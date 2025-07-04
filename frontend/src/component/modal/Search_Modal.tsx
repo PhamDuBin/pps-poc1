@@ -1,7 +1,9 @@
 "use client";
 import React from "react";
-
-export default function SearchModal({ onClose }) {
+interface ModalSearchProps {
+  onClose: () => void;
+}
+export default function SearchModal({ onClose }: ModalSearchProps) {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
       <div className="bg-white border border-gray-400 w-[600px] rounded-md relative p-6">
@@ -56,8 +58,6 @@ export default function SearchModal({ onClose }) {
               </div>
             </div>
           ))}
-
-          {/* Dotted trailing row */}
           <div className="text-center mt-2 text-xl">・・・</div>
         </div>
       </div>

@@ -1,18 +1,18 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { JSX, useEffect, useState } from "react";
 import { Card, CardBody, Button } from "@nextui-org/react";
 import ModalF1 from "../component/modal/Modal_F1";
 import ModalF2 from "../component/modal/Modal_F2";
 import SearchModal from "../component/modal/Search_Modal";
 
-export default function CheckKeyScreen() {
-  const [modalF1Open, setModalF1Open] = useState(false);
-  const [modalF2Open, setModalF2Open] = useState(false);
-  const [showSearchModal, setShowSearchModal] = useState(false);
-  const [isMagnifier, setIsMagnifier] = useState(false);
+export default function CheckKeyScreen(): JSX.Element {
+  const [modalF1Open, setModalF1Open] = useState<boolean>(false);
+  const [modalF2Open, setModalF2Open] = useState<boolean>(false);
+  const [showSearchModal, setShowSearchModal] = useState<boolean>(false);
+  const [isMagnifier, setIsMagnifier] = useState<boolean>(false);
 
   useEffect(() => {
-    const handleKeyDown = (e) => {
+    const handleKeyDown = (e: KeyboardEvent) => {
       const isMac = navigator.platform.toUpperCase().includes("MAC");
 
       // F1
@@ -49,7 +49,7 @@ export default function CheckKeyScreen() {
         if (newWindow) newWindow.focus();
       }
 
-      // Magnifier toggle
+      // Magnifier toggle (Ctrl/Cmd + Alt + Z)
       if (
         e.key.toLowerCase() === "z" &&
         e.altKey &&
@@ -63,7 +63,7 @@ export default function CheckKeyScreen() {
         });
       }
 
-      // Search modal toggle
+      // Search modal toggle (Ctrl/Cmd + Alt + F)
       if (
         e.key.toLowerCase() === "f" &&
         e.altKey &&
@@ -75,6 +75,7 @@ export default function CheckKeyScreen() {
     };
 
     window.addEventListener("keydown", handleKeyDown);
+
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
       document.body.style.cursor = "default";
@@ -86,20 +87,17 @@ export default function CheckKeyScreen() {
       <Card
         className={`w-full max-w-3xl border border-gray-300 bg-white shadow-md transition-opacity duration-200 ${
           modalF1Open || modalF2Open || showSearchModal
-            ? "opacity-20"
+            ? "opacity-20 pointer-events-none"
             : "opacity-100"
         }`}
       >
         <CardBody className="p-6 space-y-6">
-          {/* Header */}
           <div>
             <p className="text-sm text-gray-500">ショートカットサンプル</p>
             <h1 className="text-center text-xl font-bold mt-4">
               「ショートカットキー」サンプルコード
             </h1>
           </div>
-
-          {/* Instructions */}
           <ul className="space-y-2 text-sm text-black whitespace-nowrap">
             <li>
               ●
@@ -108,8 +106,6 @@ export default function CheckKeyScreen() {
             <li>● Option + Win（Command）+ Z → 虫眼鏡の切り替え</li>
             <li>● Option + Win（Command）+ F → 検索画面</li>
           </ul>
-
-          {/* Buttons */}
           <div className="flex justify-center gap-4 pt-4">
             {["F1キー", "F2キー", "F3キー", "F4キー"].map((label, index) => (
               <Button
@@ -122,7 +118,7 @@ export default function CheckKeyScreen() {
                     setModalF2Open(true); // F2
                   } else if (index === 2) {
                     const newWindow = window.open(
-                      "/window4",
+                      "/window3", // F3
                       "_blank",
                       "width=500,height=300,noopener,noreferrer"
                     );
@@ -143,8 +139,6 @@ export default function CheckKeyScreen() {
           </div>
         </CardBody>
       </Card>
-
-      {/* Modals */}
       <ModalF1 isOpen={modalF1Open} onClose={() => setModalF1Open(false)} />
       <ModalF2 isOpen={modalF2Open} onClose={() => setModalF2Open(false)} />
       {showSearchModal && (

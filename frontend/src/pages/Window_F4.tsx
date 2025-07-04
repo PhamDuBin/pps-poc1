@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 
 export default function Window4() {
   useEffect(() => {
-    const handleKeyDown = (e) => {
+    const handleKeyDown = (e: KeyboardEvent) => {
       const isMac = navigator.platform.includes("Mac");
       const isCloseKey =
         (isMac && e.metaKey && e.altKey && e.key.toLowerCase() === "c") ||
