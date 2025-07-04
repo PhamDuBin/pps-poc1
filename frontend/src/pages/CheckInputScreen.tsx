@@ -235,6 +235,7 @@ export default function CheckInputScreen() {
   const [radio2Value, setRadio2Value] = useState<string>("");
   const [code1, setCode1] = useState<string>("0");
   const [code2, setCode2] = useState<string>("0");
+  const [fontSizeClass, setFontSizeClass] = useState<string>("text-base");
 
   const codeOptions: CodeOption[] = [
     { code: "0", label: "Zero" },
@@ -276,17 +277,52 @@ export default function CheckInputScreen() {
       input.value = formatter(input.value);
     }
   };
-
+  const btnBaseStyle =
+    "font-semibold py-1 px-4 rounded-lg transition-all duration-200 shadow-md";
+  const btnActiveStyle = "bg-blue-600 text-white scale-110";
+  const btnInactiveStyle = "bg-white text-blue-600 hover:bg-blue-100";
   const className_label =
-    "flex justify-center min-w-[100px] text-base font-black bg-gray-300 py-0.5 px-3 whitespace-nowrap";
+    "flex justify-center min-w-[100px] font-black bg-gray-300 py-0.5 px-3 whitespace-nowrap";
   const className_input_customer =
     "w-8 h-8 border-2 border-gray-300 rounded-lg shadow-md p-2 focus:border-gray-300 focus:shadow-lg focus:outline-none transition-all";
   const className_input_text =
     "h-8 border-2 border-gray-300 rounded-lg shadow-md p-2 focus:border-gray-300 focus:shadow-lg focus:outline-none transition-all";
 
   return (
-    <div ref={formRef} className="p-6 bg-[#f0f0f0] min-h-screen">
-      <h1>テストフィールド1</h1>
+    <div
+      ref={formRef}
+      className={`p-6 bg-[#f0f0f0] min-h-screen ${fontSizeClass}`}
+    >
+      <div className="flex flex-row justify-between items-center mb-2">
+        <h1>テストフィールド1</h1>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => setFontSizeClass("text-xs")}
+            className={`${btnBaseStyle} ${
+              fontSizeClass === "text-xs" ? btnActiveStyle : btnInactiveStyle
+            }`}
+          >
+            Small
+          </button>
+          <button
+            onClick={() => setFontSizeClass("text-base")}
+            className={`${btnBaseStyle} ${
+              fontSizeClass === "text-base" ? btnActiveStyle : btnInactiveStyle
+            }`}
+          >
+            Medium
+          </button>
+          <button
+            onClick={() => setFontSizeClass("text-2xl")}
+            className={`${btnBaseStyle} ${
+              fontSizeClass === "text-2xl" ? btnActiveStyle : btnInactiveStyle
+            }`}
+          >
+            Large
+          </button>
+        </div>
+      </div>
+
       <Card className="border border-gray-400 bg-white shadow-md">
         <CardBody className="space-y-4">
           <div className="px-4 space-y-4">
@@ -301,11 +337,11 @@ export default function CheckInputScreen() {
             </div>
 
             <div className="flex items-center gap-5 p-2">
-              <label className="flex justify-center min-w-[100px] text-base font-black bg-gray-300 py-0.5 px-10">
+              <label className="flex justify-center min-w-[100px] font-black bg-gray-300 py-0.5 px-10">
                 氏名
               </label>
               <input className="input-free-text input-to-radio input-navigable w-60 h-8 border-2 border-gray-300 rounded-lg shadow-md p-2" />
-              <span className="flex justify-center min-w-[100px] text-base font-black bg-gray-300 py-0.5 px-8">
+              <span className="flex justify-center min-w-[100px] font-black bg-gray-300 py-0.5 px-8">
                 顧客種別
               </span>
               <RadioGroup
@@ -322,14 +358,14 @@ export default function CheckInputScreen() {
                     <Radio
                       key={v}
                       value={v}
-                      className="flex flex-row font-bold text-base radio-customer-type"
+                      className="flex flex-row font-bold radio-customer-type"
                     >
                       <p className="ml-4">{v}</p>
                     </Radio>
                   ))}
                 </div>
               </RadioGroup>
-              <span className="flex justify-center min-w-[100px] text-base font-black bg-gray-300 py-0.5 px-8">
+              <span className="flex justify-center min-w-[100px] font-black bg-gray-300 py-0.5 px-8">
                 代表者名
               </span>
               <input className="input-free-text after-radio input-navigable w-60 h-8 border-2 border-gray-300 rounded-lg shadow-md p-2" />
@@ -381,7 +417,7 @@ export default function CheckInputScreen() {
                     <Radio
                       key={v}
                       value={v}
-                      className="flex flex-row font-bold text-base radio-customer-type"
+                      className="flex flex-row font-bold radio-customer-type"
                     >
                       <p className="ml-4">Item {v}</p>
                     </Radio>
@@ -476,10 +512,7 @@ export default function CheckInputScreen() {
               <label className={`${className_label}`}>Check Box</label>
               <div className="col-span-3 flex gap-4 flex-row">
                 {["sun", "mon", "tue", "wed", "thu", "fri"].map((day) => (
-                  <label
-                    key={day}
-                    className="flex items-center gap-2 text-base"
-                  >
+                  <label key={day} className="flex items-center gap-2">
                     <input
                       type="checkbox"
                       className="w-6 h-6 accent-blue-600 checkbox-group-item"
@@ -505,7 +538,7 @@ export default function CheckInputScreen() {
                     <Radio
                       key={v}
                       value={v}
-                      className="flex flex-row font-bold text-base radio-customer-type"
+                      className="flex flex-row font-bold radio-customer-type"
                     >
                       <p className="ml-4">Item {v}</p>
                     </Radio>
@@ -534,7 +567,7 @@ export default function CheckInputScreen() {
               />
               <span></span>
 
-              <label className="flex justify-center min-w-[100px] text-base font-black bg-gray-300 py-0.5 px-8">
+              <label className="flex justify-center min-w-[100px] font-black bg-gray-300 py-0.5 px-8">
                 半角カナ
               </label>
               <input
@@ -543,7 +576,7 @@ export default function CheckInputScreen() {
               />
               <span></span>
 
-              <label className="flex justify-center min-w-[100px] text-base font-black bg-gray-300 py-0.5 px-8">
+              <label className="flex justify-center min-w-[100px] font-black bg-gray-300 py-0.5 px-8">
                 半角数字
               </label>
               <input
@@ -552,7 +585,7 @@ export default function CheckInputScreen() {
               />
               <span></span>
 
-              <label className="flex justify-center min-w-[100px] text-base font-black bg-gray-300 py-0.5 px-8">
+              <label className="flex justify-center min-w-[100px] font-black bg-gray-300 py-0.5 px-8">
                 半角英数字
               </label>
               <input
@@ -563,7 +596,7 @@ export default function CheckInputScreen() {
               />
               <span></span>
 
-              <label className="flex justify-center min-w-[100px] text-base font-black bg-gray-300 py-0.5 px-8">
+              <label className="flex justify-center min-w-[100px] font-black bg-gray-300 py-0.5 px-8">
                 全角
               </label>
               <input
@@ -572,7 +605,7 @@ export default function CheckInputScreen() {
               />
               <span></span>
 
-              <label className="flex justify-center min-w-[100px] text-base font-black bg-gray-300 py-0.5 px-8">
+              <label className="flex justify-center min-w-[100px] font-black bg-gray-300 py-0.5 px-8">
                 E/Tab排除
               </label>
               <span></span>
@@ -583,7 +616,7 @@ export default function CheckInputScreen() {
                 rows={3}
               />
 
-              <label className="flex justify-center min-w-[100px] text-base font-black bg-gray-300 py-0.5 px-8">
+              <label className="flex justify-center min-w-[100px] font-black bg-gray-300 py-0.5 px-8">
                 排除確認
               </label>
               <input
