@@ -1,6 +1,5 @@
-// src/App.js
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import CheckInputScreen from "./pages/CheckInputScreen";
 import CheckKeyScreen from "./pages/CheckKeyScreen";
 import Window3 from "./pages/Window_F3";
@@ -13,7 +12,19 @@ function App() {
         <Route
           path="/"
           element={
-            <div className="text-center mt-10 text-blue-600">Trang chính</div>
+            <div className="text-center mt-10 text-blue-600 space-y-4">
+              <div>Main Page</div>
+              <div>
+                <Link to="/check-input" className="text-blue-500 underline">
+                  → Check input page (入力画面サンプル)
+                </Link>
+              </div>
+              <div>
+                <Link to="/check-key" className="text-blue-500 underline">
+                  → Check key page (ウィンドウズ操作サンプル)
+                </Link>
+              </div>
+            </div>
           }
         />
         <Route path="/check-input" element={<CheckInputScreen />} />

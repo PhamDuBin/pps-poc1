@@ -1,12 +1,32 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 
 export default function Window4() {
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      const isMac = navigator.platform.includes("Mac");
+      const isCloseKey =
+        (isMac && e.metaKey && e.altKey && e.key.toLowerCase() === "c") ||
+        (!isMac && e.ctrlKey && e.altKey && e.key.toLowerCase() === "c");
+
+      if (isCloseKey) {
+        e.preventDefault();
+        window.close();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#f0f0f0] p-4">
       <div className="border border-gray-400 bg-white w-[400px] h-[180px] flex flex-col items-center justify-center">
         <div className="text-lg font-semibold mb-6">Window_4</div>
-        <button className="bg-gray-200 px-6 py-2 text-sm font-semibold rounded-none">
+        <button
+          onClick={() => window.close()}
+          className="bg-gray-200 px-6 py-2 text-sm font-semibold rounded-none"
+        >
           閉じる（C）
         </button>
       </div>
