@@ -606,13 +606,19 @@ export default function CheckInputScreen() {
               <div className="flex flex-row">
                 <input
                   value={code1}
-                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                    setCode1(e.target.value)
-                  }
-                  onKeyDown={(e) => handleCodeKeyDown(e, code1, setCode1)}
+                  onChange={(e) => setCode1(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Escape") {
+                      e.preventDefault();
+                      setCode1("0");
+                      return;
+                    }
+                    handleCodeKeyDown(e, code1, setCode1);
+                  }}
                   className="w-8 border border-gray-300 rounded code-input"
                   data-group="code1"
                 />
+
                 <select
                   className="ml-2 h-8 border border-gray-300 rounded code-select"
                   value={codeOptions.some((o) => o.code === code1) ? code1 : ""}
@@ -633,13 +639,19 @@ export default function CheckInputScreen() {
               <div className="flex flex-row">
                 <input
                   value={code2}
-                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                    setCode2(e.target.value)
-                  }
-                  onKeyDown={(e) => handleCodeKeyDown(e, code2, setCode2)}
+                  onChange={(e) => setCode2(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Escape") {
+                      e.preventDefault();
+                      setCode2("0");
+                      return;
+                    }
+                    handleCodeKeyDown(e, code2, setCode2);
+                  }}
                   className="w-8 border border-gray-300 rounded code-input"
                   data-group="code2"
                 />
+
                 <select
                   className="ml-2 h-8 border border-gray-300 rounded code-select"
                   value={codeOptions.some((o) => o.code === code2) ? code2 : ""}
