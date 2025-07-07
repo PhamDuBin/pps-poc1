@@ -1,14 +1,16 @@
 "use client";
 import React from "react";
-
-export default function SearchModal() {
+interface ModalSearchProps {
+  onClose: () => void;
+}
+export default function SearchModal({ onClose }: ModalSearchProps) {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
       <div className="bg-white border border-gray-400 w-[600px] rounded-md relative p-6">
         {/* Close Button */}
         <button
           className="absolute top-2 right-2 text-lg font-bold px-2 py-1"
-          onClick={() => alert("close")}
+          onClick={onClose}
         >
           ×
         </button>
@@ -26,6 +28,8 @@ export default function SearchModal() {
             新規登録
           </button>
         </div>
+
+        <label className="text-sm font-semibold">事業所ナンバー</label>
 
         {/* Table Box */}
         <div className="border border-gray-400 p-4">
@@ -54,8 +58,6 @@ export default function SearchModal() {
               </div>
             </div>
           ))}
-
-          {/* Dotted trailing row */}
           <div className="text-center mt-2 text-xl">・・・</div>
         </div>
       </div>
