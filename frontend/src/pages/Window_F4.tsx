@@ -4,10 +4,10 @@ import React, { useEffect } from "react";
 export default function Window4() {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      const isMac = navigator.platform.includes("Mac");
+      const isMac = navigator.platform.toUpperCase().includes("MAC");
       const isCloseKey =
-        (isMac && e.metaKey && e.altKey && e.key.toLowerCase() === "c") ||
-        (!isMac && e.ctrlKey && e.altKey && e.key.toLowerCase() === "c");
+        (e.code === "KeyC" && e.altKey && (isMac ? e.metaKey : e.ctrlKey)) ||
+        (e.code === "KeyC" && e.altKey && (isMac ? e.metaKey : e.ctrlKey));
 
       if (isCloseKey) {
         e.preventDefault();

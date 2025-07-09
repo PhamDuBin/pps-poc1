@@ -21,52 +21,49 @@ export function handleDigitInput(
   }
 }
 
-export function handleNavigationKey(
+export const handleNavigationKey = (
   e: KeyboardEvent,
   index: number,
   inputs: HTMLElement[]
-): void {
-  const target = e.target as HTMLInputElement;
+) => {
+  const input = inputs[index];
+  const key = e.key;
 
-  switch (e.key) {
-    case "ArrowDown":
-    case "Tab":
-    case "Enter":
-      e.preventDefault();
-      if (index < inputs.length - 1) {
-        inputs[index + 1].focus();
-      }
-      break;
-    case "ArrowUp":
-      e.preventDefault();
-      if (index > 0) {
-        inputs[index - 1].focus();
-      }
-      break;
-    case "ArrowRight":
-      // Only move focus if cursor is at end of text
-      if (target.selectionEnd === target.value.length) {
-        if (index < inputs.length - 1) {
-          inputs[index + 1].focus();
+  if (["Tab", "Enter", "ArrowDown", "ArrowRight"].includes(key)) {
+    e.preventDefault();
+
+    // Nếu input đang trong trạng thái IME composition thì chờ kết thúc
+    if (
+      input instanceof HTMLInputElement ||
+      input instanceof HTMLTextAreaElement
+    ) {
+      const el = input;
+      if ((e as any).isComposing) return;
+
+      let isComposing = false;
+      const handler = () => {
+        if (!isComposing) {
+          const nextIndex = index + 1;
+          if (nextIndex < inputs.length) inputs[nextIndex].focus();
+          el.removeEventListener("compositionend", handler);
         }
+      };
+
+      el.addEventListener("compositionend", handler);
+      if (!isComposing) {
+        const nextIndex = index + 1;
+        if (nextIndex < inputs.length) inputs[nextIndex].focus();
       }
-      break;
-    case "ArrowLeft":
-      // Only move focus if cursor is at the beginning of text
-      if (target.selectionStart === 0) {
-        if (index > 0) {
-          inputs[index - 1].focus();
-        }
-      }
-      break;
-    case "Escape":
-      e.preventDefault();
-      target.value = "";
-      break;
-    default:
-      break;
+    } else {
+      const nextIndex = index + 1;
+      if (nextIndex < inputs.length) inputs[nextIndex].focus();
+    }
+  } else if (["ArrowUp", "ArrowLeft"].includes(key)) {
+    e.preventDefault();
+    const prevIndex = index - 1;
+    if (prevIndex >= 0) inputs[prevIndex].focus();
   }
-}
+};
 
 export function handleRadioNavigation(
   e: KeyboardEvent,

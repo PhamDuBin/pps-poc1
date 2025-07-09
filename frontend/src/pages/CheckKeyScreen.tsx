@@ -12,22 +12,19 @@ export default function CheckKeyScreen(): JSX.Element {
   const [isMagnifier, setIsMagnifier] = useState<boolean>(false);
 
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      const isMac = navigator.platform.toUpperCase().includes("MAC");
+    const isMac = navigator.platform.toUpperCase().includes("MAC");
 
-      // F1
+    const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "F1") {
         e.preventDefault();
         setModalF1Open(true);
       }
 
-      // F2
       if (e.key === "F2") {
         e.preventDefault();
         setModalF2Open(true);
       }
 
-      // F3
       if (e.key === "F3") {
         e.preventDefault();
         const newWindow = window.open(
@@ -35,10 +32,9 @@ export default function CheckKeyScreen(): JSX.Element {
           "_blank",
           "width=500,height=300,noopener,noreferrer"
         );
-        if (newWindow) newWindow.focus();
+        newWindow?.focus();
       }
 
-      // F4
       if (e.key === "F4") {
         e.preventDefault();
         const newWindow = window.open(
@@ -46,15 +42,11 @@ export default function CheckKeyScreen(): JSX.Element {
           "_blank",
           "width=500,height=300,noopener,noreferrer"
         );
-        if (newWindow) newWindow.focus();
+        newWindow?.focus();
       }
 
-      // Magnifier toggle (Ctrl/Cmd + Alt + Z)
-      if (
-        e.key.toLowerCase() === "z" &&
-        e.altKey &&
-        (isMac ? e.metaKey : e.ctrlKey)
-      ) {
+      // Cmd/Ctrl + Alt + Z → toggle magnifier
+      if (e.code === "KeyZ" && e.altKey && (isMac ? e.metaKey : e.ctrlKey)) {
         e.preventDefault();
         setIsMagnifier((prev) => {
           const newCursor = !prev ? "zoom-in" : "default";
@@ -63,12 +55,8 @@ export default function CheckKeyScreen(): JSX.Element {
         });
       }
 
-      // Search modal toggle (Ctrl/Cmd + Alt + F)
-      if (
-        e.key.toLowerCase() === "f" &&
-        e.altKey &&
-        (isMac ? e.metaKey : e.ctrlKey)
-      ) {
+      // Cmd/Ctrl + Alt + T → toggle search modal
+      if (e.code === "KeyF" && e.altKey && (isMac ? e.metaKey : e.ctrlKey)) {
         e.preventDefault();
         setShowSearchModal(true);
       }

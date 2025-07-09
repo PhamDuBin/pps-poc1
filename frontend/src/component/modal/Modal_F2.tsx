@@ -19,9 +19,7 @@ export default function ModalF2({ isOpen, onClose }: ModalF2Props) {
       const isMac = navigator.platform.toUpperCase().includes("MAC");
       // Alt + Ctrl/Cmd + C
       const isComboPressed =
-        e.key.toLowerCase() === "c" &&
-        e.altKey &&
-        (isMac ? e.metaKey : e.ctrlKey);
+        e.code === "KeyC" && e.altKey && (isMac ? e.metaKey : e.ctrlKey);
 
       if (isOpen && isComboPressed) {
         e.preventDefault();

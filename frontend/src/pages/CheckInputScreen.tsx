@@ -410,9 +410,14 @@ export default function CheckInputScreen() {
                     ["Tab", "Enter", "ArrowDown", "ArrowRight"].includes(e.key)
                   ) {
                     e.preventDefault();
-                    formRef.current
-                      ?.querySelector<HTMLElement>('[data-group="code1"]')
-                      ?.focus();
+                    const currentInput = e.currentTarget;
+                    currentInput.blur();
+
+                    setTimeout(() => {
+                      formRef.current
+                        ?.querySelector<HTMLElement>('[data-group="code1"]')
+                        ?.focus();
+                    }, 10);
                   }
                 }}
                 className={`col-span-1 ${className_input_text} input-navigable`}
