@@ -1,38 +1,69 @@
-import React from "react";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import CheckInputScreen from "./pages/CheckInputScreen";
 import CheckKeyScreen from "./pages/CheckKeyScreen";
 import Window3 from "./pages/Window_F3";
 import Window4 from "./pages/Window_F4";
+import LoginPage from "./pages/LoginPage";
+import HomePage from "./pages/HomePage";
+import PrivateRoute from "./component/PrivateRoute";
+import { AuthProvider } from "./context/AuthContext";
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <div className="text-center mt-10 text-blue-600 space-y-4">
-              <div>Main Page</div>
-              <div>
-                <Link to="/check-input" className="text-blue-500 underline">
-                  → Check input page (入力画面サンプル)
-                </Link>
-              </div>
-              <div>
-                <Link to="/check-key" className="text-blue-500 underline">
-                  → Check key page (ウィンドウズ操作サンプル)
-                </Link>
-              </div>
-            </div>
-          }
-        />
-        <Route path="/check-input" element={<CheckInputScreen />} />
-        <Route path="/check-key" element={<CheckKeyScreen />} />
-        <Route path="/window3" element={<Window3 />} />
-        <Route path="/window4" element={<Window4 />} />
-      </Routes>
-    </Router>
+    <AuthProvider>
+      <Router>
+        <Routes>
+          <Route path="/login" element={<LoginPage />} />
+          <Route
+            path="/"
+            element={
+              <PrivateRoute>
+                <HomePage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/check-input"
+            element={
+              <PrivateRoute>
+                <CheckInputScreen />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/check-key"
+            element={
+              <PrivateRoute>
+                <CheckKeyScreen />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/window3"
+            element={
+              <PrivateRoute>
+                <Window3 />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/window4"
+            element={
+              <PrivateRoute>
+                <Window4 />
+              </PrivateRoute>
+            }
+          />
+          {/* fallback nếu route không khớp */}
+          <Route path="*" element={<Navigate to="/login" />} />
+        </Routes>
+      </Router>
+    </AuthProvider>
   );
 }
 
