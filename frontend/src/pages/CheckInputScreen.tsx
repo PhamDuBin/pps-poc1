@@ -12,6 +12,11 @@ import {
   handleNavigationKey,
   handleInputToRadio,
   handleRadioNavigation,
+  toHalfWidth,
+  extractHalfWidthDigits,
+  convertToHalfWidthAndRemoveKana,
+  convertToFullWidth,
+  removeAllWhitespace,
 } from "../utils/InputHandlers";
 
 interface CodeOption {
@@ -24,195 +29,6 @@ interface Listener {
   event: string;
   handler: EventListenerOrEventListenerObject;
 }
-
-// --- Text processing functions---
-export const toHalfWidth = (str: string): string => {
-  return (
-    str
-      // Chữ cái/số/ký hiệu
-      .replace(/[Ａ-Ｚａ-ｚ０-９]/g, (s) =>
-        String.fromCharCode(s.charCodeAt(0) - 0xfee0)
-      )
-      .replace(/[！-～]/g, (s) => String.fromCharCode(s.charCodeAt(0) - 0xfee0))
-      .replace(/　/g, " ")
-
-      // Katakana full-width → half-width (chuyển từng ký tự)
-      .replace(/[\u30A1-\u30F6]/g, (char) => {
-        const kanaMap: { [key: string]: string } = {
-          ア: "ｱ",
-          イ: "ｲ",
-          ウ: "ｳ",
-          エ: "ｴ",
-          オ: "ｵ",
-          カ: "ｶ",
-          キ: "ｷ",
-          ク: "ｸ",
-          ケ: "ｹ",
-          コ: "ｺ",
-          サ: "ｻ",
-          シ: "ｼ",
-          ス: "ｽ",
-          セ: "ｾ",
-          ソ: "ｿ",
-          タ: "ﾀ",
-          チ: "ﾁ",
-          ツ: "ﾂ",
-          テ: "ﾃ",
-          ト: "ﾄ",
-          ナ: "ﾅ",
-          ニ: "ﾆ",
-          ヌ: "ﾇ",
-          ネ: "ﾈ",
-          ノ: "ﾉ",
-          ハ: "ﾊ",
-          ヒ: "ﾋ",
-          フ: "ﾌ",
-          ヘ: "ﾍ",
-          ホ: "ﾎ",
-          マ: "ﾏ",
-          ミ: "ﾐ",
-          ム: "ﾑ",
-          メ: "ﾒ",
-          モ: "ﾓ",
-          ヤ: "ﾔ",
-          ユ: "ﾕ",
-          ヨ: "ﾖ",
-          ラ: "ﾗ",
-          リ: "ﾘ",
-          ル: "ﾙ",
-          レ: "ﾚ",
-          ロ: "ﾛ",
-          ワ: "ﾜ",
-          ヲ: "ｦ",
-          ン: "ﾝ",
-          ガ: "ｶﾞ",
-          ギ: "ｷﾞ",
-          グ: "ｸﾞ",
-          ゲ: "ｹﾞ",
-          ゴ: "ｺﾞ",
-          ザ: "ｻﾞ",
-          ジ: "ｼﾞ",
-          ズ: "ｽﾞ",
-          ゼ: "ｾﾞ",
-          ゾ: "ｿﾞ",
-          ダ: "ﾀﾞ",
-          ヂ: "ﾁﾞ",
-          ヅ: "ﾂﾞ",
-          デ: "ﾃﾞ",
-          ド: "ﾄﾞ",
-          バ: "ﾊﾞ",
-          ビ: "ﾋﾞ",
-          ブ: "ﾌﾞ",
-          ベ: "ﾍﾞ",
-          ボ: "ﾎﾞ",
-          パ: "ﾊﾟ",
-          ピ: "ﾋﾟ",
-          プ: "ﾌﾟ",
-          ペ: "ﾍﾟ",
-          ポ: "ﾎﾟ",
-          ャ: "ｬ",
-          ュ: "ｭ",
-          ョ: "ｮ",
-          ッ: "ｯ",
-          ヮ: "ﾜ",
-          ヰ: "ｲ",
-          ヱ: "ｴ",
-          ヵ: "ｶ",
-          ヶ: "ｹ",
-        };
-        return kanaMap[char] || char;
-      })
-  );
-};
-
-const extractHalfWidthDigits = (str: string): string =>
-  str
-    .replace(/[０-９]/g, (ch) => String.fromCharCode(ch.charCodeAt(0) - 0xfee0))
-    .replace(/[^0-9]/g, "");
-
-const convertToHalfWidthAndRemoveKana = (str: string): string =>
-  str
-    .replace(/[Ａ-Ｚａ-ｚ０-９]/g, (ch) =>
-      String.fromCharCode(ch.charCodeAt(0) - 0xfee0)
-    )
-    .replace(/[！-～]/g, (ch) => String.fromCharCode(ch.charCodeAt(0) - 0xfee0))
-    .replace(/　/g, " ")
-    .replace(/[\u3040-\u309F\u30A0-\u30FF\uFF66-\uFF9F]/g, "")
-    .trim();
-
-export const convertToFullWidth = (str: string): string => {
-  return (
-    str
-      // Chữ cái/số
-      .replace(/[A-Za-z0-9]/g, (ch) =>
-        String.fromCharCode(ch.charCodeAt(0) + 0xfee0)
-      )
-      .replace(/ /g, "　")
-
-      // Katakana half-width → full-width
-      .replace(/[ｱ-ﾝﾞﾟ]/g, (char) => {
-        const kanaMap: { [key: string]: string } = {
-          ｱ: "ア",
-          ｲ: "イ",
-          ｳ: "ウ",
-          ｴ: "エ",
-          ｵ: "オ",
-          ｶ: "カ",
-          ｷ: "キ",
-          ｸ: "ク",
-          ｹ: "ケ",
-          ｺ: "コ",
-          ｻ: "サ",
-          ｼ: "シ",
-          ｽ: "ス",
-          ｾ: "セ",
-          ｿ: "ソ",
-          ﾀ: "タ",
-          ﾁ: "チ",
-          ﾂ: "ツ",
-          ﾃ: "テ",
-          ﾄ: "ト",
-          ﾅ: "ナ",
-          ﾆ: "ニ",
-          ﾇ: "ヌ",
-          ﾈ: "ネ",
-          ﾉ: "ノ",
-          ﾊ: "ハ",
-          ﾋ: "ヒ",
-          ﾌ: "フ",
-          ﾍ: "ヘ",
-          ﾎ: "ホ",
-          ﾏ: "マ",
-          ﾐ: "ミ",
-          ﾑ: "ム",
-          ﾒ: "メ",
-          ﾓ: "モ",
-          ﾔ: "ヤ",
-          ﾕ: "ユ",
-          ﾖ: "ヨ",
-          ﾗ: "ラ",
-          ﾘ: "リ",
-          ﾙ: "ル",
-          ﾚ: "レ",
-          ﾛ: "ロ",
-          ﾜ: "ワ",
-          ｦ: "ヲ",
-          ﾝ: "ン",
-          ｬ: "ャ",
-          ｭ: "ュ",
-          ｮ: "ョ",
-          ｯ: "ッ",
-          ｳﾞ: "ヴ",
-          ﾞ: "゛",
-          ﾟ: "゜",
-        };
-        return kanaMap[char] || char;
-      })
-  );
-};
-
-const removeAllWhitespace = (str: string): string =>
-  str.replace(/[\s\r\n\t]/g, "");
 
 const useKeyboardNavigation = (
   formRef: React.RefObject<HTMLDivElement | null>
@@ -594,9 +410,14 @@ export default function CheckInputScreen() {
                     ["Tab", "Enter", "ArrowDown", "ArrowRight"].includes(e.key)
                   ) {
                     e.preventDefault();
-                    formRef.current
-                      ?.querySelector<HTMLElement>('[data-group="code1"]')
-                      ?.focus();
+                    const currentInput = e.currentTarget;
+                    currentInput.blur();
+
+                    setTimeout(() => {
+                      formRef.current
+                        ?.querySelector<HTMLElement>('[data-group="code1"]')
+                        ?.focus();
+                    }, 10);
                   }
                 }}
                 className={`col-span-1 ${className_input_text} input-navigable`}
@@ -606,13 +427,19 @@ export default function CheckInputScreen() {
               <div className="flex flex-row">
                 <input
                   value={code1}
-                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                    setCode1(e.target.value)
-                  }
-                  onKeyDown={(e) => handleCodeKeyDown(e, code1, setCode1)}
+                  onChange={(e) => setCode1(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Escape") {
+                      e.preventDefault();
+                      setCode1("0");
+                      return;
+                    }
+                    handleCodeKeyDown(e, code1, setCode1);
+                  }}
                   className="w-8 border border-gray-300 rounded code-input"
                   data-group="code1"
                 />
+
                 <select
                   className="ml-2 h-8 border border-gray-300 rounded code-select"
                   value={codeOptions.some((o) => o.code === code1) ? code1 : ""}
@@ -633,13 +460,19 @@ export default function CheckInputScreen() {
               <div className="flex flex-row">
                 <input
                   value={code2}
-                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                    setCode2(e.target.value)
-                  }
-                  onKeyDown={(e) => handleCodeKeyDown(e, code2, setCode2)}
+                  onChange={(e) => setCode2(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Escape") {
+                      e.preventDefault();
+                      setCode2("0");
+                      return;
+                    }
+                    handleCodeKeyDown(e, code2, setCode2);
+                  }}
                   className="w-8 border border-gray-300 rounded code-input"
                   data-group="code2"
                 />
+
                 <select
                   className="ml-2 h-8 border border-gray-300 rounded code-select"
                   value={codeOptions.some((o) => o.code === code2) ? code2 : ""}

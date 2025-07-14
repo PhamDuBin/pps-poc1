@@ -21,52 +21,49 @@ export function handleDigitInput(
   }
 }
 
-export function handleNavigationKey(
+export const handleNavigationKey = (
   e: KeyboardEvent,
   index: number,
   inputs: HTMLElement[]
-): void {
-  const target = e.target as HTMLInputElement;
+) => {
+  const input = inputs[index];
+  const key = e.key;
 
-  switch (e.key) {
-    case "ArrowDown":
-    case "Tab":
-    case "Enter":
-      e.preventDefault();
-      if (index < inputs.length - 1) {
-        inputs[index + 1].focus();
-      }
-      break;
-    case "ArrowUp":
-      e.preventDefault();
-      if (index > 0) {
-        inputs[index - 1].focus();
-      }
-      break;
-    case "ArrowRight":
-      // Only move focus if cursor is at end of text
-      if (target.selectionEnd === target.value.length) {
-        if (index < inputs.length - 1) {
-          inputs[index + 1].focus();
+  if (["Tab", "Enter", "ArrowDown", "ArrowRight"].includes(key)) {
+    e.preventDefault();
+
+    // Nếu input đang trong trạng thái IME composition thì chờ kết thúc
+    if (
+      input instanceof HTMLInputElement ||
+      input instanceof HTMLTextAreaElement
+    ) {
+      const el = input;
+      if ((e as any).isComposing) return;
+
+      let isComposing = false;
+      const handler = () => {
+        if (!isComposing) {
+          const nextIndex = index + 1;
+          if (nextIndex < inputs.length) inputs[nextIndex].focus();
+          el.removeEventListener("compositionend", handler);
         }
+      };
+
+      el.addEventListener("compositionend", handler);
+      if (!isComposing) {
+        const nextIndex = index + 1;
+        if (nextIndex < inputs.length) inputs[nextIndex].focus();
       }
-      break;
-    case "ArrowLeft":
-      // Only move focus if cursor is at the beginning of text
-      if (target.selectionStart === 0) {
-        if (index > 0) {
-          inputs[index - 1].focus();
-        }
-      }
-      break;
-    case "Escape":
-      e.preventDefault();
-      target.value = "";
-      break;
-    default:
-      break;
+    } else {
+      const nextIndex = index + 1;
+      if (nextIndex < inputs.length) inputs[nextIndex].focus();
+    }
+  } else if (["ArrowUp", "ArrowLeft"].includes(key)) {
+    e.preventDefault();
+    const prevIndex = index - 1;
+    if (prevIndex >= 0) inputs[prevIndex].focus();
   }
-}
+};
 
 export function handleRadioNavigation(
   e: KeyboardEvent,
@@ -135,3 +132,191 @@ export const handleInputToRadio = (
     }
   }
 };
+
+export const toHalfWidth = (str: string): string => {
+  return (
+    str
+      // Chữ cái/số/ký hiệu
+      .replace(/[Ａ-Ｚａ-ｚ０-９]/g, (s) =>
+        String.fromCharCode(s.charCodeAt(0) - 0xfee0)
+      )
+      .replace(/[！-～]/g, (s) => String.fromCharCode(s.charCodeAt(0) - 0xfee0))
+      .replace(/　/g, " ")
+
+      // Katakana full-width → half-width (chuyển từng ký tự)
+      .replace(/[\u30A1-\u30F6]/g, (char) => {
+        const kanaMap: { [key: string]: string } = {
+          ア: "ｱ",
+          イ: "ｲ",
+          ウ: "ｳ",
+          エ: "ｴ",
+          オ: "ｵ",
+          カ: "ｶ",
+          キ: "ｷ",
+          ク: "ｸ",
+          ケ: "ｹ",
+          コ: "ｺ",
+          サ: "ｻ",
+          シ: "ｼ",
+          ス: "ｽ",
+          セ: "ｾ",
+          ソ: "ｿ",
+          タ: "ﾀ",
+          チ: "ﾁ",
+          ツ: "ﾂ",
+          テ: "ﾃ",
+          ト: "ﾄ",
+          ナ: "ﾅ",
+          ニ: "ﾆ",
+          ヌ: "ﾇ",
+          ネ: "ﾈ",
+          ノ: "ﾉ",
+          ハ: "ﾊ",
+          ヒ: "ﾋ",
+          フ: "ﾌ",
+          ヘ: "ﾍ",
+          ホ: "ﾎ",
+          マ: "ﾏ",
+          ミ: "ﾐ",
+          ム: "ﾑ",
+          メ: "ﾒ",
+          モ: "ﾓ",
+          ヤ: "ﾔ",
+          ユ: "ﾕ",
+          ヨ: "ﾖ",
+          ラ: "ﾗ",
+          リ: "ﾘ",
+          ル: "ﾙ",
+          レ: "ﾚ",
+          ロ: "ﾛ",
+          ワ: "ﾜ",
+          ヲ: "ｦ",
+          ン: "ﾝ",
+          ガ: "ｶﾞ",
+          ギ: "ｷﾞ",
+          グ: "ｸﾞ",
+          ゲ: "ｹﾞ",
+          ゴ: "ｺﾞ",
+          ザ: "ｻﾞ",
+          ジ: "ｼﾞ",
+          ズ: "ｽﾞ",
+          ゼ: "ｾﾞ",
+          ゾ: "ｿﾞ",
+          ダ: "ﾀﾞ",
+          ヂ: "ﾁﾞ",
+          ヅ: "ﾂﾞ",
+          デ: "ﾃﾞ",
+          ド: "ﾄﾞ",
+          バ: "ﾊﾞ",
+          ビ: "ﾋﾞ",
+          ブ: "ﾌﾞ",
+          ベ: "ﾍﾞ",
+          ボ: "ﾎﾞ",
+          パ: "ﾊﾟ",
+          ピ: "ﾋﾟ",
+          プ: "ﾌﾟ",
+          ペ: "ﾍﾟ",
+          ポ: "ﾎﾟ",
+          ャ: "ｬ",
+          ュ: "ｭ",
+          ョ: "ｮ",
+          ッ: "ｯ",
+          ヮ: "ﾜ",
+          ヰ: "ｲ",
+          ヱ: "ｴ",
+          ヵ: "ｶ",
+          ヶ: "ｹ",
+        };
+        return kanaMap[char] || char;
+      })
+  );
+};
+
+export const extractHalfWidthDigits = (str: string): string =>
+  str
+    .replace(/[０-９]/g, (ch) => String.fromCharCode(ch.charCodeAt(0) - 0xfee0))
+    .replace(/[^0-9]/g, "");
+
+export const convertToHalfWidthAndRemoveKana = (str: string): string =>
+  str
+    .replace(/[Ａ-Ｚａ-ｚ０-９]/g, (ch) =>
+      String.fromCharCode(ch.charCodeAt(0) - 0xfee0)
+    )
+    .replace(/[！-～]/g, (ch) => String.fromCharCode(ch.charCodeAt(0) - 0xfee0))
+    .replace(/　/g, " ")
+    .replace(/[\u3040-\u309F\u30A0-\u30FF\uFF66-\uFF9F]/g, "")
+    .trim();
+
+export const convertToFullWidth = (str: string): string => {
+  return (
+    str
+      // Chữ cái/số
+      .replace(/[A-Za-z0-9]/g, (ch) =>
+        String.fromCharCode(ch.charCodeAt(0) + 0xfee0)
+      )
+      .replace(/ /g, "　")
+
+      // Katakana half-width → full-width
+      .replace(/[ｱ-ﾝﾞﾟ]/g, (char) => {
+        const kanaMap: { [key: string]: string } = {
+          ｱ: "ア",
+          ｲ: "イ",
+          ｳ: "ウ",
+          ｴ: "エ",
+          ｵ: "オ",
+          ｶ: "カ",
+          ｷ: "キ",
+          ｸ: "ク",
+          ｹ: "ケ",
+          ｺ: "コ",
+          ｻ: "サ",
+          ｼ: "シ",
+          ｽ: "ス",
+          ｾ: "セ",
+          ｿ: "ソ",
+          ﾀ: "タ",
+          ﾁ: "チ",
+          ﾂ: "ツ",
+          ﾃ: "テ",
+          ﾄ: "ト",
+          ﾅ: "ナ",
+          ﾆ: "ニ",
+          ﾇ: "ヌ",
+          ﾈ: "ネ",
+          ﾉ: "ノ",
+          ﾊ: "ハ",
+          ﾋ: "ヒ",
+          ﾌ: "フ",
+          ﾍ: "ヘ",
+          ﾎ: "ホ",
+          ﾏ: "マ",
+          ﾐ: "ミ",
+          ﾑ: "ム",
+          ﾒ: "メ",
+          ﾓ: "モ",
+          ﾔ: "ヤ",
+          ﾕ: "ユ",
+          ﾖ: "ヨ",
+          ﾗ: "ラ",
+          ﾘ: "リ",
+          ﾙ: "ル",
+          ﾚ: "レ",
+          ﾛ: "ロ",
+          ﾜ: "ワ",
+          ｦ: "ヲ",
+          ﾝ: "ン",
+          ｬ: "ャ",
+          ｭ: "ュ",
+          ｮ: "ョ",
+          ｯ: "ッ",
+          ｳﾞ: "ヴ",
+          ﾞ: "゛",
+          ﾟ: "゜",
+        };
+        return kanaMap[char] || char;
+      })
+  );
+};
+
+export const removeAllWhitespace = (str: string): string =>
+  str.replace(/[\s\r\n\t]/g, "");
