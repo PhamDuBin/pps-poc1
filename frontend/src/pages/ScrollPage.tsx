@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import BackButton from "../component/BackButton";
 
 const generateMockData = (total = 500) => {
   return Array.from({ length: total }, (_, i) => ({
@@ -91,6 +92,7 @@ const ScrollPage: React.FC = () => {
 
   return (
     <div className="h-screen w-full flex justify-center items-center bg-gray-100">
+      <BackButton />
       <div className="border border-black rounded-lg bg-white p-6 w-1/2 h-[1/2] shadow-md flex flex-col justify-start">
         <div className="p-6 text-sm">
           <p className="mb-4 font-bold text-gray-700">不確定インジケーター</p>

@@ -6,6 +6,7 @@ import React, {
   ChangeEvent,
 } from "react";
 import { Card, CardBody, Radio, RadioGroup } from "@nextui-org/react";
+import BackButton from "../component/BackButton";
 
 import {
   handleDigitInput,
@@ -264,6 +265,7 @@ export default function CheckInputScreen() {
       ref={formRef}
       className={`p-6 bg-[#f0f0f0] min-h-screen ${fontSizeClass}`}
     >
+      <BackButton />
       <div className="flex flex-row justify-between items-center mb-2">
         <h1>テストフィールド1</h1>
         <div className="flex items-center gap-3">

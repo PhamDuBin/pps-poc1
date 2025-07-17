@@ -14,6 +14,7 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { restrictToParentElement } from "@dnd-kit/modifiers";
+import BackButton from "../component/BackButton";
 
 const blocks = [
   "ブロックA",
@@ -75,6 +76,7 @@ export default function GragDropPage() {
 
   return (
     <div className="max-w-3xl mx-auto mt-8 border rounded p-4">
+      <BackButton />
       <h2 className="text-sm font-semibold mb-4">コンテンツ並び替え</h2>
       <div className="flex justify-between items-center mb-4">
         <div className="text-sm text-gray-700">カスタマイズモード</div>

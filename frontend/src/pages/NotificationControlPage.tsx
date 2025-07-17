@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { setCookie, getCookie } from "../context/cookieUtils";
+import BackButton from "../component/BackButton";
 
 export default function NotificationControlPage() {
   const [showModal, setShowModal] = useState(false);
@@ -21,6 +22,7 @@ export default function NotificationControlPage() {
 
   return (
     <div className="h-screen w-full flex justify-center items-center bg-gray-100">
+      <BackButton />
       {/* Khung chính */}
       <div className="border border-black rounded-lg bg-white p-6 w-1/2 h-1/2 shadow-md flex flex-col justify-start">
         <h2 className="text-lg font-bold mb-4 text-center text-gray-800">

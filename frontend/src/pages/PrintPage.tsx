@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Printer } from "lucide-react";
 import { useProgressStore } from "../context/useProgressStore";
+import BackButton from "../component/BackButton";
 
 const PrintPage: React.FC = () => {
   const navigate = useNavigate();
@@ -17,6 +18,7 @@ const PrintPage: React.FC = () => {
 
   return (
     <div className="h-screen w-full flex items-center justify-center bg-gray-100">
+      <BackButton />
       <div className="w-[600px] bg-white border border-gray-400 p-6 rounded shadow space-y-4">
         <ol className="text-sm list-decimal pl-5 text-gray-700 space-y-1">
           <li>

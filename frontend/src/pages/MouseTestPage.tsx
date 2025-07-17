@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import BackButton from "../component/BackButton";
 
 export default function MouseTestPage() {
   const [loading, setLoading] = useState(false);
@@ -13,6 +14,7 @@ export default function MouseTestPage() {
 
   return (
     <div className="relative min-h-screen flex items-center justify-center bg-white border border-black p-8">
+      <BackButton />
       {loading && (
         <div className="absolute inset-0 z-10 bg-black bg-opacity-40 flex items-center justify-center">
           <div className="w-16 h-16 border-4 border-blue-400 border-t-transparent rounded-full animate-spin bg-white p-4"></div>

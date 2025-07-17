@@ -4,6 +4,7 @@ import { Card, CardBody, Button } from "@nextui-org/react";
 import ModalF1 from "../component/modal/Modal_F1";
 import ModalF2 from "../component/modal/Modal_F2";
 import SearchModal from "../component/modal/Search_Modal";
+import BackButton from "../component/BackButton";
 
 export default function CheckKeyScreen(): JSX.Element {
   const [modalF1Open, setModalF1Open] = useState<boolean>(false);
@@ -72,6 +73,7 @@ export default function CheckKeyScreen(): JSX.Element {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-[#f0f0f0] p-4">
+      <BackButton />
       <Card
         className={`w-full max-w-3xl border border-gray-300 bg-white shadow-md transition-opacity duration-200 ${
           modalF1Open || modalF2Open || showSearchModal
