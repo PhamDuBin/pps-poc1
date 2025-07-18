@@ -22,7 +22,7 @@ const NextPage: React.FC = () => {
           前のページへ
         </button>
 
-        {visible && (
+        {visible && progress !== 100 && (
           <div className="border mt-6 p-1 bg-white rounded shadow w-fit flex items-center gap-3">
             {!collapsed ? (
               <>
