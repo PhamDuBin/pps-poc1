@@ -50,6 +50,11 @@ export default function HomePage() {
           → Print Page (確定インジケーター)
         </Link>
       </div>
+      <div>
+        <Link to="/tank-meter" className="text-blue-500 underline">
+          → Tank Meter Page (入力値と連動する動的タンクメータ)
+        </Link>
+      </div>
 
       <button
         onClick={handleLogout}

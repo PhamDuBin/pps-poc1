@@ -18,6 +18,7 @@ import NotificationControlPage from "./pages/NotificationControlPage";
 import ScrollPage from "./pages/ScrollPage";
 import PrintPage from "./pages/PrintPage";
 import NextPage from "./pages/NextPage";
+import TankMeterPage from "./pages/TankMeterPage";
 
 function App() {
   return (
@@ -110,6 +111,14 @@ function App() {
             element={
               <PrivateRoute>
                 <NextPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/tank-meter"
+            element={
+              <PrivateRoute>
+                <TankMeterPage />
               </PrivateRoute>
             }
           />
