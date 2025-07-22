@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import BackButton from "../component/BackButton";
 
 const TOTAL_BLOCKS = 10;
 
@@ -14,6 +15,7 @@ const TankMeter = () => {
 
   return (
     <div className="flex flex-col items-center font-sans text-gray-800 p-8 my-8 mx-auto w-full max-w-md border border-gray-300 rounded-lg bg-gray-50">
+      <BackButton />
       <h2 className="text-2xl font-bold text-gray-900">
         入力値と連動する動的タンクメーター
       </h2>
