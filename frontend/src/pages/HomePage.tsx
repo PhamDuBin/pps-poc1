@@ -55,6 +55,11 @@ export default function HomePage() {
           → Tank Meter Page (入力値と連動する動的タンクメータ)
         </Link>
       </div>
+      <div>
+        <Link to="/tranc-info" className="text-blue-500 underline">
+          → Tranc Info Page Page (01.01.01_取引情報照会_構成情報_250719)
+        </Link>
+      </div>
 
       <button
         onClick={handleLogout}

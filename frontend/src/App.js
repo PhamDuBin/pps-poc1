@@ -19,6 +19,7 @@ import ScrollPage from "./pages/ScrollPage";
 import PrintPage from "./pages/PrintPage";
 import NextPage from "./pages/NextPage";
 import TankMeterPage from "./pages/TankMeterPage";
+import TrancInfoScreen from "./pages/transaction_information_01.01.01/TrancInfoScreen";
 
 function App() {
   return (
@@ -119,6 +120,14 @@ function App() {
             element={
               <PrivateRoute>
                 <TankMeterPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/tranc-info"
+            element={
+              <PrivateRoute>
+                <TrancInfoScreen />
               </PrivateRoute>
             }
           />
