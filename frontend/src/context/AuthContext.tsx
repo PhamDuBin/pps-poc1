@@ -15,10 +15,21 @@ const AuthContext = createContext<AuthContextProps>({
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(() => {
+    // Đọc trạng thái từ localStorage khi khởi tạo
+    const stored = localStorage.getItem("isLoggedIn");
+    return stored === "true";
+  });
 
-  const login = () => setIsLoggedIn(true);
-  const logout = () => setIsLoggedIn(false);
+  const login = () => {
+    setIsLoggedIn(true);
+    localStorage.setItem("isLoggedIn", "true");
+  };
+
+  const logout = () => {
+    setIsLoggedIn(false);
+    localStorage.removeItem("isLoggedIn");
+  };
 
   return (
     <AuthContext.Provider value={{ isLoggedIn, login, logout }}>

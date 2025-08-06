@@ -12,6 +12,13 @@ import LoginPage from "./pages/LoginPage";
 import HomePage from "./pages/HomePage";
 import PrivateRoute from "./component/PrivateRoute";
 import { AuthProvider } from "./context/AuthContext";
+import GragDropPage from "./pages/GragDropPage";
+import MouseTestPage from "./pages/MouseTestPage";
+import NotificationControlPage from "./pages/NotificationControlPage";
+import ScrollPage from "./pages/ScrollPage";
+import PrintPage from "./pages/PrintPage";
+import NextPage from "./pages/NextPage";
+import TankMeterPage from "./pages/TankMeterPage";
 
 function App() {
   return (
@@ -59,7 +66,62 @@ function App() {
               </PrivateRoute>
             }
           />
-          {/* fallback nếu route không khớp */}
+          <Route
+            path="/position-custome"
+            element={
+              <PrivateRoute>
+                <GragDropPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/mouse-test"
+            element={
+              <PrivateRoute>
+                <MouseTestPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/noti-control"
+            element={
+              <PrivateRoute>
+                <NotificationControlPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/scroll"
+            element={
+              <PrivateRoute>
+                <ScrollPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/print"
+            element={
+              <PrivateRoute>
+                <PrintPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/next-page"
+            element={
+              <PrivateRoute>
+                <NextPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/tank-meter"
+            element={
+              <PrivateRoute>
+                <TankMeterPage />
+              </PrivateRoute>
+            }
+          />
           <Route path="*" element={<Navigate to="/login" />} />
         </Routes>
       </Router>

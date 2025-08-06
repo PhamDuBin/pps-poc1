@@ -24,6 +24,37 @@ export default function HomePage() {
           → Check key page (ウィンドウズ操作サンプル)
         </Link>
       </div>
+      <div>
+        <Link to="/position-custome" className="text-blue-500 underline">
+          → Display position customization sample page
+          (表示位置カスタマイズサンプル)
+        </Link>
+      </div>
+      <div>
+        <Link to="/mouse-test" className="text-blue-500 underline">
+          → Mouse testing (不確定インジケーター10&12)
+        </Link>
+      </div>
+      <div>
+        <Link to="/noti-control" className="text-blue-500 underline">
+          → Notification Control (通知コントロール)
+        </Link>
+      </div>
+      <div>
+        <Link to="/scroll" className="text-blue-500 underline">
+          → Scroll (不確定インジケーター02)
+        </Link>
+      </div>
+      <div>
+        <Link to="/print" className="text-blue-500 underline">
+          → Print Page (確定インジケーター)
+        </Link>
+      </div>
+      <div>
+        <Link to="/tank-meter" className="text-blue-500 underline">
+          → Tank Meter Page (入力値と連動する動的タンクメータ)
+        </Link>
+      </div>
 
       <button
         onClick={handleLogout}
