@@ -20,6 +20,11 @@ export default function HomePage() {
         </Link>
       </div>
       <div>
+        <Link to="/check-saleByCategory" className="text-blue-500 underline">
+          → Check sale by category page (大分類別売上)
+        </Link>
+      </div>
+      <div>
         <Link to="/check-key" className="text-blue-500 underline">
           → Check key page (ウィンドウズ操作サンプル)
         </Link>

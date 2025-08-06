@@ -19,6 +19,7 @@ import ScrollPage from "./pages/ScrollPage";
 import PrintPage from "./pages/PrintPage";
 import NextPage from "./pages/NextPage";
 import TankMeterPage from "./pages/TankMeterPage";
+import CheckSaleByCategoryScreen from "./component/transaction_information/1.1.1_03/salesByCategory"
 
 function App() {
   return (
@@ -38,7 +39,15 @@ function App() {
             path="/check-input"
             element={
               <PrivateRoute>
-                <CheckInputScreen />
+                < CheckInputScreen/>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/check-saleByCategory"
+            element={
+              <PrivateRoute>
+                <CheckSaleByCategoryScreen />
               </PrivateRoute>
             }
           />
