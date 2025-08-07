@@ -19,7 +19,8 @@ import ScrollPage from "./pages/ScrollPage";
 import PrintPage from "./pages/PrintPage";
 import NextPage from "./pages/NextPage";
 import TankMeterPage from "./pages/TankMeterPage";
-import CheckSaleByCategoryScreen from "./component/transaction_information/1.1.1_03/salesByCategory"
+import CheckSaleByCategoryScreen from "./component/transaction_information/1.1.1_03/CheckSalesByCategory";
+import CheckCurrentMonthSalesStatusScreen from "./component/transaction_information/1.1.1_03/CheckCurrentMonthSalesStatus";
 
 function App() {
   return (
@@ -48,6 +49,14 @@ function App() {
             element={
               <PrivateRoute>
                 <CheckSaleByCategoryScreen />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/check-current-month-sales-status"
+            element={
+              <PrivateRoute>
+                <CheckCurrentMonthSalesStatusScreen />
               </PrivateRoute>
             }
           />

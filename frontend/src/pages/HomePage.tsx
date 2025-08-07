@@ -25,6 +25,11 @@ export default function HomePage() {
         </Link>
       </div>
       <div>
+        <Link to="/check-current-month-sales-status" className="text-blue-500 underline">
+          → Check current month sales status page (当月売上状況)
+        </Link>
+      </div>
+      <div>
         <Link to="/check-key" className="text-blue-500 underline">
           → Check key page (ウィンドウズ操作サンプル)
         </Link>
