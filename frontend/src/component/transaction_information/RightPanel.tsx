@@ -1,8 +1,14 @@
-import { useState } from "react";
+import React from "react";
 
-const RightPanel = () => {
-  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+interface RightPanelProps {
+  onButtonClick: (buttonName: string) => void;
+  activeButton: string | null;
+}
 
+const RightPanel: React.FC<RightPanelProps> = ({
+  onButtonClick,
+  activeButton,
+}) => {
   const buttons = [
     "当月明細",
     "当月売上状況",
@@ -23,9 +29,9 @@ const RightPanel = () => {
         {buttons.map((label, index) => (
           <button
             key={index}
-            onClick={() => setActiveIndex(index)}
+            onClick={() => onButtonClick(label)}
             className={`mb-3 h-10 border border-black shadow-md hover:bg-white ${
-              activeIndex === index ? "bg-gray-400" : "bg-[#f0f0f0]"
+              activeButton === label ? "bg-gray-400" : "bg-[#f0f0f0]"
             }`}
           >
             {label}
