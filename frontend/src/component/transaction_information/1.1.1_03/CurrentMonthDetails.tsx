@@ -1,3 +1,4 @@
+// ■01当月明細
 import React from "react";
 
 const CurrentMonthDetails = () => {
@@ -23,43 +24,52 @@ const CurrentMonthDetails = () => {
 
   const inputStyle = "bg-white border border-black h-8 w-full text-right px-2";
   const labelStyle =
-    "bg-gray-300 border border-black h-8 flex items-center justify-center font-semibold text-sm w-32";
-  const titleStyle = "font-semibold text-center mb-1";
+    "bg-gray-300 m-0.5 h-8 flex items-center justify-center font-semibold text-sm w-32";
+  const titleStyle =
+    "font-semibold w-full text-sm p-1 text-center border bg-gray-300 mb-1";
 
   return (
-    <div className="p-4 bg-[#f0f0f0] flex flex-col lg:flex-row gap-4 text-black font-sans">
+    <div className="p-4 flex flex-row gap-4 text-black font-sans h-1/2">
       <div className="flex flex-col items-center flex-shrink-0">
         <div className={titleStyle}>＜判定＞</div>
-        <div className="p-2 border border-black flex flex-col gap-2 bg-white rounded">
-          <div className="w-12 h-12 rounded-full bg-red-400 border border-gray-400"></div>
-          <div className="w-12 h-12 rounded-full bg-yellow-300 border border-gray-400"></div>
-          <div className="w-12 h-12 rounded-full bg-cyan-400 border border-gray-400"></div>
+        <div className="p-2 border border-black bg-gray-300 h-full">
+          <div className="p-2 border border-black flex flex-col gap-2 bg-white h-full">
+            <div className="w-12 h-12 rounded-full bg-red-400 border border-gray-400"></div>
+            <div className="w-12 h-12 rounded-full bg-yellow-300 border border-gray-400"></div>
+            <div className="w-12 h-12 rounded-full bg-cyan-400 border border-gray-400"></div>
+          </div>
         </div>
       </div>
 
       <div className="flex-grow">
         <div className="flex items-center mb-1 text-sm">
-          <div className="font-semibold text-center w-full max-w-[160px]">
+          <div className="font-semibold text-center w-full  bg-gray-300 p-1 mr-1 flex-[2]">
             ＜６ヶ月残高推移＞
           </div>
-          <div className="font-semibold text-center flex-1"></div>
-          <div className="font-semibold text-center w-24">滞留状況</div>
-          <div className="font-semibold text-center w-24">自振対象</div>
+          <div className="font-semibold text-center w-24 bg-gray-300 m-1 p-1">
+            滞留状況
+          </div>
+          <div className="font-semibold text-center w-24 bg-gray-300 p-1">
+            自振対象
+          </div>
         </div>
         <div className="flex flex-col gap-1">
-          {balanceMonths.map((month) => (
-            <div key={month} className="flex flex-row items-center gap-1">
-              <div className={`${labelStyle} !w-40`}>{month}</div>
+          <div className="border border-black p-1">
+            {balanceMonths.map((month) => (
+              <div key={month} className="flex flex-row items-center gap-1">
+                <div className={`${labelStyle} !w-40`}>{month}</div>
+                <input type="text" className={`${inputStyle} flex-1`} />
+                <input type="text" className={`${inputStyle} !w-24 rounded`} />
+                <input type="text" className={`${inputStyle} !w-24 rounded`} />
+              </div>
+            ))}
+            <div className="border border-black my-1"></div>
+            <div className="flex flex-row items-center gap-1">
+              <div className={`${labelStyle} !w-40`}>合計</div>
               <input type="text" className={`${inputStyle} flex-1`} />
-              <input type="text" className={`${inputStyle} !w-24`} />
-              <input type="text" className={`${inputStyle} !w-24`} />
+              <div className="w-24 h-8"></div> {/* Placeholder */}
+              <div className="w-24 h-8"></div> {/* Placeholder */}
             </div>
-          ))}
-          <div className="flex flex-row items-center gap-1">
-            <div className={`${labelStyle} !w-40`}>合計</div>
-            <input type="text" className={`${inputStyle} flex-1`} />
-            <div className="w-24 h-8"></div> {/* Placeholder */}
-            <div className="w-24 h-8"></div> {/* Placeholder */}
           </div>
         </div>
       </div>
@@ -98,7 +108,7 @@ const CurrentMonthDetails = () => {
               警報器リース
             </div>
             <div className={`${labelStyle} w-full text-center`}>設備使用料</div>
-            <div className="border border-black p-1 bg-gray-200">
+            <div className="border border-black p-1 bg-gray-300">
               <div className="flex items-center gap-1 mb-1">
                 <div className={`${labelStyle} flex-1 !text-xs`}>数量</div>
                 <input type="text" className={`${inputStyle} flex-1`} />

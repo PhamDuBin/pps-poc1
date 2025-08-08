@@ -3,7 +3,12 @@ import RightPanel from "../../component/transaction_information/RightPanel";
 import LeftPanel from "../../component/transaction_information/LeftPanel";
 import CheckSaleByCategoryScreen from "../../component/transaction_information/1.1.1_03/CheckSaleByCategoryScreen";
 import CurrentMonthDetails from "../../component/transaction_information/1.1.1_03/CurrentMonthDetails";
+import CheckCurrentMonthSalesStatusScreen from "../../component/transaction_information/1.1.1_03/CheckCurrentMonthSalesStatus";
 import { CircleArrowLeft, CircleArrowRight } from "lucide-react";
+import BalanceDetailScreen from "../../component/transaction_information/1.1.1_03/BalanceDetailScreen";
+import MeterReadingInforScreen from "../../component/transaction_information/1.1.1_03/MeterReadingInforScreen";
+import CRM from "../../component/transaction_information/1.1.1_03/CRM";
+import LinkDestinationScreen from "../../component/transaction_information/1.1.1_03/LinkDestinationScreen";
 
 const TrancInfoScreen = () => {
   const [showLeftPanel, setShowLeftPanel] = useState(false);
@@ -19,12 +24,31 @@ const TrancInfoScreen = () => {
         return <CheckSaleByCategoryScreen />;
       case "当月明細":
         return <CurrentMonthDetails />;
+      case "当月売上状況":
+        return <CheckCurrentMonthSalesStatusScreen />;
+      case "残高内訳":
+        return <BalanceDetailScreen />;
+      case "検針情報":
+        return <MeterReadingInforScreen />;
+      case "年間明細":
+        return <LinkDestinationScreen />;
+      case "CRM":
+        return <CRM />;
+      case "ポイント":
+        return <LinkDestinationScreen />;
+      case "印刷依頼情報":
+        return <LinkDestinationScreen />;
+      case "自振照会":
+        return <LinkDestinationScreen />;
+      case "大分類残高":
+        return <LinkDestinationScreen />;
+
       default:
     }
   };
 
   return (
-    <div className="w-full h-screen flex flex-row">
+    <div className="w-full h-screen flex flex-row overflow-hidden">
       {!showLeftPanel && (
         <div className="relative flex items-center h-full w-2 bg-[#e6cfcf]"></div>
       )}
@@ -32,10 +56,9 @@ const TrancInfoScreen = () => {
         <div className="transition-all duration-300">
           <LeftPanel />
         </div>
-      )}
-
-      <div className="my-3 ml-2 w-full h-[calc(100%-0.75rem*2)] flex flex-row">
-        <div className="relative mr-2 border border-black w-10/12 bg-[#f0f0f0] text-black flex  justify-center">
+      )}{" "}
+      <div className="my-3 ml-2 flex-1 h-[calc(100%-0.75rem*2)] flex flex-row min-w-0">
+        <div className="relative mr-2 border border-black w-10/12 text-black flex justify-center">
           {showLeftPanel ? (
             <CircleArrowLeft
               className="absolute -left-3 top-1/2 -translate-y-1/2 text-black w-5 h-5 z-10 cursor-pointer bg-white rounded-full shadow"

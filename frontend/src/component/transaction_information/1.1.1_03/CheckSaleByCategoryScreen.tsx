@@ -1,3 +1,4 @@
+//■03大分類別売上
 import clsx from "clsx";
 
 const labels = [
@@ -47,7 +48,7 @@ function CheckSaleByCategoryScreen() {
     "border border-black text-base w-full max-w-[150px] h-8 text-center";
 
   return (
-    <div className="mt-2">
+    <div className="p-4">
       <div className="bg-gray-300 w-full max-w-4xl h-8 text-center font-semibold text-lg mb-2 leading-8">
         ＜大分類別売上＞
       </div>

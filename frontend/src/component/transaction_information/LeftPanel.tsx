@@ -1,3 +1,4 @@
+//■左カラム顧客検索＆情報表示ランチャー
 import { useState } from "react";
 
 const DownArrowIcon = () => (
