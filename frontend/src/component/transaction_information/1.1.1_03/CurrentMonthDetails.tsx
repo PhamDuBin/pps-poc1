@@ -2,6 +2,18 @@
 import React from "react";
 
 const CurrentMonthDetails = () => {
+  const handleOpenWindow = () => {
+    const win = window.open(
+      "/link-destination",
+      "_blank",
+      "width=800,height=600,noopener,noreferrer"
+    );
+
+    if (win) {
+      win.focus();
+    }
+  };
+
   const balanceMonths = [
     "2025年05月",
     "2025年04月",
@@ -22,18 +34,24 @@ const CurrentMonthDetails = () => {
     "ガス料金",
   ];
 
-  const inputStyle = "bg-white border border-black h-8 w-full text-right px-2";
+  const inputStyle =
+    "bg-white border border-black h-8 w-full text-right mt-1 ml-2";
   const labelStyle =
-    "bg-gray-300 m-0.5 h-8 flex items-center justify-center font-semibold text-sm w-32";
+    "bg-gray-300 my-1 h-8 flex items-center justify-center font-semibold text-sm w-[50%]";
   const titleStyle =
-    "font-semibold w-full text-sm p-1 text-center border bg-gray-300 mb-1";
+    "font-semibold w-full text-sm p-1 text-center border bg-gray-300 my-1";
+
+  const buttonLabelStyle = `${labelStyle} text-left w-full cursor-pointer hover:bg-gray-300`;
+
+  const verticalLabelStyle =
+    "flex items-center justify-center w-[30%] text-sm font-semibold bg-gray-300 my-1";
 
   return (
-    <div className="p-4 flex flex-row gap-4 text-black font-sans h-1/2">
-      <div className="flex flex-col items-center flex-shrink-0">
+    <div className="p-4 flex flex-row gap-4 text-black font-sans w-full">
+      <div className="flex flex-col items-center flex-shrink-0 h-fit w-[7%]">
         <div className={titleStyle}>＜判定＞</div>
-        <div className="p-2 border border-black bg-gray-300 h-full">
-          <div className="p-2 border border-black flex flex-col gap-2 bg-white h-full">
+        <div className="p-2 border border-black bg-gray-300 h-full w-full">
+          <div className="p-2 border border-black flex flex-col items-center gap-2 bg-white h-full">
             <div className="w-12 h-12 rounded-full bg-red-400 border border-gray-400"></div>
             <div className="w-12 h-12 rounded-full bg-yellow-300 border border-gray-400"></div>
             <div className="w-12 h-12 rounded-full bg-cyan-400 border border-gray-400"></div>
@@ -41,9 +59,9 @@ const CurrentMonthDetails = () => {
         </div>
       </div>
 
-      <div className="flex-grow">
+      <div className="flex-grow w-[40%]">
         <div className="flex items-center mb-1 text-sm">
-          <div className="font-semibold text-center w-full  bg-gray-300 p-1 mr-1 flex-[2]">
+          <div className="font-semibold text-center w-full bg-gray-300 p-1 mr-1 flex-[2]">
             ＜６ヶ月残高推移＞
           </div>
           <div className="font-semibold text-center w-24 bg-gray-300 m-1 p-1">
@@ -73,50 +91,58 @@ const CurrentMonthDetails = () => {
           </div>
         </div>
       </div>
-
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-1 w-[40%] font-sans">
         <div className={titleStyle}>＜ガス料金・使用量・料金No.＞</div>
-        <div className="flex items-center justify-between border border-black p-1 bg-gray-300 rounded-sm">
-          <div className="flex items-center gap-4 ml-2">
-            <span className="font-semibold text-sm">料金表No.</span>
-            <span className="font-semibold text-sm">使用量</span>
-          </div>
-          <input
-            type="text"
-            readOnly
-            value="000"
-            className="bg-white border border-black h-7 w-20 text-center"
-          />
-        </div>
-
-        <div className="flex flex-col sm:flex-row gap-4">
-          <div className="flex flex-col gap-1">
-            {gasFeeItems.map((item) => (
-              <div key={item} className="flex flex-row items-center gap-1">
-                <div className={`${labelStyle}`}>
-                  {item === "調整金額" && (
-                    <span className="text-xs mr-1">m³ 売</span>
-                  )}
-                  {item}
-                </div>
-                <input type="text" className={`${inputStyle} w-36`} />
-              </div>
-            ))}
-          </div>
-          <div className="flex flex-col gap-2 w-48">
-            <div className={`${labelStyle} w-full text-center`}>
-              警報器リース
+        <div className="border border-black p-1">
+          <div className="flex gap-2 mb-2">
+            <div className={verticalLabelStyle}>
+              <span>料金表No.</span>
             </div>
-            <div className={`${labelStyle} w-full text-center`}>設備使用料</div>
-            <div className="border border-black p-1 bg-gray-300">
-              <div className="flex items-center gap-1 mb-1">
-                <div className={`${labelStyle} flex-1 !text-xs`}>数量</div>
+            <div className="flex flex-col gap-1 flex-1">
+              <div className="flex">
+                <div className={labelStyle}>使用量</div>
+                <input placeholder="000" type="text" className={inputStyle} />
+              </div>
+            </div>
+          </div>
+          <div className="flex gap-2">
+            <div className={verticalLabelStyle}>
+              <span>m³ 売</span>
+            </div>
+            <div className="flex flex-col gap-1 flex-1">
+              {gasFeeItems.map((item) => (
+                <div key={item} className="flex">
+                  <div className={labelStyle}>{item}</div>
+                  <input type="text" className={inputStyle} />
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="flex flex-col gap-1 mt-1">
+            <div className="flex">
+              <button onClick={handleOpenWindow} className={buttonLabelStyle}>
+                警報器リース
+              </button>
+              <input type="text" className={inputStyle} />
+            </div>
+            <div className="flex">
+              <button onClick={handleOpenWindow} className={buttonLabelStyle}>
+                設備使用料
+              </button>
+              <input type="text" className={inputStyle} />
+            </div>
+          </div>
+          <div className="flex gap-2 mt-1">
+            <div className={verticalLabelStyle}>
+              <span>Kg 売</span>
+            </div>
+            <div className="flex flex-col gap-1 flex-1 p-1 border border-gray-400 bg-gray-200">
+              <div className="flex items-center">
+                <div className={`${labelStyle} flex-1`}>数量</div>
                 <input type="text" className={`${inputStyle} flex-1`} />
               </div>
-              <div className="flex items-center gap-1">
-                <div className={`${labelStyle} flex-1 !text-xs`}>
-                  <span className="text-xs mr-1">Kg 売</span> 金額
-                </div>
+              <div className="flex items-center">
+                <div className={`${labelStyle} flex-1`}>金額</div>
                 <input type="text" className={`${inputStyle} flex-1`} />
               </div>
             </div>

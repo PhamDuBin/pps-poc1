@@ -1,5 +1,6 @@
 //■左カラム顧客検索＆情報表示ランチャー
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import AdvanceSearchModal from "./1.1.1_03/AdvanceSearchModal";
 
 const DownArrowIcon = () => (
   <svg
@@ -25,6 +26,7 @@ const LeftPanel = () => {
   const [id1, setId1] = useState("");
   const [id2, setId2] = useState("");
   const [showCustomer, setShowCustomer] = useState(false);
+  const [showAdvanceSearch, setShowAdvanceSearch] = useState(false);
 
   const hanleSearchDepartment = (postcode1: string, postcode2: string) => {
     if (postcode1 && postcode2) {
@@ -42,6 +44,23 @@ const LeftPanel = () => {
     }
   };
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const isMac = navigator.platform.toUpperCase().includes("MAC");
+      // Alt + Ctrl/Cmd + C
+      const isComboPressed =
+        e.code === "KeyC" && e.altKey && (isMac ? e.metaKey : e.ctrlKey);
+
+      if (isComboPressed && showAdvanceSearch) {
+        e.preventDefault();
+        setShowAdvanceSearch(false);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [showAdvanceSearch]);
+
   return (
     <div className="w-72 h-screen p-3 bg-white border-2 border-gray-400 font-sans">
       <div className="mb-4">
@@ -52,22 +71,22 @@ const LeftPanel = () => {
           {!showDepart ? (
             <>
               <input
-                type="number"
+                type="text"
                 className="w-[30%] px-1 py-0.5 border border-gray-500"
                 onChange={(e) => setPostcode1(e.target.value)}
               />
               <span className="mx-1">-</span>
               <input
-                type="number"
+                type="text"
                 className="w-[30%] px-1 py-0.5 border border-gray-500"
                 onChange={(e) => setPostcode2(e.target.value)}
               />
-              <div
+              <button
                 onClick={() => hanleSearchDepartment(postcode1, postcode2)}
                 className="mx-1 w-[20px] h-[20px] inset-y-0 right-0 flex items-center px-1 bg-gray-200 border border-gray-500 cursor-pointer"
               >
                 <DownArrowIcon />
-              </div>
+              </button>
             </>
           ) : (
             <div className="w-full flex items-center justify-between">
@@ -97,22 +116,22 @@ const LeftPanel = () => {
           {!showCustomer ? (
             <>
               <input
-                type="number"
+                type="text"
                 className="w-[30%] px-1 py-0.5 border border-gray-500"
                 onChange={(e) => setId1(e.target.value)}
               />
               <span className="mx-1">-</span>
               <input
-                type="number"
+                type="text"
                 className="w-[30%] px-1 py-0.5 border border-gray-500"
                 onChange={(e) => setId2(e.target.value)}
               />
-              <div
+              <button
                 onClick={() => hanleSearchCustomer(id1, id2)}
                 className="mx-1 w-[20px] h-[20px] inset-y-0 right-0 flex items-center px-1 bg-gray-200 border border-gray-500 cursor-pointer"
               >
                 <DownArrowIcon />
-              </div>
+              </button>
             </>
           ) : (
             <div className="w-full flex items-center justify-between">
@@ -194,7 +213,10 @@ const LeftPanel = () => {
           </div>
         )}
         <div className="text-xs mt-4 flex items-center flex-col gap-2">
-          <button className="border text-center border-black p-2 rounded-md shadow-md shadow-zinc-600">
+          <button
+            onClick={() => setShowAdvanceSearch(true)}
+            className="border text-center border-black p-2 rounded-md shadow-md shadow-zinc-600"
+          >
             詳細検索（S）
           </button>
           <button className="w-1/2 font-bold border text-center border-black p-2 text-white bg-gray-500">
@@ -258,6 +280,13 @@ const LeftPanel = () => {
           </button>
         </div>
       </div>
+      {showAdvanceSearch && (
+        <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
+          <div className="bg-white rounded shadow-lg relative w-[700px] max-w-full">
+            <AdvanceSearchModal />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

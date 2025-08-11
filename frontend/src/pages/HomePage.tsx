@@ -62,7 +62,7 @@ export default function HomePage() {
       </div>
       <div>
         <Link to="/tranc-info" className="text-blue-500 underline">
-          → Tranc Info Page Page (01.01.01_取引情報照会_構成情報_250719)
+          → Tranc Info Page (01.01.01_取引情報照会_構成情報_250719)
         </Link>
       </div>
 

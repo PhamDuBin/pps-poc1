@@ -61,12 +61,12 @@ const BalanceDetailScreen = () => {
     "割賦金",
   ];
   const categoryLabelStyle =
-    "bg-gray-200 border border-gray-400 px-4 py-2 text-center font-semibold text-sm w-[150px]";
+    "bg-gray-200 border border-gray-400 px-4 py-2 text-center font-semibold text-sm w-full";
   const categoryOperatorStyle =
     "flex items-center justify-center text-2xl font-semibold px-2";
 
   return (
-    <div className="p-4 bg-white text-black w-[80%] text-sm">
+    <div className="p-4 bg-white text-black w-full text-sm">
       <div className="text-center font-bold bg-gray-300 p-2 mb-1">
         ＜残高内訳＞
       </div>
@@ -210,7 +210,7 @@ const BalanceDetailScreen = () => {
                 type="text"
                 placeholder="0"
                 readOnly
-                className="bg-white border border-gray-400 px-4  text-right font-semibold w-[150px]"
+                className="bg-white border border-gray-400 px-4  text-right font-semibold w-full"
               />
             </div>
           </div>

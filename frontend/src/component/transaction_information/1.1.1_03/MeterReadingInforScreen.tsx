@@ -80,7 +80,7 @@ const MeterReadingInforScreen = () => {
   ];
 
   return (
-    <div className="p-4 bg-white text-black w-[90%] text-sm">
+    <div className="p-4 bg-white text-black w-full text-sm">
       <div className="text-center font-bold bg-gray-300 p-2 mb-4">
         ＜検針情報＞
       </div>
