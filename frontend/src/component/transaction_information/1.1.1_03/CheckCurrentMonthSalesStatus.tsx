@@ -62,7 +62,7 @@ function CheckCurrentMonthSalesStatusScreen() {
                   >
                     {label}
                   </label>
-                  <input className={inputClass} type="text" />
+                  <input placeholder="000" className={inputClass} type="text" />
                 </div>
               ))}
             </div>
@@ -78,7 +78,11 @@ function CheckCurrentMonthSalesStatusScreen() {
                   <div className={container4colClass} key={idx}>
                     <label className={labelClass}>{label}</label>
                     <label className={borderClass}>25/05/12</label>
-                    <input className={`${inputClass} col-span-2`} type="text" />
+                    <input
+                      placeholder="000"
+                      className={`${inputClass} col-span-2`}
+                      type="text"
+                    />
                   </div>
                 ))}
               </div>
@@ -93,7 +97,11 @@ function CheckCurrentMonthSalesStatusScreen() {
                     >
                       {label}
                     </button>
-                    <input className={inputClass} type="text" />
+                    <input
+                      placeholder="000"
+                      className={inputClass}
+                      type="text"
+                    />
                   </div>
                 ))}
               </div>
@@ -112,7 +120,11 @@ function CheckCurrentMonthSalesStatusScreen() {
                     ) : (
                       <label className={labelClass}>{label}</label>
                     )}
-                    <input className={inputClass} type="text" />
+                    <input
+                      placeholder="000"
+                      className={inputClass}
+                      type="text"
+                    />
                   </div>
                 ))}
               </div>
@@ -140,7 +152,11 @@ function CheckCurrentMonthSalesStatusScreen() {
                   )}
                   {label === "自振区分" ? (
                     <>
-                      <input className={inputClass} type="text" />
+                      <input
+                        placeholder="000"
+                        className={inputClass}
+                        type="text"
+                      />
                       <label className="font-semibold col-span-2">
                         自振区分004
                       </label>
@@ -149,7 +165,11 @@ function CheckCurrentMonthSalesStatusScreen() {
                     <>
                       <label>（依頼）</label>
                       <label className={borderClass}>25/05/12</label>
-                      <input className={inputClass} type="text" />
+                      <input
+                        placeholder="000"
+                        className={inputClass}
+                        type="text"
+                      />
                     </>
                   )}
                 </div>

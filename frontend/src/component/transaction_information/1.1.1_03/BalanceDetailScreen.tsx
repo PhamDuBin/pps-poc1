@@ -131,6 +131,7 @@ const BalanceDetailScreen = () => {
               残高合計
             </div>
             <input
+              placeholder="0"
               type="text"
               className="border border-gray-400 h-9 w-48 text-right px-2"
               readOnly

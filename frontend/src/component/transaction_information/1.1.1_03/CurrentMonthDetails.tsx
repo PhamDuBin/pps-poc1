@@ -48,13 +48,13 @@ const CurrentMonthDetails = () => {
 
   return (
     <div className="p-4 flex flex-row gap-4 text-black font-sans w-full">
-      <div className="flex flex-col items-center flex-shrink-0 h-fit w-[7%]">
+      <div className="flex flex-col items-center flex-shrink-0 w-[10%]">
         <div className={titleStyle}>＜判定＞</div>
-        <div className="p-2 border border-black bg-gray-300 h-full w-full">
-          <div className="p-2 border border-black flex flex-col items-center gap-2 bg-white h-full">
-            <div className="w-12 h-12 rounded-full bg-red-400 border border-gray-400"></div>
-            <div className="w-12 h-12 rounded-full bg-yellow-300 border border-gray-400"></div>
-            <div className="w-12 h-12 rounded-full bg-cyan-400 border border-gray-400"></div>
+        <div className="p-1 border border-black bg-gray-300 w-full h-[342px]">
+          <div className="p-0.5 border border-black flex flex-col justify-between items-center bg-white h-full">
+            <div className="w-full aspect-square rounded-full bg-red-300 border border-gray-400"></div>
+            <div className="w-full aspect-square rounded-full bg-yellow-200 border border-gray-400"></div>
+            <div className="w-full aspect-square rounded-full bg-cyan-300 border border-gray-400"></div>
           </div>
         </div>
       </div>
@@ -92,7 +92,7 @@ const CurrentMonthDetails = () => {
         </div>
       </div>
       <div className="flex flex-col gap-1 w-[40%] font-sans">
-        <div className={titleStyle}>＜ガス料金・使用量・料金No.＞</div>
+        <div className={titleStyle}>＜ガス料金・使用量・料金No.000＞</div>
         <div className="border border-black p-1">
           <div className="flex gap-2 mb-2">
             <div className={verticalLabelStyle}>
@@ -113,7 +113,7 @@ const CurrentMonthDetails = () => {
               {gasFeeItems.map((item) => (
                 <div key={item} className="flex">
                   <div className={labelStyle}>{item}</div>
-                  <input type="text" className={inputStyle} />
+                  <input placeholder="0" type="text" className={inputStyle} />
                 </div>
               ))}
             </div>
@@ -123,13 +123,13 @@ const CurrentMonthDetails = () => {
               <button onClick={handleOpenWindow} className={buttonLabelStyle}>
                 警報器リース
               </button>
-              <input type="text" className={inputStyle} />
+              <input placeholder="0" type="text" className={inputStyle} />
             </div>
             <div className="flex">
               <button onClick={handleOpenWindow} className={buttonLabelStyle}>
                 設備使用料
               </button>
-              <input type="text" className={inputStyle} />
+              <input placeholder="0" type="text" className={inputStyle} />
             </div>
           </div>
           <div className="flex gap-2 mt-1">
@@ -139,11 +139,19 @@ const CurrentMonthDetails = () => {
             <div className="flex flex-col gap-1 flex-1 p-1 border border-gray-400 bg-gray-200">
               <div className="flex items-center">
                 <div className={`${labelStyle} flex-1`}>数量</div>
-                <input type="text" className={`${inputStyle} flex-1`} />
+                <input
+                  placeholder="0"
+                  type="text"
+                  className={`${inputStyle} flex-1`}
+                />
               </div>
               <div className="flex items-center">
                 <div className={`${labelStyle} flex-1`}>金額</div>
-                <input type="text" className={`${inputStyle} flex-1`} />
+                <input
+                  placeholder="0"
+                  type="text"
+                  className={`${inputStyle} flex-1`}
+                />
               </div>
             </div>
           </div>

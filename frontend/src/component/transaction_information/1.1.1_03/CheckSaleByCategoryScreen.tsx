@@ -73,6 +73,7 @@ function CheckSaleByCategoryScreen() {
                   <div className={containerClass}>
                     <label className={labelClass}>{label}</label>
                     <input
+                      placeholder="0"
                       type="text"
                       readOnly
                       value=""

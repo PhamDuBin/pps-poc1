@@ -61,6 +61,18 @@ const LeftPanel = () => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [showAdvanceSearch]);
 
+  const handleOpenWindow = () => {
+    const win = window.open(
+      "/link-destination",
+      "_blank",
+      "width=800,height=600,noopener,noreferrer"
+    );
+
+    if (win) {
+      win.focus();
+    }
+  };
+
   return (
     <div className="w-72 h-screen p-3 bg-white border-2 border-gray-400 font-sans">
       <div className="mb-4">
@@ -72,17 +84,22 @@ const LeftPanel = () => {
             <>
               <input
                 type="text"
-                className="w-[30%] px-1 py-0.5 border border-gray-500"
+                placeholder="0000"
+                className="w-[30%] px-1 py-0.5 border border-gray-500 "
                 onChange={(e) => setPostcode1(e.target.value)}
               />
               <span className="mx-1">-</span>
               <input
                 type="text"
-                className="w-[30%] px-1 py-0.5 border border-gray-500"
+                placeholder="000"
+                className="w-[30%] px-1 py-0.5 border border-gray-500 "
                 onChange={(e) => setPostcode2(e.target.value)}
               />
               <button
-                onClick={() => hanleSearchDepartment(postcode1, postcode2)}
+                onClick={() => {
+                  hanleSearchDepartment(postcode1, postcode2);
+                  setShowAdvanceSearch(true);
+                }}
                 className="mx-1 w-[20px] h-[20px] inset-y-0 right-0 flex items-center px-1 bg-gray-200 border border-gray-500 cursor-pointer"
               >
                 <DownArrowIcon />
@@ -117,17 +134,22 @@ const LeftPanel = () => {
             <>
               <input
                 type="text"
+                placeholder="000000"
                 className="w-[30%] px-1 py-0.5 border border-gray-500"
                 onChange={(e) => setId1(e.target.value)}
               />
               <span className="mx-1">-</span>
               <input
                 type="text"
+                placeholder="000"
                 className="w-[30%] px-1 py-0.5 border border-gray-500"
                 onChange={(e) => setId2(e.target.value)}
               />
               <button
-                onClick={() => hanleSearchCustomer(id1, id2)}
+                onClick={() => {
+                  hanleSearchCustomer(id1, id2);
+                  setShowAdvanceSearch(true);
+                }}
                 className="mx-1 w-[20px] h-[20px] inset-y-0 right-0 flex items-center px-1 bg-gray-200 border border-gray-500 cursor-pointer"
               >
                 <DownArrowIcon />
@@ -154,7 +176,10 @@ const LeftPanel = () => {
                   電話番号
                 </label>
                 <span>03-1234-9999</span>
-                <button className="border border-black rounded">
+                <button
+                  onClick={handleOpenWindow}
+                  className="border border-black rounded"
+                >
                   <span className="w-[25%] m-2">電話番号</span>
                 </button>
               </div>
@@ -275,7 +300,10 @@ const LeftPanel = () => {
               </div>
             </div>
           </div>
-          <button className="w-1/2 font-bold border text-center border-black p-2 bg-gray-200">
+          <button
+            onClick={handleOpenWindow}
+            className="w-1/2 font-bold border text-center border-black p-2 bg-gray-200"
+          >
             日報入力
           </button>
         </div>

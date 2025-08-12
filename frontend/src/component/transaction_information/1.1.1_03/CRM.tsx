@@ -86,14 +86,20 @@ const CRM = () => {
           <span className="flex mr-2 justify-center text-center items-center font-semibold bg-gray-200 border border-gray-400 h-20 w-[20%]">
             内容
           </span>
-          <textarea className="border border-gray-400 p-2 rounded-sm w-[80%] h-20"></textarea>
+          <textarea
+            placeholder="400"
+            className="border border-gray-400 p-2 rounded-sm w-[80%] h-20"
+          ></textarea>
         </div>
 
         <div className="flex items-center w-[45%]">
           <span className="flex mx-2 justify-center text-center items-center font-semibold bg-gray-200 border border-gray-400 h-20 w-[20%]">
             コメント
           </span>
-          <textarea className="border border-gray-400 p-2 rounded-sm w-[80%] h-20"></textarea>
+          <textarea
+            placeholder="100"
+            className="border border-gray-400 p-2 rounded-sm w-[80%] h-20"
+          ></textarea>
         </div>
         <div className="flex justify-end w-[10%]">
           <button

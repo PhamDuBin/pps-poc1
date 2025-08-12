@@ -88,12 +88,12 @@ const TrancInfoScreen = () => {
         <div className="relative mr-2 border border-black w-10/12 text-black flex justify-center ">
           {showLeftPanel ? (
             <CircleArrowLeft
-              className="absolute -left-3 top-1/2 -translate-y-1/2 text-black w-5 h-5 z-50 cursor-pointer bg-white rounded-full shadow"
+              className="absolute -left-3 top-1/2 -translate-y-1/2 text-black w-5 h-5 z-10 cursor-pointer bg-white rounded-full shadow"
               onClick={() => setShowLeftPanel(false)}
             />
           ) : (
             <CircleArrowRight
-              className="absolute -left-3 top-1/2 -translate-y-1/2 text-black w-5 h-5 z-50 cursor-pointer bg-white rounded-full"
+              className="absolute -left-3 top-1/2 -translate-y-1/2 text-black w-5 h-5 z-10 cursor-pointer bg-white rounded-full"
               onClick={() => setShowLeftPanel(true)}
             />
           )}
