@@ -19,6 +19,10 @@ import ScrollPage from "./pages/ScrollPage";
 import PrintPage from "./pages/PrintPage";
 import NextPage from "./pages/NextPage";
 import TankMeterPage from "./pages/TankMeterPage";
+import TrancInfoScreen from "./pages/transaction_information_01.01.01/TrancInfoScreen";
+import CheckSaleByCategoryScreen from "./component/transaction_information/1.1.1_03/CheckSaleByCategoryScreen";
+import CheckCurrentMonthSalesStatusScreen from "./component/transaction_information/1.1.1_03/CheckCurrentMonthSalesStatus";
+import LinkDestinationScreen from "./component/transaction_information/1.1.1_03/LinkDestinationScreen";
 
 function App() {
   return (
@@ -39,6 +43,22 @@ function App() {
             element={
               <PrivateRoute>
                 <CheckInputScreen />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/check-saleByCategory"
+            element={
+              <PrivateRoute>
+                <CheckSaleByCategoryScreen />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/check-current-month-sales-status"
+            element={
+              <PrivateRoute>
+                <CheckCurrentMonthSalesStatusScreen />
               </PrivateRoute>
             }
           />
@@ -119,6 +139,22 @@ function App() {
             element={
               <PrivateRoute>
                 <TankMeterPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/tranc-info"
+            element={
+              <PrivateRoute>
+                <TrancInfoScreen />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/link-destination"
+            element={
+              <PrivateRoute>
+                <LinkDestinationScreen />
               </PrivateRoute>
             }
           />

@@ -20,6 +20,11 @@ export default function HomePage() {
         </Link>
       </div>
       <div>
+        <Link to="/check-saleByCategory" className="text-blue-500 underline">
+          → Check sale by category page (大分類別売上)
+        </Link>
+      </div>
+      <div>
         <Link to="/check-key" className="text-blue-500 underline">
           → Check key page (ウィンドウズ操作サンプル)
         </Link>
@@ -53,6 +58,11 @@ export default function HomePage() {
       <div>
         <Link to="/tank-meter" className="text-blue-500 underline">
           → Tank Meter Page (入力値と連動する動的タンクメータ)
+        </Link>
+      </div>
+      <div>
+        <Link to="/tranc-info" className="text-blue-500 underline">
+          → Tranc Info Page (01.01.01_取引情報照会_構成情報_250719)
         </Link>
       </div>
 
