@@ -65,6 +65,11 @@ export default function HomePage() {
           → Tranc Info Page (01.01.01_取引情報照会_構成情報_250719)
         </Link>
       </div>
+      <div>
+        <Link to="/sale-slip-entry-info" className="text-blue-500 underline">
+          → Sale Slip Entry Page (03.03.01_売上伝票入力_伝票対象選択ランチャー)
+        </Link>
+      </div>
 
       <button
         onClick={handleLogout}

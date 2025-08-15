@@ -23,6 +23,7 @@ import TrancInfoScreen from "./pages/transaction_information_01.01.01/TrancInfoS
 import CheckSaleByCategoryScreen from "./component/transaction_information/1.1.1_03/CheckSaleByCategoryScreen";
 import CheckCurrentMonthSalesStatusScreen from "./component/transaction_information/1.1.1_03/CheckCurrentMonthSalesStatus";
 import LinkDestinationScreen from "./component/transaction_information/1.1.1_03/LinkDestinationScreen";
+import SaleSlipEntryScreen from "./pages/sale_slip_entry_03.03.01/SaleSlipEntryScreen";
 
 function App() {
   return (
@@ -150,6 +151,15 @@ function App() {
               </PrivateRoute>
             }
           />
+          <Route
+            path="/sale-slip-entry-info"
+            element={
+              <PrivateRoute>
+                <SaleSlipEntryScreen />
+              </PrivateRoute>
+            }
+          />
+          
           <Route
             path="/link-destination"
             element={
