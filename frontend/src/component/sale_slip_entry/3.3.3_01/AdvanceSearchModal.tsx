@@ -1,48 +1,48 @@
 import React, { useState } from "react";
 
 const fieldDefinitions = [
-  { id: "allTel", label: "顧客コード", type: "double",},
+  { id: "customerCode", label: "顧客コード", type: "double",},
   {
-    id: "customerCode",
+    id: "searchKey2",
     label: "検索キー１",
     type: "input",
   },
-  { id: "searchCode1", label: "検索キー２", type: "input" },
-  { id: "kanaName", label: "電算コード", type: "single" },
-  { id: "securityCode", label: "軒先バーコード", type: "input"},
-  { id: "searchCode2", label: "配送順コード", type: "multi", partSizes: [110, 170, 110], },
-  { id: "tel1", label: "点検順コード", type: "multi", partSizes: [110, 170, 110], },
+  { id: "searchKey2", label: "検索キー２", type: "input" },
+  { id: "computerCode", label: "電算コード", type: "single" },
+  { id: "eavesbarCode", label: "軒先バーコード", type: "input"},
+  { id: "deleveryOrderCode", label: "配送順コード", type: "multi", partSizes: [110, 170, 110], },
+  { id: "inspectionOderCode", label: "点検順コード", type: "multi", partSizes: [110, 170, 110], },
   {
-    id: "meterRouteCode",
+    id: "saleOrderCode",
     label: "営業順コード",
     type: "multi",
     partSizes: [110, 170, 110],
   },
   {
-    id: "keroseneCode",
+    id: "meterReadingOrderCode",
     label: "検針順コード",
     type: "multi",
     partSizes: [110, 170, 110],
   },
-  { id: "tel2", label: "集金順コード", type: "multi", partSizes: [110, 170, 110],},
+  { id: "collectionOderCode", label: "集金順コード", type: "multi", partSizes: [110, 170, 110],},
   {
-    id: "deliveryRouteCode",
+    id: "distributionCenterCD",
     label: "配送センターCD",
     type: "dropdown",
   },
   {
-    id: "salesRepCode",
+    id: "securityAgencyCD",
     label: "保安機関CD",
     type: "dropdown",
   },
-  { id: "tel3", label: "集中監視CD", type: "dropdown" },
+  { id: "centralMonitoringCD", label: "集中監視CD", type: "dropdown" },
   {
-    id: "gMeterCode",
+    id: "oderManagementNo",
     label: "受注管理No.",
     type: "input",
   },
   {
-    id: "chimneyCode",
+    id: "deliverySlipNo",
     label: "出庫伝票No.",
     type: "input",
   }
