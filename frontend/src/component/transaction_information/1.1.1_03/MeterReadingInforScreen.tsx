@@ -81,7 +81,7 @@ const MeterReadingInforScreen = () => {
 
   return (
     <div className="p-4 bg-white text-black w-full text-sm">
-      <div className="text-center font-bold bg-gray-300 p-2 mb-4">
+      <div className="border border-black text-center font-bold bg-[#80bad7] p-2 mb-4">
         ＜検針情報＞
       </div>
 
@@ -89,7 +89,7 @@ const MeterReadingInforScreen = () => {
         <div className="flex items-center gap-4">
           {headerFields.map((field) => (
             <div key={field.label} className="flex items-center gap-2">
-              <span className="font-semibold bg-gray-200 px-3 py-1.5 border border-gray-400 w-[150px] flex justify-center">
+              <span className="font-semibold bg-[#80bad7] px-3 py-1.5 border border-black w-[150px] flex justify-center">
                 {field.label}
               </span>
               <span className="font-semibold">{field.value}</span>
@@ -98,20 +98,20 @@ const MeterReadingInforScreen = () => {
         </div>
         <button
           onClick={handleOpenWindow}
-          className="bg-gray-200 border border-gray-400 px-4 py-1.5 rounded-sm shadow-sm font-semibold"
+          className="bg-[#80bad7] border border-black px-4 py-1.5 rounded-sm shadow-sm font-semibold"
         >
           顧客別ガス使用量
         </button>
       </div>
 
-      <div className="overflow-x-auto border border-gray-400">
+      <div className="overflow-x-auto border border-black">
         <div className="relative" style={{ width: "max-content" }}>
           <div className="flex">
             {tableHeaders.map((header, index) => (
               <div
                 key={header}
                 className={`
-                                    p-2 text-center font-semibold bg-gray-300 border-b-2 border-r border-gray-400
+                                    p-2 text-center font-semibold bg-[#80bad7] border border-r border-b-2 border-black
                                     ${colWidths[index]}
                                     ${
                                       index < 5
@@ -131,7 +131,7 @@ const MeterReadingInforScreen = () => {
                 <div
                   key={cellIndex}
                   className={`
-                                        p-1 text-right border-b border-r border-gray-300 bg-white
+                                        p-1 text-right border-b border-r border-black bg-[#ebcec0]
                                         ${colWidths[cellIndex]}
                                         ${
                                           cellIndex < 5

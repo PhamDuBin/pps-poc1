@@ -75,7 +75,7 @@ const TrancInfoScreen = () => {
   }, []);
 
   return (
-    <div ref={containerRef} className="w-full h-screen flex flex-row">
+    <div ref={containerRef} className="w-full h-screen flex flex-row ">
       {!showLeftPanel && (
         <div className="relative flex items-center h-full w-2 bg-[#e6cfcf]"></div>
       )}
@@ -85,7 +85,7 @@ const TrancInfoScreen = () => {
         </div>
       )}
       <div className="my-3 ml-2 flex-1 h-[calc(100%-0.75rem*2)] flex flex-row min-w-0">
-        <div className="relative mr-2 border border-black w-10/12 text-black flex justify-center ">
+        <div className="relative mr-2 border border-black bg-[#cbcdcf91] w-10/12 text-black flex justify-center ">
           {showLeftPanel ? (
             <CircleArrowLeft
               className="absolute -left-3 top-1/2 -translate-y-1/2 text-black w-5 h-5 z-10 cursor-pointer bg-white rounded-full shadow"
@@ -97,7 +97,7 @@ const TrancInfoScreen = () => {
               onClick={() => setShowLeftPanel(true)}
             />
           )}
-          <div className="overflow-y-auto">{renderActiveScreen()}</div>
+          <div className="overflow-y-auto ">{renderActiveScreen()}</div>
         </div>
 
         <RightPanel

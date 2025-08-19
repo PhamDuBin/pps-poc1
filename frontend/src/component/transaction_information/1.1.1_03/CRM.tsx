@@ -36,17 +36,17 @@ const CRM = () => {
 
   return (
     <div className="p-4 bg-white text-black w-full text-sm">
-      <div className="text-center font-bold bg-gray-300 p-2 mb-2">＜CRM＞</div>
+      <div className="text-center font-bold bg-[#80bad7] border border-black p-2 mb-2">＜CRM＞</div>
       <div
-        className="overflow-auto border border-gray-400"
+        className="overflow-auto border border-black"
         style={{ height: "280px" }}
       >
         <div className="relative" style={{ width: "max-content" }}>
-          <div className="flex sticky top-0 bg-gray-200 z-10">
+          <div className="flex sticky top-0 bg-[#80bad7] z-10">
             {tableHeaders.map((header) => (
               <div
                 key={header}
-                className="p-2 text-center font-semibold border-b-2 border-r border-gray-400"
+                className="p-2 text-center font-semibold border-b-2 border-r border-black"
                 style={{
                   minWidth:
                     header === "内容" || header === "コメント"
@@ -64,7 +64,7 @@ const CRM = () => {
               {tableHeaders.map((_, cellIndex) => (
                 <div
                   key={cellIndex}
-                  className="p-2 border-b border-r border-gray-300 bg-white"
+                  className="p-2 border-b border-r border-black bg-[#ebcec0]"
                   style={{
                     minWidth:
                       tableHeaders[cellIndex] === "内容" ||
@@ -83,28 +83,28 @@ const CRM = () => {
 
       <div className="flex justify-between mt-4 w-full">
         <div className="flex items-center w-[45%]">
-          <span className="flex mr-2 justify-center text-center items-center font-semibold bg-gray-200 border border-gray-400 h-20 w-[20%]">
+          <span className="flex mr-2 justify-center text-center items-center font-semibold bg-[#80bad7] border border-gray-400 h-20 w-[20%]">
             内容
           </span>
           <textarea
             placeholder="400"
-            className="border border-gray-400 p-2 rounded-sm w-[80%] h-20"
+            className=" bg-[#ebcec0] border border-black p-2 rounded-sm w-[80%] h-20"
           ></textarea>
         </div>
 
         <div className="flex items-center w-[45%]">
-          <span className="flex mx-2 justify-center text-center items-center font-semibold bg-gray-200 border border-gray-400 h-20 w-[20%]">
+          <span className="flex mx-2 justify-center text-center items-center font-semibold bg-[#80bad7] border border-black h-20 w-[20%]">
             コメント
           </span>
           <textarea
             placeholder="100"
-            className="border border-gray-400 p-2 rounded-sm w-[80%] h-20"
+            className="border bg-[#ebcec0] border-black p-2 rounded-sm w-[80%] h-20"
           ></textarea>
         </div>
         <div className="flex justify-end w-[10%]">
           <button
             onClick={handleOpenWindow}
-            className="bg-gray-200 border border-gray-400 px-6 py-1.5 rounded-sm shadow-sm font-semibold h-full"
+            className="bg-[#80bad7] border border-black px-6 py-1.5 rounded-sm shadow-sm font-semibold h-full"
           >
             CRM分析
           </button>

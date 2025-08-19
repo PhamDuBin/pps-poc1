@@ -125,7 +125,7 @@ const AdvancedSearchForm: React.FC = () => {
                 <input
                   type="text"
                   placeholder="000"
-                  className="border border-gray-400 p-1 text-center placeholder-black"
+                  className="border border-black p-1 text-center placeholder-black"
                   style={{ width: `${size}px` }}
                   value={(Array.isArray(value) && value[index]) || ""}
                   onChange={(e) => handleValueChange(e.target.value, index)}
@@ -140,13 +140,13 @@ const AdvancedSearchForm: React.FC = () => {
           <div className="flex items-center space-x-1">
             <input
               type="text"
-              className="border border-gray-400 p-1 placeholder-black w-[40px]"
+              className="border border-black p-1 placeholder-black w-[40px]"
               placeholder="0"
             />
             <span> - </span>
             <input
               type="text"
-              className="border border-gray-400 p-1 flex-1"
+              className="border border-black p-1 flex-1"
               value={(Array.isArray(value) && value[1]) || ""}
               onChange={(e) => handleValueChange(e.target.value, 1)}
             />
@@ -160,16 +160,16 @@ const AdvancedSearchForm: React.FC = () => {
             </div>
             <input
               type="text"
-              className="border border-gray-400 p-1 placeholder-black"
+              className="border border-black p-1 placeholder-black"
               value={(Array.isArray(value) && value[0]) || ""}
               onChange={(e) => handleValueChange(e.target.value, 0)}
             />
-            <div className=" bg-gray-300 flex text-center justify-center p-1">
+            <div className=" bg-[#80bad7] flex text-center justify-center p-1">
               {currentField.placeholders?.[1]}
             </div>
             <input
               type="text"
-              className="border border-gray-400 p-1 placeholder-black"
+              className="border border-black p-1 placeholder-black"
               value={(Array.isArray(value) && value[1]) || ""}
               onChange={(e) => handleValueChange(e.target.value, 1)}
             />
@@ -179,7 +179,7 @@ const AdvancedSearchForm: React.FC = () => {
         return (
           <input
             type="text"
-            className="border border-gray-400 p-1 w-full"
+            className="border border-black p-1 w-full"
             value={(typeof value === "string" && value) || ""}
             onChange={(e) => handleValueChange(e.target.value)}
           />
@@ -188,13 +188,13 @@ const AdvancedSearchForm: React.FC = () => {
   };
 
   return (
-    <div className="flex items-start space-x-2 mt-2 p-3 border border-gray-300 rounded-md bg-gray-50">
+    <div className="flex items-start space-x-2 mt-2 p-3 border border-black rounded-md bg-gray-50">
       <div className="flex flex-col">
-        <label className="text-xs font-semibold text-gray-600 mb-1">
+        <label className="text-xs  font-semibold text-gray-600 mb-1">
           検索種類 / 検索順
         </label>
         <select
-          className="border border-gray-400 p-1"
+          className="border border-black p-1"
           value={selectedFieldId}
           onChange={(e) => setSelectedFieldId(e.target.value as FieldId)}
         >
@@ -207,17 +207,17 @@ const AdvancedSearchForm: React.FC = () => {
       </div>
 
       <div className="flex-grow">
-        <label className="flex text-center justify-center text-xs font-semibold mb-1 p-1 bg-gray-300">
+        <label className="flex text-center justify-center text-xs font-semibold mb-1 p-1 bg-[#80bad7] ">
           {currentField?.label}
         </label>
         {renderDynamicInput()}
       </div>
 
       <div className="flex flex-col space-y-1 pt-5">
-        <button className="bg-gray-200 border border-gray-400 px-4 py-1 h-[26px] flex items-center justify-center">
+        <button className="bg-[#80bad7] border border-black px-4 py-1 h-[26px] flex items-center justify-center">
           検索
         </button>
-        <button className="bg-gray-200 border border-gray-400 px-4 py-1 h-[26px] flex items-center justify-center">
+        <button className="bg-[#80bad7] border border-black px-4 py-1 h-[26px] flex items-center justify-center">
           再入力
         </button>
       </div>
@@ -236,8 +236,8 @@ const AdvanceSearchModal: React.FC = () => {
 
   return (
     <div className="p-4 bg-white text-black w-full text-sm">
-      <div className="bg-gray-300 p-2 text-center font-bold">顧客検索</div>
-      <div className="flex items-center space-x-6 bg-gray-200 p-2 border border-gray-400">
+      <div className="bg-[#80bad7] border border-black p-2 text-center font-bold mb-2">顧客検索</div>
+      <div className="flex items-center space-x-6 bg-[#80bad7]  p-2 border border-black">
         <div className="flex items-center space-x-2">
           <label className="font-semibold">事務所</label>
           <span>0000-000 全指定</span>
@@ -297,16 +297,16 @@ const AdvanceSearchModal: React.FC = () => {
       <AdvancedSearchForm />
 
       <div
-        className="overflow-auto border border-gray-400 mt-2"
+        className="overflow-auto border border-black mt-2"
         style={{ height: "200px" }}
       >
-        <table className="min-w-full border-collapse border border-gray-400 text-sm">
-          <thead className="sticky top-0 bg-gray-200">
+        <table className="min-w-full border-collapse border border-black text-sm">
+          <thead className="sticky top-0 bg-[#80bad7]">
             <tr>
-              <th className="border border-gray-400 p-1">カナ氏名</th>
-              <th className="border border-gray-400 p-1">氏名</th>
-              <th className="border border-gray-400 p-1">住所 / 番地</th>
-              <th className="border border-gray-400 p-1">
+              <th className="border border-black p-1">カナ氏名</th>
+              <th className="border border-black p-1">氏名</th>
+              <th className="border border-black p-1">住所 / 番地</th>
+              <th className="border border-black p-1">
                 住所名称 / 部屋番号
               </th>
             </tr>
@@ -314,10 +314,10 @@ const AdvanceSearchModal: React.FC = () => {
           <tbody>
             {tableData.map((row, idx) => (
               <tr key={idx} className="hover:bg-blue-50">
-                <td className="border border-gray-300 p-1">{row.kanaName}</td>
-                <td className="border border-gray-300 p-1">{row.name}</td>
-                <td className="border border-gray-300 p-1">{row.address}</td>
-                <td className="border border-gray-300 p-1">{row.building}</td>
+                <td className="bg-[#ebcec0] border border-black p-1">{row.kanaName}</td>
+                <td className="bg-[#ebcec0] border border-black p-1">{row.name}</td>
+                <td className="bg-[#ebcec0] border border-black p-1">{row.address}</td>
+                <td className="bg-[#ebcec0] border border-black p-1">{row.building}</td>
               </tr>
             ))}
           </tbody>

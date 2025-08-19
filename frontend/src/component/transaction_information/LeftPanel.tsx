@@ -74,9 +74,9 @@ const LeftPanel = () => {
   };
 
   return (
-    <div className="w-72 h-screen p-3 bg-white border-2 border-gray-400 font-sans">
+    <div className="w-72 h-screen p-3 bg-[#cbcdcf91] border-2 border-gray-400 font-sans">
       <div className="mb-4">
-        <div className="text-center text-sm bg-gray-200 py-1 font-semibold">
+        <div className="text-center text-sm bg-[#80bad7] py-1 font-semibold border border-black">
           {!showDepart ? "事務所コード" : "事務所情報"}
         </div>
         <div className="text-xs flex items-center flex-row py-2 w-full">
@@ -85,14 +85,14 @@ const LeftPanel = () => {
               <input
                 type="text"
                 placeholder="0000"
-                className="w-[30%] px-1 py-0.5 border border-gray-500 "
+                className="w-[30%] bg-[#ebcec0] px-1 py-0.5 border border-black"
                 onChange={(e) => setPostcode1(e.target.value)}
               />
               <span className="mx-1">-</span>
               <input
                 type="text"
                 placeholder="000"
-                className="w-[30%] px-1 py-0.5 border border-gray-500 "
+                className="w-[30%] bg-[#ebcec0] px-1 py-0.5 border border-black "
                 onChange={(e) => setPostcode2(e.target.value)}
               />
               <button
@@ -100,7 +100,7 @@ const LeftPanel = () => {
                   hanleSearchDepartment(postcode1, postcode2);
                   setShowAdvanceSearch(true);
                 }}
-                className="mx-1 w-[20px] h-[20px] inset-y-0 right-0 flex items-center px-1 bg-gray-200 border border-gray-500 cursor-pointer"
+                className="mx-1 w-[20px] h-[20px] inset-y-0 right-0 flex items-center px-1 bg-gray-200 border border-black cursor-pointer"
               >
                 <DownArrowIcon />
               </button>
@@ -126,7 +126,7 @@ const LeftPanel = () => {
 
       {/* Customer Code Section */}
       <div className="mb-4">
-        <div className="text-center text-sm bg-gray-200 py-1 font-semibold">
+        <div className="text-center text-sm bg-[#80bad7] border border-black py-1 font-semibold">
           {!showCustomer ? "顧客コード" : "顧客情報"}
         </div>
         <div className="text-xs flex items-center flex-row py-2 w-full">
@@ -135,14 +135,14 @@ const LeftPanel = () => {
               <input
                 type="text"
                 placeholder="000000"
-                className="w-[30%] px-1 py-0.5 border border-gray-500"
+                className="w-[30%] bg-[#ebcec0] px-1 py-0.5 border border-gray-500"
                 onChange={(e) => setId1(e.target.value)}
               />
               <span className="mx-1">-</span>
               <input
                 type="text"
                 placeholder="000"
-                className="w-[30%] px-1 py-0.5 border border-gray-500"
+                className="w-[30%] bg-[#ebcec0] px-1 py-0.5 border border-gray-500"
                 onChange={(e) => setId2(e.target.value)}
               />
               <button
@@ -150,7 +150,7 @@ const LeftPanel = () => {
                   hanleSearchCustomer(id1, id2);
                   setShowAdvanceSearch(true);
                 }}
-                className="mx-1 w-[20px] h-[20px] inset-y-0 right-0 flex items-center px-1 bg-gray-200 border border-gray-500 cursor-pointer"
+                className="mx-1 w-[20px] h-[20px] inset-y-0 right-0 flex items-center px-1 bg-gray-200 border border-black cursor-pointer"
               >
                 <DownArrowIcon />
               </button>
@@ -244,11 +244,11 @@ const LeftPanel = () => {
           >
             詳細検索（S）
           </button>
-          <button className="w-1/2 font-bold border text-center border-black p-2 text-white bg-gray-500">
+          <button className="w-1/2 font-bold border text-center border-black p-2 text-white bg-[#4d7a90]">
             請求親
           </button>
           <div className="relative group w-1/2">
-            <button className="font-bold border text-center border-black p-2 bg-gray-200 w-full">
+            <button className="font-bold border text-center border-black p-2 bg-[#80bad7] w-full">
               担当者
             </button>
             {/* Tooltip for  担当者*/}
@@ -275,7 +275,7 @@ const LeftPanel = () => {
             </div>
           </div>
           <div className="relative group w-1/2">
-            <button className="font-bold border text-center border-black p-2 bg-gray-200 w-full">
+            <button className="font-bold border text-center border-black p-2 bg-[#80bad7] w-full">
               顧客備考
             </button>
             {/* Tooltip for  顧客備考*/}
@@ -302,7 +302,7 @@ const LeftPanel = () => {
           </div>
           <button
             onClick={handleOpenWindow}
-            className="w-1/2 font-bold border text-center border-black p-2 bg-gray-200"
+            className="w-1/2 font-bold border text-center border-black p-2 bg-[#80bad7]"
           >
             日報入力
           </button>
