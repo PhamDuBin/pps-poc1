@@ -36,7 +36,7 @@ const RightPanel: React.FC<RightPanelProps> = ({
   };
 
   return (
-    <div className="w-2/12 border border-black h-full">
+    <div className="w-2/12 border bg-[#d8dadc] border-black h-full">
       <div className="m-3 font-bold text-base text-black flex flex-col gap-2 overflow-auto h-full">
         {buttons.map((label, index) => {
           const specialLabels = [
@@ -55,7 +55,7 @@ const RightPanel: React.FC<RightPanelProps> = ({
                 isSpecial ? handleOpenWindow : () => onButtonClick(label)
               }
               className={`mb-3 h-10 border border-black shadow-md hover:bg-white ${
-                activeButton === label ? "bg-gray-400" : "bg-[#f0f0f0]"
+                activeButton === label ? "bg-[#4d7a90]" : "bg-[#80bad7]"
               }`}
             >
               {label}

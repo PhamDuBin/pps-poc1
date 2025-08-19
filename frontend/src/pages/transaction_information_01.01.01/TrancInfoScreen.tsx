@@ -75,7 +75,7 @@ const TrancInfoScreen = () => {
   }, []);
 
   return (
-    <div ref={containerRef} className="w-full h-screen flex flex-row">
+    <div ref={containerRef} className="w-full h-screen flex flex-row bg-[#d8dadc]">
       {!showLeftPanel && (
         <div className="relative flex items-center h-full w-2 bg-[#e6cfcf]"></div>
       )}

@@ -17,7 +17,7 @@ const BalanceDetailScreen = () => {
   };
 
   const buttonStyle =
-    "bg-gray-200 border border-gray-400 px-4 py-1.5 rounded-sm shadow-sm font-semibold w-[150px]";
+    "bg-[#80bad7] border border-black  px-4 py-1.5 rounded-sm shadow-sm font-semibold w-[150px]";
 
   const detailsHeaders = [
     "日付",
@@ -29,9 +29,9 @@ const BalanceDetailScreen = () => {
     "自振対象",
   ];
   const detailsRowCount = 15;
-  const detailsCellStyle = "border-b border-r border-gray-300 p-2 h-9";
+  const detailsCellStyle = " bg-[#ebcec0] border-b border-r border-black p-2 h-9";
   const detailsHeaderCellStyle =
-    "bg-gray-300 border-b-2 border-gray-400 text-center p-2 font-semibold text-sm border-r border-black";
+    "bg-[#80bad7] border-b text-center p-2 font-semibold text-sm border-r border-black";
 
   const categoryHeaders = [
     "項目名",
@@ -61,19 +61,19 @@ const BalanceDetailScreen = () => {
     "割賦金",
   ];
   const categoryLabelStyle =
-    "bg-gray-200 border border-gray-400 px-4 py-2 text-center font-semibold text-sm w-full";
+    "bg-[#80bad7] border border-black  px-4 py-2 text-center font-semibold text-sm w-full";
   const categoryOperatorStyle =
     "flex items-center justify-center text-2xl font-semibold px-2";
 
   return (
-    <div className="p-4 bg-white text-black w-full text-sm">
-      <div className="text-center font-bold bg-gray-300 p-2 mb-1">
+    <div className="p-4 text-black w-full text-sm">
+      <div className="text-center font-bold bg-[#80bad7] p-2 mb-1">
         ＜残高内訳＞
       </div>
 
       <div className="flex justify-between items-center mb-2">
         <div className="flex items-center gap-6">
-          <span className="font-semibold p-2 bg-[#D9D9D9] w-[150px] flex justify-center">
+          <span className="font-semibold p-2 bg-[#80bad7] w-[150px] flex justify-center">
             表示種類
           </span>
           <div className="flex items-center gap-4">
@@ -108,7 +108,7 @@ const BalanceDetailScreen = () => {
 
       {view === "details" ? (
         <>
-          <div className="border-t border-l border-gray-400">
+          <div className="border-t border-l border-black">
             <div className="grid grid-cols-[1fr_1.2fr_3fr_1.5fr_1.5fr_1.5fr_1.2fr]">
               {detailsHeaders.map((header) => (
                 <div key={header} className={detailsHeaderCellStyle}>
@@ -116,7 +116,7 @@ const BalanceDetailScreen = () => {
                 </div>
               ))}
             </div>
-            <div className="grid grid-cols-[1fr_1.2fr_3fr_1.5fr_1.5fr_1.5fr_1.2fr] bg-gray-100">
+            <div className="grid grid-cols-[1fr_1.2fr_3fr_1.5fr_1.5fr_1.5fr_1.2fr] bg-[#80bad7]">
               {Array.from({
                 length: detailsRowCount * detailsHeaders.length,
               }).map((_, index) => (
@@ -127,25 +127,25 @@ const BalanceDetailScreen = () => {
             </div>
           </div>
           <div className="flex justify-end items-center mt-4 gap-2">
-            <div className={`${buttonStyle} bg-gray-300 flex justify-center`}>
+            <div className={`${buttonStyle} bg-[#80bad7] flex justify-center`}>
               残高合計
             </div>
             <input
               placeholder="0"
               type="text"
-              className="border border-gray-400 h-9 w-48 text-right px-2"
+              className="border border-black h-9 w-48 text-right px-2"
               readOnly
             />
           </div>
         </>
       ) : (
         <div className="w-full text-sm">
-          <div className="border-t border-l border-gray-400">
+          <div className="border-t border-l border-black ">
             <div className="grid grid-cols-[2.5fr_1fr_1fr_1fr_1fr_1.2fr] text-center font-semibold">
               {categoryHeaders.map((h) => (
                 <div
                   key={h}
-                  className="bg-gray-300 p-2 border-b-2 border-r border-gray-400"
+                  className="bg-[#80bad7] p-2 border-b-2 border-r border-black"
                 >
                   {h}
                 </div>
@@ -155,37 +155,37 @@ const BalanceDetailScreen = () => {
               {categoryItemNames.map((item, index) => (
                 <div
                   key={index}
-                  className="grid grid-cols-[2.5fr_1fr_1fr_1fr_1fr_1.2fr] border-b bg-gray-100 border-gray-300"
+                  className="grid grid-cols-[2.5fr_1fr_1fr_1fr_1fr_1.2fr] border-b bg-[#ebcec0] border-black"
                 >
-                  <div className="border-r border-gray-400 p-1 text-center">
+                  <div className="border-r border-black p-1 text-center">
                     {item}
                   </div>
-                  <div className="border-r border-gray-400 p-1 text-right">
+                  <div className="border-r border-black p-1 text-right">
                     0
                   </div>
-                  <div className="border-r border-gray-400 p-1 text-right">
+                  <div className="border-r border-black p-1 text-right">
                     0
                   </div>
-                  <div className="border-r border-gray-400 p-1 text-right">
+                  <div className="border-r border-black p-1 text-right">
                     0
                   </div>
-                  <div className="border-r border-gray-400 p-1 text-right">
+                  <div className="border-r border-black p-1 text-right">
                     0
                   </div>
-                  <div className="border-r border-gray-400 p-1 text-right">
+                  <div className="border-r border-black p-1 text-right">
                     0
                   </div>
                 </div>
               ))}
-              <div className="grid grid-cols-[2.5fr_1fr_1fr_1fr_1fr_1.2fr] bg-gray-300 font-bold">
-                <div className="border-r border-gray-400 p-2 text-center">
+              <div className="grid grid-cols-[2.5fr_1fr_1fr_1fr_1fr_1.2fr] bg-[#80bad7] font-bold">
+                <div className="border-r border-black p-2 text-center">
                   合計
                 </div>
-                <div className="border-r border-gray-400 p-2 text-right">0</div>
-                <div className="border-r border-gray-400 p-2 text-right">0</div>
-                <div className="border-r border-gray-400 p-2 text-right">0</div>
-                <div className="border-r border-gray-400 p-2 text-right">0</div>
-                <div className="border-r border-gray-400 p-2 text-right">0</div>
+                <div className="border-r border-black p-2 text-right">0</div>
+                <div className="border-r border-black p-2 text-right">0</div>
+                <div className="border-r border-black p-2 text-right">0</div>
+                <div className="border-r border-black p-2 text-right">0</div>
+                <div className="border-r border-black p-2 text-right">0</div>
               </div>
             </div>
           </div>
@@ -211,7 +211,7 @@ const BalanceDetailScreen = () => {
                 type="text"
                 placeholder="0"
                 readOnly
-                className="bg-white border border-gray-400 px-4  text-right font-semibold w-full"
+                className="bg-[#ebcec0] border border-black  px-4  text-right font-semibold w-full"
               />
             </div>
           </div>

@@ -15,18 +15,18 @@ const thirdOtherLabels = ["保証金", "与信限度額"];
 const autoDebitLabels = ["自振区分", "自振状況", "自振履歴"];
 const paymentInformationLabels = ["請求金額", "有効期限", "有効期限"];
 
-const inputClass = "border border-black text-base h-8 text-center";
-const halfInputClass = "border border-black text-base h-8 text-center w-[50%]";
+const inputClass = "border border-black text-base h-8 text-center bg-[#ebcec0]";
+const halfInputClass = "border border-black text-base h-8 text-center w-[50%] bg-[#ebcec0]";
 const labelClass =
-  "bg-gray-300 text-base font-medium h-8 flex items-center justify-center";
+  "bg-[#80bad7] text-base font-medium h-8 flex items-center justify-center";
 const containerClass = "flex items-center space-x-2 grid pb-1 grid-cols-2";
 const container4colClass = "flex items-center space-x-2 grid pb-1 grid-cols-4";
 const containerBillingClass =
   "flex items-center space-x-2 mb-2 grid grid-cols-2";
 const titleClass =
-  "mb-1 font-semibold text-[16px] text-center bg-gray-300 h-8 flex items-center justify-center";
+  "mb-1 font-semibold text-[16px] text-center bg-[#80bad7] h-8 flex items-center justify-center";
 const borderClass =
-  "border border-black font-semibold text-[16px] text-center h-8 flex items-center justify-center";
+  "bg-[#ebcec0] border border-black font-semibold text-[16px] text-center h-8 flex items-center justify-center";
 const borderContainerClass = "border border-black p-1";
 const borderContainerBillingClass =
   "border border-black mb-1 p-1 max-w-[315px] h-[265px]";
@@ -46,9 +46,9 @@ function CheckCurrentMonthSalesStatusScreen() {
   return (
     <div className="p-4 max-w-[620px] mx-auto">
       <div className="grid grid-rows-2 gap-1.5">
-        <div className="grid grid-cols-2 gap-1.5">
+        <div className="grid grid-cols-2 gap-1.5 ">
           {/* ＜請求残高＞ */}
-          <div>
+          <div >
             <h2 className={titleClass}>＜請求残高＞</h2>
             <div className={borderContainerBillingClass}>
               {billingLabels.map((label, idx) => (
