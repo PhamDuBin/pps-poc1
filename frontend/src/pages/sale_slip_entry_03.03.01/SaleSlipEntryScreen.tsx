@@ -84,19 +84,20 @@ const SaleSlipEntryScreen = () => {
           <LeftPanel />
         </div>
       )}
-      <div className="my-3 ml-2 flex-1 h-[calc(100%-0.75rem*2)] flex flex-row min-w-0">
-        <div className="relative mr-2 border border-black w-10/12 text-black flex justify-center ">
-          {showLeftPanel ? (
+      {showLeftPanel ? (
             <CircleArrowLeft
-              className="absolute -left-3 top-1/2 -translate-y-1/2 text-black w-5 h-5 z-10 cursor-pointer bg-white rounded-full shadow"
+              className="absolute left-[36.3rem] top-1/2 -translate-y-1/2 text-black w-5 h-5 z-20 cursor-pointer bg-white rounded-full shadow"
               onClick={() => setShowLeftPanel(false)}
             />
           ) : (
             <CircleArrowRight
-              className="absolute -left-3 top-1/2 -translate-y-1/2 text-black w-5 h-5 z-10 cursor-pointer bg-white rounded-full"
+              className="absolute left-2 top-1/2 -translate-y-1/2 text-black w-5 h-5 z-20 cursor-pointer bg-white rounded-full"
               onClick={() => setShowLeftPanel(true)}
             />
           )}
+      <div className="my-3 ml-2 flex-1 h-[calc(100%-0.75rem*2)] flex flex-row min-w-0 z-10">
+        <div className="relative mr-2 border border-black w-10/12 text-black flex justify-center ">
+          
           <div className="overflow-y-auto">{renderActiveScreen()}</div>
         </div>
 

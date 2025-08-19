@@ -80,23 +80,24 @@ const TrancInfoScreen = () => {
         <div className="relative flex items-center h-full w-2 bg-[#e6cfcf]"></div>
       )}
       {showLeftPanel && (
-        <div className="transition-all duration-300">
+        <div className="transition-all absolute duration-300 z-20">
           <LeftPanel />
         </div>
       )}
-      <div className="my-3 ml-2 flex-1 h-[calc(100%-0.75rem*2)] flex flex-row min-w-0">
-        <div className="relative mr-2 border border-black w-10/12 text-black flex justify-center ">
-          {showLeftPanel ? (
+      {showLeftPanel ? (
             <CircleArrowLeft
-              className="absolute -left-3 top-1/2 -translate-y-1/2 text-black w-5 h-5 z-10 cursor-pointer bg-white rounded-full shadow"
+              className="absolute left-[17.3rem] top-1/2 -translate-y-1/2 text-black w-5 h-5 cursor-pointer bg-white rounded-full shadow z-20"
               onClick={() => setShowLeftPanel(false)}
             />
           ) : (
             <CircleArrowRight
-              className="absolute -left-3 top-1/2 -translate-y-1/2 text-black w-5 h-5 z-10 cursor-pointer bg-white rounded-full"
+              className="absolute left-2 top-1/2 -translate-y-1/2 text-black w-5 h-5 cursor-pointer bg-white rounded-full z-20"
               onClick={() => setShowLeftPanel(true)}
             />
           )}
+      <div className="my-3 ml-2 flex-1 h-[calc(100%-0.75rem*2)] flex flex-row min-w-0 z-10">
+        <div className="relative mr-2 border border-black w-10/12 text-black flex justify-center">
+          
           <div className="overflow-y-auto">{renderActiveScreen()}</div>
         </div>
 
