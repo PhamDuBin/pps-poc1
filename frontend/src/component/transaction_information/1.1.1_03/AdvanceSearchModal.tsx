@@ -188,7 +188,7 @@ const AdvancedSearchForm: React.FC = () => {
   };
 
   return (
-    <div className="flex items-start space-x-2 mt-2 p-3 border border-black rounded-md bg-gray-50">
+    <div className="flex items-start space-x-2 mt-2 p-3 border z-30 border-black rounded-md bg-gray-50">
       <div className="flex flex-col">
         <label className="text-xs  font-semibold text-gray-600 mb-1">
           検索種類 / 検索順
