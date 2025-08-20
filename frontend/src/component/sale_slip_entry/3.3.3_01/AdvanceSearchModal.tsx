@@ -184,7 +184,7 @@ const AdvancedSearchForm: React.FC = () => {
         {renderDynamicInput()}
       </div>
 
-      <div className="flex flex-col space-y-1 pt-5">
+      <div className="flex flex-col space-y-1">
         <button className="bg-[#80bad7] border border-black px-4 py-1 h-[26px] flex items-center justify-center">
           検索
         </button>
@@ -196,7 +196,12 @@ const AdvancedSearchForm: React.FC = () => {
   );
 };
 
-const AdvanceSearchModal: React.FC = () => {
+type LeftPanelProps ={
+  showAdvanceSearch: boolean;
+  setShowAdvanceSearch: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const AdvanceSearchModal: React.FC<LeftPanelProps> = ({ showAdvanceSearch, setShowAdvanceSearch }) => {
   const [searchMode, setSearchMode] = useState<string>("overall");
   const tableData = Array.from({ length: 12 }).map(() => ({
     kanaName: "cell",
@@ -293,6 +298,16 @@ const AdvanceSearchModal: React.FC = () => {
             ))}
           </tbody>
         </table>
+      </div>
+
+      <div className="flex justify-center">
+        <button
+          onClick={() => {
+            setShowAdvanceSearch(false);
+            
+          }}
+          className="w-20 border border-black bg-[#80bad7] px-2 py-1 flex mt-2 justify-center"
+        >請求額</button>
       </div>
     </div>
   );

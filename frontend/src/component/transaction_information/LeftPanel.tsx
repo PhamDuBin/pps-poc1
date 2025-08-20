@@ -19,7 +19,12 @@ const DownArrowIcon = () => (
   </svg>
 );
 
-const LeftPanel: React.FC<{ showAdvanceSearch: boolean; setShowAdvanceSearch: React.Dispatch<React.SetStateAction<boolean>> }> = ({ showAdvanceSearch, setShowAdvanceSearch }) => {
+type LeftPanelProps = {
+  showAdvanceSearch: boolean;
+  setShowAdvanceSearch: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+const LeftPanel: React.FC<LeftPanelProps> = ({ showAdvanceSearch, setShowAdvanceSearch }) => {
   const [postcode1, setPostcode1] = useState("");
   const [postcode2, setPostcode2] = useState("");
   const [showDepart, setShowDepart] = useState(false);

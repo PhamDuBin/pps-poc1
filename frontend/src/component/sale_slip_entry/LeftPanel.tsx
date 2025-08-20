@@ -76,7 +76,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({ showAdvanceSearch, setShowAdvance
   };
 
   return (
-    <div className="max-w-6xl h-screen p-3 bg-[#d8dadc] border-2 border-gray-400 font-sans">
+    <div className="max-w-6xl overflow-y-auto overflow-x-hidden h-screen p-3 bg-[#d8dadc] border-2 border-gray-400 font-sans">
       <div>
         <div className="text-center h-8 text-sm bg-[#80bad7] py-1 font-semibold border border-black">
           顧客検索
@@ -133,7 +133,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({ showAdvanceSearch, setShowAdvance
                   />
                   <button
                     onClick={() => {
-                      setShowTable(true);
+                      setShowAdvanceSearch(true);
                     }}
                     className="mx-1 w-[20px] h-[20px] inset-y-0 right-0 flex items-center px-1 bg-white border border-gray-500 cursor-pointer"
                   >
@@ -154,7 +154,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({ showAdvanceSearch, setShowAdvance
           {showAdvanceSearch && (
           <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
             <div className="bg-white rounded shadow-lg relative w-[700px] max-w-full">
-              <AdvanceSearchModal />
+              <AdvanceSearchModal setShowAdvanceSearch={setShowAdvanceSearch} showAdvanceSearch={showAdvanceSearch} />
             </div>
           </div>
         )}

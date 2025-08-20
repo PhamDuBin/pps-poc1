@@ -99,7 +99,7 @@ const SaleSlipEntryScreen = () => {
       {showLeftPanel ? (
         <CircleArrowLeft
           className={`absolute left-[36.3rem] top-1/2 -translate-y-1/2 text-black w-5 h-5 cursor-pointer bg-[#d8dadc] rounded-full shadow 
-            ${showAdvanceSearch ? 'z-0 pointer-events-none' : 'z-30'}`}
+            ${showAdvanceSearch ? 'z-0 hidden pointer-events-none' : 'z-30'}`}
           onClick={() => setShowLeftPanel(false)}
         />
       ) : (
