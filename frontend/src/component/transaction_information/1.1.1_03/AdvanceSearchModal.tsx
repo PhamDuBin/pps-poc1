@@ -162,16 +162,16 @@ const AdvancedSearchForm: React.FC = () => {
             </div>
             <input
               type="text"
-              className="border border-black p-1 placeholder-black"
+              className="border border-gray-400 p-1 placeholder-black"
               value={(Array.isArray(value) && value[0]) || ""}
               onChange={(e) => handleValueChange(e.target.value, 0)}
             />
-            <div className=" bg-[#80bad7] flex text-center justify-center p-1">
+            <div className=" bg-gray-300 flex text-center justify-center p-1">
               {currentField.placeholders?.[1]}
             </div>
             <input
               type="text"
-              className="border border-black p-1 placeholder-black"
+              className="border border-gray-400 p-1 placeholder-black"
               value={(Array.isArray(value) && value[1]) || ""}
               onChange={(e) => handleValueChange(e.target.value, 1)}
             />
@@ -215,7 +215,7 @@ const AdvancedSearchForm: React.FC = () => {
         {renderDynamicInput()}
       </div>
 
-      <div className="flex flex-col space-y-1 pt-5">
+      <div className="flex flex-col space-y-1">
         <button className="bg-[#80bad7] border border-black px-4 py-1 h-[26px] flex items-center justify-center">
           検索
         </button>
