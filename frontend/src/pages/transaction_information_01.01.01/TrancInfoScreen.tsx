@@ -13,10 +13,12 @@ import { handleNavigationKey } from "../../utils/InputHandlers";
 const TrancInfoScreen = () => {
   const [showLeftPanel, setShowLeftPanel] = useState(true);
   const [activeScreen, setActiveScreen] = useState<string | null>(null);
+  const [showAdvanceSearch, setShowAdvanceSearch] = useState(false);
 
   const handleButtonClick = (buttonName: string) => {
     setActiveScreen(buttonName);
   };
+  
 
   const renderActiveScreen = () => {
     switch (activeScreen) {
@@ -81,17 +83,19 @@ const TrancInfoScreen = () => {
       )}
       {showLeftPanel && (
         <div className="transition-all absolute duration-300 z-20">
-          <LeftPanel />
+          <LeftPanel showAdvanceSearch={showAdvanceSearch} setShowAdvanceSearch={setShowAdvanceSearch} />
         </div>
       )}
       {showLeftPanel ? (
             <CircleArrowLeft
-              className="absolute left-[17.3rem] top-1/2 -translate-y-1/2 text-black w-5 h-5 cursor-pointer bg-white rounded-full shadow z-20"
+              className={`absolute left-[17.3rem] top-1/2 -translate-y-1/2 text-black w-5 h-5 cursor-pointer bg-white rounded-full shadow
+              ${showAdvanceSearch ? 'z-0 hidden pointer-events-none' : 'z-20'}`}
               onClick={() => setShowLeftPanel(false)}
             />
           ) : (
             <CircleArrowRight
-              className="absolute left-2 top-1/2 -translate-y-1/2 text-black w-5 h-5 cursor-pointer bg-white rounded-full z-20"
+              className={`absolute left-2 top-1/2 -translate-y-1/2 text-black w-5 h-5 cursor-pointer bg-white rounded-full
+              ${showAdvanceSearch ? 'z-0 pointer-events-none' : 'z-20'}`}
               onClick={() => setShowLeftPanel(true)}
             />
           )}

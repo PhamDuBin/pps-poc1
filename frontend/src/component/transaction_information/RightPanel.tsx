@@ -37,7 +37,7 @@ const RightPanel: React.FC<RightPanelProps> = ({
 
   return (
     <div className="w-2/12 border bg-[#d8dadc] border-black h-full">
-      <div className="m-3 font-bold text-base text-black flex flex-col gap-2 overflow-auto h-full">
+      <div className="ml-3 mr-3 font-bold text-base text-black flex flex-col gap-2 overflow-auto h-full">
         {buttons.map((label, index) => {
           const specialLabels = [
             "年間明細",

@@ -19,14 +19,13 @@ const DownArrowIcon = () => (
   </svg>
 );
 
-const LeftPanel = () => {
+const LeftPanel: React.FC<{ showAdvanceSearch: boolean; setShowAdvanceSearch: React.Dispatch<React.SetStateAction<boolean>> }> = ({ showAdvanceSearch, setShowAdvanceSearch }) => {
   const [postcode1, setPostcode1] = useState("");
   const [postcode2, setPostcode2] = useState("");
   const [showDepart, setShowDepart] = useState(false);
   const [id1, setId1] = useState("");
   const [id2, setId2] = useState("");
   const [showCustomer, setShowCustomer] = useState(false);
-  const [showAdvanceSearch, setShowAdvanceSearch] = useState(false);
 
   const hanleSearchDepartment = (postcode1: string, postcode2: string) => {
     if (postcode1 && postcode2) {
@@ -74,7 +73,7 @@ const LeftPanel = () => {
   };
 
   return (
-    <div className="w-72 h-screen p-3 bg-[#d8dadc] border-2 border-gray-400 font-sans">
+    <div className="w-72 overflow-y-auto overflow-x-hidden h-screen p-3 bg-[#d8dadc] border-2 border-gray-400 font-sans">
       <div className="mb-4">
         <div className="text-center text-sm bg-[#80bad7] py-1 font-semibold border border-black">
           {!showDepart ? "事務所コード" : "事務所情報"}
@@ -311,7 +310,7 @@ const LeftPanel = () => {
       {showAdvanceSearch && (
         <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
           <div className="bg-white rounded shadow-lg relative w-[700px] max-w-full">
-            <AdvanceSearchModal />
+            <AdvanceSearchModal showAdvanceSearch={showAdvanceSearch} setShowAdvanceSearch={setShowAdvanceSearch} />
           </div>
         </div>
       )}

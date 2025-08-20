@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React,{ useState } from "react";
+
+import LeftPanel from "../LeftPanel";
 
 const fieldDefinitions = [
   { id: "allTel", label: "ALL電話番号", type: "single" },
@@ -225,7 +227,7 @@ const AdvancedSearchForm: React.FC = () => {
   );
 };
 
-const AdvanceSearchModal: React.FC = () => {
+const AdvanceSearchModal: React.FC<{ showAdvanceSearch: boolean; setShowAdvanceSearch: React.Dispatch<React.SetStateAction<boolean>> }> = ({ showAdvanceSearch, setShowAdvanceSearch }) => {
   const [searchMode, setSearchMode] = useState<string>("overall");
   const tableData = Array.from({ length: 12 }).map(() => ({
     kanaName: "cell",
@@ -242,7 +244,7 @@ const AdvanceSearchModal: React.FC = () => {
           <label className="font-semibold">事務所</label>
           <span>0000-000 全指定</span>
         </div>
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-4"> 
           <div className="flex items-center">
             <input
               type="radio"
@@ -322,6 +324,15 @@ const AdvanceSearchModal: React.FC = () => {
             ))}
           </tbody>
         </table>
+      </div>
+      <div className="flex justify-center">
+        <button
+          onClick={() => {
+            setShowAdvanceSearch(false);
+            
+          }}
+          className="w-20 border border-black bg-[#80bad7] px-2 py-1 flex mt-2 justify-center"
+        >請求額</button>
       </div>
     </div>
   );
