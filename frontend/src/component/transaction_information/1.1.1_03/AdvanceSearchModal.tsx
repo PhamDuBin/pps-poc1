@@ -1,6 +1,4 @@
-import React,{ useState } from "react";
-
-import LeftPanel from "../LeftPanel";
+import React, { useState } from "react";
 
 const fieldDefinitions = [
   { id: "allTel", label: "ALL電話番号", type: "single" },
@@ -227,7 +225,10 @@ const AdvancedSearchForm: React.FC = () => {
   );
 };
 
-const AdvanceSearchModal: React.FC<{ showAdvanceSearch: boolean; setShowAdvanceSearch: React.Dispatch<React.SetStateAction<boolean>> }> = ({ showAdvanceSearch, setShowAdvanceSearch }) => {
+const AdvanceSearchModal: React.FC<{
+  showAdvanceSearch: boolean;
+  setShowAdvanceSearch: React.Dispatch<React.SetStateAction<boolean>>;
+}> = ({ showAdvanceSearch, setShowAdvanceSearch }) => {
   const [searchMode, setSearchMode] = useState<string>("overall");
   const tableData = Array.from({ length: 12 }).map(() => ({
     kanaName: "cell",
@@ -238,13 +239,15 @@ const AdvanceSearchModal: React.FC<{ showAdvanceSearch: boolean; setShowAdvanceS
 
   return (
     <div className="p-4 bg-white text-black w-full text-sm">
-      <div className="bg-[#80bad7] border border-black p-2 text-center font-bold mb-2">顧客検索</div>
+      <div className="bg-[#80bad7] border border-black p-2 text-center font-bold mb-2">
+        顧客検索
+      </div>
       <div className="flex items-center space-x-6 bg-[#80bad7]  p-2 border border-black">
         <div className="flex items-center space-x-2">
           <label className="font-semibold">事務所</label>
           <span>0000-000 全指定</span>
         </div>
-        <div className="flex items-center space-x-4"> 
+        <div className="flex items-center space-x-4">
           <div className="flex items-center">
             <input
               type="radio"
@@ -308,18 +311,24 @@ const AdvanceSearchModal: React.FC<{ showAdvanceSearch: boolean; setShowAdvanceS
               <th className="border border-black p-1">カナ氏名</th>
               <th className="border border-black p-1">氏名</th>
               <th className="border border-black p-1">住所 / 番地</th>
-              <th className="border border-black p-1">
-                住所名称 / 部屋番号
-              </th>
+              <th className="border border-black p-1">住所名称 / 部屋番号</th>
             </tr>
           </thead>
           <tbody>
             {tableData.map((row, idx) => (
               <tr key={idx} className="hover:bg-blue-50">
-                <td className="bg-[#ebcec0] border border-black p-1">{row.kanaName}</td>
-                <td className="bg-[#ebcec0] border border-black p-1">{row.name}</td>
-                <td className="bg-[#ebcec0] border border-black p-1">{row.address}</td>
-                <td className="bg-[#ebcec0] border border-black p-1">{row.building}</td>
+                <td className="bg-[#ebcec0] border border-black p-1">
+                  {row.kanaName}
+                </td>
+                <td className="bg-[#ebcec0] border border-black p-1">
+                  {row.name}
+                </td>
+                <td className="bg-[#ebcec0] border border-black p-1">
+                  {row.address}
+                </td>
+                <td className="bg-[#ebcec0] border border-black p-1">
+                  {row.building}
+                </td>
               </tr>
             ))}
           </tbody>
@@ -329,10 +338,11 @@ const AdvanceSearchModal: React.FC<{ showAdvanceSearch: boolean; setShowAdvanceS
         <button
           onClick={() => {
             setShowAdvanceSearch(false);
-            
           }}
           className="w-20 border border-black bg-[#80bad7] px-2 py-1 flex mt-2 justify-center"
-        >請求額</button>
+        >
+          請求額
+        </button>
       </div>
     </div>
   );

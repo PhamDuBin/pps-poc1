@@ -11,14 +11,13 @@ import CRM from "../../component/transaction_information/1.1.1_03/CRM";
 import LinkDestinationScreen from "../../component/transaction_information/1.1.1_03/LinkDestinationScreen";
 import { handleNavigationKey } from "../../utils/InputHandlers";
 const TrancInfoScreen = () => {
-  const [showLeftPanel, setShowLeftPanel] = useState(true);
+  const [showLeftPanel, setShowLeftPanel] = useState(false);
   const [activeScreen, setActiveScreen] = useState<string | null>(null);
   const [showAdvanceSearch, setShowAdvanceSearch] = useState(false);
 
   const handleButtonClick = (buttonName: string) => {
     setActiveScreen(buttonName);
   };
-  
 
   const renderActiveScreen = () => {
     switch (activeScreen) {
@@ -44,8 +43,8 @@ const TrancInfoScreen = () => {
         return <LinkDestinationScreen />;
       case "大分類残高":
         return <LinkDestinationScreen />;
-
       default:
+        return <CurrentMonthDetails />;
     }
   };
 
@@ -77,32 +76,37 @@ const TrancInfoScreen = () => {
   }, []);
 
   return (
-    <div ref={containerRef} className="w-full h-screen flex flex-row bg-[#d8dadc]">
+    <div
+      ref={containerRef}
+      className="w-full h-screen flex flex-row bg-[#d8dadc]"
+    >
       {!showLeftPanel && (
         <div className="relative flex items-center h-full w-2 bg-[#e6cfcf]"></div>
       )}
-      {showLeftPanel && (
-        <div className="transition-all absolute duration-300 z-20">
-          <LeftPanel showAdvanceSearch={showAdvanceSearch} setShowAdvanceSearch={setShowAdvanceSearch} />
-        </div>
-      )}
+
       {showLeftPanel ? (
-            <CircleArrowLeft
-              className={`absolute left-[17.3rem] top-1/2 -translate-y-1/2 text-black w-5 h-5 cursor-pointer bg-white rounded-full shadow
-              ${showAdvanceSearch ? 'z-0 hidden pointer-events-none' : 'z-20'}`}
-              onClick={() => setShowLeftPanel(false)}
-            />
-          ) : (
-            <CircleArrowRight
-              className={`absolute left-2 top-1/2 -translate-y-1/2 text-black w-5 h-5 cursor-pointer bg-white rounded-full
-              ${showAdvanceSearch ? 'z-0 pointer-events-none' : 'z-20'}`}
-              onClick={() => setShowLeftPanel(true)}
-            />
-          )}
-      <div className="my-3 ml-2 flex-1 h-[calc(100%-0.75rem*2)] flex flex-row min-w-0 z-10">
+        <div className="transition-all absolute duration-300 z-20">
+          <LeftPanel
+            showAdvanceSearch={showAdvanceSearch}
+            setShowAdvanceSearch={setShowAdvanceSearch}
+          />
+          <CircleArrowLeft
+            className={`absolute left-[17.3rem] top-1/2 -transl
+                ate-y-1/2 text-black w-5 h-5 cursor-pointer bg-white rounded-full shadow
+              ${showAdvanceSearch ? "z-0 hidden pointer-events-none" : "z-20"}`}
+            onClick={() => setShowLeftPanel(false)}
+          />
+        </div>
+      ) : (
+        <CircleArrowRight
+          className={`absolute left-2 top-1/2 -translate-y-1/2 text-black w-5 h-5 cursor-pointer bg-white rounded-full
+              ${showAdvanceSearch ? "z-0 pointer-events-none" : "z-20"}`}
+          onClick={() => setShowLeftPanel(true)}
+        />
+      )}
+      <div className="my-3 ml-2 flex-1 h-[calc(100%-0.75rem*2)] flex flex-row z-10 w-full">
         <div className="relative mr-2 border border-black w-10/12 text-black flex justify-center">
-          
-          <div className="overflow-y-auto">{renderActiveScreen()}</div>
+          <div className="overflow-y-auto w-full">{renderActiveScreen()}</div>
         </div>
 
         <RightPanel

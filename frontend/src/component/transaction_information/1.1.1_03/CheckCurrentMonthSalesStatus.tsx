@@ -16,7 +16,8 @@ const autoDebitLabels = ["自振区分", "自振状況", "自振履歴"];
 const paymentInformationLabels = ["請求金額", "有効期限", "有効期限"];
 
 const inputClass = "border border-black text-base h-8 text-center bg-[#ebcec0]";
-const halfInputClass = "border border-black text-base h-8 text-center w-[50%] bg-[#ebcec0]";
+const halfInputClass =
+  "border border-black text-base h-8 text-center w-[50%] bg-[#ebcec0]";
 const labelClass =
   "bg-[#80bad7] text-base font-medium h-8 flex items-center justify-center";
 const containerClass = "flex items-center space-x-2 grid pb-1 grid-cols-2";
@@ -44,59 +45,30 @@ function CheckCurrentMonthSalesStatusScreen() {
     }
   };
   return (
-    <div className="p-4 max-w-[620px] mx-auto">
-      <div className="grid grid-rows-2 gap-1.5">
-        <div className="grid grid-cols-2 gap-1.5 ">
-          {/* ＜請求残高＞ */}
-          <div >
-            <h2 className={titleClass}>＜請求残高＞</h2>
-            <div className={borderContainerBillingClass}>
-              {billingLabels.map((label, idx) => (
-                <div className={containerBillingClass} key={idx}>
-                  <label
-                    className={`${labelClass} ${
-                      label === "前月繰越金" || label === "当月残高"
-                        ? "font-semibold"
-                        : ""
-                    }`}
-                  >
-                    {label}
-                  </label>
-                  <input placeholder="000" className={inputClass} type="text" />
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* ＜その他＞ */}
-          <div className="gap-1.5">
-            <h2 className={titleClass}>＜その他＞</h2>
-            <div className="grid max-h-[265px] gap-2.5">
-              {/* 最終入金 */}
-              <div className={borderContainerClass}>
-                {firstOtherLabels.map((label, idx) => (
-                  <div className={container4colClass} key={idx}>
-                    <label className={labelClass}>{label}</label>
-                    <label className={borderClass}>25/05/12</label>
-                    <input
-                      placeholder="000"
-                      className={`${inputClass} col-span-2`}
-                      type="text"
-                    />
-                  </div>
-                ))}
-              </div>
-
-              {/* 割賦金・割賦残金・器具リース */}
-              <div className={borderContainerClass}>
-                {secondOtherLabels.map((label, idx) => (
-                  <div className={containerClass} key={idx}>
-                    <button
-                      onClick={handleOpenWindow}
-                      className={`${labelClass} border border-black`}
+    <>
+      <div
+        className={`font-semibold text-sm p-1 mx-4 mt-4 text-center border bg-[#80bad7]`}
+      >
+        ＜当月売上状況＞
+      </div>
+      <div className="p-4 max-w-[620px] mx-auto">
+        <div className="grid grid-rows-2 gap-1.5">
+          <div className="flex grid-cols-2 gap-1.5 flex-col md:flex-row">
+            {/* ＜請求残高＞ */}
+            <div>
+              <h2 className={titleClass}>＜請求残高＞</h2>
+              <div className={borderContainerBillingClass}>
+                {billingLabels.map((label, idx) => (
+                  <div className={containerBillingClass} key={idx}>
+                    <label
+                      className={`${labelClass} ${
+                        label === "前月繰越金" || label === "当月残高"
+                          ? "font-semibold"
+                          : ""
+                      }`}
                     >
                       {label}
-                    </button>
+                    </label>
                     <input
                       placeholder="000"
                       className={inputClass}
@@ -105,12 +77,81 @@ function CheckCurrentMonthSalesStatusScreen() {
                   </div>
                 ))}
               </div>
+            </div>
 
-              {/* 保証金・与信限度額 */}
+            {/* ＜その他＞ */}
+            <div className="gap-1.5">
+              <h2 className={titleClass}>＜その他＞</h2>
+              <div className="grid max-h-[265px] gap-2.5">
+                {/* 最終入金 */}
+                <div className={borderContainerClass}>
+                  {firstOtherLabels.map((label, idx) => (
+                    <div className={container4colClass} key={idx}>
+                      <label className={labelClass}>{label}</label>
+                      <label className={borderClass}>25/05/12</label>
+                      <input
+                        placeholder="000"
+                        className={`${inputClass} col-span-2`}
+                        type="text"
+                      />
+                    </div>
+                  ))}
+                </div>
+
+                {/* 割賦金・割賦残金・器具リース */}
+                <div className={borderContainerClass}>
+                  {secondOtherLabels.map((label, idx) => (
+                    <div className={containerClass} key={idx}>
+                      <button
+                        onClick={handleOpenWindow}
+                        className={`${labelClass} border border-black`}
+                      >
+                        {label}
+                      </button>
+                      <input
+                        placeholder="000"
+                        className={inputClass}
+                        type="text"
+                      />
+                    </div>
+                  ))}
+                </div>
+
+                {/* 保証金・与信限度額 */}
+                <div className={borderContainerClass}>
+                  {thirdOtherLabels.map((label, idx) => (
+                    <div className={containerClass} key={idx}>
+                      {label === "保証金" ? (
+                        <button
+                          onClick={handleOpenWindow}
+                          className={`${labelClass} border border-black`}
+                        >
+                          {label}
+                        </button>
+                      ) : (
+                        <label className={labelClass}>{label}</label>
+                      )}
+                      <input
+                        placeholder="000"
+                        className={inputClass}
+                        type="text"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Bottom: 自振情報 + コンビニ情報 */}
+          <div className="flex grid-cols-[6fr_4fr] gap-1.5 flex-col md:flex-row">
+            {/* ＜自振情報＞ */}
+            <div>
+              <label className={titleClass}>＜自振情報＞</label>
               <div className={borderContainerClass}>
-                {thirdOtherLabels.map((label, idx) => (
-                  <div className={containerClass} key={idx}>
-                    {label === "保証金" ? (
+                {autoDebitLabels.map((label, idx) => (
+                  <div className={container4colClass} key={idx}>
+                    {label === "自振履歴" ? (
                       <button
                         onClick={handleOpenWindow}
                         className={`${labelClass} border border-black`}
@@ -120,9 +161,44 @@ function CheckCurrentMonthSalesStatusScreen() {
                     ) : (
                       <label className={labelClass}>{label}</label>
                     )}
+                    {label === "自振区分" ? (
+                      <>
+                        <input
+                          placeholder="000"
+                          className={inputClass}
+                          type="text"
+                        />
+                        <label className="font-semibold col-span-2">
+                          自振区分004
+                        </label>
+                      </>
+                    ) : (
+                      <>
+                        <label>（依頼）</label>
+                        <label className={borderClass}>25/05/12</label>
+                        <input
+                          placeholder="000"
+                          className={inputClass}
+                          type="text"
+                        />
+                      </>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* ＜コンビニ情報＞ */}
+            <div>
+              <label className={titleClass}>＜コンビニ情報＞</label>
+              <div className={borderContainerClass}>
+                {paymentInformationLabels.map((label, idx) => (
+                  <div className={containerClass} key={idx}>
+                    <label className={labelClass}>{label}</label>
                     <input
-                      placeholder="000"
-                      className={inputClass}
+                      className={
+                        label === "請求金額" ? inputClass : halfInputClass
+                      }
                       type="text"
                     />
                   </div>
@@ -131,72 +207,8 @@ function CheckCurrentMonthSalesStatusScreen() {
             </div>
           </div>
         </div>
-
-        {/* Bottom: 自振情報 + コンビニ情報 */}
-        <div className="grid grid-cols-[6fr_4fr] gap-1.5">
-          {/* ＜自振情報＞ */}
-          <div>
-            <label className={titleClass}>＜自振情報＞</label>
-            <div className={borderContainerClass}>
-              {autoDebitLabels.map((label, idx) => (
-                <div className={container4colClass} key={idx}>
-                  {label === "自振履歴" ? (
-                    <button
-                      onClick={handleOpenWindow}
-                      className={`${labelClass} border border-black`}
-                    >
-                      {label}
-                    </button>
-                  ) : (
-                    <label className={labelClass}>{label}</label>
-                  )}
-                  {label === "自振区分" ? (
-                    <>
-                      <input
-                        placeholder="000"
-                        className={inputClass}
-                        type="text"
-                      />
-                      <label className="font-semibold col-span-2">
-                        自振区分004
-                      </label>
-                    </>
-                  ) : (
-                    <>
-                      <label>（依頼）</label>
-                      <label className={borderClass}>25/05/12</label>
-                      <input
-                        placeholder="000"
-                        className={inputClass}
-                        type="text"
-                      />
-                    </>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* ＜コンビニ情報＞ */}
-          <div>
-            <label className={titleClass}>＜コンビニ情報＞</label>
-            <div className={borderContainerClass}>
-              {paymentInformationLabels.map((label, idx) => (
-                <div className={containerClass} key={idx}>
-                  <label className={labelClass}>{label}</label>
-                  <input
-                    className={
-                      label === "請求金額" ? inputClass : halfInputClass
-                    }
-                    type="text"
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
       </div>
-    </div>
+    </>
   );
 }
 

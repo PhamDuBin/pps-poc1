@@ -1,6 +1,7 @@
 //■左カラム顧客検索＆情報表示ランチャー
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import AdvanceSearchModal from "./1.1.1_03/AdvanceSearchModal";
+import TooltipPortal from "./1.1.1_03/TooltipPortal";
 
 const DownArrowIcon = () => (
   <svg
@@ -24,13 +25,86 @@ type LeftPanelProps = {
   setShowAdvanceSearch: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const LeftPanel: React.FC<LeftPanelProps> = ({ showAdvanceSearch, setShowAdvanceSearch }) => {
+const LeftPanel: React.FC<LeftPanelProps> = ({
+  showAdvanceSearch,
+  setShowAdvanceSearch,
+}) => {
   const [postcode1, setPostcode1] = useState("");
   const [postcode2, setPostcode2] = useState("");
   const [showDepart, setShowDepart] = useState(false);
   const [id1, setId1] = useState("");
   const [id2, setId2] = useState("");
   const [showCustomer, setShowCustomer] = useState(false);
+
+  const [tooltip, setTooltip] = useState({
+    visible: false,
+    content: null as React.ReactNode | null,
+    top: 0,
+    left: 0,
+  });
+  const tantoRef = useRef<HTMLButtonElement>(null);
+  const bikouRef = useRef<HTMLButtonElement>(null);
+
+  const handleShowTooltip = (
+    ref: React.RefObject<HTMLButtonElement | null>,
+    content: React.ReactNode
+  ) => {
+    if (ref.current) {
+      const rect = ref.current.getBoundingClientRect();
+      setTooltip({
+        visible: true,
+        content: content,
+
+        top: rect.top,
+        left: rect.right + 8,
+      });
+    }
+  };
+
+  const tantoTooltipContent = (
+    <div className="w-36 bg-white border border-gray-400 rounded shadow-lg p-2 text-xs">
+      <div className="font-bold mb-1 text-center bg-gray-200 p-1">
+        担当者表示
+      </div>
+      <div className="mb-2">
+        <span className="font-bold bg-gray-200 p-0.5 mr-2">営業</span> 001
+        担当者名01
+      </div>
+      <div className="mb-2">
+        <span className="font-bold bg-gray-200 p-0.5 mr-2">営業</span> 001
+        担当者名01
+      </div>
+      <div className="mb-2">
+        <span className="font-bold bg-gray-200 p-0.5 mr-2">営業</span> 001
+        担当者名01
+      </div>
+      <div className="mb-2">
+        <span className="font-bold bg-gray-200 p-0.5 mr-2">営業</span> 001
+        担当者名01
+      </div>
+    </div>
+  );
+
+  const bikouTooltipContent = (
+    <div className="w-64 bg-white border border-gray-400 rounded shadow-lg p-2 text-xs">
+      <div className="font-bold mb-1 text-center bg-gray-200 p-1">顧客備考</div>
+      <div className="mb-2">
+        <span className="font-bold bg-gray-200 p-0.5 mr-2">顧客備考1</span>{" "}
+        住所仮のものになります。
+      </div>
+      <div className="mb-2">
+        <span className="font-bold bg-gray-200 p-0.5 mr-2">顧客備考2</span>{" "}
+        世帯主様に直接お伺い。
+      </div>
+      <div>
+        <span className="font-bold bg-gray-200 p-0.5">顧客備考3</span>
+      </div>
+    </div>
+  );
+
+  const handleHideTooltip = () => {
+    setTooltip({ ...tooltip, visible: false });
+  };
 
   const hanleSearchDepartment = (postcode1: string, postcode2: string) => {
     if (postcode1 && postcode2) {
@@ -78,7 +152,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({ showAdvanceSearch, setShowAdvance
   };
 
   return (
-    <div className="w-72 overflow-y-auto overflow-x-hidden h-screen p-3 bg-[#d8dadc] border-2 border-gray-400 font-sans">
+    <div className="w-72 overflow-y-auto  h-screen p-3 bg-[#d8dadc] border-2 border-gray-400 font-sans">
       <div className="mb-4">
         <div className="text-center text-sm bg-[#80bad7] py-1 font-semibold border border-black">
           {!showDepart ? "事務所コード" : "事務所情報"}
@@ -251,59 +325,27 @@ const LeftPanel: React.FC<LeftPanelProps> = ({ showAdvanceSearch, setShowAdvance
           <button className="w-1/2 font-bold border text-center border-black p-2 text-white bg-[#4d7a90]">
             請求親
           </button>
-          <div className="relative group w-1/2">
-            <button className="font-bold border text-center border-black p-2 bg-[#80bad7] w-full">
-              担当者
-            </button>
-            {/* Tooltip for  担当者*/}
-            <div className="absolute left-full top-1/2 -translate-y-1/2 ml-2 w-36 bg-white border border-gray-400 rounded shadow-lg p-2 text-xs z-20 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity">
-              <div className="font-bold mb-1 text-center bg-gray-200 p-1">
-                担当者表示
-              </div>
-              <div className="mb-2">
-                <span className="font-bold bg-gray-200 p-0.5 mr-2">営業</span>
-                001 担当者名01
-              </div>
-              <div className="mb-2">
-                <span className="font-bold bg-gray-200 p-0.5 mr-2">営業</span>
-                001 担当者名01
-              </div>
-              <div className="mb-2">
-                <span className="font-bold bg-gray-200 p-0.5 mr-2">営業</span>
-                001 担当者名01
-              </div>
-              <div className="mb-2">
-                <span className="font-bold bg-gray-200 p-0.5 mr-2">営業</span>
-                001 担当者名01
-              </div>
-            </div>
-          </div>
-          <div className="relative group w-1/2">
-            <button className="font-bold border text-center border-black p-2 bg-[#80bad7] w-full">
-              顧客備考
-            </button>
-            {/* Tooltip for  顧客備考*/}
-            <div className="absolute left-full top-1/2 -translate-y-1/2 ml-2 w-64 bg-white border border-gray-400 rounded shadow-lg p-2 text-xs z-20 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity">
-              <div className="font-bold mb-1 text-center bg-gray-200 p-1">
-                顧客備考
-              </div>
-              <div className="mb-2">
-                <span className="font-bold bg-gray-200 p-0.5 mr-2">
-                  顧客備考1
-                </span>
-                住所仮のものになります。
-              </div>
-              <div className="mb-2">
-                <span className="font-bold bg-gray-200 p-0.5 mr-2">
-                  顧客備考2
-                </span>
-                世帯主様に直接お伺い。
-              </div>
-              <div>
-                <span className="font-bold bg-gray-200 p-0.5">顧客備考3</span>
-              </div>
-            </div>
-          </div>
+          <button
+            ref={tantoRef}
+            onMouseEnter={() =>
+              handleShowTooltip(tantoRef, tantoTooltipContent)
+            }
+            onMouseLeave={handleHideTooltip}
+            className="w-1/2 font-bold border text-center border-black p-2 bg-[#80bad7]"
+          >
+            担当者
+          </button>
+
+          <button
+            ref={bikouRef}
+            onMouseEnter={() =>
+              handleShowTooltip(bikouRef, bikouTooltipContent)
+            }
+            onMouseLeave={handleHideTooltip}
+            className="w-1/2 font-bold border text-center border-black p-2 bg-[#80bad7]"
+          >
+            顧客備考
+          </button>
           <button
             onClick={handleOpenWindow}
             className="w-1/2 font-bold border text-center border-black p-2 bg-[#80bad7]"
@@ -315,9 +357,22 @@ const LeftPanel: React.FC<LeftPanelProps> = ({ showAdvanceSearch, setShowAdvance
       {showAdvanceSearch && (
         <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
           <div className="bg-white rounded shadow-lg relative w-[700px] max-w-full">
-            <AdvanceSearchModal showAdvanceSearch={showAdvanceSearch} setShowAdvanceSearch={setShowAdvanceSearch} />
+            <AdvanceSearchModal
+              showAdvanceSearch={showAdvanceSearch}
+              setShowAdvanceSearch={setShowAdvanceSearch}
+            />
           </div>
         </div>
+      )}
+      {tooltip.visible && (
+        <TooltipPortal>
+          <div
+            className="absolute z-50"
+            style={{ top: `${tooltip.top}px`, left: `${tooltip.left}px` }}
+          >
+            {tooltip.content}
+          </div>
+        </TooltipPortal>
       )}
     </div>
   );

@@ -43,17 +43,17 @@ function CheckSaleByCategoryScreen() {
   );
 
   const labelClass =
-    "bg-[#80bad7] text-base font-medium w-full max-w-[150px] h-8 flex items-center justify-center bg-[#80bad7]";
+    "bg-[#80bad7] text-base font-medium w-full  h-8 flex items-center justify-center bg-[#80bad7]";
   const inputClass =
-    "border border-black text-base w-full max-w-[150px] h-8 text-center bg-[#ebcec0]";
+    "border border-black text-base w-full  h-8 text-center bg-[#ebcec0]";
 
   return (
-    <div className="p-4 ">
-      <div className="bg-[#80bad7] w-full max-w-4xl h-8 text-center font-semibold text-lg mb-2 leading-8 border border-black">
+    <div className="p-4 w-full">
+      <div className="bg-[#80bad7] w-full h-8 text-center font-semibold text-lg mb-2 leading-8 border border-black">
         ＜大分類別売上＞
       </div>
 
-      <div className="border border-black grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 w-full max-w-4xl ">
+      <div className="border border-black grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 w-full">
         {columns.map((col, colIndex) => (
           <div key={colIndex} className="grid p-2 grid-rows-11 mb-1 gap-y-1">
             {col.map((label, rowIndex) => {
