@@ -240,16 +240,33 @@ const LeftPanel: React.FC<LeftPanelProps> = ({ showAdvanceSearch, setShowAdvance
             <div className="flex items-center space-x-1">
               <input
                 type="text"
-                className="border border-black p-1 placeholder-black w-20 bg-[#ebcec0]"
-                placeholder="0"
+                className="border border-black p-1 placeholder-gray-400 w-20 bg-[#ebcec0]"
+                placeholder="000000"
+                onChange={(e) => {
+                setId1(e.target.value);
+                handleValueChange(e.target.value, 0);
+                }}
               />
               <span> - </span>
               <input
                 type="text"
-                className="border w-20 border-black p-1 bg-[#ebcec0]"
+                className="border w-20 border-gray-400 p-1 bg-[#ebcec0]"
                 value={(Array.isArray(value) && value[1]) || ""}
-                onChange={(e) => handleValueChange(e.target.value, 1)}
+                onChange={(e) => {
+                setId2(e.target.value);
+                handleValueChange(e.target.value, 1);
+                
+                }}
+                placeholder="000000"
               />
+              <button
+                    onClick={() => {
+                      handleSearchCustomer(id1, id2);
+                    }}
+                    className=" w-[20px] h-[20px] mt-1 inset-y-0 right-0 flex items-center px-1 bg-white border border-gray-500 cursor-pointer"
+                  >
+                    <DownArrowIcon />
+              </button>
             </div>
           );
         case "double":
@@ -321,7 +338,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({ showAdvanceSearch, setShowAdvance
 };
 
   return (
-    <div className="h-screen p-3 bg-[#d8dadc] border-2 border-gray-400 font-sans">
+    <div className=" transition-all duration-300 h-screen p-3 bg-[#d8dadc] border-2 border-gray-400 font-sans">
       <div className="text-center h-8 text-sm bg-[#80bad7] py-1 font-semibold border border-black">
           顧客検索
         </div>
@@ -336,14 +353,14 @@ const LeftPanel: React.FC<LeftPanelProps> = ({ showAdvanceSearch, setShowAdvance
                   <input
                     type="text"
                     placeholder="0000"
-                    className="w-20 px-1 py-0.5 border border-gray-500 bg-[#ebcec0]"
+                    className="w-20 p-1 border border-gray-500 bg-[#ebcec0]"
                     onChange={(e) => setPostcode1(e.target.value)}
                   />
                   <span className="mx-1">-</span>
                   <input
                     type="text"
                     placeholder="000"
-                    className="w-20 px-1 py-0.5 border border-gray-500 bg-[#ebcec0]"
+                    className="w-20 p-1 border border-gray-500 bg-[#ebcec0]"
                     onChange={(e) => setPostcode2(e.target.value)}
                   />
                   <button
@@ -392,21 +409,6 @@ const LeftPanel: React.FC<LeftPanelProps> = ({ showAdvanceSearch, setShowAdvance
                   <div className="flex">
                     {renderDynamicInput()}
                   </div>
-                  {/* <input
-                    type="text"
-                    placeholder="0000"
-                    className="w-20 px-1 py-0.5 border border-gray-500 bg-[#ebcec0]"
-                    onChange={(e) => setId1(e.target.value)}
-                  />
-                  <span className="mx-1">-</span>
-                  <input
-                    type="text"
-                    placeholder="000"
-                    className="w-20 px-1 py-0.5 border border-gray-500 bg-[#ebcec0]"
-                    onChange={(e) => setId2(e.target.value)}
-                  /> */}
-                  
-
                 </>
               ):(
                 <>
@@ -527,7 +529,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({ showAdvanceSearch, setShowAdvance
                         </form>
                         <input
                           type="text"
-                          className="w-64 px-1 py-0.5 border border-gray-500 bg-[#ebcec0]"
+                          className="w-64 p-1 border border-gray-500 bg-[#ebcec0]"
                         />
                       </>      
                   </div>
@@ -629,7 +631,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({ showAdvanceSearch, setShowAdvance
               
             </div>
             {showTable && (
-            <div className="h-52 overflow-y-auto">
+            <div className="h-48 overflow-y-auto">
               <div className="flex w-full ">
                 {tableHeaders.map((header, colIndex) => (
                   <div
