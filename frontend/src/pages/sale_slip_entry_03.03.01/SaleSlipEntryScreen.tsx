@@ -10,8 +10,8 @@ import MeterReadingInforScreen from "../../component/transaction_information/1.1
 import CRM from "../../component/transaction_information/1.1.1_03/CRM";
 import LinkDestinationScreen from "../../component/transaction_information/1.1.1_03/LinkDestinationScreen";
 import { handleNavigationKey } from "../../utils/InputHandlers";
-import AdvanceSearchModal from "../../component/sale_slip_entry/3.3.3_01/AdvanceSearchModal";
-
+//import AdvanceSearchModal from "../../component/sale_slip_entry/3.3.3_01/AdvanceSearchModal";
+import SalesSlipEntry from "../../component/sale_slip_entry/3.3.3_01/SalesSlipEntry";
 const SaleSlipEntryScreen = () => {
   
   const [showLeftPanel, setShowLeftPanel] = useState(true);
@@ -112,7 +112,11 @@ const SaleSlipEntryScreen = () => {
       <div className="my-3 ml-2 flex-1 h-[calc(100%-0.75rem*2)] flex flex-row min-w-0 z-10">
         <div className="relative mr-2 border border-black w-10/12 text-black flex justify-center ">
           
-          <div className="overflow-y-auto">{renderActiveScreen()}</div>
+          {/* <div className="overflow-y-auto">{renderActiveScreen()}</div> */}
+          {/* <div className="overflow-y-auto">
+            <SalesSlipEntry />
+          </div> */}
+          <SalesSlipEntry />
         </div>
 
         <RightPanel
