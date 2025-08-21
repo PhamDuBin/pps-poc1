@@ -338,7 +338,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({ showAdvanceSearch, setShowAdvance
 };
 
   return (
-    <div className=" transition-all duration-300 h-screen p-3 bg-[#d8dadc] border-2 border-gray-400 font-sans">
+    <div className="h-screen p-3 bg-[#d8dadc] border-2 border-gray-400 font-sans">
       <div className="text-center h-8 text-sm bg-[#80bad7] py-1 font-semibold border border-black">
           顧客検索
         </div>
