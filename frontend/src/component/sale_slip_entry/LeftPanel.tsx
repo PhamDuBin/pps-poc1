@@ -21,6 +21,12 @@ const DownArrowIcon = () => (
   </svg>
 );
 
+const kanaButtons = [
+  "ア", "カ", "サ", "タ", "ナ", "ハ", "マ", "ヤ", "ラ", "ワ",
+  { label: "その他", wide: true },
+  { label: "全て", wide: true },
+];
+
 const tableHeaders = [
   "コード", "氏名", "カナ氏名", "所属事務所名",
 ];
@@ -41,7 +47,6 @@ type LeftPanelProps = {
 const LeftPanel: React.FC<LeftPanelProps> = ({ showAdvanceSearch, setShowAdvanceSearch }) => {
   const [postcode1, setPostcode1] = useState("");
   const [postcode2, setPostcode2] = useState("");
-  const [postcode3, setPostcode3] = useState("");
   const [showTable, setShowTable] = useState(false);
   const [showDepart, setShowDepart] = useState(false);
   const [id1, setId1] = useState("");
@@ -52,21 +57,14 @@ const LeftPanel: React.FC<LeftPanelProps> = ({ showAdvanceSearch, setShowAdvance
   const [selectedRow, setSelectedRow] = useState(false);
 
 
-  const handleSearchCustomer = (id1: string, id2: string) => {
-    if (id1 && id2) {
+  const handleSearch = (...ids: string[]) => {
+    if (ids.some((id) => id)) {
       setShowCustomer(true);
     } else {
       setShowCustomer(false);
     }
   };
 
-  const handleSearchDefault = (id1: string) => {
-    if (id1 ) {
-      setShowCustomer(true);
-    } else {
-      setShowCustomer(false);
-    }
-  };
 
   const handleSearchDepartment = (postcode1: string, postcode2: string) => {
     if (postcode1 && postcode2) {
@@ -76,86 +74,22 @@ const LeftPanel: React.FC<LeftPanelProps> = ({ showAdvanceSearch, setShowAdvance
     }
   };
 
-
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      const isMac = navigator.platform.toUpperCase().includes("MAC");
-      // Alt + Ctrl/Cmd + C
-      const isComboPressed =
-        e.code === "KeyC" && e.altKey && (isMac ? e.metaKey : e.ctrlKey);
-
-      if (isComboPressed && showAdvanceSearch) {
-        e.preventDefault();
-        setShowAdvanceSearch(false);
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [showAdvanceSearch]);
-
-  const handleOpenWindow = () => {
-    const win = window.open(
-      "/link-destination",
-      "_blank",
-      "width=800,height=600,noopener,noreferrer"
-    );
-
-    if (win) {
-      win.focus();
-    }
-  };
-
   const fieldDefinitions = [
-  { id: "customerCode", label: "顧客コード", type: "double",},
-  {
-    id: "searchKey1",
-    label: "検索キー１",
-    type: "input",
-
-  },
+  { id: "customerCode", label: "顧客コード", type: "double" },
+  { id: "searchKey1", label: "検索キー１", type: "input" },
   { id: "searchKey2", label: "検索キー２", type: "input" },
   { id: "computerCode", label: "電算コード", type: "single" },
-  { id: "eavesbarCode", label: "軒先バーコード", type: "input"},
-  { id: "deleveryOrderCode", label: "配送順コード", type: "multi", partSizes: [50 , 70 , 50], },
-  { id: "inspectionOderCode", label: "点検順コード", type: "multi", partSizes: [50 , 70 , 50], },
-  {
-    id: "saleOrderCode",
-    label: "営業順コード",
-    type: "multi",
-    partSizes: [50 , 70 , 50],
-  },
-
-  {
-    id: "meterReadingOrderCode",
-    label: "検針順コード",
-    type: "multi",
-    partSizes: [50 , 70 , 50],
-  },
-
-  { id: "collectionOderCode", label: "集金順コード", type: "multi", partSizes: [50 , 70 , 50],},
-  {
-    id: "distributionCenterCD",
-    label: "配送センターCD",
-    type: "dropdown",
-  },
-  {
-    id: "securityAgencyCD",
-    label: "保安機関CD",
-    type: "dropdown",
-  },
-
+  { id: "eavesbarCode", label: "軒先バーコード", type: "input" },
+  { id: "deleveryOrderCode", label: "配送順コード", type: "multi", partSizes: [50, 70, 50] },
+  { id: "inspectionOderCode", label: "点検順コード", type: "multi", partSizes: [50, 70, 50] },
+  { id: "saleOrderCode", label: "営業順コード", type: "multi", partSizes: [50, 70, 50] },
+  { id: "meterReadingOrderCode", label: "検針順コード", type: "multi", partSizes: [50, 70, 50] },
+  { id: "collectionOderCode", label: "集金順コード", type: "multi", partSizes: [50, 70, 50] },
+  { id: "distributionCenterCD", label: "配送センターCD", type: "dropdown" },
+  { id: "securityAgencyCD", label: "保安機関CD", type: "dropdown" },
   { id: "centralMonitoringCD", label: "集中監視CD", type: "dropdown" },
-   {
-    id: "oderManagementNo",
-    label: "受注管理No.",
-    type: "input",
-  },
-  {
-    id: "deliverySlipNo",
-    label: "出庫伝票No.",
-    type: "input",
-  }
+  { id: "oderManagementNo", label: "受注管理No.", type: "input" },
+  { id: "deliverySlipNo", label: "出庫伝票No.", type: "input" },
   ] as const;
 
   type FieldId = (typeof fieldDefinitions)[number]["id"];
@@ -227,7 +161,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({ showAdvanceSearch, setShowAdvance
               ))}
               <button
                     onClick={() => {
-                      handleSearchCustomer(id1, id2);
+                      handleSearch(id1, id2);
                     }}
                     className=" w-[20px] h-[20px] mt-1 inset-y-0 right-0 flex items-center px-1 bg-white border border-gray-500 cursor-pointer"
                   >
@@ -261,7 +195,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({ showAdvanceSearch, setShowAdvance
               />
               <button
                     onClick={() => {
-                      handleSearchCustomer(id1, id2);
+                      handleSearch(id1, id2);
                     }}
                     className=" w-[20px] h-[20px] mt-1 inset-y-0 right-0 flex items-center px-1 bg-white border border-gray-500 cursor-pointer"
                   >
@@ -296,7 +230,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({ showAdvanceSearch, setShowAdvance
               />
               <button
                     onClick={() => {
-                      handleSearchCustomer(id1, id2);
+                      handleSearch(id1, id2);
                     }}
                     className=" w-[20px] h-[20px] mt-1 inset-y-0 right-0 flex items-center px-1 bg-white border border-gray-500 cursor-pointer"
                   >
@@ -318,7 +252,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({ showAdvanceSearch, setShowAdvance
             />
             <button
                     onClick={() => {
-                      handleSearchDefault(id1)
+                      handleSearch(id1)
                     }}
                     className=" w-[20px] h-[20px] mt-1 inset-y-0 right-0 flex items-center px-1 bg-white border border-gray-500 cursor-pointer"
                   >
@@ -340,7 +274,8 @@ const LeftPanel: React.FC<LeftPanelProps> = ({ showAdvanceSearch, setShowAdvance
   return (
     <div className="h-screen p-3 bg-[#d8dadc] border-2 border-gray-400 font-sans">
       <div className="text-center h-8 text-sm bg-[#80bad7] py-1 font-semibold border border-black">
-          顧客検索
+        {(showDepart || showCustomer) ? "顧客情報" : "顧客検索"}
+          
         </div>
         <div className="mb-2 items-center flex-col relative">
           {/* department */}
@@ -489,8 +424,6 @@ const LeftPanel: React.FC<LeftPanelProps> = ({ showAdvanceSearch, setShowAdvance
               </button>
             </div>
           )}
-          
-          
           {showAdvanceSearch && (
           <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
             <div className="bg-white rounded shadow-lg relative w-[700px] max-w-full">
@@ -498,7 +431,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({ showAdvanceSearch, setShowAdvance
             </div>
           </div>
         )}
-        
+
         </div>  
       <div >
       {!selectedRow ? (
@@ -584,51 +517,26 @@ const LeftPanel: React.FC<LeftPanelProps> = ({ showAdvanceSearch, setShowAdvance
                           />
                           <label htmlFor="all">全て</label>
                         </div>
-
                       </>
                   </div>
                 </div>
               </div> 
             </div> 
             
-            <div className="h-8 text-sm font-semibold text-center">
-              <button className="border text-center bg-white border-black p-0.5 w-8 mr-1">
-                ア
-              </button>
-              <button className="border text-center bg-white border-black p-0.5 w-8 mr-1">
-                カ
-              </button>
-              <button className="border text-center bg-white border-black p-0.5 w-8 mr-1">
-                サ
-              </button>
-              <button className="border text-center bg-white border-black p-0.5 w-8 mr-1">
-                タ
-              </button>
-              <button className="border text-center bg-white border-black p-0.5 w-8 mr-1">
-                ナ
-              </button>
-              <button className="border text-center bg-white border-black p-0.5 w-8 mr-1">
-                ハ
-              </button>
-              <button className="border text-center bg-white border-black p-0.5 w-8 mr-1">
-                マ
-              </button>
-              <button className="border text-center bg-white border-black p-0.5 w-8 mr-1">
-                ヤ
-              </button>
-              <button className="border text-center bg-white border-black p-0.5 w-8 mr-1">
-                ラ
-              </button>
-              <button className="border text-center bg-white border-black p-0.5 w-8 mr-1">
-                ワ
-              </button>
-              <button className="border text-center bg-white border-black p-0.5 w-20 mr-1">
-                その他
-              </button>
-              <button className="border text-center bg-white border-black p-0.5 w-20 mr-1">
-                全て
-              </button>
-              
+            <div className="flex flex-wrap justify-center">
+              {kanaButtons.map((item, index) => {
+                const isObject = typeof item === "object";
+                const label = isObject ? item.label : item;
+                const isWide = isObject && item.wide;
+                return (
+                  <button
+                    key={index}
+                    className={`border text-center bg-white border-black p-0.5 mr-1 ${isWide ? "w-20" : "w-8"}`}
+                  >
+                    {label}
+                  </button>
+                );
+              })}
             </div>
             {showTable && (
             <div className="h-48 overflow-y-auto">
@@ -689,5 +597,5 @@ const LeftPanel: React.FC<LeftPanelProps> = ({ showAdvanceSearch, setShowAdvance
     </div>
   );
 };
-
 export default LeftPanel;
+

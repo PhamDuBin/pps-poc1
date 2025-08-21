@@ -18,7 +18,7 @@ const RightPanel: React.FC<RightPanelProps> = ({
 
   return (
     <div className="w-2/12 border bg-[#d8dadc] border-black h-full pt-5">
-      <div className="ml-3 mr-3 font-bold text-base text-black flex flex-col gap-2 overflow-auto h-full">
+      <div className="mx-3 font-bold text-base text-black flex flex-col gap-2 overflow-auto h-full">
         {buttons.map((label, index) => {
           return (
             <button

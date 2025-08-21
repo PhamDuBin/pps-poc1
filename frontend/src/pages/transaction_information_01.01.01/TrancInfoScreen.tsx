@@ -82,7 +82,7 @@ const TrancInfoScreen = () => {
         <div className="relative flex items-center h-full w-2 bg-[#e6cfcf]"></div>
       )}
       {showLeftPanel && (
-        <div className="transition-all absolute duration-300 z-20">
+        <div className="transition-all duration-300  absolute z-20">
           <LeftPanel showAdvanceSearch={showAdvanceSearch} setShowAdvanceSearch={setShowAdvanceSearch} />
         </div>
       )}
