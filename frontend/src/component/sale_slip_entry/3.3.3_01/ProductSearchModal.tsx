@@ -1,11 +1,15 @@
 import React, { useState } from "react";
 import StatusBar from "../StatusBar";
+import SaleDetailModal from "./SaleDetail/SaleDetailModal";
 
 interface ProductSearchModalProps {
   isOpen: boolean;
   onClose: () => void;
   categoryName: string;
+  onNext: () => void; 
 }
+
+
 
 const mockData = [
   {
@@ -199,7 +203,12 @@ const ProductSearchModal: React.FC<ProductSearchModalProps> = ({
   isOpen,
   onClose,
   categoryName,
+  onNext,
 }) => {
+
+  const [currentStep, setCurrentStep] = useState(1);
+  
+
   if (!isOpen) return null;
 
   return (
@@ -223,7 +232,7 @@ const ProductSearchModal: React.FC<ProductSearchModalProps> = ({
             </div>
           </div>
         </div>
-
+        
         {/* 2. Search Form */}
         <AdvancedSearchForm />
 
@@ -337,7 +346,9 @@ const ProductSearchModal: React.FC<ProductSearchModalProps> = ({
           >
             戻る (R)
           </button>
-          <button className="bg-gray-300 border border-gray-500 rounded px-10 py-2 font-bold hover:bg-gray-400">
+          <button
+          onClick={onNext}
+          className="bg-gray-300 border border-gray-500 rounded px-10 py-2 font-bold hover:bg-gray-400">
             選択 (N)
           </button>
         </div>

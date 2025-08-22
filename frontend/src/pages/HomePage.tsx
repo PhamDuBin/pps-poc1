@@ -70,7 +70,6 @@ export default function HomePage() {
           → Sale Slip Entry Page (03.03.01_売上伝票入力_伝票対象選択ランチャー)
         </Link>
       </div>
-
       <button
         onClick={handleLogout}
         className="mt-6 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
