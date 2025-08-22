@@ -4,6 +4,9 @@ import DepositProcess from "./DepositProcess";
 import CategorySelectionModal from "./CategorySelectionModal";
 import { DownArrowIcon } from "../../transaction_information/LeftPanel";
 import ProductSearchModal from "./ProductSearchModal";
+import SaleDetailModal from "./SaleDetail/SaleDetailModal";
+import StatusBar from "../StatusBar";
+
 
 export default function SalesSlipEntry() {
   const [labelDeposit, setLabelDeposit] = useState("入金処理");
@@ -11,11 +14,14 @@ export default function SalesSlipEntry() {
   const [isOpenDepositProcess, setIsOpenDepositProcess] = useState(false);
   const [isProductSearchModalOpen, setProductSearchModalOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("");
+  const [isSaleDetailModalOpen, setIsSaleDetailModalOpen] = useState(false);
+  const [currentStep, setCurrentStep] = useState(1);
 
   const handleCategorySelect = (categoryName: string) => {
     setSelectedCategory(categoryName);
     setIsOpenCategorySelection(false);
     setProductSearchModalOpen(true);
+    setCurrentStep(2);
   };
 
   const handleBackToCategory = () => {
@@ -160,13 +166,21 @@ export default function SalesSlipEntry() {
           onCategorySelect={handleCategorySelect}
         />
       )}
-      {isProductSearchModalOpen && (
+      {currentStep === 2  && (
         <ProductSearchModal
           isOpen={isProductSearchModalOpen}
           onClose={handleBackToCategory}
           categoryName={selectedCategory}
+          onNext={() => setCurrentStep(3)}
         />
       )}
+      {currentStep === 3 && (
+          <SaleDetailModal
+            isOpen={isSaleDetailModalOpen}
+            onClose={() => setCurrentStep(2)}
+            categoryName={selectedCategory} 
+          />
+        )}
     </div>
   );
 }

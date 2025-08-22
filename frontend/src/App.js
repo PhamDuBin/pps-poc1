@@ -24,6 +24,7 @@ import CheckSaleByCategoryScreen from "./component/transaction_information/1.1.1
 import CheckCurrentMonthSalesStatusScreen from "./component/transaction_information/1.1.1_03/CheckCurrentMonthSalesStatus";
 import LinkDestinationScreen from "./component/transaction_information/1.1.1_03/LinkDestinationScreen";
 import SaleSlipEntryScreen from "./pages/sale_slip_entry_03.03.01/SaleSlipEntryScreen";
+import SaleDetailModal from "./component/sale_slip_entry/3.3.3_01/SaleDetail/SaleDetailModal.tsx"
 
 function App() {
   return (
@@ -158,8 +159,7 @@ function App() {
                 <SaleSlipEntryScreen />
               </PrivateRoute>
             }
-          />
-          
+          />          
           <Route
             path="/link-destination"
             element={
