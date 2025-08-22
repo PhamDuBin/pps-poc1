@@ -89,7 +89,7 @@ const SaleSlipEntryScreen = () => {
         <div className="relative flex items-center h-full w-2 bg-[#e6cfcf]"></div>
       )}
       {showLeftPanel && (
-        <div className="transition-all duration-300 absolute z-20">
+        <div className="w-[600px] transition-all duration-300 absolute z-20">
           <LeftPanel
             showAdvanceSearch={showAdvanceSearch}
             setShowAdvanceSearch={setShowAdvanceSearch}
@@ -98,7 +98,7 @@ const SaleSlipEntryScreen = () => {
       )}
       {showLeftPanel ? (
         <CircleArrowLeft
-          className={`absolute left-[36.3rem] top-1/2 -translate-y-1/2 text-black w-5 h-5 cursor-pointer bg-[#d8dadc] rounded-full shadow 
+          className={`absolute left-[36.8rem] top-1/2 -translate-y-1/2 text-black w-5 h-5 cursor-pointer bg-[#d8dadc] rounded-full shadow 
             ${showAdvanceSearch ? 'z-0 hidden pointer-events-none' : 'z-30'}`}
           onClick={() => setShowLeftPanel(false)}
         />

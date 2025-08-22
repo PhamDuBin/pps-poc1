@@ -1,51 +1,77 @@
-import React, { useState } from "react";
+import React,{ useState } from "react";
+
+import LeftPanel from "../LeftPanel";
 
 const fieldDefinitions = [
-  { id: "customerCode", label: "顧客コード", type: "double",},
+  { id: "allTel", label: "ALL電話番号", type: "single" },
   {
-    id: "searchKey2",
-    label: "検索キー１",
-    type: "input",
-  },
-  { id: "searchKey2", label: "検索キー２", type: "input" },
-  { id: "computerCode", label: "電算コード", type: "single" },
-  { id: "eavesbarCode", label: "軒先バーコード", type: "input"},
-  { id: "deleveryOrderCode", label: "配送順コード", type: "multi", partSizes: [110, 170, 110], },
-  { id: "inspectionOderCode", label: "点検順コード", type: "multi", partSizes: [110, 170, 110], },
-  {
-    id: "saleOrderCode",
-    label: "営業順コード",
+    id: "customerCode",
+    label: "顧客コード",
     type: "multi",
-    partSizes: [110, 170, 110],
+    partSizes: [45, 35, 65, 35],
   },
+  { id: "searchCode1", label: "検索コード１", type: "single" },
+  { id: "kanaName", label: "カナ氏名", type: "single" },
+  { id: "securityCode", label: "保安機関コード", type: "dropdown" },
+  { id: "searchCode2", label: "検索コード２", type: "single" },
+  { id: "tel1", label: "電話番号１", type: "single" },
   {
-    id: "meterReadingOrderCode",
+    id: "meterRouteCode",
     label: "検針順コード",
     type: "multi",
-    partSizes: [110, 170, 110],
+    partSizes: [50, 40, 40],
   },
-  { id: "collectionOderCode", label: "集金順コード", type: "multi", partSizes: [110, 170, 110],},
   {
-    id: "distributionCenterCD",
-    label: "配送センターCD",
+    id: "keroseneCode",
+    label: "灯油配達順コード",
+    type: "multi",
+    partSizes: [50, 40, 40],
+  },
+  { id: "tel2", label: "電話番号２", type: "single" },
+  {
+    id: "deliveryRouteCode",
+    label: "配送順コード",
+    type: "multi",
+    partSizes: [50, 40, 40],
+  },
+  {
+    id: "salesRepCode",
+    label: "営業順コード",
+    type: "multi",
+    partSizes: [50, 40, 40],
+  },
+  { id: "tel3", label: "電話番号３", type: "single" },
+  {
+    id: "gMeterCode",
+    label: "点検順コード",
+    type: "multi",
+    partSizes: [50, 40, 40],
+  },
+  {
+    id: "chimneyCode",
+    label: "集金順コード",
+    type: "multi",
+    partSizes: [50, 40, 40],
+  },
+  {
+    id: "addressName",
+    label: "住所＋カナ",
+    type: "double",
+    placeholders: ["住所", "カナ氏名"],
+  },
+  {
+    id: "managementCenterCode",
+    label: "集中管理センターコード",
     type: "dropdown",
   },
+  { id: "deliveryCenterCode", label: "配送センターコード", type: "dropdown" },
   {
-    id: "securityAgencyCD",
-    label: "保安機関CD",
-    type: "dropdown",
+    id: "addressName",
+    label: "住所名称＋カナ",
+    type: "double",
+    placeholders: ["住所名称", "カナ氏名"],
   },
-  { id: "centralMonitoringCD", label: "集中監視CD", type: "dropdown" },
-  {
-    id: "oderManagementNo",
-    label: "受注管理No.",
-    type: "input",
-  },
-  {
-    id: "deliverySlipNo",
-    label: "出庫伝票No.",
-    type: "input",
-  }
+  { id: "gasMeterSerial", label: "ガスメータ製造番号", type: "single" },
 ] as const;
 
 type FieldId = (typeof fieldDefinitions)[number]["id"];
@@ -116,7 +142,7 @@ const AdvancedSearchForm: React.FC = () => {
           <div className="flex items-center space-x-1">
             <input
               type="text"
-              className="border border-black p-1 placeholder-black w-[25%]"
+              className="border border-black p-1 placeholder-black w-[40px]"
               placeholder="0"
             />
             <span> - </span>
@@ -130,20 +156,25 @@ const AdvancedSearchForm: React.FC = () => {
         );
       case "double":
         return (
-          <div className="flex gap-x-1">
+          <div className="flex flex-col space-y-1">
+            <div className=" bg-gray-300 flex text-center justify-center p-1">
+              {currentField.placeholders?.[0]}
+            </div>
             <input
-                    type="text"
-                    placeholder="0000"
-                    className="w-[50%] px-1 py-0.5 border border-gray-500 bg-[#ebcec0]"
-                    onChange={(e) => handleValueChange(e.target.value, 1)}
-                  />
-                  <span className="mx-1">-</span>
-                  <input
-                    type="text"
-                    placeholder="000"
-                    className="w-[50%] px-1 py-0.5 border border-gray-500 bg-[#ebcec0]"
-                    onChange={(e) => handleValueChange(e.target.value, 2)}
-                  />
+              type="text"
+              className="border border-gray-400 p-1 placeholder-black"
+              value={(Array.isArray(value) && value[0]) || ""}
+              onChange={(e) => handleValueChange(e.target.value, 0)}
+            />
+            <div className=" bg-gray-300 flex text-center justify-center p-1">
+              {currentField.placeholders?.[1]}
+            </div>
+            <input
+              type="text"
+              className="border border-gray-400 p-1 placeholder-black"
+              value={(Array.isArray(value) && value[1]) || ""}
+              onChange={(e) => handleValueChange(e.target.value, 1)}
+            />
           </div>
         );
       default:
@@ -159,7 +190,7 @@ const AdvancedSearchForm: React.FC = () => {
   };
 
   return (
-    <div className="flex items-start space-x-2 mt-2 p-3 border border-black rounded-md bg-gray-50">
+    <div className="flex items-start space-x-2 mt-2 p-3 border z-30 border-black rounded-md bg-gray-50">
       <div className="flex flex-col">
         <label className="text-xs  font-semibold text-gray-600 mb-1">
           検索種類 / 検索順
@@ -196,12 +227,7 @@ const AdvancedSearchForm: React.FC = () => {
   );
 };
 
-type LeftPanelProps ={
-  showAdvanceSearch: boolean;
-  setShowAdvanceSearch: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-const AdvanceSearchModal: React.FC<LeftPanelProps> = ({ showAdvanceSearch, setShowAdvanceSearch }) => {
+const AdvanceSearchModal: React.FC<{ showAdvanceSearch: boolean; setShowAdvanceSearch: React.Dispatch<React.SetStateAction<boolean>> }> = ({ showAdvanceSearch, setShowAdvanceSearch }) => {
   const [searchMode, setSearchMode] = useState<string>("overall");
   const tableData = Array.from({ length: 12 }).map(() => ({
     kanaName: "cell",
@@ -211,14 +237,14 @@ const AdvanceSearchModal: React.FC<LeftPanelProps> = ({ showAdvanceSearch, setSh
   }));
 
   return (
-    <div className="p-4 bg-white text-black w-full text-sm z-30">
+    <div className="p-4 bg-white text-black w-full text-sm">
       <div className="bg-[#80bad7] border border-black p-2 text-center font-bold mb-2">顧客検索</div>
       <div className="flex items-center space-x-6 bg-[#80bad7]  p-2 border border-black">
         <div className="flex items-center space-x-2">
           <label className="font-semibold">事務所</label>
           <span>0000-000 全指定</span>
         </div>
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-4"> 
           <div className="flex items-center">
             <input
               type="radio"
@@ -299,7 +325,6 @@ const AdvanceSearchModal: React.FC<LeftPanelProps> = ({ showAdvanceSearch, setSh
           </tbody>
         </table>
       </div>
-
       <div className="flex justify-center">
         <button
           onClick={() => {

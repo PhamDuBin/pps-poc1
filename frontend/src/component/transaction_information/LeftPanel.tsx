@@ -106,7 +106,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
     setTooltip({ ...tooltip, visible: false });
   };
 
-  const hanleSearchDepartment = (postcode1: string, postcode2: string) => {
+  const handleSearchDepartment = (postcode1: string, postcode2: string) => {
     if (postcode1 && postcode2) {
       setShowDepart(true);
     } else {
@@ -175,7 +175,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
               />
               <button
                 onClick={() => {
-                  hanleSearchDepartment(postcode1, postcode2);
+                  handleSearchDepartment(postcode1, postcode2);
                   setShowAdvanceSearch(true);
                 }}
                 className="mx-1 w-[20px] h-[20px] inset-y-0 right-0 flex items-center px-1 bg-gray-200 border border-black cursor-pointer"
