@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import AdvanceSearchModal from "./1.1.1_03/AdvanceSearchModal";
 import TooltipPortal from "./1.1.1_03/TooltipPortal";
 
-const DownArrowIcon = () => (
+export const DownArrowIcon = () => (
   <svg
     className="w-3 h-3 text-black"
     fill="none"
