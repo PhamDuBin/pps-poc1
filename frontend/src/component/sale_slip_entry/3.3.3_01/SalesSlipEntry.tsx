@@ -67,6 +67,7 @@ export default function SalesSlipEntry() {
     left: number;
   } | null>(null);
   const slipRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const tooltipRef = useRef<HTMLDivElement | null>(null); // Ref cho div chứa tooltip
 
   const handleClickSlip = (index: number) => {
     if (activeSlipIndex === index) {
@@ -111,7 +112,12 @@ export default function SalesSlipEntry() {
 
   const handleDeleteLine = (index: number) => {
     setSaleSlips((prev) => prev.filter((_, i) => i !== index));
-    setActiveSlipIndex(null); // ẩn balloon sau khi delete
+    setActiveSlipIndex(null);
+  };
+
+  const handleOpenCategorySelection = () => {
+    setActiveSlipIndex(null);
+    setIsOpenCategorySelection(true);
   };
 
   const handleCategorySelect = (categoryName: string) => {
@@ -125,7 +131,69 @@ export default function SalesSlipEntry() {
     setProductSearchModalOpen(false);
     setIsOpenCategorySelection(true);
   };
+  useEffect(() => {
+    if (activeSlipIndex !== null && tooltipRef.current) {
+      // Tìm tất cả các nút trong tooltip và focus vào nút đầu tiên
+      const firstButton = tooltipRef.current.querySelector("button");
+      firstButton?.focus();
+    }
+  }, [activeSlipIndex]); // Chạy mỗi khi activeSlipIndex thay đổi
 
+  function focusNextElement() {
+    const focusableElements = Array.from(
+      document.querySelectorAll<HTMLElement>(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      )
+    ).filter(
+      (el) => !el.hasAttribute("disabled") && !el.getAttribute("aria-hidden")
+    );
+
+    const currentIndex = focusableElements.indexOf(
+      document.activeElement as HTMLElement
+    );
+    if (currentIndex > -1) {
+      const nextElement =
+        focusableElements[currentIndex + 1] || focusableElements[0];
+      nextElement.focus();
+    }
+  }
+
+  // 3. Hàm xử lý sự kiện bàn phím trên tooltip
+  const handleTooltipKeyDown = (e: React.KeyboardEvent) => {
+    // Đóng tooltip khi nhấn mũi tên trái
+    if (e.key === "ArrowLeft") {
+      e.preventDefault();
+      const originalSlip = slipRefs.current[activeSlipIndex!]; // Lấy lại slip gốc
+      setActiveSlipIndex(null);
+      setTooltipPos(null);
+      originalSlip?.focus();
+
+      // Giả lập nhấn phím Tab
+
+      focusNextElement();
+    }
+
+    // Di chuyển focus giữa các nút trong tooltip
+    else if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+      e.preventDefault();
+      const buttons = Array.from(
+        tooltipRef.current?.querySelectorAll("button") || []
+      ) as HTMLButtonElement[];
+      const currentIndex = buttons.findIndex(
+        (btn) => btn === document.activeElement
+      );
+
+      if (currentIndex > -1) {
+        let nextIndex = 0;
+        if (e.key === "ArrowDown") {
+          nextIndex = (currentIndex + 1) % buttons.length;
+        } else {
+          nextIndex = (currentIndex - 1 + buttons.length) % buttons.length;
+        }
+        buttons[nextIndex]?.focus();
+      }
+    }
+  };
   return (
     <div className="bg-white w-full h-full flex flex-col items-center px-4 pt-4 2xl:text-[16px] text-[11px]">
       {/* Header */}
@@ -211,9 +279,10 @@ export default function SalesSlipEntry() {
               ref={(el) => {
                 slipRefs.current[index] = el;
               }}
+              tabIndex={0}
               onClick={() => handleClickSlip(index)}
               onKeyDown={(e) => {
-                if (e.key === "Enter") {
+                if (e.key === "Enter" || e.key === "ArrowRight") {
                   e.preventDefault();
                   handleClickSlip(index);
                 }
@@ -230,8 +299,10 @@ export default function SalesSlipEntry() {
           {activeSlipIndex !== null &&
             tooltipPos &&
             createPortal(
+              // 5. Thêm ref và onKeyDown cho div của tooltip
               <div
-
+                ref={tooltipRef}
+                onKeyDown={handleTooltipKeyDown}
                 style={{
                   position: "absolute",
                   top: tooltipPos.top,
@@ -241,14 +312,8 @@ export default function SalesSlipEntry() {
                 }}
               >
                 <div className="relative bg-white border border-black shadow-lg rounded-md p-2 font-normal text-[14px] text-black">
-                  {/* Mũi tên bên trái */}
-                  <div
-                    className="absolute top-4 -left-2 w-0 h-0 
-                           border-t-8 border-b-8 border-r-8 border-transparent border-r-[#D9D9D9]"
-                  ></div>
-
-                  <button tabIndex={0}
-                    className="block w-full px-2 py-1 hover:bg-gray-100 border border-black rounded shadow-md shadow-zinc-600 text-center">
+                  <div className="absolute top-4 -left-2 w-0 h-0 border-t-8 border-b-8 border-r-8 border-transparent border-r-[#D9D9D9]"></div>
+                  <button className="block w-full px-2 py-1 hover:bg-gray-100 border border-black rounded shadow-md shadow-zinc-600 text-center">
                     行編集
                   </button>
                   <button
@@ -258,7 +323,7 @@ export default function SalesSlipEntry() {
                     行削除
                   </button>
                   <button
-                    onClick={() => setIsOpenCategorySelection(true)}
+                    onClick={() => handleOpenCategorySelection()}
                     className="block w-full px-2 py-1 hover:bg-gray-100 border border-black rounded shadow-md shadow-zinc-600 mt-2 text-center"
                   >
                     行追加
