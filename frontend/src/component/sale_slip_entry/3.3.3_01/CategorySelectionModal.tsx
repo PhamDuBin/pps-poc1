@@ -1,3 +1,4 @@
+import { useRef, useEffect } from "react";
 import StatusBar from "../StatusBar";
 
 type Props = {
@@ -10,11 +11,19 @@ export default function CategorySelectionModal({
   onCategorySelect,
 }: Props) {
   const btnClass =
-    "flex-1 text-center bg-[#EEEEEE] border border-black py-2 rounded shadow-md shadow-zinc-600 mx-1";
+    "flex-1 text-center bg-[#EEEEEE] border border-black py-2 rounded shadow-md shadow-zinc-600 mx-1 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:black";
 
   const handleButtonClick = (name: string) => {
     onCategorySelect(name);
   };
+
+  const firstButtonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (firstButtonRef.current) {
+      firstButtonRef.current.focus();
+    }
+  }, []);
   return (
     // Overlay
     <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
@@ -26,6 +35,7 @@ export default function CategorySelectionModal({
         <div className="flex flex-col space-y-5 font-bold text-black mt-5 items-center">
           <div className="flex w-full max-w-3xl">
             <button
+              ref={firstButtonRef}
               className={btnClass}
               onClick={() => handleButtonClick("1.売上")}
             >

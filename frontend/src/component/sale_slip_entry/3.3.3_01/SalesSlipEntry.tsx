@@ -195,7 +195,7 @@ export default function SalesSlipEntry() {
     }
   };
   return (
-    <div className="bg-white w-full h-full flex flex-col items-center px-4 pt-4 2xl:text-[16px] text-[11px]">
+    <div className=" w-full h-full flex flex-col items-center px-4 pt-4 2xl:text-[16px] text-[11px]">
       {/* Header */}
       <div className="w-3/4">
         <div className="bg-[#D9D9D9] text-center font-bold py-2">
