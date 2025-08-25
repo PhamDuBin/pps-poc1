@@ -17,14 +17,6 @@ interface SaleDetailModalProps {
   onNext: (data: any) => void;
 }
 
-const TitleSaleDetail = [
-  "1.売上", "2.直送売上", "3.売上値引", "4.返品", "5.経費", "6.資産", "7.消費税"
-]
-
-
-
-
-
 const SaleDetailModal: React.FC<SaleDetailModalProps> = ({
   isOpen,
   onClose,
@@ -33,55 +25,158 @@ const SaleDetailModal: React.FC<SaleDetailModalProps> = ({
 }) => {
   let SelectedEntry: React.ReactNode = null;
 
+  const [formData, setFormData] = useState<any>({});
+
+  const handleChange = (field: string, value: string) => {
+    setFormData((prev: any) => {
+      const updated = {
+        ...prev,
+        [field]: value,
+      };
+      console.log("formData updated:", updated);
+      return updated;
+    });
+  };
+
   switch (categoryName) {
-    case "1.売上":
-      SelectedEntry = <SaleDetailEntry1 />;
-      break;
-    case "2.直送売上":
-      SelectedEntry = <SaleDetailEntry2 />;
-      break;
-    case "3.売上値引":
-      SelectedEntry = <SaleDetailEntry3 />;
-      break;
-    case "4.返品":
-      SelectedEntry = <SaleDetailEntry4 />;
-      break;
-    case "5.経費":
-      SelectedEntry = <SaleDetailEntry5 />;
-      break;
-    case "6.資産":
-      SelectedEntry = <SaleDetailEntry6 />;
-      break;
-    case "7.消費税":
-      SelectedEntry = <SaleDetailEntry7 />;
-      break;
-    default:
-      SelectedEntry = null;
+    case "1.売上":        SelectedEntry = <SaleDetailEntry1 onChange={handleChange}/>; break;
+    case "2.直送売上":    SelectedEntry = <SaleDetailEntry2 onChange={handleChange} />;; break;
+    case "3.売上値引":    SelectedEntry = <SaleDetailEntry3 onChange={handleChange}/>; break;
+    case "4.返品":        SelectedEntry = <SaleDetailEntry4 onChange={handleChange}/>; break;
+    case "5.経費":        SelectedEntry = <SaleDetailEntry5 onChange={handleChange}/>; break;
+    case "6.資産":        SelectedEntry = <SaleDetailEntry6 onChange={handleChange}/>; break;
+    case "7.消費税":      SelectedEntry = <SaleDetailEntry7 onChange={handleChange}/>; break;
   }
+  
 
   const handleNext = () => {
-    const data = {
-      headerRow: {
-        no: "03",
-        icon: "",
-        categoryName: "売上",
-        outsideMonth: 1,
-        selfTransferTarget: 1,
-      },
-      bodyRow: {
+
+  
+  let bodyRow: any = {};
+
+  switch (categoryName) { 
+    case "1.売上":   // Form 1
+      bodyRow = {
         titleInfo: {
-          productName: "リンナイ 給湯器 RUX-V1615W-E",
-          //supplierName: "XYZ商会",
+          productName:  "0111107 | パロマ湯沸器（13A） | PH−5BV" ,
+          supplierName: formData.supplierName || "",
         },
         detailInfo: {
-          quantity: "02",
-          tax: "200,000",
+          quantity: formData.purchaseAmount || "0",
+          tax: formData.tax || "0",
+          saleAmount: formData.saleAmount,
+          selfSwingTarget: formData.selfSwingTarget,
         },
-        note: "xxx",
+        note: formData.note || "",
+      };
+      break;
+
+    case "2.直送売上":   // Form 2
+      bodyRow = {
+        titleInfo: {
+          productName:  "0111107 | パロマ湯沸器（13A） | PH−5BV" ,
+          supplierName: formData.supplierName || "",
+        },
+        detailInfo: {
+          quantity: formData.purchaseAmount || "0",
+          tax: formData.tax || "0",
+          saleAmount: formData.saleAmount || "0",
+          salesPrice: formData.salesPrice || "0",
+        },
+        note: formData.note || "",
+      };
+      break;
+
+    case "3.売上値引":   // Form 3
+      bodyRow = {
+        titleInfo: {
+          productName:  "0111107 | パロマ湯沸器（13A） | PH−5BV" ,
+          supplierName: formData.supplierName || "",
+        },
+        detailInfo: {
+          quantity: formData.purchaseAmount || "0",
+          tax: formData.tax || "0",
+          discountAmount: formData.discountAmount || "0",
+        },
+        note: formData.note || "",
+      };
+      break;
+
+    case "4.返品":   // Form 4
+      bodyRow = {
+        titleInfo: {
+          productName:  "0111107 | パロマ湯沸器（13A） | PH−5BV" ,
+          supplierName: formData.supplierName || "",
+        },
+        detailInfo: {
+          quantity: formData.purchaseAmount || "0",
+          tax: formData.tax || "0",
+          purchaseAmount: formData.purchaseAmount || "0",
+        },
+        note: formData.note || "",
+      };
+      break;
+  case "5.経費":   // Form 5
+    bodyRow = {
+      titleInfo: {
+        productName:  "0111107 | パロマ湯沸器（13A） | PH−5BV" ,
+        supplierName: formData.supplierName || "",
       },
+      detailInfo: {
+        quantity: formData.purchaseAmount || "0",
+        tax: formData.tax || "0",
+        purchaseAmount: formData.purchaseAmount || "0",
+      },
+      note: formData.note || "",
     };
-    onNext(data);
+    break;
+
+  case "6.資産":   // Form 6
+    bodyRow = {
+      titleInfo: {
+        productName:  "0111107 | パロマ湯沸器（13A） | PH−5BV" ,
+        supplierName: formData.supplierName || "",
+      },
+      detailInfo: {
+        quantity: formData.purchaseAmount || "0",
+        tax: formData.tax || "0",
+        purchaseAmount: formData.purchaseAmount || "0",
+      },
+      note: formData.note || "",
+    };
+    break;
+
+  case "7.消費税":   // Form 7
+    bodyRow = {
+          titleInfo: {
+            productName:  "0111107 | パロマ湯沸器（13A） | PH−5BV" ,
+            supplierName: formData.supplierName || "",
+          },
+          detailInfo: {
+            tax: formData.tax,
+          },
+        };
+      break;
+
+    default:
+      bodyRow = {};
   }
+
+  const data = {
+    headerRow: {
+      no: "03",
+      icon: "",
+      categoryName,
+      outsideMonth: formData.outsideMonth || 1,
+      selfTransferTarget: formData.selfTransferTarget || 1,
+    },
+    bodyRow,
+  };
+
+  onNext(data);
+  console.log(data);
+};
+
 
 
   return (
