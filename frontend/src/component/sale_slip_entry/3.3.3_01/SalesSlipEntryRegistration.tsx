@@ -21,7 +21,6 @@ type BodyRow = {
   titleInfo?: {
     productName?: string;
     supplierName?: string;
-    
   };
   detailInfo?: {
     quantity?: string;
@@ -41,7 +40,9 @@ function renderRow(obj?: Record<string, string | undefined>) {
   const items = Object.entries(obj)
     .filter(([_, value]) => !!value)
     .map(([key, value]) => `${fieldLabelMap[key] || key}: ${value}`);
-   return items.length > 0 ? items.join("\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0") : null;
+  return items.length > 0
+    ? items.join("\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0")
+    : null;
 }
 
 export default function SalesSlipEntryRegistration({
@@ -49,7 +50,11 @@ export default function SalesSlipEntryRegistration({
   bodyRow,
 }: SalesSlipEntryRegistrationProps) {
   return (
-    <div className="w-full max-w-3xl border border-gray-300 rounded-md overflow-hidden shadow-sm">
+    <div
+      tabIndex={0}
+      role="registmodal"
+      className="w-full max-w-3xl border border-gray-300 rounded-md overflow-hidden shadow-sm"
+    >
       {/* Header */}
       <div className="bg-blue-100 flex justify-between items-center px-3 py-2 border-b">
         {/* Left side */}
@@ -57,16 +62,22 @@ export default function SalesSlipEntryRegistration({
           <span className="font-bold text-gray-800">No:{headerRow.no}</span>
           {/* {headerRow.icon && <img src={headerRow.icon} alt="icon" className="w-5 h-5" />} */}
           <img src={headerRow.icon} alt="icon" className="w-5 h-5" />
-          <span className="font-bold text-gray-800">区分: {headerRow.categoryName}</span>
+          <span className="font-bold text-gray-800">
+            区分: {headerRow.categoryName}
+          </span>
         </div>
 
         {/* Right side */}
         <div className="flex items-center space-x-2">
           {headerRow.outsideMonth === 1 && (
-            <span className="text-xs bg-gray-200 px-2 py-0.5 rounded">当月外</span>
+            <span className="text-xs bg-gray-200 px-2 py-0.5 rounded">
+              当月外
+            </span>
           )}
           {headerRow.selfTransferTarget === 1 && (
-            <span className="text-xs bg-gray-200 px-2 py-1 rounded">自動対象</span>
+            <span className="text-xs bg-gray-200 px-2 py-1 rounded">
+              自動対象
+            </span>
           )}
         </div>
       </div>
