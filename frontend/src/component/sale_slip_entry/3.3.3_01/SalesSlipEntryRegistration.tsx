@@ -53,7 +53,7 @@ export default function SalesSlipEntryRegistration({
     <div
       tabIndex={0}
       role="registmodal"
-      className="w-full border border-gray-300 rounded-md overflow-hidden shadow-sm mb-4"
+      className="w-full border border-black rounded-md overflow-hidden shadow-sm mb-4"
     >
       {/* Header */}
       <div className="bg-[#BFE7F5] flex justify-between items-center px-3 py-2 border-b font-semibold text-[14px] text-black">
