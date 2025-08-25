@@ -212,6 +212,12 @@ export default function SalesSlipEntry() {
                 slipRefs.current[index] = el;
               }}
               onClick={() => handleClickSlip(index)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  handleClickSlip(index);
+                }
+              }}
             >
               <SalesSlipEntryRegistration
                 headerRow={slip.headerRow}
@@ -225,7 +231,7 @@ export default function SalesSlipEntry() {
             tooltipPos &&
             createPortal(
               <div
-                
+
                 style={{
                   position: "absolute",
                   top: tooltipPos.top,
@@ -242,7 +248,7 @@ export default function SalesSlipEntry() {
                   ></div>
 
                   <button tabIndex={0}
-                 className="block w-full px-2 py-1 hover:bg-gray-100 border border-black rounded shadow-md shadow-zinc-600 text-center">
+                    className="block w-full px-2 py-1 hover:bg-gray-100 border border-black rounded shadow-md shadow-zinc-600 text-center">
                     行編集
                   </button>
                   <button
