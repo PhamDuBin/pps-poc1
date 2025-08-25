@@ -114,11 +114,7 @@ export default function SalesSlipEntry({
 
   // Handle Add Sale Slip
   const handleAddSaleSlip = (data: any) => {
-<<<<<<< HEAD
     setSaleSlips([...saleSlips, data]);
-    setIsSaleDetailModalOpen(false);
-    setCurrentStep(4);
-=======
     console.log("Line data:", data);
     setSaleSlips((prev) => {
       if (data.id !== undefined && data.id >= 0 && data.id < prev.length) {
@@ -132,7 +128,8 @@ export default function SalesSlipEntry({
         return [...prev, { ...data, id: prev.length }];
       }
     });
->>>>>>> feature/#14-01-01-01
+    setIsSaleDetailModalOpen(false);
+    setCurrentStep(4);
   };
 
   const handleEditLine = (index: number) => {
@@ -369,7 +366,7 @@ export default function SalesSlipEntry({
                 <div className="relative bg-white border border-black shadow-lg rounded-md p-2 font-normal text-[14px] text-black">
                   <div className="absolute top-4 -left-2 w-0 h-0 border-t-8 border-b-8 border-r-8 border-transparent border-r-[#D9D9D9]"></div>
                   <button
-                    onClick={() => handleEditLine(activeSlipIndex)}
+                    onClick={() => handleEditLine(activeSlipIndex!)}
                     className="block w-full px-2 py-1 hover:bg-gray-100 border border-black rounded shadow-md shadow-zinc-600 text-center">
                     行編集
                   </button>
@@ -463,19 +460,11 @@ export default function SalesSlipEntry({
       )}
       {currentStep === 3 && (
         <SaleDetailModal
-<<<<<<< HEAD
-            isOpen={isSaleDetailModalOpen}
-            onClose={() => setCurrentStep(2)}
-            categoryName={selectedCategory}
-            onNext={handleAddSaleSlip}
-            
-=======
           isOpen={isSaleDetailModalOpen}
           onClose={() => setCurrentStep(2)}
           categoryName={selectedCategory}
           onNext={handleAddSaleSlip}
           rowEdit={rowEdit}
->>>>>>> feature/#14-01-01-01
         />
       )}
     </div>
