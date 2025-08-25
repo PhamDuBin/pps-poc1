@@ -225,32 +225,35 @@ export default function SalesSlipEntry() {
             tooltipPos &&
             createPortal(
               <div
+                
                 style={{
                   position: "absolute",
                   top: tooltipPos.top,
                   left: tooltipPos.left,
                   zIndex: 9999,
+                  width: "160px",
                 }}
               >
-                <div className="relative bg-white border shadow-lg rounded-md p-2">
+                <div className="relative bg-white border border-black shadow-lg rounded-md p-2 font-normal text-[14px] text-black">
                   {/* Mũi tên bên trái */}
                   <div
                     className="absolute top-4 -left-2 w-0 h-0 
-                           border-t-8 border-b-8 border-r-8 border-transparent border-r-white"
+                           border-t-8 border-b-8 border-r-8 border-transparent border-r-[#D9D9D9]"
                   ></div>
 
-                  <button className="block w-full text-left px-2 py-1 hover:bg-gray-100">
+                  <button tabIndex={0}
+                 className="block w-full px-2 py-1 hover:bg-gray-100 border border-black rounded shadow-md shadow-zinc-600 text-center">
                     行編集
                   </button>
                   <button
                     onClick={() => handleDeleteLine(activeSlipIndex)}
-                    className="block w-full text-left px-2 py-1 hover:bg-gray-100"
+                    className="block w-full px-2 py-1 hover:bg-gray-100 border border-black rounded shadow-md shadow-zinc-600 mt-2 text-center"
                   >
                     行削除
                   </button>
                   <button
                     onClick={() => setIsOpenCategorySelection(true)}
-                    className="block w-full text-left px-2 py-1 hover:bg-gray-100"
+                    className="block w-full px-2 py-1 hover:bg-gray-100 border border-black rounded shadow-md shadow-zinc-600 mt-2 text-center"
                   >
                     行追加
                   </button>
