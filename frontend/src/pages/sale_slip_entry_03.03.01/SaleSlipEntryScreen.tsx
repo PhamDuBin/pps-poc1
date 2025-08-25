@@ -16,6 +16,12 @@ const SaleSlipEntryScreen = () => {
   const [showLeftPanel, setShowLeftPanel] = useState(false);
   const [activeScreen, setActiveScreen] = useState<string | null>(null);
   const [showAdvanceSearch, setShowAdvanceSearch] = useState(false);
+  const [showCustomerInLeftPanel, setShowCustomerInLeftPanel] = useState(false);
+
+  const handleOpenAndResetLeftPanel = () => {
+    setShowLeftPanel(true); // Mở LeftPanel
+    setShowCustomerInLeftPanel(false); // Reset trạng thái customer view trong LeftPanel
+  };
 
   const handleButtonClick = (buttonName: string) => {
     setActiveScreen(buttonName);
@@ -60,6 +66,8 @@ const SaleSlipEntryScreen = () => {
           <LeftPanel
             showAdvanceSearch={showAdvanceSearch}
             setShowAdvanceSearch={setShowAdvanceSearch}
+            showCustomer={showCustomerInLeftPanel}
+            setShowCustomer={setShowCustomerInLeftPanel}
           />
         </div>
       )}
@@ -77,12 +85,14 @@ const SaleSlipEntryScreen = () => {
         />
       )}
       <div className="my-3 ml-2 flex-1 h-[calc(100%-0.75rem*2)] flex flex-row min-w-0 z-10">
-        <div className="relative mr-2 border border-black w-10/12 text-black flex justify-center ">
+        <div className="relative mr-2 border border-black w-10/12 text-black flex justify-center overflow-auto bg-white">
           {/* <div className="overflow-y-auto">{renderActiveScreen()}</div> */}
           {/* <div className="overflow-y-auto">
             <SalesSlipEntry />
           </div> */}
-          <SalesSlipEntry />
+          <SalesSlipEntry
+            onOpenLeftPanelForSearch={handleOpenAndResetLeftPanel}
+          />
         </div>
 
         <RightPanel

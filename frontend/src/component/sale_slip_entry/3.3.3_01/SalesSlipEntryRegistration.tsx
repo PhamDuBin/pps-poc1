@@ -9,7 +9,7 @@ const fieldLabelMap: Record<string, string> = {
   note: "備考",
   saleAmount: "売上金額",
   outsideTheMonth: "当月外",
-  selfSwingTarget:"自振対象",
+  selfSwingTarget: "自振対象",
   salesPrice: "売上単価",
   discountAmount: "値引金額",
   expenseNo: "経費分類No.",
@@ -38,6 +38,7 @@ type BodyRow = {
 };
 
 type SalesSlipEntryRegistrationProps = {
+  id?: string;
   headerRow: HeaderRow;
   bodyRow: BodyRow;
 };
@@ -76,13 +77,13 @@ export default function SalesSlipEntryRegistration({
         {/* Right side */}
         <div className="flex space-x-2">
           {headerRow.outsideMonth === 1 && (
-            <div className="w-16 bg-[#DADADA] text-xs px-2 py-2 rounded text-center whitespace-nowrap flex items-center justify-center">
+            <div className="w-20 bg-[#DADADA] text-xs px-2 py-2 rounded text-center whitespace-nowrap flex items-center justify-center">
               当月外
             </div>
           )}
-          {headerRow.selfTransferTarget === 1 && (
-            <div className="w-16 bg-[#DADADA] text-xs px-2 py-2 rounded text-center whitespace-nowrap flex items-center justify-center">
-              自動対象
+          {headerRow.selfTransferTarget !== undefined && (
+            <div className="w-20 bg-[#DADADA] text-xs px-2 py-2 rounded text-center whitespace-nowrap flex items-center justify-center">
+              {headerRow.selfTransferTarget === 1 ? "自振対象外" : "自動対象"}
             </div>
           )}
         </div>

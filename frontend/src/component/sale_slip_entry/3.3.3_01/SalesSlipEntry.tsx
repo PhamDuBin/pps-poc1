@@ -9,7 +9,11 @@ import SaleDetailModal from "./SaleDetail/SaleDetailModal";
 import StatusBar from "../StatusBar";
 import { createPortal } from "react-dom";
 
-export default function SalesSlipEntry() {
+export default function SalesSlipEntry({
+  onOpenLeftPanelForSearch,
+}: {
+  onOpenLeftPanelForSearch: () => void;
+}) {
   const [labelDeposit, setLabelDeposit] = useState("入金処理");
   const [isDeposited, setIsDeposited] = useState(false);
   const [isOpenCategorySelection, setIsOpenCategorySelection] = useState(false);
@@ -18,6 +22,8 @@ export default function SalesSlipEntry() {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [isSaleDetailModalOpen, setIsSaleDetailModalOpen] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
+  const [focusIndex, setFocusIndex] = useState<number | null>(null);
+  const [rowEdit, setRowEdit] = useState<any>(null);
   const [saleSlips, setSaleSlips] = useState([
     {
       headerRow: {
@@ -106,16 +112,51 @@ export default function SalesSlipEntry() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [activeSlipIndex]);
 
+  // Handle Add Sale Slip
   const handleAddSaleSlip = (data: any) => {
+<<<<<<< HEAD
     setSaleSlips([...saleSlips, data]);
     setIsSaleDetailModalOpen(false);
     setCurrentStep(4);
+=======
+    console.log("Line data:", data);
+    setSaleSlips((prev) => {
+      if (data.id !== undefined && data.id >= 0 && data.id < prev.length) {
+        // ✅ Update slip by id
+        const updated = [...prev];
+        updated[data.id] = { ...data, id: data.id };
+        return updated;
+      } else {
+        // ✅ Add slip new
+        data.headerRow.no = (prev.length + 1).toString().padStart(2, "0");
+        return [...prev, { ...data, id: prev.length }];
+      }
+    });
+>>>>>>> feature/#14-01-01-01
   };
 
-  const handleDeleteLine = (index: number) => {
-    setSaleSlips((prev) => prev.filter((_, i) => i !== index));
+  const handleEditLine = (index: number) => {
+    const rowData = saleSlips[index];
+    console.log("Edit line data:", rowData);
+    //rowData.id = index; // Thêm id để biết đang sửa dòng nào  
+    console.log("Edit line data with id:", rowData);
+    setRowEdit(rowData);
     setActiveSlipIndex(null);
+    setSelectedCategory(saleSlips[index].headerRow.categoryName);
+    setIsSaleDetailModalOpen(true);
+    setTooltipPos(null);
+    setCurrentStep(3);
   };
+
+  const handleDeleteLine = (indexToDelete: number) => {
+    const nextFocusIndex = indexToDelete > 0 ? indexToDelete - 1 : 0;
+    setSaleSlips((prev) => prev.filter((_, i) => i !== indexToDelete));
+    setActiveSlipIndex(null);
+    if (saleSlips.length > 1) {
+      setFocusIndex(nextFocusIndex);
+    }
+  };
+
 
   const handleOpenCategorySelection = () => {
     setActiveSlipIndex(null);
@@ -140,6 +181,15 @@ export default function SalesSlipEntry() {
       firstButton?.focus();
     }
   }, [activeSlipIndex]); // Chạy mỗi khi activeSlipIndex thay đổi
+
+  useEffect(() => {
+    // Chạy khi `focusIndex` có giá trị và `saleSlips` đã được cập nhật
+    if (focusIndex !== null && slipRefs.current[focusIndex]) {
+      slipRefs.current[focusIndex]?.focus();
+      // Reset lại để không chạy lại lần nữa
+      setFocusIndex(null);
+    }
+  }, [saleSlips, focusIndex]);
 
   function focusNextElement() {
     const focusableElements = Array.from(
@@ -197,7 +247,7 @@ export default function SalesSlipEntry() {
     }
   };
   return (
-    <div className="bg-white w-full h-full flex flex-col items-center px-4 pt-4 2xl:text-[16px] text-[11px]">
+    <div className=" w-full h-full flex flex-col items-center px-4 pt-4 2xl:text-[16px] text-[11px]">
       {/* Header */}
       <div className="w-3/4">
         <div className="bg-[#D9D9D9] text-center font-bold py-2">
@@ -269,7 +319,10 @@ export default function SalesSlipEntry() {
               defaultValue="営業タロウ"
               className="ml-1 w-1/2 border border-black px-2 py-1"
             />
-            <button className="mx-1 w-[20px] h-[20px] inset-y-0 right-0 flex items-center px-1 bg-white border border-gray-500 cursor-pointer">
+            <button
+              onClick={onOpenLeftPanelForSearch}
+              className="mx-1 w-[20px] h-[20px] inset-y-0 right-0 flex items-center px-1 bg-white border border-gray-500 cursor-pointer"
+            >
               <DownArrowIcon />
             </button>
           </div>
@@ -315,7 +368,9 @@ export default function SalesSlipEntry() {
               >
                 <div className="relative bg-white border border-black shadow-lg rounded-md p-2 font-normal text-[14px] text-black">
                   <div className="absolute top-4 -left-2 w-0 h-0 border-t-8 border-b-8 border-r-8 border-transparent border-r-[#D9D9D9]"></div>
-                  <button className="block w-full px-2 py-1 hover:bg-gray-100 border border-black rounded shadow-md shadow-zinc-600 text-center">
+                  <button
+                    onClick={() => handleEditLine(activeSlipIndex)}
+                    className="block w-full px-2 py-1 hover:bg-gray-100 border border-black rounded shadow-md shadow-zinc-600 text-center">
                     行編集
                   </button>
                   <button
@@ -408,11 +463,19 @@ export default function SalesSlipEntry() {
       )}
       {currentStep === 3 && (
         <SaleDetailModal
+<<<<<<< HEAD
             isOpen={isSaleDetailModalOpen}
             onClose={() => setCurrentStep(2)}
             categoryName={selectedCategory}
             onNext={handleAddSaleSlip}
             
+=======
+          isOpen={isSaleDetailModalOpen}
+          onClose={() => setCurrentStep(2)}
+          categoryName={selectedCategory}
+          onNext={handleAddSaleSlip}
+          rowEdit={rowEdit}
+>>>>>>> feature/#14-01-01-01
         />
       )}
     </div>
