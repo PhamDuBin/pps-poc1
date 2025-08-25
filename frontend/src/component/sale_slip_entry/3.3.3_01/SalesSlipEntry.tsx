@@ -9,7 +9,11 @@ import SaleDetailModal from "./SaleDetail/SaleDetailModal";
 import StatusBar from "../StatusBar";
 import { createPortal } from "react-dom";
 
-export default function SalesSlipEntry() {
+export default function SalesSlipEntry({
+  onOpenLeftPanelForSearch,
+}: {
+  onOpenLeftPanelForSearch: () => void;
+}) {
   const [labelDeposit, setLabelDeposit] = useState("入金処理");
   const [isDeposited, setIsDeposited] = useState(false);
   const [isOpenCategorySelection, setIsOpenCategorySelection] = useState(false);
@@ -18,8 +22,9 @@ export default function SalesSlipEntry() {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [isSaleDetailModalOpen, setIsSaleDetailModalOpen] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
-  const [rowEdit, setRowEdit] = useState(null);
-  const [saleSlips, setSaleSlips] = useState<any[]>([
+  const [focusIndex, setFocusIndex] = useState<number | null>(null);
+  const [rowEdit, setRowEdit] = useState<any>(null);
+  const [saleSlips, setSaleSlips] = useState([
     {
       headerRow: {
         no: "01",
@@ -109,8 +114,6 @@ export default function SalesSlipEntry() {
 
   // Handle Add Sale Slip
   const handleAddSaleSlip = (data: any) => {
-    // data.id = 2;
-    // data.bodyRow.detailInfo.quantity = 10;
     console.log("Line data:", data);
     setSaleSlips((prev) => {
       if (data.id !== undefined && data.id >= 0 && data.id < prev.length) {
@@ -139,10 +142,15 @@ export default function SalesSlipEntry() {
     setCurrentStep(3);
   };
 
-  const handleDeleteLine = (index: number) => {
-    setSaleSlips((prev: any[]) => prev.filter((_, i) => i !== index));
+  const handleDeleteLine = (indexToDelete: number) => {
+    const nextFocusIndex = indexToDelete > 0 ? indexToDelete - 1 : 0;
+    setSaleSlips((prev) => prev.filter((_, i) => i !== indexToDelete));
     setActiveSlipIndex(null);
+    if (saleSlips.length > 1) {
+      setFocusIndex(nextFocusIndex);
+    }
   };
+
 
   const handleOpenCategorySelection = () => {
     setActiveSlipIndex(null);
@@ -167,6 +175,15 @@ export default function SalesSlipEntry() {
       firstButton?.focus();
     }
   }, [activeSlipIndex]); // Chạy mỗi khi activeSlipIndex thay đổi
+
+  useEffect(() => {
+    // Chạy khi `focusIndex` có giá trị và `saleSlips` đã được cập nhật
+    if (focusIndex !== null && slipRefs.current[focusIndex]) {
+      slipRefs.current[focusIndex]?.focus();
+      // Reset lại để không chạy lại lần nữa
+      setFocusIndex(null);
+    }
+  }, [saleSlips, focusIndex]);
 
   function focusNextElement() {
     const focusableElements = Array.from(
@@ -296,7 +313,10 @@ export default function SalesSlipEntry() {
               defaultValue="営業タロウ"
               className="ml-1 w-1/2 border border-black px-2 py-1"
             />
-            <button className="mx-1 w-[20px] h-[20px] inset-y-0 right-0 flex items-center px-1 bg-white border border-gray-500 cursor-pointer">
+            <button
+              onClick={onOpenLeftPanelForSearch}
+              className="mx-1 w-[20px] h-[20px] inset-y-0 right-0 flex items-center px-1 bg-white border border-gray-500 cursor-pointer"
+            >
               <DownArrowIcon />
             </button>
           </div>

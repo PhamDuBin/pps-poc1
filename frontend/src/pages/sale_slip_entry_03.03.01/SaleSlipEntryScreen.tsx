@@ -16,6 +16,12 @@ const SaleSlipEntryScreen = () => {
   const [showLeftPanel, setShowLeftPanel] = useState(false);
   const [activeScreen, setActiveScreen] = useState<string | null>(null);
   const [showAdvanceSearch, setShowAdvanceSearch] = useState(false);
+  const [showCustomerInLeftPanel, setShowCustomerInLeftPanel] = useState(false);
+
+  const handleOpenAndResetLeftPanel = () => {
+    setShowLeftPanel(true); // Mở LeftPanel
+    setShowCustomerInLeftPanel(false); // Reset trạng thái customer view trong LeftPanel
+  };
 
   const handleButtonClick = (buttonName: string) => {
     setActiveScreen(buttonName);
@@ -60,6 +66,8 @@ const SaleSlipEntryScreen = () => {
           <LeftPanel
             showAdvanceSearch={showAdvanceSearch}
             setShowAdvanceSearch={setShowAdvanceSearch}
+            showCustomer={showCustomerInLeftPanel}
+            setShowCustomer={setShowCustomerInLeftPanel}
           />
         </div>
       )}
@@ -82,7 +90,9 @@ const SaleSlipEntryScreen = () => {
           {/* <div className="overflow-y-auto">
             <SalesSlipEntry />
           </div> */}
-          <SalesSlipEntry />
+          <SalesSlipEntry
+            onOpenLeftPanelForSearch={handleOpenAndResetLeftPanel}
+          />
         </div>
 
         <RightPanel
