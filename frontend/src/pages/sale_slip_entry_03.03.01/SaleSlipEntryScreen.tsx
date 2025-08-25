@@ -21,37 +21,7 @@ const SaleSlipEntryScreen = () => {
     setActiveScreen(buttonName);
   };
 
-  const renderActiveScreen = () => {
-    switch (activeScreen) {
-      case "大分類別売上":
-        return <CheckSaleByCategoryScreen />;
-      case "当月明細":
-        return <CurrentMonthDetails />;
-      case "当月売上状況":
-        return <CheckCurrentMonthSalesStatusScreen />;
-      case "残高内訳":
-        return <BalanceDetailScreen />;
-      case "検針情報":
-        return <MeterReadingInforScreen />;
-      case "年間明細":
-        return <LinkDestinationScreen />;
-      case "CRM":
-        return <CRM />;
-      case "ポイント":
-        return <LinkDestinationScreen />;
-      case "印刷依頼情報":
-        return <LinkDestinationScreen />;
-      case "自振照会":
-        return <LinkDestinationScreen />;
-      case "大分類残高":
-        return <LinkDestinationScreen />;
-
-      default:
-    }
-  };
-
   const containerRef = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
@@ -59,7 +29,7 @@ const SaleSlipEntryScreen = () => {
     const handleContainerKeyDown = (e: KeyboardEvent) => {
       const focusableElements = Array.from(
         container.querySelectorAll(
-          'input, button, [role="button"], select, textarea'
+          'input, button, [role="registmodal"], select, textarea'
         )
       ) as HTMLElement[];
 

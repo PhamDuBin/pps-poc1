@@ -29,7 +29,6 @@ type BodyRow = {
   titleInfo?: {
     productName?: string;
     supplierName?: string;
-    
   };
   detailInfo?: {
     quantity?: string;
@@ -49,7 +48,9 @@ function renderRow(obj?: Record<string, string | undefined>) {
   const items = Object.entries(obj)
     .filter(([_, value]) => !!value)
     .map(([key, value]) => `${fieldLabelMap[key] || key}: ${value}`);
-   return items.length > 0 ? items.join("\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0") : null;
+  return items.length > 0
+    ? items.join("\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0")
+    : null;
 }
 
 export default function SalesSlipEntryRegistration({
@@ -57,30 +58,38 @@ export default function SalesSlipEntryRegistration({
   bodyRow,
 }: SalesSlipEntryRegistrationProps) {
   return (
-    <div className="w-full max-w-3xl border border-gray-300 rounded-md overflow-hidden shadow-sm">
+    <div
+      tabIndex={0}
+      role="registmodal"
+      className="w-full border border-black rounded-md overflow-hidden shadow-sm mb-4"
+    >
       {/* Header */}
-      <div className="bg-blue-100 flex justify-between items-center px-3 py-2 border-b">
+      <div className="bg-[#BFE7F5] flex justify-between items-center px-3 py-2 border-b font-semibold text-[14px] text-black">
         {/* Left side */}
         <div className="flex items-center space-x-4">
-          <span className="font-bold text-gray-800">No:{headerRow.no}</span>
-          {/* {headerRow.icon && <img src={headerRow.icon} alt="icon" className="w-5 h-5" />} */}
-          <img src={headerRow.icon || "/default-icon.png" } alt="icon" className="w-5 h-5" />
-          <span className="font-bold text-gray-800">区分: {headerRow.categoryName}</span>
+          <span className="text-[16px]">No:{headerRow.no}</span>
+          {/* <img src={headerRow.icon} alt="icon" className="w-5 h-5" /> */}
+          <span className="bg-white px-2 py-2">Icon</span>
+          <span>区分: {headerRow.categoryName}</span>
         </div>
 
         {/* Right side */}
-        <div className="flex items-center space-x-2">
+        <div className="flex space-x-2">
           {headerRow.outsideMonth === 1 && (
-            <span className="text-xs bg-gray-200 px-2 py-0.5 rounded">当月外</span>
+            <div className="w-16 bg-[#DADADA] text-xs px-2 py-2 rounded text-center whitespace-nowrap flex items-center justify-center">
+              当月外
+            </div>
           )}
           {headerRow.selfTransferTarget === 1 && (
-            <span className="text-xs bg-gray-200 px-2 py-1 rounded">自動対象</span>
+            <div className="w-16 bg-[#DADADA] text-xs px-2 py-2 rounded text-center whitespace-nowrap flex items-center justify-center">
+              自動対象
+            </div>
           )}
         </div>
       </div>
 
       {/* Body */}
-      <div className="bg-white p-3 text-sm space-y-2">
+      <div className="bg-white p-3 text-sm space-y-2 font-normal text-[16px] text-black">
         {renderRow(bodyRow.titleInfo) && (
           <div>{renderRow(bodyRow.titleInfo)}</div>
         )}

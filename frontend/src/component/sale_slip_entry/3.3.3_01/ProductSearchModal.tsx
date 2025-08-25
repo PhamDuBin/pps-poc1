@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import StatusBar from "../StatusBar";
 import SaleDetailModal from "./SaleDetail/SaleDetailModal";
 
@@ -6,10 +6,8 @@ interface ProductSearchModalProps {
   isOpen: boolean;
   onClose: () => void;
   categoryName: string;
-  onNext: () => void; 
+  onNext: () => void;
 }
-
-
 
 const mockData = [
   {
@@ -93,12 +91,22 @@ const fieldDefinitions = [
 type FieldId = (typeof fieldDefinitions)[number]["id"];
 type FormValues = { [key in FieldId]?: string | string[] };
 
-const AdvancedSearchForm: React.FC = () => {
+const AdvancedSearchForm: React.FC<{
+  onSearch: () => void;
+  onReset: () => void;
+}> = ({ onSearch, onReset }) => {
   const [selectedFieldId, setSelectedFieldId] = useState<FieldId>(
     fieldDefinitions[2].id
   );
   const [formValues, setFormValues] = useState<FormValues>({});
   const currentField = fieldDefinitions.find((f) => f.id === selectedFieldId);
+
+  const selectRef = useRef<HTMLSelectElement>(null);
+  useEffect(() => {
+    if (selectRef.current) {
+      selectRef.current.focus();
+    }
+  }, []);
 
   const handleValueChange = (value: string, index: number | null = null) => {
     if (!currentField) return;
@@ -116,6 +124,26 @@ const AdvancedSearchForm: React.FC = () => {
       newValues = value;
     }
     setFormValues((prev) => ({ ...prev, [selectedFieldId]: newValues }));
+  };
+
+  const isFormEmpty = () => {
+    const values = Object.values(formValues);
+    if (values.length === 0) return true;
+    return !values.some((v) =>
+      Array.isArray(v) ? v.some((subV) => subV.trim() !== "") : v.trim() !== ""
+    );
+  };
+
+  const handleSearchClick = () => {
+    if (isFormEmpty()) {
+      return;
+    }
+    onSearch();
+  };
+
+  const handleResetClick = () => {
+    setFormValues({});
+    onReset();
   };
 
   const renderDynamicInput = () => {
@@ -173,6 +201,7 @@ const AdvancedSearchForm: React.FC = () => {
           検索種類
         </label>
         <select
+          ref={selectRef}
           className="border border-gray-400 p-2 bg-white h-[36px]"
           value={selectedFieldId}
           onChange={(e) => setSelectedFieldId(e.target.value as FieldId)}
@@ -188,10 +217,16 @@ const AdvancedSearchForm: React.FC = () => {
       <div className="flex-grow">{renderDynamicInput()}</div>
 
       <div className="flex flex-col gap-1 h-[64px]">
-        <button className="bg-gray-300 border border-gray-500 rounded px-8 font-bold hover:bg-gray-400 h-[30px]">
+        <button
+          onClick={handleSearchClick}
+          className="bg-gray-300 border border-gray-500 rounded px-8 font-bold hover:bg-gray-400 h-[30px]"
+        >
           検索
         </button>
-        <button className="bg-gray-300 border border-gray-500 rounded px-8 font-bold hover:bg-gray-400 h-[30px]">
+        <button
+          onClick={handleResetClick}
+          className="bg-gray-300 border border-gray-500 rounded px-8 font-bold hover:bg-gray-400 h-[30px]"
+        >
           再入力
         </button>
       </div>
@@ -205,11 +240,28 @@ const ProductSearchModal: React.FC<ProductSearchModalProps> = ({
   categoryName,
   onNext,
 }) => {
-
   const [currentStep, setCurrentStep] = useState(1);
-  
+  const [hasSearched, setHasSearched] = useState(false);
+
+  const handleSearch = () => {
+    setHasSearched(true);
+  };
 
   if (!isOpen) return null;
+  const handleReset = () => {
+    setHasSearched(false);
+  };
+
+  const openNewWindow = () => {
+    const newWindow = window.open(
+      "/window4",
+      "_blank",
+      "width=500,height=300,noopener,noreferrer"
+    );
+    if (newWindow) {
+      newWindow.focus();
+    }
+  };
 
   return (
     // Backdrop
@@ -219,11 +271,14 @@ const ProductSearchModal: React.FC<ProductSearchModalProps> = ({
         {/* 1. Status Bar & Title */}
         <div className="w-full flex items-center justify-between">
           {/* Button */}
-          <button className="flex items-center justify-center mb-8">
-            <span className="text-black border bg-[#D9D9D9] p-4">
+          <div className="flex items-center justify-center mb-8">
+            <button
+              onClick={onClose}
+              className="text-black border bg-[#D9D9D9] p-4"
+            >
               {categoryName}
-            </span>
-          </button>
+            </button>
+          </div>
 
           {/* StatusBar + Title */}
           <div className="flex-1 flex flex-col items-center justify-center mr-24">
@@ -232,9 +287,9 @@ const ProductSearchModal: React.FC<ProductSearchModalProps> = ({
             </div>
           </div>
         </div>
-        
+
         {/* 2. Search Form */}
-        <AdvancedSearchForm />
+        <AdvancedSearchForm onSearch={handleSearch} onReset={handleReset} />
 
         <div className="flex flex-row mt-2">
           <div className="flex items-center gap-2 mr-4">
@@ -279,62 +334,75 @@ const ProductSearchModal: React.FC<ProductSearchModalProps> = ({
         </div>
 
         {/* 3. Results Table */}
-        <div className="mt-4 h-64 overflow-y-auto border border-gray-400">
-          <table className="w-full text-sm border-collapse bg-white">
-            <thead className="sticky top-0 bg-gray-300">
-              <tr>
-                <th className="border border-gray-400 p-2">
-                  商品コード/メーカ
-                </th>
-                <th className="border border-gray-400 p-2">No.</th>
-                <th className="border border-gray-400 p-2 w-1/4">
-                  商品名/型式
-                </th>
-                <th className="border border-gray-400 p-2">倉庫</th>
-                <th className="border border-gray-400 p-2">仕入単価</th>
-                <th className="border border-gray-400 p-2">現在庫数</th>
-                <th className="border border-gray-400 p-2">引当数</th>
-                <th className="border border-gray-400 p-2">引当可能</th>
-              </tr>
-            </thead>
-            <tbody>
-              {mockData.map((item) => (
-                <tr key={item.id} className="hover:bg-blue-50">
-                  <td className="border-b border-gray-300 p-2">
-                    {item.productCode}
-                    <br />
-                    {item.makerCode}
-                  </td>
-                  <td className="border-b border-gray-300 p-2">{item.no}</td>
-                  <td className="border-b border-gray-300 p-2">{item.name}</td>
-                  <td className="border-b border-gray-300 p-2">
-                    {item.warehouse}
-                  </td>
-                  <td className="border-b border-gray-300 p-2 text-right">
-                    {item.price}
-                  </td>
-                  <td className="border-b border-gray-300 p-2 text-right">
-                    {item.stock}
-                  </td>
-                  <td className="border-b border-gray-300 p-2 text-right">
-                    {item.allocated}
-                  </td>
-                  <td className="border-b border-gray-300 p-2 text-right">
-                    {item.available}
-                  </td>
+        {hasSearched && (
+          <div className="mt-4 h-64 overflow-y-auto border border-gray-400">
+            <table className="w-full text-sm border-collapse bg-white">
+              <thead className="sticky top-0 bg-gray-300">
+                <tr>
+                  <th className="border border-gray-400 p-2">
+                    商品コード/メーカ
+                  </th>
+                  <th className="border border-gray-400 p-2">No.</th>
+                  <th className="border border-gray-400 p-2 w-1/4">
+                    商品名/型式
+                  </th>
+                  <th className="border border-gray-400 p-2">倉庫</th>
+                  <th className="border border-gray-400 p-2">仕入単価</th>
+                  <th className="border border-gray-400 p-2">現在庫数</th>
+                  <th className="border border-gray-400 p-2">引当数</th>
+                  <th className="border border-gray-400 p-2">引当可能</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {mockData.map((item) => (
+                  <tr key={item.id} className="hover:bg-blue-50">
+                    <td className="border-b border-gray-300 p-2">
+                      {item.productCode}
+                      <br />
+                      {item.makerCode}
+                    </td>
+                    <td className="border-b border-gray-300 p-2">{item.no}</td>
+                    <td className="border-b border-gray-300 p-2">
+                      {item.name}
+                    </td>
+                    <td className="border-b border-gray-300 p-2">
+                      {item.warehouse}
+                    </td>
+                    <td className="border-b border-gray-300 p-2 text-right">
+                      {item.price}
+                    </td>
+                    <td className="border-b border-gray-300 p-2 text-right">
+                      {item.stock}
+                    </td>
+                    <td className="border-b border-gray-300 p-2 text-right">
+                      {item.allocated}
+                    </td>
+                    <td className="border-b border-gray-300 p-2 text-right">
+                      {item.available}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+        {!hasSearched && (
+          <div className="mt-4 h-64 border border-transparent"></div>
+        )}
 
         {/* 4. Footer Actions */}
         <div className="mt-4">
           <div className="flex gap-2">
-            <button className="bg-gray-700 text-white px-3 py-1 rounded text-sm">
+            <button
+              onClick={openNewWindow}
+              className="bg-gray-700 text-white px-3 py-1 rounded text-sm"
+            >
               F5引当済状況
             </button>
-            <button className="bg-gray-700 text-white px-3 py-1 rounded text-sm">
+            <button
+              onClick={openNewWindow}
+              className="bg-gray-700 text-white px-3 py-1 rounded text-sm"
+            >
               F6在庫詳細表示
             </button>
           </div>
@@ -347,8 +415,9 @@ const ProductSearchModal: React.FC<ProductSearchModalProps> = ({
             戻る (R)
           </button>
           <button
-          onClick={onNext}
-          className="bg-gray-300 border border-gray-500 rounded px-10 py-2 font-bold hover:bg-gray-400">
+            onClick={onNext}
+            className="bg-gray-300 border border-gray-500 rounded px-10 py-2 font-bold hover:bg-gray-400"
+          >
             選択 (N)
           </button>
         </div>
