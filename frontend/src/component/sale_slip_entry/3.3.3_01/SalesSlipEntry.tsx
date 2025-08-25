@@ -92,26 +92,7 @@ export default function SalesSlipEntry({
       });
     }
   };
-
-  // 🔑 Click outside to close tooltip
-  useEffect(() => {
-    function handleClickOutside(e: MouseEvent) {
-      // Nếu tooltip đang mở
-      if (activeSlipIndex !== null) {
-        const clickedInsideSlip = slipRefs.current[activeSlipIndex]?.contains(
-          e.target as Node
-        );
-        if (!clickedInsideSlip) {
-          setActiveSlipIndex(null);
-          setTooltipPos(null);
-        }
-      }
-    }
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [activeSlipIndex]);
-
+  
   // Handle Add Sale Slip
   const handleAddSaleSlip = (data: any) => {
     console.log("Line data:", data);
