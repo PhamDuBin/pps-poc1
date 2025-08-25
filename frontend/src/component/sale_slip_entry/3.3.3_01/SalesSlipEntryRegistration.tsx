@@ -7,6 +7,14 @@ const fieldLabelMap: Record<string, string> = {
   quantity: "数量",
   tax: "消費税",
   note: "備考",
+  saleAmount: "売上金額",
+  outsideTheMonth: "当月外",
+  selfSwingTarget:"自振対象",
+  salesPrice: "売上単価",
+  discountAmount: "値引金額",
+  expenseNo: "経費分類No.",
+  purchasePrice: "仕入単価",
+  purchaseAmount: "仕入金額",
 };
 
 type HeaderRow = {

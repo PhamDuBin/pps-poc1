@@ -1,51 +1,71 @@
-import React from 'react';
+import React from "react";
 
+interface SaleDetailEntry7Props {
+  onChange: (field: string, value: string) => void;
+}
 
-const SaleDetailEntry7 = () => {
+const SaleDetailEntry7: React.FC<SaleDetailEntry7Props> = ({ onChange }) => {
   return (
-    <div className='flex gap-2'>
-        <div className='h-[64px] w-[100px]'>
-            <div className='h-1/2 bg-[#80bad7] p-1'>
-                商品コード
-            </div>
-            <input type="text" className='h-1/2 w-full border border-black text-center' placeholder='96-0001'/>
-        </div>
-        <div className='h-[64px] w-[100px]'>
-            <div className='h-1/2 bg-[#80bad7] p-1'>
-                商品名
-            </div>
-            <input type="text" className='h-1/2 w-full border border-black text-center' />
-        </div>
-        <div className='h-[64px] w-[100px]'>
-            <div className='h-1/2 bg-[#80bad7] p-1'>
-                型式
-            </div>
-            <input type="text" className='h-1/2 w-full border border-black text-center' />
-        </div>
-        <div className='h-[64px] w-[120px]'>
-            <div className='h-1/2 bg-[#80bad7] p-1'>
-                売上消費税
-            </div>
-            <input type="text" className='h-1/2 w-full border border-black text-center' placeholder='0' />
-        </div>
-        <div className='h-[64px] w-[120px]'>
-            <div className='h-1/2 bg-[#80bad7] p-1'>
-                自振対象
-            </div>
-            <select className="border border-black w-full h-1/2 text-center">
-                <option value="0">0 対象</option>
-                <option value="1">1 対象外</option>
-            </select>
-        </div>
-        <div className='h-[64px] w-[120px]'>
-            <div className='h-1/2 bg-[#80bad7] p-1'>
-                当月外
-            </div>
-                <select className="border border-black w-full h-1/2 text-center">
-                    <option value="0">0 対象</option>
-                    <option value="1">1 対象外</option>
-                </select>
-            </div>
+    <div className="flex gap-2">
+      <div className="h-[64px] w-[100px]">
+        <div className="h-1/2 bg-[#80bad7] p-1">商品コード</div>
+        <input
+          type="text"
+          className="h-1/2 w-full border border-black text-center"
+          placeholder="96-0001"
+          onChange={(e) => onChange("productCode", e.target.value)}
+        />
+      </div>
+
+      <div className="h-[64px] w-[100px]">
+        <div className="h-1/2 bg-[#80bad7] p-1">商品名</div>
+        <input
+          type="text"
+          className="h-1/2 w-full border border-black text-center"
+          onChange={(e) => onChange("productName", e.target.value)}
+        />
+      </div>
+
+      <div className="h-[64px] w-[100px]">
+        <div className="h-1/2 bg-[#80bad7] p-1">型式</div>
+        <input
+          type="text"
+          className="h-1/2 w-full border border-black text-center"
+          onChange={(e) => onChange("modelNumber", e.target.value)}
+        />
+      </div>
+
+      <div className="h-[64px] w-[120px]">
+        <div className="h-1/2 bg-[#80bad7] p-1">売上消費税</div>
+        <input
+          type="text"
+          className="h-1/2 w-full border border-black text-center"
+          placeholder="0"
+          onChange={(e) => onChange("tax", e.target.value)}
+        />
+      </div>
+
+      <div className="h-[64px] w-[120px]">
+        <div className="h-1/2 bg-[#80bad7] p-1">自振対象</div>
+        <select
+          className="border border-black w-full h-1/2 text-center"
+          onChange={(e) => onChange("selfDebitTarget", e.target.value)}
+        >
+          <option value="0">0 対象</option>
+          <option value="1">1 対象外</option>
+        </select>
+      </div>
+
+      <div className="h-[64px] w-[120px]">
+        <div className="h-1/2 bg-[#80bad7] p-1">当月外</div>
+        <select
+          className="border border-black w-full h-1/2 text-center"
+          onChange={(e) => onChange("outsideCurrentMonth", e.target.value)}
+        >
+          <option value="0">0 空欄</option>
+          <option value="1">1 当月外</option>
+        </select>
+      </div>
     </div>
   );
 };
