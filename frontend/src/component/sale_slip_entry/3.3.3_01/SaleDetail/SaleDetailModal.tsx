@@ -15,6 +15,7 @@ interface SaleDetailModalProps {
   onClose: () => void;
   categoryName: string;
   onNext: (data: any) => void;
+  rowEdit?: any;
 }
 
 const SaleDetailModal: React.FC<SaleDetailModalProps> = ({
@@ -22,6 +23,8 @@ const SaleDetailModal: React.FC<SaleDetailModalProps> = ({
   onClose,
   categoryName,
   onNext,
+  rowEdit,
+
 }) => {
   let SelectedEntry: React.ReactNode = null;
 

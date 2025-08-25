@@ -38,6 +38,7 @@ type BodyRow = {
 };
 
 type SalesSlipEntryRegistrationProps = {
+  id?: string;
   headerRow: HeaderRow;
   bodyRow: BodyRow;
 };

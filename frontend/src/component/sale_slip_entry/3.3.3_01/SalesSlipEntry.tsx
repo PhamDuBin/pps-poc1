@@ -18,7 +18,8 @@ export default function SalesSlipEntry() {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [isSaleDetailModalOpen, setIsSaleDetailModalOpen] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
-  const [saleSlips, setSaleSlips] = useState([
+  const [rowEdit, setRowEdit] = useState(null);
+  const [saleSlips, setSaleSlips] = useState<any[]>([
     {
       headerRow: {
         no: "01",
@@ -106,12 +107,40 @@ export default function SalesSlipEntry() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [activeSlipIndex]);
 
+  // Handle Add Sale Slip
   const handleAddSaleSlip = (data: any) => {
-    setSaleSlips([...saleSlips, data]);
+    // data.id = 2;
+    // data.bodyRow.detailInfo.quantity = 10;
+    console.log("Line data:", data);
+    setSaleSlips((prev) => {
+      if (data.id !== undefined && data.id >= 0 && data.id < prev.length) {
+        // ✅ Update slip by id
+        const updated = [...prev];
+        updated[data.id] = { ...data, id: data.id };
+        return updated;
+      } else {
+        // ✅ Add slip new
+        data.headerRow.no = (prev.length + 1).toString().padStart(2, "0");
+        return [...prev, { ...data, id: prev.length }];
+      }
+    });
+  };
+
+  const handleEditLine = (index: number) => {
+    const rowData = saleSlips[index];
+    console.log("Edit line data:", rowData);
+    //rowData.id = index; // Thêm id để biết đang sửa dòng nào  
+    console.log("Edit line data with id:", rowData);
+    setRowEdit(rowData);
+    setActiveSlipIndex(null);
+    setSelectedCategory(saleSlips[index].headerRow.categoryName);
+    setIsSaleDetailModalOpen(true);
+    setTooltipPos(null);
+    setCurrentStep(3);
   };
 
   const handleDeleteLine = (index: number) => {
-    setSaleSlips((prev) => prev.filter((_, i) => i !== index));
+    setSaleSlips((prev: any[]) => prev.filter((_, i) => i !== index));
     setActiveSlipIndex(null);
   };
 
@@ -313,7 +342,9 @@ export default function SalesSlipEntry() {
               >
                 <div className="relative bg-white border border-black shadow-lg rounded-md p-2 font-normal text-[14px] text-black">
                   <div className="absolute top-4 -left-2 w-0 h-0 border-t-8 border-b-8 border-r-8 border-transparent border-r-[#D9D9D9]"></div>
-                  <button className="block w-full px-2 py-1 hover:bg-gray-100 border border-black rounded shadow-md shadow-zinc-600 text-center">
+                  <button
+                    onClick={() => handleEditLine(activeSlipIndex)}
+                    className="block w-full px-2 py-1 hover:bg-gray-100 border border-black rounded shadow-md shadow-zinc-600 text-center">
                     行編集
                   </button>
                   <button
@@ -410,6 +441,7 @@ export default function SalesSlipEntry() {
           onClose={() => setCurrentStep(2)}
           categoryName={selectedCategory}
           onNext={handleAddSaleSlip}
+          rowEdit={rowEdit}
         />
       )}
     </div>
