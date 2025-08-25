@@ -2,7 +2,7 @@ import React from "react";
 
 // Map key → label tiếng Nhật
 const fieldLabelMap: Record<string, string> = {
-  name: "商品名",
+  productName: "商品名",
   supplierName: "仕入先",
   quantity: "数量",
   tax: "消費税",
@@ -13,13 +13,13 @@ type HeaderRow = {
   no: string | number;
   icon?: string;
   categoryName: string;
-  outsideMonth?: 0 | 1;
-  selfTransferTarget?: 0 | 1;
+  outsideMonth?: number;
+  selfTransferTarget?: number;
 };
 
 type BodyRow = {
-  productionInfo?: {
-    name?: string;
+  titleInfo?: {
+    productName?: string;
     supplierName?: string;
     
   };
@@ -55,7 +55,8 @@ export default function SalesSlipEntryRegistration({
         {/* Left side */}
         <div className="flex items-center space-x-4">
           <span className="font-bold text-gray-800">No:{headerRow.no}</span>
-          {headerRow.icon && <img src={headerRow.icon} alt="icon" className="w-5 h-5" />}
+          {/* {headerRow.icon && <img src={headerRow.icon} alt="icon" className="w-5 h-5" />} */}
+          <img src={headerRow.icon} alt="icon" className="w-5 h-5" />
           <span className="font-bold text-gray-800">区分: {headerRow.categoryName}</span>
         </div>
 
@@ -72,8 +73,8 @@ export default function SalesSlipEntryRegistration({
 
       {/* Body */}
       <div className="bg-white p-3 text-sm space-y-2">
-        {renderRow(bodyRow.productionInfo) && (
-          <div>{renderRow(bodyRow.productionInfo)}</div>
+        {renderRow(bodyRow.titleInfo) && (
+          <div>{renderRow(bodyRow.titleInfo)}</div>
         )}
         {renderRow(bodyRow.detailInfo) && (
           <div>{renderRow(bodyRow.detailInfo)}</div>
