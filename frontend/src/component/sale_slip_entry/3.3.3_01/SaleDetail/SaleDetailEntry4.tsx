@@ -26,7 +26,7 @@ const SaleDetailEntry4 = () => {
             </div>
             <div className=' w-15 text-center h-16 '>
                 <div className='bg-[#80bad7]'>
-                    数量
+                    単位
                 </div>
                 <div>
                     <input type="text" placeholder='000' className='w-full placeholder-black-200 border border-black' />

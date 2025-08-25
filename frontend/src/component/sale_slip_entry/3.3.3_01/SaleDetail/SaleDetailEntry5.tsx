@@ -18,7 +18,7 @@ const SaleDetailEntry5 = () => {
         <div className='flex gap-2 p-1 border border-black h-56'>
             <div className=' w-20 text-center h-[64px]'>
                 <div className='bg-[#80bad7] h-1/2'>
-                    仕入単価
+                    数量
                 </div>
                 <div className='h-1/2'>
                     <input type="text" placeholder='0.00' className='w-20 h-full placeholder-black-200 border border-black' />
@@ -26,7 +26,7 @@ const SaleDetailEntry5 = () => {
             </div>
             <div className=' w-14 text-center h-[64px]'>
                 <div className='bg-[#80bad7] h-1/2'>
-                    数量
+                    単位
                 </div>
                 <div className='h-1/2 '>
                     <input type="text" placeholder='000' className='w-14 h-full placeholder-black-200 border border-black' />
