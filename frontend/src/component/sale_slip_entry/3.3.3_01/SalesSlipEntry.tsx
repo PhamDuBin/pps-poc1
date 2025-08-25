@@ -404,12 +404,13 @@ export default function SalesSlipEntry() {
           onNext={() => setCurrentStep(3)}
         />
       )}
-      {currentStep === 3 && (
+      {currentStep === 3 && isSaleDetailModalOpen && (
         <SaleDetailModal
-          isOpen={isSaleDetailModalOpen}
-          onClose={() => setCurrentStep(2)}
-          categoryName={selectedCategory}
-          onNext={handleAddSaleSlip}
+            isOpen={isSaleDetailModalOpen}
+            onClose={() => setCurrentStep(2)}
+            categoryName={selectedCategory}
+            onNext={handleAddSaleSlip}
+            onFinish={() => setIsSaleDetailModalOpen(false)}
         />
       )}
     </div>

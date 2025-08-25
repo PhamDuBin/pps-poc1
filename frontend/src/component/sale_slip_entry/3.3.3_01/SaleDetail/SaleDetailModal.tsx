@@ -15,6 +15,7 @@ interface SaleDetailModalProps {
   onClose: () => void;
   categoryName: string;
   onNext: (data: any) => void;
+  onFinish: () => void;
 }
 
 const SaleDetailModal: React.FC<SaleDetailModalProps> = ({
@@ -22,10 +23,15 @@ const SaleDetailModal: React.FC<SaleDetailModalProps> = ({
   onClose,
   categoryName,
   onNext,
+  onFinish
 }) => {
+
+  
   let SelectedEntry: React.ReactNode = null;
 
   const [formData, setFormData] = useState<any>({});
+
+  if (!isOpen) return null;
 
   const handleChange = (field: string, value: string) => {
     setFormData((prev: any) => {
@@ -82,6 +88,7 @@ const SaleDetailModal: React.FC<SaleDetailModalProps> = ({
           tax: formData.tax || "0",
           saleAmount: formData.saleAmount || "0",
           salesPrice: formData.salesPrice || "0",
+          
         },
         note: formData.note || "",
       };
@@ -148,10 +155,6 @@ const SaleDetailModal: React.FC<SaleDetailModalProps> = ({
 
   case "7.消費税":   // Form 7
     bodyRow = {
-          titleInfo: {
-            productName:  "0111107 | パロマ湯沸器（13A） | PH−5BV" ,
-            supplierName: formData.supplierName || "",
-          },
           detailInfo: {
             tax: formData.tax,
           },
@@ -174,7 +177,7 @@ const SaleDetailModal: React.FC<SaleDetailModalProps> = ({
   };
 
   onNext(data);
-  console.log(data);
+  onFinish();
 };
 
 
