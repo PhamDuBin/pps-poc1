@@ -1,8 +1,8 @@
 import React from 'react';
 import SaleDetailSelector from './SaleDetailSelector';
-import SaleDetailEntry1 from './SaleDetailEntry1'; 
-import SaleDetailEntry2 from './SaleDetailEntry2' ;
-import SaleDetailEntry3 from './SaleDetailEntry3' ;
+import SaleDetailEntry1 from './SaleDetailEntry1';
+import SaleDetailEntry2 from './SaleDetailEntry2';
+import SaleDetailEntry3 from './SaleDetailEntry3';
 import StatusBar from '../../StatusBar';
 import { useState } from "react";
 import SaleDetailEntry4 from './SaleDetailEntry4';
@@ -13,11 +13,12 @@ import SaleDetailEntry5 from './SaleDetailEntry5';
 interface SaleDetailModalProps {
   isOpen: boolean;
   onClose: () => void;
-  categoryName: string;  
+  categoryName: string;
+  onNext: (data: any) => void;
 }
 
 const TitleSaleDetail = [
-  "1.売上", "2.直送売上" , "3.売上値引" , "4.返品" , "5.経費" , "6.資産" , "7.消費税"
+  "1.売上", "2.直送売上", "3.売上値引", "4.返品", "5.経費", "6.資産", "7.消費税"
 ]
 
 
@@ -28,34 +29,59 @@ const SaleDetailModal: React.FC<SaleDetailModalProps> = ({
   isOpen,
   onClose,
   categoryName,
+  onNext,
 }) => {
-let SelectedEntry: React.ReactNode = null;
+  let SelectedEntry: React.ReactNode = null;
 
-switch (categoryName) {
-  case "1.売上":
-    SelectedEntry = <SaleDetailEntry1 />;
-    break;
-  case "2.直送売上":
-    SelectedEntry = <SaleDetailEntry2 />;
-    break;
-  case "3.売上値引":
-    SelectedEntry = <SaleDetailEntry3 />;
-    break;
-  case "4.返品":
-    SelectedEntry = <SaleDetailEntry4 />;
-    break;
-  case "5.経費":
-    SelectedEntry = <SaleDetailEntry5 />;
-    break;
-  case "6.資産":
-    SelectedEntry = <SaleDetailEntry6 />;
-    break;
-  case "7.消費税":
-    SelectedEntry = <SaleDetailEntry7 />;
-    break;
-  default:
-    SelectedEntry = null;
-}
+  switch (categoryName) {
+    case "1.売上":
+      SelectedEntry = <SaleDetailEntry1 />;
+      break;
+    case "2.直送売上":
+      SelectedEntry = <SaleDetailEntry2 />;
+      break;
+    case "3.売上値引":
+      SelectedEntry = <SaleDetailEntry3 />;
+      break;
+    case "4.返品":
+      SelectedEntry = <SaleDetailEntry4 />;
+      break;
+    case "5.経費":
+      SelectedEntry = <SaleDetailEntry5 />;
+      break;
+    case "6.資産":
+      SelectedEntry = <SaleDetailEntry6 />;
+      break;
+    case "7.消費税":
+      SelectedEntry = <SaleDetailEntry7 />;
+      break;
+    default:
+      SelectedEntry = null;
+  }
+
+  const handleNext = () => {
+    const data = {
+      headerRow: {
+        no: "03",
+        icon: "",
+        categoryName: "売上",
+        outsideMonth: 1,
+        selfTransferTarget: 1,
+      },
+      bodyRow: {
+        titleInfo: {
+          productName: "リンナイ 給湯器 RUX-V1615W-E",
+          //supplierName: "XYZ商会",
+        },
+        detailInfo: {
+          quantity: "02",
+          tax: "200,000",
+        },
+        note: "xxx",
+      },
+    };
+    onNext(data);
+  }
 
 
   return (
@@ -83,12 +109,12 @@ switch (categoryName) {
         <div className='mt-5'>
           <SaleDetailSelector />
         </div>
-        
+
 
         <div className='my-5'>
           {SelectedEntry}
         </div>
-        
+
 
         {/* 4. Footer Actions */}
         <div className="flex gap-4 w-full justify-center items-center">
@@ -98,7 +124,9 @@ switch (categoryName) {
           >
             戻る (R)
           </button>
-          <button className="bg-gray-300 border border-gray-500 rounded px-10 py-2 font-bold hover:bg-gray-400">
+          <button
+            onClick={handleNext}
+            className="bg-gray-300 border border-gray-500 rounded px-10 py-2 font-bold hover:bg-gray-400">
             選択 (N)
           </button>
         </div>
