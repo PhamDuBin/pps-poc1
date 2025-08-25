@@ -15,7 +15,6 @@ interface SaleDetailModalProps {
   onClose: () => void;
   categoryName: string;
   onNext: (data: any) => void;
-  onFinish: () => void;
 }
 
 const SaleDetailModal: React.FC<SaleDetailModalProps> = ({
@@ -23,7 +22,6 @@ const SaleDetailModal: React.FC<SaleDetailModalProps> = ({
   onClose,
   categoryName,
   onNext,
-  onFinish
 }) => {
 
   
@@ -31,15 +29,12 @@ const SaleDetailModal: React.FC<SaleDetailModalProps> = ({
 
   const [formData, setFormData] = useState<any>({});
 
-  if (!isOpen) return null;
-
   const handleChange = (field: string, value: string) => {
     setFormData((prev: any) => {
       const updated = {
         ...prev,
         [field]: value,
       };
-      console.log("formData updated:", updated);
       return updated;
     });
   };
@@ -57,7 +52,6 @@ const SaleDetailModal: React.FC<SaleDetailModalProps> = ({
 
   const handleNext = () => {
 
-  
   let bodyRow: any = {};
 
   switch (categoryName) { 
@@ -177,7 +171,6 @@ const SaleDetailModal: React.FC<SaleDetailModalProps> = ({
   };
 
   onNext(data);
-  onFinish();
 };
 
 
@@ -223,7 +216,10 @@ const SaleDetailModal: React.FC<SaleDetailModalProps> = ({
             戻る (R)
           </button>
           <button
-            onClick={handleNext}
+              onClick={() => {
+                handleNext() 
+              }}
+
             className="bg-gray-300 border border-gray-500 rounded px-10 py-2 font-bold hover:bg-gray-400">
             選択 (N)
           </button>

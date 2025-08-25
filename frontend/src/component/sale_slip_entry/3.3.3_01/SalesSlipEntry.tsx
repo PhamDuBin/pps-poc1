@@ -108,6 +108,8 @@ export default function SalesSlipEntry() {
 
   const handleAddSaleSlip = (data: any) => {
     setSaleSlips([...saleSlips, data]);
+    setIsSaleDetailModalOpen(false);
+    setCurrentStep(4);
   };
 
   const handleDeleteLine = (index: number) => {
@@ -404,13 +406,13 @@ export default function SalesSlipEntry() {
           onNext={() => setCurrentStep(3)}
         />
       )}
-      {currentStep === 3 && isSaleDetailModalOpen && (
+      {currentStep === 3 && (
         <SaleDetailModal
             isOpen={isSaleDetailModalOpen}
             onClose={() => setCurrentStep(2)}
             categoryName={selectedCategory}
             onNext={handleAddSaleSlip}
-            onFinish={() => setIsSaleDetailModalOpen(false)}
+            
         />
       )}
     </div>
