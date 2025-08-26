@@ -114,7 +114,7 @@ const SaleDetailEntry6: React.FC<SaleDetailEntry6Props> = ({ onChange, formData 
             <div className='bg-[#80bad7] h-1/2'>当月外</div>
             <select
               className="border border-black w-full h-1/2"
-              value={formData.outsidetMonth !== undefined ? String(formData.outsideMonth) : "0"}
+              value={formData.outsideMonth !== undefined ? String(formData.outsideMonth) : "0"}
               onChange={(e) => onChange("outsideMonth", e.target.value)}
             >
               <option value="0">0 空欄</option>

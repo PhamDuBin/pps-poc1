@@ -109,9 +109,10 @@ const SaleDetailEntry5: React.FC<SaleDetailEntry5Props> = ({ onChange, formData 
               <div className='flex w-1/4 relative text-center'>
                 <select
                   className=" text-center border w-full border-black"
-                  value={formData.expenseNo ?? '1'}
+                  value={formData.expenseNo ?? '0'}
                   onChange={(e) => onChange("expenseNo", e.target.value)}
                 >
+                  <option value="0">0</option>
                   {Array.from({ length: 10 }, (_, i) => {
                     const value = (i + 1).toString();
                     return (
@@ -125,8 +126,8 @@ const SaleDetailEntry5: React.FC<SaleDetailEntry5Props> = ({ onChange, formData 
               <input
                 type="text"
                 className='w-full h-full border p-1 border-black placeholder-black-200'
-                value={formData.expenseCategoryText ?? ''}
-                onChange={(e) => onChange("expenseCategoryText", e.target.value)}
+                value={formData.expenseText ?? ''}
+                onChange={(e) => onChange("expenseText", e.target.value)}
               />
             </div>
           </div>

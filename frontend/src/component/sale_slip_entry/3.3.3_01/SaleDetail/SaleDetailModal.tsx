@@ -131,11 +131,13 @@ const SaleDetailModal: React.FC<SaleDetailModalProps> = ({
       bodyRow = {
         titleInfo: {
           productName:  "0111107 | パロマ湯沸器（13A） | PH−5BV" ,
+          expenseText: formData.expenseText || "",
         },
         detailInfo: {
           quantity: formData.quantity || "0",
           purchasePrice: formData.purchasePrice || "0",
           purchaseAmount: formData.purchaseAmount || "0",
+          
         },
         note: formData.note || "",
       };
@@ -215,6 +217,7 @@ const SaleDetailModal: React.FC<SaleDetailModalProps> = ({
     no: rowEdit.headerRow?.no || "99",
     supplierCode,
     supplierName,
+    expenseText: rowEdit.bodyRow?.titleInfo?.expenseText || "",
     });
     console.log(rowEdit);
     
