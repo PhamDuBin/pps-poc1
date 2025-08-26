@@ -14,9 +14,10 @@ const handleOpenWindow = () => {
 
 interface SaleDetailEntry5Props {
   onChange: (field: string, value: string) => void;
+  formData: any;
 }
 
-const SaleDetailEntry5: React.FC<SaleDetailEntry5Props> = ({ onChange }) => {
+const SaleDetailEntry5: React.FC<SaleDetailEntry5Props> = ({ onChange, formData }) => {
   return (
     <div className='flex gap-1 '>  
       <div className='flex gap-2 p-1 border border-black h-56'>
@@ -118,6 +119,7 @@ const SaleDetailEntry5: React.FC<SaleDetailEntry5Props> = ({ onChange }) => {
             <div className='bg-[#80bad7] h-1/2'>当月外</div>
             <select
               className="border border-black w-full h-1/2"
+              value={formData.outsideMonth !== undefined ? String(formData.outsideMonth) : "0"}
               onChange={(e) => onChange("outsideMonth", e.target.value)}
             >
               <option value="0">0 空欄</option>

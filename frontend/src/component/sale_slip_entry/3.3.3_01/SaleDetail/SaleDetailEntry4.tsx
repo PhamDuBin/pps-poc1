@@ -2,6 +2,7 @@ import React from 'react';
 
 interface SaleDetailEntry4Props {
   onChange: (field: string, value: string) => void;
+  formData: any;
 }
 
 const handleOpenWindow = () => {
@@ -16,7 +17,7 @@ const handleOpenWindow = () => {
   }
 };
 
-const SaleDetailEntry4: React.FC<SaleDetailEntry4Props> = ({ onChange }) => {
+const SaleDetailEntry4: React.FC<SaleDetailEntry4Props> = ({ onChange,formData }) => {
   return (
     <div className='flex gap-1 '>  
       {/* Left side */}
@@ -137,6 +138,7 @@ const SaleDetailEntry4: React.FC<SaleDetailEntry4Props> = ({ onChange }) => {
             <div className='bg-[#80bad7] h-1/2'>自振対象</div>
             <select
               className="border border-black w-full h-1/2"
+              value={formData.selfTransferTarget !== undefined ? String(formData.selfTransferTarget) : "0"}
               onChange={(e) => onChange("selfTransferTarget", e.target.value)}
             >
               <option value="0">0 対象</option>
@@ -148,6 +150,7 @@ const SaleDetailEntry4: React.FC<SaleDetailEntry4Props> = ({ onChange }) => {
             <div className='bg-[#80bad7] h-1/2'>当月外</div>
             <select
               className="border border-black w-full h-1/2"
+              value={formData.outsideMonth !== undefined ? String(formData.outsideMonth) : "0"}
               onChange={(e) => onChange("outsideMonth", e.target.value)}
             >
               <option value="0">0 空欄</option>

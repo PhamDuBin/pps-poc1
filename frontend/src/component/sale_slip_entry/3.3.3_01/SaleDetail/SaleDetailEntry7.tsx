@@ -2,9 +2,10 @@ import React from "react";
 
 interface SaleDetailEntry7Props {
   onChange: (field: string, value: string) => void;
+  formData: any;
 }
 
-const SaleDetailEntry7: React.FC<SaleDetailEntry7Props> = ({ onChange }) => {
+const SaleDetailEntry7: React.FC<SaleDetailEntry7Props> = ({ onChange, formData }) => {
   return (
     <div className="flex gap-2">
       <div className="h-[64px] w-[100px]">

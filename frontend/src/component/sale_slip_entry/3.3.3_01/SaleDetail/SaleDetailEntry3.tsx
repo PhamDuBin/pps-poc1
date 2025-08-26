@@ -2,9 +2,10 @@ import React from 'react';
 
 interface SaleDetailEntry3Props {
   onChange: (field: string, value: string) => void;
+  formData: any;
 }
 
-const SaleDetailEntry3: React.FC<SaleDetailEntry3Props> = ({ onChange }) => {
+const SaleDetailEntry3: React.FC<SaleDetailEntry3Props> = ({ onChange,formData }) => {
   return (
     <div className='flex gap-1 '>
       <div className='flex gap-2 p-1 border border-black h-40'>
@@ -66,6 +67,7 @@ const SaleDetailEntry3: React.FC<SaleDetailEntry3Props> = ({ onChange }) => {
             <div className='bg-[#80bad7] h-1/2'>当月外</div>
             <select
               className="border border-black w-full h-1/2"
+              value={formData.outsideMonth !== undefined ? String(formData.outsideMonth) : "0"}
               onChange={(e) => onChange("outsideMonth", e.target.value)}
             >
               <option value="0">0 空欄</option>
@@ -78,6 +80,7 @@ const SaleDetailEntry3: React.FC<SaleDetailEntry3Props> = ({ onChange }) => {
             <div className='bg-[#80bad7] h-1/2'>売上消費税対象</div>
             <select
               className="border border-black w-full h-1/2"
+              value={formData.selfTransferTarget !== undefined ? String(formData.selfTransferTarget) : "0"}
               onChange={(e) => onChange("selfTransferTarget", e.target.value)}
             >
               <option value="0">0 対象</option>

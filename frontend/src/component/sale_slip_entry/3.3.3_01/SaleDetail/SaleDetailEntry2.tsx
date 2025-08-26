@@ -14,9 +14,10 @@ const handleOpenWindow = () => {
 
 interface SaleDetailEntry2Props {
   onChange: (field: string, value: string) => void;
+  formData: any;
 }
 
-const SaleDetailEntry2: React.FC<SaleDetailEntry2Props> = ({ onChange }) => {
+const SaleDetailEntry2: React.FC<SaleDetailEntry2Props> = ({ onChange, formData }) => {
   return (
     <div className='flex gap-1 '>  
       {/* Cột số lượng */}
@@ -126,6 +127,7 @@ const SaleDetailEntry2: React.FC<SaleDetailEntry2Props> = ({ onChange }) => {
             <div className='bg-[#80bad7] h-1/2'>自振対象</div>
             <select 
               className="border border-black w-full h-1/2"
+              value={formData.selfTransferTarget !== undefined ? String(formData.selfTransferTarget) : "0"}
               onChange={(e) => onChange("selfTransferTarget", e.target.value)} 
             >
               <option value="0">0 対象</option>
@@ -139,6 +141,7 @@ const SaleDetailEntry2: React.FC<SaleDetailEntry2Props> = ({ onChange }) => {
               <div className='flex w-3/5 relative'>
                 <select 
                   className="border w-full border-black"
+                  value={formData.outsideMonth !== undefined ? String(formData.outsideMonth) : "0"}
                   onChange={(e) => onChange("supplierCode", e.target.value)} 
                 >
                   {Array.from({ length: 10 }, (_, i) => {
@@ -165,6 +168,7 @@ const SaleDetailEntry2: React.FC<SaleDetailEntry2Props> = ({ onChange }) => {
             <div className='bg-[#80bad7] h-1/2'>当月外</div>
             <select 
               className="border border-black w-full h-1/2"
+              value={formData.outsideMonth !== undefined ? String(formData.outsideMonth) : "0"}
               onChange={(e) => onChange("outsideMonth", e.target.value)} 
             >
               <option value="0">0 空欄</option>

@@ -46,12 +46,12 @@ const SaleDetailModal: React.FC<SaleDetailModalProps> = ({
 
   switch (categoryName) {
     case "1.売上":        SelectedEntry = <SaleDetailEntry1 onChange={handleChange} formData={formData}/>; break;
-    case "2.直送売上":    SelectedEntry = <SaleDetailEntry2 onChange={handleChange} />;; break;
-    case "3.売上値引":    SelectedEntry = <SaleDetailEntry3 onChange={handleChange}/>; break;
-    case "4.返品":        SelectedEntry = <SaleDetailEntry4 onChange={handleChange}/>; break;
-    case "5.経費":        SelectedEntry = <SaleDetailEntry5 onChange={handleChange}/>; break;
-    case "6.資産":        SelectedEntry = <SaleDetailEntry6 onChange={handleChange}/>; break;
-    case "7.消費税":      SelectedEntry = <SaleDetailEntry7 onChange={handleChange}/>; break;
+    case "2.直送売上":    SelectedEntry = <SaleDetailEntry2 onChange={handleChange} formData={formData}/>;; break;
+    case "3.売上値引":    SelectedEntry = <SaleDetailEntry3 onChange={handleChange} formData={formData}/>; break;
+    case "4.返品":        SelectedEntry = <SaleDetailEntry4 onChange={handleChange} formData={formData}/>; break;
+    case "5.経費":        SelectedEntry = <SaleDetailEntry5 onChange={handleChange} formData={formData}/>; break;
+    case "6.資産":        SelectedEntry = <SaleDetailEntry6 onChange={handleChange} formData={formData}/>; break;
+    case "7.消費税":      SelectedEntry = <SaleDetailEntry7 onChange={handleChange} formData={formData}/>; break;
   }
   
 

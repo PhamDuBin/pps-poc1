@@ -2,6 +2,7 @@ import React from 'react';
 
 interface SaleDetailEntry6Props {
   onChange: (field: string, value: string) => void;
+  formData: any;
 }
 
 const handleOpenWindow = () => {
@@ -13,7 +14,7 @@ const handleOpenWindow = () => {
   if (win) win.focus();
 };
 
-const SaleDetailEntry6: React.FC<SaleDetailEntry6Props> = ({ onChange }) => {
+const SaleDetailEntry6: React.FC<SaleDetailEntry6Props> = ({ onChange, formData }) => {
   return (
     <div className='flex gap-1 '>  
       <div className='flex gap-2 p-1 border border-black h-[150px]'>
