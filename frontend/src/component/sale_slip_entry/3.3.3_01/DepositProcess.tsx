@@ -46,7 +46,7 @@ export default function DepositProcess({
       if(firstInputRef.current) {
         firstInputRef.current.focus();
       }
-  })
+  }, [])
 
   return (
     <div className="flex flex-col w-full border border-black">

@@ -14,7 +14,7 @@ const fieldLabelMap: Record<string, string> = {
   expenseNo: "経費分類No.",
   purchasePrice: "仕入単価",
   purchaseAmount: "仕入金額",
-  supplier:"仕入先"
+  supplier:"仕入先 "
 };
 
 type HeaderRow = {

@@ -86,7 +86,9 @@ const SaleDetailModal: React.FC<SaleDetailModalProps> = ({
       bodyRow = {
         titleInfo: {
           productName:  "0111107 | パロマ湯沸器（13A） | PH−5BV" ,
-          supplier: `${formData.supplierCode} | ${formData.supplierName}` || "",
+          supplier: [formData.supplierCode, formData.supplierName]
+          .filter(val => val && val !== "0000000000")
+          .join(" | "),
         },
         detailInfo: {
           quantity: formData.quantity || "0",
@@ -181,9 +183,19 @@ const SaleDetailModal: React.FC<SaleDetailModalProps> = ({
 
   useEffect(() => {
     if (rowEdit) {
-    const supplierCode = rowEdit.bodyRow?.titleInfo?.supplierCode || "";
-    const supplierName = rowEdit.bodyRow?.titleInfo?.supplierName || "";
-    const supplier = rowEdit.bodyRow?.titleInfo?.supplierName || "";
+    const supplierRaw = rowEdit.bodyRow?.titleInfo?.supplier || "";
+    let supplierCode = "";
+    let supplierName = "";
+
+    if (supplierRaw.includes(" | ")) {
+      [supplierCode, supplierName] = supplierRaw.split(" | ");
+    } else if (/^\d{10}$/.test(supplierRaw)) {
+      // Nếu chỉ có mã supplier 10 số
+      supplierCode = supplierRaw;
+    } else {
+      // Nếu chỉ có tên
+      supplierName = supplierRaw;
+    }
     setFormData({
     quantity: (rowEdit.bodyRow?.detailInfo?.quantity || "")
       .replace(/[()]/g, "")
@@ -203,8 +215,6 @@ const SaleDetailModal: React.FC<SaleDetailModalProps> = ({
     no: rowEdit.headerRow?.no || "99",
     supplierCode,
     supplierName,
-    supplier,
-
     });
     console.log(rowEdit);
     

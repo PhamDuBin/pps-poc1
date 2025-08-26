@@ -163,6 +163,7 @@ const SaleDetailEntry2: React.FC<SaleDetailEntry2Props> = ({ onChange, formData 
                   value={formData.supplierCode || "0"}
                   onChange={(e) => onChange("supplierCode", e.target.value)} 
                 >
+                  <option value="0000000000">0000000000</option>
                   {Array.from({ length: 10 }, (_, i) => {
                     const value = (i + 1).toString().padStart(10, '0');
                     return <option key={value} value={value}>{value}</option>;
