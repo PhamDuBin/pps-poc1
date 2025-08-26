@@ -24,48 +24,7 @@ export default function SalesSlipEntry({
   const [currentStep, setCurrentStep] = useState(1);
   const [focusIndex, setFocusIndex] = useState<number | null>(null);
   const [rowEdit, setRowEdit] = useState<any>(null);
-  const [saleSlips, setSaleSlips] = useState([
-    {
-      headerRow: {
-        no: "01",
-        icon: "",
-        categoryName: "売上",
-        outsideMonth: 1,
-        selfTransferTarget: 1,
-      },
-      bodyRow: {
-        titleInfo: {
-          productName: "パロマ 給湯器 PH-163EWS",
-          supplierName: "ABC商事",
-        },
-        detailInfo: {
-          quantity: "01",
-          tax: "100,000",
-        },
-        note: "備考がある場合追加で表示。当月分が空白の場合ラベルは非表示。",
-      },
-    },
-    {
-      headerRow: {
-        no: "02",
-        icon: "",
-        categoryName: "売上",
-        outsideMonth: 1,
-        selfTransferTarget: 1,
-      },
-      bodyRow: {
-        titleInfo: {
-          productName: "リンナイ 給湯器 RUX-V1615W-E",
-          supplierName: "XYZ商会",
-        },
-        detailInfo: {
-          quantity: "02",
-          tax: "200,000",
-        },
-        note: "",
-      },
-    },
-  ]);
+  const [saleSlips, setSaleSlips] = useState<any>([]);
 
   const [activeSlipIndex, setActiveSlipIndex] = useState<number | null>(null);
   const [tooltipPos, setTooltipPos] = useState<{
@@ -92,11 +51,11 @@ export default function SalesSlipEntry({
       });
     }
   };
-  
+
   // Handle Add Sale Slip
   const handleAddSaleSlip = (data: any) => {
     console.log("Line data:", data);
-    setSaleSlips((prev) => {
+    setSaleSlips((prev: any) => {
       if (data.id !== undefined && data.id >= 0 && data.id < prev.length) {
         // ✅ Update slip by id
         const updated = [...prev];
@@ -116,7 +75,7 @@ export default function SalesSlipEntry({
     const rowData = saleSlips[index];
     setRowEdit({ ...rowData, id: index });
     setActiveSlipIndex(null);
-    setSelectedCategory(saleSlips[index].headerRow.categoryName);     
+    setSelectedCategory(saleSlips[index].headerRow.categoryName);
     setTooltipPos(null);
     setIsSaleDetailModalOpen(true); // ✅ mở modal edit
     setCurrentStep(3);
@@ -124,13 +83,14 @@ export default function SalesSlipEntry({
 
   const handleDeleteLine = (indexToDelete: number) => {
     const nextFocusIndex = indexToDelete > 0 ? indexToDelete - 1 : 0;
-    setSaleSlips((prev) => prev.filter((_, i) => i !== indexToDelete));
+    setSaleSlips((prev: any) =>
+      prev.filter((_: any, i: any) => i !== indexToDelete)
+    );
     setActiveSlipIndex(null);
     if (saleSlips.length > 1) {
       setFocusIndex(nextFocusIndex);
     }
   };
-
 
   const handleOpenCategorySelection = () => {
     setActiveSlipIndex(null);
@@ -222,7 +182,7 @@ export default function SalesSlipEntry({
     }
   };
 
-  console.log("rowedit:",rowEdit);
+  console.log("rowedit:", rowEdit);
 
   return (
     <div className=" w-full h-full flex flex-col items-center px-4 pt-4 2xl:text-[16px] text-[11px]">
@@ -306,7 +266,7 @@ export default function SalesSlipEntry({
           </div>
         </div>
         <div className="w-full max-h-96 overflow-y-auto border p-2 relative">
-          {saleSlips.map((slip, index) => (
+          {saleSlips.map((slip: any, index: any) => (
             <div
               key={index}
               ref={(el) => {
@@ -348,7 +308,8 @@ export default function SalesSlipEntry({
                   <div className="absolute top-4 -left-2 w-0 h-0 border-t-8 border-b-8 border-r-8 border-transparent border-r-[#D9D9D9]"></div>
                   <button
                     onClick={() => handleEditLine(activeSlipIndex!)}
-                    className="block w-full px-2 py-1 hover:bg-gray-100 border border-black rounded shadow-md shadow-zinc-600 text-center">
+                    className="block w-full px-2 py-1 hover:bg-gray-100 border border-black rounded shadow-md shadow-zinc-600 text-center"
+                  >
                     行編集
                   </button>
                   <button
@@ -446,9 +407,7 @@ export default function SalesSlipEntry({
           categoryName={selectedCategory}
           onNext={handleAddSaleSlip}
           rowEdit={rowEdit}
-          
         />
-
       )}
     </div>
   );

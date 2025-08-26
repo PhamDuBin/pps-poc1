@@ -66,7 +66,7 @@ const RightPanel: React.FC<RightPanelProps> = ({
         <div className="flex items-center justify-center space-x-4 mt-10 mb-8">
           <div className="flex flex-col items-center">
             <button
-              className="w-0 h-0 border-t-8 border-b-8 border-r-8 border-t-transparent border-b-transparent border-r-gray-300 bg-transparent"
+              className="w-0 h-0 border-t-8 border-b-8 border-r-8 border-t-transparent border-b-transparent border-r-gray-500 bg-transparent"
               disabled
               aria-label="left"
             />
@@ -77,7 +77,7 @@ const RightPanel: React.FC<RightPanelProps> = ({
           </div>
           <div className="flex flex-col items-center">
             <button
-              className="w-0 h-0 border-t-8 border-b-8 border-l-8 border-t-transparent border-b-transparent border-l-gray-300 bg-transparent"
+              className="w-0 h-0 border-t-8 border-b-8 border-l-8 border-t-transparent border-b-transparent border-l-gray-500 bg-transparent"
               disabled
               aria-label="right"
             />
