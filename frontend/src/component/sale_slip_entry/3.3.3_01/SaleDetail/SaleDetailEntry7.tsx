@@ -14,6 +14,7 @@ const SaleDetailEntry7: React.FC<SaleDetailEntry7Props> = ({ onChange, formData 
           type="text"
           className="h-1/2 w-full border border-black text-center"
           placeholder="96-0001"
+          value={formData.productCode ?? ""}
           onChange={(e) => onChange("productCode", e.target.value)}
         />
       </div>
@@ -23,6 +24,7 @@ const SaleDetailEntry7: React.FC<SaleDetailEntry7Props> = ({ onChange, formData 
         <input
           type="text"
           className="h-1/2 w-full border border-black text-center"
+          value={formData.productName ?? ""}
           onChange={(e) => onChange("productName", e.target.value)}
         />
       </div>
@@ -32,6 +34,7 @@ const SaleDetailEntry7: React.FC<SaleDetailEntry7Props> = ({ onChange, formData 
         <input
           type="text"
           className="h-1/2 w-full border border-black text-center"
+          value={formData.modelNumber ?? ""}
           onChange={(e) => onChange("modelNumber", e.target.value)}
         />
       </div>
@@ -42,6 +45,7 @@ const SaleDetailEntry7: React.FC<SaleDetailEntry7Props> = ({ onChange, formData 
           type="text"
           className="h-1/2 w-full border border-black text-center"
           placeholder="0"
+          value={formData.tax ?? ""}
           onChange={(e) => onChange("tax", e.target.value)}
         />
       </div>
@@ -50,6 +54,7 @@ const SaleDetailEntry7: React.FC<SaleDetailEntry7Props> = ({ onChange, formData 
         <div className="h-1/2 bg-[#80bad7] p-1">自振対象</div>
         <select
           className="border border-black w-full h-1/2 text-center"
+          value={formData.selfDebitTarget !== undefined ? String(formData.selfDebitTarget) : "0"}
           onChange={(e) => onChange("selfDebitTarget", e.target.value)}
         >
           <option value="0">0 対象</option>
@@ -61,6 +66,7 @@ const SaleDetailEntry7: React.FC<SaleDetailEntry7Props> = ({ onChange, formData 
         <div className="h-1/2 bg-[#80bad7] p-1">当月外</div>
         <select
           className="border border-black w-full h-1/2 text-center"
+          value={formData.outsideCurrentMonth !== undefined ? String(formData.outsideCurrentMonth) : "0"}
           onChange={(e) => onChange("outsideCurrentMonth", e.target.value)}
         >
           <option value="0">0 空欄</option>

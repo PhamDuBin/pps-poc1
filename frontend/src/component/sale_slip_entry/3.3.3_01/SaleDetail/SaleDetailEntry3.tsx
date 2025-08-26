@@ -17,6 +17,7 @@ const SaleDetailEntry3: React.FC<SaleDetailEntry3Props> = ({ onChange,formData }
               type="text"
               placeholder='000'
               className='w-20 placeholder-black-200 border border-black'
+              value={formData.quantity || ""}
               onChange={(e) => onChange("quantity", e.target.value)}
             />
           </div>
@@ -28,6 +29,7 @@ const SaleDetailEntry3: React.FC<SaleDetailEntry3Props> = ({ onChange,formData }
               type="text"
               placeholder='000'
               className='w-14 placeholder-black-200 border border-black'
+              value={formData.unit || ""}
               onChange={(e) => onChange("unit", e.target.value)}
             />
           </div>
@@ -46,6 +48,7 @@ const SaleDetailEntry3: React.FC<SaleDetailEntry3Props> = ({ onChange,formData }
                 type="text"
                 placeholder='(0.00)'
                 className='h-full px-1 w-[120px] border border-black placeholder-black-200'
+                value={formData.saleAmount || ""}
                 onChange={(e) => onChange("saleAmount", e.target.value)}
               />
             </div>
@@ -58,6 +61,7 @@ const SaleDetailEntry3: React.FC<SaleDetailEntry3Props> = ({ onChange,formData }
               type="text"
               placeholder='0'
               className='w-[120px] h-1/2 border px-1 border-black placeholder-black-200'
+              value={formData.tax || ""}
               onChange={(e) => onChange("tax", e.target.value)}
             />
           </div>
@@ -95,6 +99,7 @@ const SaleDetailEntry3: React.FC<SaleDetailEntry3Props> = ({ onChange,formData }
               type="text"
               placeholder='値引き'
               className='w-full h-1/2 border px-1 border-black placeholder-black-200'
+              value={formData.note || ""}
               onChange={(e) => onChange("note", e.target.value)}
             />
           </div>

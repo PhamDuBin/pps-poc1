@@ -29,6 +29,7 @@ const SaleDetailEntry2: React.FC<SaleDetailEntry2Props> = ({ onChange, formData 
               type="text" 
               placeholder='000' 
               className='w-20 placeholder-black-200 border border-black'
+              value={formData.quantity || ""}
               onChange={(e) => onChange("quantity", e.target.value)} 
             />
           </div>
@@ -40,6 +41,7 @@ const SaleDetailEntry2: React.FC<SaleDetailEntry2Props> = ({ onChange, formData 
               type="text" 
               placeholder='000' 
               className='w-14 placeholder-black-200 border border-black' 
+              value={formData.unit || ""}
               onChange={(e) => onChange("unit", e.target.value)} 
             />
           </div>
@@ -56,6 +58,7 @@ const SaleDetailEntry2: React.FC<SaleDetailEntry2Props> = ({ onChange, formData 
                 type="text" 
                 placeholder='0.00' 
                 className='h-full px-1 w-[120px] placeholder-black-200 border border-black'
+                value={formData.salesPrice || ""}
                 onChange={(e) => onChange("salesPrice", e.target.value)} 
               />
             </div>
@@ -65,6 +68,7 @@ const SaleDetailEntry2: React.FC<SaleDetailEntry2Props> = ({ onChange, formData 
             <div className='bg-[#80bad7] h-1/2'>売上単価区分</div>
             <select 
               className="border border-black w-full h-1/2"
+              value={formData.salesPriceType !== undefined ? String(formData.salesPriceType) : "0"}
               onChange={(e) => onChange("salesPriceType", e.target.value)} 
             >
               <option value="0">0 確定単価</option>
@@ -78,6 +82,7 @@ const SaleDetailEntry2: React.FC<SaleDetailEntry2Props> = ({ onChange, formData 
               type="text" 
               placeholder='0' 
               className='w-[120px] h-1/2 border px-1 border-black placeholder-black-200 '
+              value={formData.saleAmount || ""}
               onChange={(e) => onChange("saleAmount", e.target.value)} 
             />
           </div>
@@ -88,6 +93,7 @@ const SaleDetailEntry2: React.FC<SaleDetailEntry2Props> = ({ onChange, formData 
               type="text" 
               placeholder='0' 
               className='w-[120px] h-1/2 border px-1 border-black placeholder-black-200 '
+              value={formData.tax || ""}
               onChange={(e) => onChange("tax", e.target.value)} 
             />
           </div>
@@ -98,6 +104,7 @@ const SaleDetailEntry2: React.FC<SaleDetailEntry2Props> = ({ onChange, formData 
               type="text" 
               placeholder='01234567.00' 
               className='w-[120px] h-1/2 border px-1 border-black placeholder-black-200 '
+              value={formData.purchasePrice || ""}
               onChange={(e) => onChange("purchasePrice", e.target.value)} 
             />
           </div>
@@ -106,6 +113,7 @@ const SaleDetailEntry2: React.FC<SaleDetailEntry2Props> = ({ onChange, formData 
             <div className='bg-[#80bad7] h-1/2'>仕入単価区分</div>
             <select 
               className="border border-black w-full h-1/2"
+              value={formData.purchasePriceType !== undefined ? String(formData.purchasePriceType) : "0"}
               onChange={(e) => onChange("purchasePriceType", e.target.value)} 
             >
               <option value="0">0 確定単価</option>
@@ -119,6 +127,7 @@ const SaleDetailEntry2: React.FC<SaleDetailEntry2Props> = ({ onChange, formData 
               type="text" 
               placeholder='0' 
               className='w-[120px] h-1/2 border px-1 border-black placeholder-black-200 '
+              value={formData.purchaseAmount || ""}
               onChange={(e) => onChange("purchaseAmount", e.target.value)} 
             />
           </div>
@@ -141,7 +150,7 @@ const SaleDetailEntry2: React.FC<SaleDetailEntry2Props> = ({ onChange, formData 
               <div className='flex w-3/5 relative'>
                 <select 
                   className="border w-full border-black"
-                  value={formData.outsideMonth !== undefined ? String(formData.outsideMonth) : "0"}
+                  value={formData.supplierCode || "0"}
                   onChange={(e) => onChange("supplierCode", e.target.value)} 
                 >
                   {Array.from({ length: 10 }, (_, i) => {
@@ -153,6 +162,7 @@ const SaleDetailEntry2: React.FC<SaleDetailEntry2Props> = ({ onChange, formData 
               <input 
                 type="text" 
                 className='w-full h-full border p-1 border-black placeholder-black-200 '
+                value={formData.supplierName || ""}
                 onChange={(e) => onChange("supplierName", e.target.value)} 
               />
             </div>
@@ -181,6 +191,7 @@ const SaleDetailEntry2: React.FC<SaleDetailEntry2Props> = ({ onChange, formData 
             <input 
               type="text" 
               className='w-full h-1/2 border px-1 border-black placeholder-black-200 '
+              value={formData.note || ""}
               onChange={(e) => onChange("note", e.target.value)} 
             />
           </div>

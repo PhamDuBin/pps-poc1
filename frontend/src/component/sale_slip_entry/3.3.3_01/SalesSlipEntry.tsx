@@ -67,6 +67,7 @@ export default function SalesSlipEntry({
         return [...prev, { ...data, id: prev.length }];
       }
     });
+    setRowEdit(undefined);
     setIsSaleDetailModalOpen(false);
     setCurrentStep(4);
   };

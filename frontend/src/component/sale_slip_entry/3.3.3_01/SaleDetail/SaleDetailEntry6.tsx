@@ -26,6 +26,7 @@ const SaleDetailEntry6: React.FC<SaleDetailEntry6Props> = ({ onChange, formData 
               type="text"
               placeholder='0.00'
               className='w-20 h-full placeholder-black-200 border border-black'
+              value={formData.quantity ?? ''}
               onChange={(e) => onChange("quantity", e.target.value)}
             />
           </div>
@@ -39,6 +40,7 @@ const SaleDetailEntry6: React.FC<SaleDetailEntry6Props> = ({ onChange, formData 
               type="text"
               placeholder='000'
               className='w-14 h-full placeholder-black-200 border border-black'
+              value={formData.unit ?? ''}
               onChange={(e) => onChange("unit", e.target.value)}
             />
           </div>
@@ -56,6 +58,7 @@ const SaleDetailEntry6: React.FC<SaleDetailEntry6Props> = ({ onChange, formData 
                 type="text"
                 placeholder='01234567.00'
                 className='h-full px-1 w-[120px] placeholder-black-200 border border-black'
+                value={formData.salesPrice ?? ''}
                 onChange={(e) => onChange("salesPrice", e.target.value)}
               />
             </div>
@@ -66,6 +69,7 @@ const SaleDetailEntry6: React.FC<SaleDetailEntry6Props> = ({ onChange, formData 
             <div className='bg-[#80bad7] h-1/2'>仕入単価区分</div>
             <select
               className="border border-black w-full h-1/2"
+              value={formData.purchasePriceType !== undefined ? String(formData.purchasePriceType) : "0"}
               onChange={(e) => onChange("purchasePriceType", e.target.value)}
             >
               <option value="0">0 確定単価</option>
@@ -80,6 +84,7 @@ const SaleDetailEntry6: React.FC<SaleDetailEntry6Props> = ({ onChange, formData 
               type="text"
               placeholder='0'
               className='w-[120px] h-1/2 border px-1 border-black placeholder-black-200'
+              value={formData.purchaseAmount ?? ''}
               onChange={(e) => onChange("purchaseAmount", e.target.value)}
             />
           </div>
@@ -99,6 +104,7 @@ const SaleDetailEntry6: React.FC<SaleDetailEntry6Props> = ({ onChange, formData 
             <div className='bg-[#80bad7] h-1/2'>当月外</div>
             <select
               className="border border-black w-full h-1/2"
+              value={formData.outsideCurrentMonth !== undefined ? String(formData.outsideCurrentMonth) : "0"}
               onChange={(e) => onChange("outsideCurrentMonth", e.target.value)}
             >
               <option value="0">0 空欄</option>
@@ -112,6 +118,7 @@ const SaleDetailEntry6: React.FC<SaleDetailEntry6Props> = ({ onChange, formData 
             <input
               type="text"
               className='w-full h-1/2 border px-1 border-black placeholder-black-200'
+              value={formData.remarks ?? ''}
               onChange={(e) => onChange("remarks", e.target.value)}
             />
           </div>

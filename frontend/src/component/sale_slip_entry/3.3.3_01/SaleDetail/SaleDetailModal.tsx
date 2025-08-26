@@ -46,7 +46,7 @@ const SaleDetailModal: React.FC<SaleDetailModalProps> = ({
 
   switch (categoryName) {
     case "1.売上":        SelectedEntry = <SaleDetailEntry1 onChange={handleChange} formData={formData}/>; break;
-    case "2.直送売上":    SelectedEntry = <SaleDetailEntry2 onChange={handleChange} formData={formData}/>;; break;
+    case "2.直送売上":    SelectedEntry = <SaleDetailEntry2 onChange={handleChange} formData={formData}/>; break;
     case "3.売上値引":    SelectedEntry = <SaleDetailEntry3 onChange={handleChange} formData={formData}/>; break;
     case "4.返品":        SelectedEntry = <SaleDetailEntry4 onChange={handleChange} formData={formData}/>; break;
     case "5.経費":        SelectedEntry = <SaleDetailEntry5 onChange={handleChange} formData={formData}/>; break;
@@ -64,14 +64,14 @@ const SaleDetailModal: React.FC<SaleDetailModalProps> = ({
   let bodyRow: any = {};
 
   switch (categoryName) { 
-    case "売上":   // Form 1
+    case "1.売上":   // Form 1
       bodyRow = {
         titleInfo: {
           productName:  "0111107 | パロマ湯沸器（13A） | PH−5BV" ,
           supplierName: formData.supplierName || "",
         },
         detailInfo: {
-          quantity: formData.purchaseAmount || "0",
+          quantity: formData.quantity || "0",
           salesPrice: formData.salesPrice || "0",
           saleAmount: formData.saleAmount,
           tax: formData.tax || "0",
@@ -87,7 +87,7 @@ const SaleDetailModal: React.FC<SaleDetailModalProps> = ({
           supplierName: formData.supplierName || "",
         },
         detailInfo: {
-          quantity: formData.purchaseAmount || "0",
+          quantity: formData.quantity || "0",
           salesPrice: formData.salesPrice || "0",
           saleAmount: formData.saleAmount || "0",
           tax: formData.tax || "0",
@@ -103,7 +103,7 @@ const SaleDetailModal: React.FC<SaleDetailModalProps> = ({
           supplierName: formData.supplierName || "",
         },
         detailInfo: {
-          quantity: formData.purchaseAmount || "0",
+          quantity: formData.quantity || "0",
           discountAmount: formData.discountAmount || "0",
           tax: formData.tax || "0",
         },
@@ -111,19 +111,19 @@ const SaleDetailModal: React.FC<SaleDetailModalProps> = ({
       };
       break;
 
-    case "4.返品":   // Form 4
+    case "4.返品":  // Form 4
       bodyRow = {
-        titleInfo: {
-          productName:  "0111107 | パロマ湯沸器（13A） | PH−5BV" ,
-          supplierName: formData.supplierName || "",
-        },
-        detailInfo: {
-          quantity: formData.purchaseAmount || "0",
-          purchasePrice: formData.purchasePrice || "0",
-          purchaseAmount: formData.purchaseAmount || "0",
-        },
-        note: formData.note || "",
-      };
+          titleInfo: {
+            productName:  "0111107 | パロマ湯沸器（13A） | PH−5BV" ,
+            supplierName: formData.supplierName || "",
+          },
+          detailInfo: {
+            quantity: formData.quantity || "0",
+            purchasePrice: formData.purchasePrice || "0",
+            purchaseAmount: formData.purchaseAmount || "0",
+          },
+          note: formData.note || "",
+        };
       break;
     case "5.経費":   // Form 5
       bodyRow = {
@@ -132,28 +132,27 @@ const SaleDetailModal: React.FC<SaleDetailModalProps> = ({
           supplierName: formData.supplierName || "",
         },
         detailInfo: {
-          quantity: formData.purchaseAmount || "0",
+          quantity: formData.quantity || "0",
           purchasePrice: formData.purchasePrice || "0",
           purchaseAmount: formData.purchaseAmount || "0",
         },
         note: formData.note || "",
       };
-    break;
-
-  case "6.資産":   // Form 6
-    bodyRow = {
-      titleInfo: {
-        productName:  "0111107 | パロマ湯沸器（13A） | PH−5BV" ,
-        supplierName: formData.supplierName || "",
-      },
-      detailInfo: {
-        quantity: formData.purchaseAmount || "0",
-        purchasePrice: formData.purchasePrice || "0",
-        purchaseAmount: formData.purchaseAmount || "0",
-      },
-      note: formData.note || "",
-    };
-    break;
+      break;
+    case "6.資産":   // Form 6
+      bodyRow = {
+        titleInfo: {
+          productName:  "0111107 | パロマ湯沸器（13A） | PH−5BV" ,
+          supplierName: formData.supplierName || "",
+        },
+        detailInfo: {
+          quantity: formData.quantity || "0",
+          purchasePrice: formData.purchasePrice || "0",
+          purchaseAmount: formData.purchaseAmount || "0",
+        },
+        note: formData.note || "",
+      };
+      break;
 
   case "7.消費税":   // Form 7
     bodyRow = {
@@ -167,7 +166,9 @@ const SaleDetailModal: React.FC<SaleDetailModalProps> = ({
       bodyRow = {};
   }
   const data = {
+    id: rowEdit?.id,
     headerRow: {
+      
       no: "",
       icon: "",
       categoryName,
@@ -176,8 +177,9 @@ const SaleDetailModal: React.FC<SaleDetailModalProps> = ({
     },
     bodyRow,
   };
-
+  
   onNext(data);
+  
 };
 
   useEffect(() => {
@@ -186,14 +188,15 @@ const SaleDetailModal: React.FC<SaleDetailModalProps> = ({
     quantity: rowEdit.bodyRow?.detailInfo?.quantity || "",
     unit: rowEdit.bodyRow?.detailInfo?.unit || "",
     salesPrice: rowEdit.bodyRow?.detailInfo?.salesPrice || "",
-    salesPriceType: rowEdit.bodyRow?.detailInfo?.salesPriceType || "0",
+    salesPriceType: rowEdit.bodyRow?.detailInfo?.salesPriceType ?? "0",
     saleAmount: rowEdit.bodyRow?.detailInfo?.saleAmount || "",
     tax: rowEdit.bodyRow?.detailInfo?.tax || "",
     purchasePrice: rowEdit.bodyRow?.detailInfo?.purchasePrice || "",
-    purchasePriceType: rowEdit.bodyRow?.detailInfo?.purchasePriceType || "0",
+    purchasePriceType: rowEdit.bodyRow?.detailInfo?.purchasePriceType ?? "0",
     purchaseAmount: rowEdit.bodyRow?.detailInfo?.purchaseAmount || "",
     selfTransferTarget: rowEdit.headerRow?.selfTransferTarget || "0",
     outsideMonth: rowEdit.headerRow?.outsideMonth || "0",
+    discountAmount: rowEdit.headerRow?.discountAmount || "0",
     note: rowEdit.note || "",
     });
     console.log(rowEdit);
