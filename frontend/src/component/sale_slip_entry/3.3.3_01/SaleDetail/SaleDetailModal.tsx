@@ -9,6 +9,7 @@ import SaleDetailEntry4 from './SaleDetailEntry4';
 import SaleDetailEntry6 from './SaleDetailEntry6';
 import SaleDetailEntry7 from './SaleDetailEntry7';
 import SaleDetailEntry5 from './SaleDetailEntry5';
+import { useEffect } from "react";
 
 interface SaleDetailModalProps {
   isOpen: boolean;
@@ -33,6 +34,7 @@ const SaleDetailModal: React.FC<SaleDetailModalProps> = ({
   const [formData, setFormData] = useState<any>({});
 
   const handleChange = (field: string, value: string) => {
+    console.log(field,value);
     setFormData((prev: any) => {
       const updated = {
         ...prev,
@@ -43,7 +45,7 @@ const SaleDetailModal: React.FC<SaleDetailModalProps> = ({
   };
 
   switch (categoryName) {
-    case "1.売上":        SelectedEntry = <SaleDetailEntry1 onChange={handleChange}/>; break;
+    case "1.売上":        SelectedEntry = <SaleDetailEntry1 onChange={handleChange} formData={formData}/>; break;
     case "2.直送売上":    SelectedEntry = <SaleDetailEntry2 onChange={handleChange} />;; break;
     case "3.売上値引":    SelectedEntry = <SaleDetailEntry3 onChange={handleChange}/>; break;
     case "4.返品":        SelectedEntry = <SaleDetailEntry4 onChange={handleChange}/>; break;
@@ -55,10 +57,14 @@ const SaleDetailModal: React.FC<SaleDetailModalProps> = ({
 
   const handleNext = () => {
 
+  console.log(formData);
+
+  console.log("test" , rowEdit);
+
   let bodyRow: any = {};
 
   switch (categoryName) { 
-    case "1.売上":   // Form 1
+    case "売上":   // Form 1
       bodyRow = {
         titleInfo: {
           productName:  "0111107 | パロマ湯沸器（13A） | PH−5BV" ,
@@ -66,9 +72,9 @@ const SaleDetailModal: React.FC<SaleDetailModalProps> = ({
         },
         detailInfo: {
           quantity: formData.purchaseAmount || "0",
-          tax: formData.tax || "0",
+          salesPrice: formData.salesPrice || "0",
           saleAmount: formData.saleAmount,
-          selfSwingTarget: formData.selfSwingTarget,
+          tax: formData.tax || "0",
         },
         note: formData.note || "",
       };
@@ -82,10 +88,9 @@ const SaleDetailModal: React.FC<SaleDetailModalProps> = ({
         },
         detailInfo: {
           quantity: formData.purchaseAmount || "0",
-          tax: formData.tax || "0",
-          saleAmount: formData.saleAmount || "0",
           salesPrice: formData.salesPrice || "0",
-          
+          saleAmount: formData.saleAmount || "0",
+          tax: formData.tax || "0",
         },
         note: formData.note || "",
       };
@@ -99,8 +104,8 @@ const SaleDetailModal: React.FC<SaleDetailModalProps> = ({
         },
         detailInfo: {
           quantity: formData.purchaseAmount || "0",
-          tax: formData.tax || "0",
           discountAmount: formData.discountAmount || "0",
+          tax: formData.tax || "0",
         },
         note: formData.note || "",
       };
@@ -114,25 +119,25 @@ const SaleDetailModal: React.FC<SaleDetailModalProps> = ({
         },
         detailInfo: {
           quantity: formData.purchaseAmount || "0",
-          tax: formData.tax || "0",
+          purchasePrice: formData.purchasePrice || "0",
           purchaseAmount: formData.purchaseAmount || "0",
         },
         note: formData.note || "",
       };
       break;
-  case "5.経費":   // Form 5
-    bodyRow = {
-      titleInfo: {
-        productName:  "0111107 | パロマ湯沸器（13A） | PH−5BV" ,
-        supplierName: formData.supplierName || "",
-      },
-      detailInfo: {
-        quantity: formData.purchaseAmount || "0",
-        tax: formData.tax || "0",
-        purchaseAmount: formData.purchaseAmount || "0",
-      },
-      note: formData.note || "",
-    };
+    case "5.経費":   // Form 5
+      bodyRow = {
+        titleInfo: {
+          productName:  "0111107 | パロマ湯沸器（13A） | PH−5BV" ,
+          supplierName: formData.supplierName || "",
+        },
+        detailInfo: {
+          quantity: formData.purchaseAmount || "0",
+          purchasePrice: formData.purchasePrice || "0",
+          purchaseAmount: formData.purchaseAmount || "0",
+        },
+        note: formData.note || "",
+      };
     break;
 
   case "6.資産":   // Form 6
@@ -143,7 +148,7 @@ const SaleDetailModal: React.FC<SaleDetailModalProps> = ({
       },
       detailInfo: {
         quantity: formData.purchaseAmount || "0",
-        tax: formData.tax || "0",
+        purchasePrice: formData.purchasePrice || "0",
         purchaseAmount: formData.purchaseAmount || "0",
       },
       note: formData.note || "",
@@ -161,20 +166,40 @@ const SaleDetailModal: React.FC<SaleDetailModalProps> = ({
     default:
       bodyRow = {};
   }
-
   const data = {
     headerRow: {
-      no: "03",
+      no: "",
       icon: "",
       categoryName,
-      outsideMonth: formData.outsideMonth || 1,
-      selfTransferTarget: formData.selfTransferTarget || 1,
+      outsideMonth: formData.outsideMonth || 0,
+      selfTransferTarget: formData.selfTransferTarget || 0,
     },
     bodyRow,
   };
 
   onNext(data);
 };
+
+  useEffect(() => {
+    if (rowEdit) {
+    setFormData({
+    quantity: rowEdit.bodyRow?.detailInfo?.quantity || "",
+    unit: rowEdit.bodyRow?.detailInfo?.unit || "",
+    salesPrice: rowEdit.bodyRow?.detailInfo?.salesPrice || "",
+    salesPriceType: rowEdit.bodyRow?.detailInfo?.salesPriceType || "0",
+    saleAmount: rowEdit.bodyRow?.detailInfo?.saleAmount || "",
+    tax: rowEdit.bodyRow?.detailInfo?.tax || "",
+    purchasePrice: rowEdit.bodyRow?.detailInfo?.purchasePrice || "",
+    purchasePriceType: rowEdit.bodyRow?.detailInfo?.purchasePriceType || "0",
+    purchaseAmount: rowEdit.bodyRow?.detailInfo?.purchaseAmount || "",
+    selfTransferTarget: rowEdit.headerRow?.selfTransferTarget || "0",
+    outsideMonth: rowEdit.headerRow?.outsideMonth || "0",
+    note: rowEdit.note || "",
+    });
+    console.log(rowEdit);
+    }
+  }, [rowEdit]);
+
 
 
 
@@ -200,9 +225,13 @@ const SaleDetailModal: React.FC<SaleDetailModalProps> = ({
           </div>
         </div>
 
-        <div className='mt-5'>
-          <SaleDetailSelector />
-        </div>
+
+        {categoryName !== "7.消費税" && (
+            <div className='mt-5'>
+              <SaleDetailSelector />
+            </div>
+        )} 
+        
 
 
         <div className='my-5'>
@@ -222,7 +251,6 @@ const SaleDetailModal: React.FC<SaleDetailModalProps> = ({
               onClick={() => {
                 handleNext() 
               }}
-
             className="bg-gray-300 border border-gray-500 rounded px-10 py-2 font-bold hover:bg-gray-400">
             選択 (N)
           </button>

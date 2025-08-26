@@ -2,6 +2,7 @@ import React from 'react';
 
 interface SaleDetailEntry1Props {
   onChange: (field: string, value: string) => void;
+  formData: any;
 }
 
 const handleOpenWindow = () => {
@@ -16,7 +17,7 @@ const handleOpenWindow = () => {
   }
 }
 
-const SaleDetailEntry1: React.FC<SaleDetailEntry1Props> = ({ onChange }) => {
+const SaleDetailEntry1: React.FC<SaleDetailEntry1Props> = ({ onChange, formData }) => {
   return (
     <div className='flex gap-1 '>  
       <div className='flex gap-2 p-1 border border-black h-56'>
@@ -29,6 +30,7 @@ const SaleDetailEntry1: React.FC<SaleDetailEntry1Props> = ({ onChange }) => {
               type="text"
               placeholder='000'
               className='w-20 placeholder-black-200 border border-black'
+              value={formData.quantity || ""}
               onChange={(e) => onChange("quantity", e.target.value)}
             />
           </div>
@@ -42,6 +44,7 @@ const SaleDetailEntry1: React.FC<SaleDetailEntry1Props> = ({ onChange }) => {
               type="text"
               placeholder='000'
               className='w-14 placeholder-black-200 border border-black'
+              value={formData.unit || ""}
               onChange={(e) => onChange("unit", e.target.value)}
             />
           </div>
@@ -59,6 +62,7 @@ const SaleDetailEntry1: React.FC<SaleDetailEntry1Props> = ({ onChange }) => {
                 type="text"
                 placeholder='0.00'
                 className='h-full px-1 w-[120px] placeholder-black-200 border border-black'
+                value={formData.salesPrice || ""}
                 onChange={(e) => onChange("salesPrice", e.target.value)}
               />
             </div>
@@ -69,6 +73,7 @@ const SaleDetailEntry1: React.FC<SaleDetailEntry1Props> = ({ onChange }) => {
             </div>
             <select
               className="border border-black w-full h-1/2"
+              value={formData.salesPriceType || "0"}
               onChange={(e) => onChange("salesPriceType", e.target.value)}
             >
               <option value="0">0 確定単価</option>
@@ -83,6 +88,7 @@ const SaleDetailEntry1: React.FC<SaleDetailEntry1Props> = ({ onChange }) => {
               type="text"
               placeholder='0'
               className='w-[120px] h-1/2 border px-1 border-black placeholder-black-200'
+              value={formData.saleAmount || ""}
               onChange={(e) => onChange("saleAmount", e.target.value)}
             />
           </div>
@@ -94,6 +100,7 @@ const SaleDetailEntry1: React.FC<SaleDetailEntry1Props> = ({ onChange }) => {
               type="text"
               placeholder='0'
               className='w-[120px] h-1/2 border px-1 border-black placeholder-black-200'
+              value={formData.tax || ""}
               onChange={(e) => onChange("tax", e.target.value)}
             />
           </div>
@@ -105,6 +112,7 @@ const SaleDetailEntry1: React.FC<SaleDetailEntry1Props> = ({ onChange }) => {
               type="text"
               placeholder='01234567.00'
               className='w-[120px] h-1/2 border px-1 border-black placeholder-black-200'
+               value={formData.purchasePrice || ""}
               onChange={(e) => onChange("purchasePrice", e.target.value)}
             />
           </div>
@@ -114,6 +122,7 @@ const SaleDetailEntry1: React.FC<SaleDetailEntry1Props> = ({ onChange }) => {
             </div>
             <select
               className="border border-black w-full h-1/2"
+              value={formData.purchasePriceType || "0"}
               onChange={(e) => onChange("purchasePriceType", e.target.value)}
             >
               <option value="0">0 確定単価</option>
@@ -128,6 +137,7 @@ const SaleDetailEntry1: React.FC<SaleDetailEntry1Props> = ({ onChange }) => {
               type="text"
               placeholder='0'
               className='w-[120px] h-1/2 border px-1 border-black placeholder-black-200'
+              value={formData.purchaseAmount || ""}
               onChange={(e) => onChange("purchaseAmount", e.target.value)}
             />
           </div>
@@ -137,8 +147,10 @@ const SaleDetailEntry1: React.FC<SaleDetailEntry1Props> = ({ onChange }) => {
             </div>
             <select
               className="border border-black w-full h-1/2"
-              onChange={(e) => onChange("selfSwingTarget", e.target.value)}
+              value={formData.selfTransferTarget !== undefined ? String(formData.selfTransferTarget) : "0"}
+              onChange={(e) => onChange("selfTransferTarget", e.target.value)}
             >
+              
               <option value="0">0 対象</option>
               <option value="1">1 対象外</option>
             </select>
@@ -149,7 +161,8 @@ const SaleDetailEntry1: React.FC<SaleDetailEntry1Props> = ({ onChange }) => {
             </div>
             <select
               className="border border-black w-full h-1/2"
-              onChange={(e) => onChange("outsideTheMonth", e.target.value)}
+              value={formData.outsideMonth !== undefined ? String(formData.outsideMonth) : "0"}
+              onChange={(e) => onChange("outsideMonth", e.target.value)}
             >
               <option value="0">0 空欄</option>
               <option value="1">1 当月外</option>
@@ -162,6 +175,7 @@ const SaleDetailEntry1: React.FC<SaleDetailEntry1Props> = ({ onChange }) => {
             <input
               type="text"
               className='w-full h-1/2 border px-1 border-black placeholder-black-200'
+              value={formData.note || ""}
               onChange={(e) => onChange("note", e.target.value)}
             />
           </div>

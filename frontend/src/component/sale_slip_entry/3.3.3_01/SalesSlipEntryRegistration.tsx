@@ -8,8 +8,6 @@ const fieldLabelMap: Record<string, string> = {
   tax: "消費税",
   note: "備考",
   saleAmount: "売上金額",
-  outsideTheMonth: "当月外",
-  selfSwingTarget: "自振対象",
   salesPrice: "売上単価",
   discountAmount: "値引金額",
   expenseNo: "経費分類No.",
@@ -71,7 +69,7 @@ export default function SalesSlipEntryRegistration({
           <span className="text-[16px]">No:{headerRow.no}</span>
           {/* <img src={headerRow.icon} alt="icon" className="w-5 h-5" /> */}
           <span className="bg-white px-2 py-2">Icon</span>
-          <span>区分: {headerRow.categoryName}</span>
+          <span>区分: {headerRow.categoryName.split(".")[1]}</span>
         </div>
 
         {/* Right side */}

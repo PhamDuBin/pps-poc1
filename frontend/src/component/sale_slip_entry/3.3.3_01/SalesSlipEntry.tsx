@@ -95,7 +95,6 @@ export default function SalesSlipEntry({
   
   // Handle Add Sale Slip
   const handleAddSaleSlip = (data: any) => {
-    setSaleSlips([...saleSlips, data]);
     console.log("Line data:", data);
     setSaleSlips((prev) => {
       if (data.id !== undefined && data.id >= 0 && data.id < prev.length) {
@@ -115,14 +114,11 @@ export default function SalesSlipEntry({
 
   const handleEditLine = (index: number) => {
     const rowData = saleSlips[index];
-    console.log("Edit line data:", rowData);
-    //rowData.id = index; // Thêm id để biết đang sửa dòng nào  
-    console.log("Edit line data with id:", rowData);
-    setRowEdit(rowData);
+    setRowEdit({ ...rowData, id: index });
     setActiveSlipIndex(null);
-    setSelectedCategory(saleSlips[index].headerRow.categoryName);
-    setIsSaleDetailModalOpen(true);
+    setSelectedCategory(saleSlips[index].headerRow.categoryName);     
     setTooltipPos(null);
+    setIsSaleDetailModalOpen(true); // ✅ mở modal edit
     setCurrentStep(3);
   };
 
@@ -139,6 +135,7 @@ export default function SalesSlipEntry({
   const handleOpenCategorySelection = () => {
     setActiveSlipIndex(null);
     setIsOpenCategorySelection(true);
+    setRowEdit(null);
   };
 
   const handleCategorySelect = (categoryName: string) => {
@@ -224,6 +221,9 @@ export default function SalesSlipEntry({
       }
     }
   };
+
+  console.log("rowedit:",rowEdit);
+
   return (
     <div className=" w-full h-full flex flex-col items-center px-4 pt-4 2xl:text-[16px] text-[11px]">
       {/* Header */}
@@ -446,7 +446,9 @@ export default function SalesSlipEntry({
           categoryName={selectedCategory}
           onNext={handleAddSaleSlip}
           rowEdit={rowEdit}
+          
         />
+
       )}
     </div>
   );
