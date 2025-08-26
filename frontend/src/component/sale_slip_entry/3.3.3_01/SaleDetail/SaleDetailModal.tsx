@@ -32,6 +32,7 @@ const SaleDetailModal: React.FC<SaleDetailModalProps> = ({
   let SelectedEntry: React.ReactNode = null;
 
   const [formData, setFormData] = useState<any>({});
+  
 
   const handleChange = (field: string, value: string) => {
     console.log(field,value);
@@ -59,6 +60,8 @@ const SaleDetailModal: React.FC<SaleDetailModalProps> = ({
 
   console.log(formData);
 
+  console.log(formData.supplier);
+
   console.log("test" , rowEdit);
 
   let bodyRow: any = {};
@@ -68,7 +71,6 @@ const SaleDetailModal: React.FC<SaleDetailModalProps> = ({
       bodyRow = {
         titleInfo: {
           productName:  "0111107 | パロマ湯沸器（13A） | PH−5BV" ,
-          supplierName: formData.supplierName || "",
         },
         detailInfo: {
           quantity: formData.quantity || "0",
@@ -84,7 +86,7 @@ const SaleDetailModal: React.FC<SaleDetailModalProps> = ({
       bodyRow = {
         titleInfo: {
           productName:  "0111107 | パロマ湯沸器（13A） | PH−5BV" ,
-          supplierName: formData.supplierName || "",
+          supplier: `${formData.supplierCode} | ${formData.supplierName}` || "",
         },
         detailInfo: {
           quantity: formData.quantity || "0",
@@ -100,10 +102,9 @@ const SaleDetailModal: React.FC<SaleDetailModalProps> = ({
       bodyRow = {
         titleInfo: {
           productName:  "0111107 | パロマ湯沸器（13A） | PH−5BV" ,
-          supplierName: formData.supplierName || "",
         },
         detailInfo: {
-          quantity: formData.quantity || "(0.00)",
+          quantity: `(${formData.quantity})` || "(0.00)",
           discountAmount: "-1,000,000",
           tax: formData.tax || "0",
         },
@@ -115,7 +116,6 @@ const SaleDetailModal: React.FC<SaleDetailModalProps> = ({
       bodyRow = {
           titleInfo: {
             productName:  "0111107 | パロマ湯沸器（13A） | PH−5BV" ,
-            supplierName: formData.supplierName || "",
           },
           detailInfo: {
             quantity: formData.quantity || "0",
@@ -129,7 +129,6 @@ const SaleDetailModal: React.FC<SaleDetailModalProps> = ({
       bodyRow = {
         titleInfo: {
           productName:  "0111107 | パロマ湯沸器（13A） | PH−5BV" ,
-          supplierName: formData.supplierName || "",
         },
         detailInfo: {
           quantity: formData.quantity || "0",
@@ -143,7 +142,6 @@ const SaleDetailModal: React.FC<SaleDetailModalProps> = ({
       bodyRow = {
         titleInfo: {
           productName:  "0111107 | パロマ湯沸器（13A） | PH−5BV" ,
-          supplierName: formData.supplierName || "",
         },
         detailInfo: {
           quantity: formData.quantity || "0",
@@ -168,7 +166,7 @@ const SaleDetailModal: React.FC<SaleDetailModalProps> = ({
   const data = {
     id: rowEdit?.id,
     headerRow: {
-      no: "",
+      no: formData.no,
       icon: "",
       categoryName,
       outsideMonth: Number(formData.outsideMonth) || 0,
@@ -183,8 +181,13 @@ const SaleDetailModal: React.FC<SaleDetailModalProps> = ({
 
   useEffect(() => {
     if (rowEdit) {
+    const supplierCode = rowEdit.bodyRow?.titleInfo?.supplierCode || "";
+    const supplierName = rowEdit.bodyRow?.titleInfo?.supplierName || "";
+    const supplier = rowEdit.bodyRow?.titleInfo?.supplierName || "";
     setFormData({
-    quantity: rowEdit.bodyRow?.detailInfo?.quantity || "",
+    quantity: (rowEdit.bodyRow?.detailInfo?.quantity || "")
+      .replace(/[()]/g, "")
+      .trim(),  
     unit: rowEdit.bodyRow?.detailInfo?.unit || "",
     salesPrice: rowEdit.bodyRow?.detailInfo?.salesPrice || "",
     salesPriceType: rowEdit.bodyRow?.detailInfo?.salesPriceType ?? "0",
@@ -196,9 +199,15 @@ const SaleDetailModal: React.FC<SaleDetailModalProps> = ({
     selfTransferTarget: Number(rowEdit.headerRow?.selfTransferTarget) || 0,
     outsideMonth: Number(rowEdit.headerRow?.outsideMonth) || 0,
     discountAmount: rowEdit.headerRow?.discountAmount || "0",
-    note: rowEdit.note || "",
+    note: rowEdit.bodyRow?.note || "",
+    no: rowEdit.headerRow?.no || "99",
+    supplierCode,
+    supplierName,
+    supplier,
+
     });
     console.log(rowEdit);
+    
     }
   }, [rowEdit]);
 

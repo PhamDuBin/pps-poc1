@@ -64,8 +64,8 @@ const SaleDetailEntry7: React.FC<SaleDetailEntry7Props> = ({ onChange, formData 
         <div className="h-1/2 bg-[#80bad7] p-1">自振対象</div>
         <select
           className="border border-black w-full h-1/2 text-center"
-          value={formData.selfDebitTarget !== undefined ? String(formData.selfDebitTarget) : "0"}
-          onChange={(e) => onChange("selfDebitTarget", e.target.value)}
+          value={formData.selfSwingTarget !== undefined ? String(formData.selfSwingTarget) : "0"}
+          onChange={(e) => onChange("selfSwingTarget", e.target.value)}
         >
           <option value="0">0 対象</option>
           <option value="1">1 対象外</option>
@@ -76,8 +76,8 @@ const SaleDetailEntry7: React.FC<SaleDetailEntry7Props> = ({ onChange, formData 
         <div className="h-1/2 bg-[#80bad7] p-1">当月外</div>
         <select
           className="border border-black w-full h-1/2 text-center"
-          value={formData.outsideCurrentMonth !== undefined ? String(formData.outsideCurrentMonth) : "0"}
-          onChange={(e) => onChange("outsideCurrentMonth", e.target.value)}
+          value={formData.outsideMonth !== undefined ? String(formData.outsideMonth) : "0"}
+          onChange={(e) => onChange("outsideMonth", e.target.value)}
         >
           <option value="0">0 空欄</option>
           <option value="1">1 当月外</option>

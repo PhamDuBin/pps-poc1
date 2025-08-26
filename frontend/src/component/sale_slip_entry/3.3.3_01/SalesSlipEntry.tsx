@@ -191,7 +191,7 @@ export default function SalesSlipEntry({
       if(firstInputRef.current) {
         firstInputRef.current.focus();
       }
-    })
+    }, [])
 
   return (
     <div className=" w-full h-full flex flex-col items-center px-4 pt-4 2xl:text-[16px] text-[11px]">

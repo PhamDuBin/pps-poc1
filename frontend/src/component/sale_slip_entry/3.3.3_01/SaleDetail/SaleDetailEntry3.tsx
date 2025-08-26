@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 interface SaleDetailEntry3Props {
   onChange: (field: string, value: string) => void;
@@ -14,6 +14,8 @@ const SaleDetailEntry3: React.FC<SaleDetailEntry3Props> = ({ onChange,formData }
         firstInputRef.current.focus();
       }
     }, [])
+
+    const [isQuantityFocused, setIsQuantityFocused] = useState(false);
   return (
     <div className='flex gap-1 '>
       <div className='flex gap-2 p-1 border border-black h-40'>
@@ -22,21 +24,22 @@ const SaleDetailEntry3: React.FC<SaleDetailEntry3Props> = ({ onChange,formData }
           <div className='bg-[#80bad7]'>数量</div>
           <div>
             <input
-              ref = {firstInputRef}
               type="text"
-              placeholder='(0.00)'
-              className='w-20 placeholder-black-200 border border-black'
-              value={formData.quantity || ""}
-              // onChange={(e) => onChange("quantity", e.target.value)}
+              className="w-20 text-right border border-black"
+              value={
+                isQuantityFocused
+                  ? formData.quantity || ""
+                  : `(${Number(formData.quantity || 0).toFixed(2)})`
+              }
+              onFocus={() => setIsQuantityFocused(true)}
+              onBlur={() => setIsQuantityFocused(false)}
               onChange={(e) => {
-                // Lấy giá trị input
                 const val = e.target.value;
-                // Lọc lấy số bên trong dấu ngoặc (nếu có)
-                const match = val.match(/\((\d*)\)/);
-                const newVal = match ? match[1] : val.replace(/[^\d]/g, ""); // hoặc nếu không có ngoặc thì lấy số thuần
-                onChange("quantity", newVal);
+                const cleaned = val.replace(/[^\d.]/g, "");
+                onChange("quantity", cleaned);
               }}
             />
+
           </div>
         </div>
         <div className='w-14 text-center'>
@@ -63,7 +66,7 @@ const SaleDetailEntry3: React.FC<SaleDetailEntry3Props> = ({ onChange,formData }
             <div className='h-1/2'>
               <input
                 type="text"
-                placeholder='(0.00)'
+                placeholder='0'
                 className='h-full px-1 w-[120px] border border-black placeholder-black-200'
                 value={formData.saleAmount || ""}
                 onChange={(e) => onChange("saleAmount", e.target.value)}

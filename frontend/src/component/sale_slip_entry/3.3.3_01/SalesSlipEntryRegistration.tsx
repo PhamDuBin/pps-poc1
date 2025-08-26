@@ -4,6 +4,7 @@ import React from "react";
 const fieldLabelMap: Record<string, string> = {
   productName: "商品名",
   supplierName: "仕入先",
+  supplierCode: "仕入先コード",
   quantity: "数量",
   tax: "消費税",
   note: "備考",
@@ -13,6 +14,7 @@ const fieldLabelMap: Record<string, string> = {
   expenseNo: "経費分類No.",
   purchasePrice: "仕入単価",
   purchaseAmount: "仕入金額",
+  supplier:"仕入先"
 };
 
 type HeaderRow = {
@@ -26,7 +28,8 @@ type HeaderRow = {
 type BodyRow = {
   titleInfo?: {
     productName?: string;
-    supplierName?: string;
+    // supplierName?: string;
+    supplier?: string;
   };
   detailInfo?: {
     quantity?: string;
