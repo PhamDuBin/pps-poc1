@@ -62,14 +62,14 @@ const SaleDetailEntry6: React.FC<SaleDetailEntry6Props> = ({ onChange, formData 
 
           {/* 売上単価 */}
           <div className='text-center h-[64px]'>
-            <div className='bg-[#80bad7] h-1/2'>売上単価</div>
+            <div className='bg-[#80bad7] h-1/2'>仕入単価</div>
             <div className='h-1/2'>
               <input
                 type="text"
                 placeholder='01234567.00'
                 className='h-full px-1 w-[120px] placeholder-black-200 border border-black'
-                value={formData.salesPrice ?? ''}
-                onChange={(e) => onChange("salesPrice", e.target.value)}
+                value={formData.purchasePrice ?? ''}
+                onChange={(e) => onChange("purchasePrice", e.target.value)}
               />
             </div>
           </div>

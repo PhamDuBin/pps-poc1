@@ -58,11 +58,7 @@ const SaleDetailModal: React.FC<SaleDetailModalProps> = ({
 
   const handleNext = () => {
 
-  console.log(formData);
-
-  console.log(formData.supplier);
-
-  console.log("test" , rowEdit);
+  console.log(formData.purchasePrice);
 
   let bodyRow: any = {};
 
@@ -118,6 +114,7 @@ const SaleDetailModal: React.FC<SaleDetailModalProps> = ({
       bodyRow = {
           titleInfo: {
             productName:  "0111107 | パロマ湯沸器（13A） | PH−5BV" ,
+            expenseNo: formData.expenseNo || "",
           },
           detailInfo: {
             quantity: formData.quantity || "0",
@@ -208,7 +205,6 @@ const SaleDetailModal: React.FC<SaleDetailModalProps> = ({
     saleAmount: rowEdit.bodyRow?.detailInfo?.saleAmount || "",
     tax: rowEdit.bodyRow?.detailInfo?.tax || "",
     purchasePrice: rowEdit.bodyRow?.detailInfo?.purchasePrice || "",
-    purchasePriceType: rowEdit.bodyRow?.detailInfo?.purchasePriceType ?? "0",
     purchaseAmount: rowEdit.bodyRow?.detailInfo?.purchaseAmount || "",
     selfTransferTarget: Number(rowEdit.headerRow?.selfTransferTarget) || 0,
     outsideMonth: Number(rowEdit.headerRow?.outsideMonth) || 0,
@@ -218,6 +214,7 @@ const SaleDetailModal: React.FC<SaleDetailModalProps> = ({
     supplierCode,
     supplierName,
     expenseText: rowEdit.bodyRow?.titleInfo?.expenseText || "",
+    expenseNo: rowEdit.bodyRow?.titleInfo?.expenseNo || "",
     });
     console.log(rowEdit);
     
