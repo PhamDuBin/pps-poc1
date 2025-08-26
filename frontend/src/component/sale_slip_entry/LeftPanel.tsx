@@ -404,7 +404,13 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
                   </div>
                 </div>
                 <button
-                  onClick={() => setShowCustomer(false)}
+                  onClick={() => {
+                    setShowCustomer(false);
+                    setFormValues((prev) => ({
+                      ...prev,
+                      customerCode: ["", ""],
+                    }));
+                  }}
                   className=" border border-black rounded p-1"
                 >
                   <span className="w-[25%] m-2">再検索</span>

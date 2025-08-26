@@ -8,6 +8,8 @@ import ProductSearchModal from "./ProductSearchModal";
 import SaleDetailModal from "./SaleDetail/SaleDetailModal";
 import StatusBar from "../StatusBar";
 import { createPortal } from "react-dom";
+import { MonthYearPicker } from "../../../context/MonthYearPicker";
+import { format } from "date-fns";
 
 export default function SalesSlipEntry({
   onOpenLeftPanelForSearch,
@@ -33,6 +35,9 @@ export default function SalesSlipEntry({
   } | null>(null);
   const slipRefs = useRef<(HTMLDivElement | null)[]>([]);
   const tooltipRef = useRef<HTMLDivElement | null>(null); // Ref cho div chứa tooltip
+  const today = new Date().toISOString().slice(0, 7);
+  const [keiriDate, setKeiriDate] = useState<Date | undefined>(new Date());
+  const [showDatePicker, setShowDatePicker] = useState(false);
 
   const handleClickSlip = (index: number) => {
     if (activeSlipIndex === index) {
@@ -188,10 +193,10 @@ export default function SalesSlipEntry({
   const firstInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-      if(firstInputRef.current) {
-        firstInputRef.current.focus();
-      }
-    }, [])
+    if (firstInputRef.current) {
+      firstInputRef.current.focus();
+    }
+  }, []);
 
   return (
     <div className=" w-full h-full flex flex-col items-center px-4 pt-4 2xl:text-[16px] text-[11px]">
@@ -201,7 +206,7 @@ export default function SalesSlipEntry({
           <h1 className="text-[24px] font-bold text-black">売上伝票入力</h1>
         </div>
       </div>
-      <div className="h-full w-3/5 mx-60 mt-4">
+      <div className="h-full w-[70%] mx-60 mt-4">
         {/* Customer Info */}
         <div className="w-full p-2 grid lg:grid-cols-4 grid-cols-3  gap-x-4 gap-y-2 whitespace-nowrap font-bold  text-black border border-black">
           <div className="flex items-center">
@@ -215,7 +220,7 @@ export default function SalesSlipEntry({
               売上日
             </label>
             <input
-              ref = {firstInputRef}
+              ref={firstInputRef}
               type="text"
               defaultValue="2025/05/01"
               className="ml-1 w-1/2 border border-black px-2 py-1"
@@ -231,7 +236,7 @@ export default function SalesSlipEntry({
             <input
               type="text"
               defaultValue="0000000000"
-              className="ml-1 w-1/2 border border-black text-black px-2 py-1"
+              className="ml-1 w-1/2 border border-black text-black px-1 py-1"
             />
           </div>
           <div className="flex items-center">
@@ -249,14 +254,29 @@ export default function SalesSlipEntry({
             <label className="w-1/2 bg-[#D9D9D9] px-2 py-1 text-center">
               請求年月
             </label>
-            <input
-              type="text"
-              defaultValue="2025/05"
-              className="ml-1 w-1/2 border border-black px-2 py-1"
-            />
-            <button className="mx-1 w-[20px] h-[20px] inset-y-0 right-0 flex items-center px-1 bg-white border border-gray-500 cursor-pointer">
-              <DownArrowIcon />
-            </button>
+            <div className="relative ml-1 w-1/2">
+              <input
+                type="text"
+                value={keiriDate ? format(keiriDate, "yyyy/MM") : ""}
+                readOnly
+                onClick={() => setShowDatePicker(true)}
+                placeholder="YYYY/MM"
+                className="w-full border border-black px-2 py-1 pr-8 cursor-pointer"
+              />
+              <button
+                className="absolute right-0 top-1/2 -translate-y-1/2 h-full flex items-center px-2 text-gray-500 cursor-pointer"
+                onClick={() => setShowDatePicker(!showDatePicker)}
+              >
+                <DownArrowIcon />
+              </button>
+              {showDatePicker && (
+                <MonthYearPicker
+                  selectedDate={keiriDate}
+                  onDateChange={setKeiriDate}
+                  onClose={() => setShowDatePicker(false)}
+                />
+              )}
+            </div>
           </div>
           <div className="flex items-center">
             <label className="w-1/2 bg-[#D9D9D9] px-2 py-1 text-center">

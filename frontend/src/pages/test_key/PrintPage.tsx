@@ -1,8 +1,8 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Printer } from "lucide-react";
-import { useProgressStore } from "../context/useProgressStore";
-import BackButton from "../component/BackButton";
+import { useProgressStore } from "../../context/useProgressStore";
+import BackButton from "../../component/BackButton";
 
 const PrintPage: React.FC = () => {
   const navigate = useNavigate();

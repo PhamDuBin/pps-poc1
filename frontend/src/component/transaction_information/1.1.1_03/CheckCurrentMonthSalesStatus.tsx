@@ -29,8 +29,7 @@ const titleClass =
 const borderClass =
   "bg-[#ebcec0] border border-black font-semibold text-[16px] text-center h-8 flex items-center justify-center";
 const borderContainerClass = "border border-black p-1";
-const borderContainerBillingClass =
-  "border border-black mb-1 p-1 max-w-[315px] h-[265px]";
+const borderContainerBillingClass = "border border-black mb-1 p-1 h-[265px]";
 
 function CheckCurrentMonthSalesStatusScreen() {
   const handleOpenWindow = () => {
@@ -51,11 +50,11 @@ function CheckCurrentMonthSalesStatusScreen() {
       >
         ＜当月売上状況＞
       </div>
-      <div className="p-4 max-w-[620px] mx-auto">
+      <div className="p-4 w-[70%] mx-auto">
         <div className="grid grid-rows-2 gap-1.5">
-          <div className="flex grid-cols-2 gap-1.5 flex-col md:flex-row">
+          <div className="flex grid-cols-2 gap-1.5 flex-col lg:flex-row w-full">
             {/* ＜請求残高＞ */}
-            <div>
+            <div className="w-[40%]">
               <h2 className={titleClass}>＜請求残高＞</h2>
               <div className={borderContainerBillingClass}>
                 {billingLabels.map((label, idx) => (
@@ -80,7 +79,7 @@ function CheckCurrentMonthSalesStatusScreen() {
             </div>
 
             {/* ＜その他＞ */}
-            <div className="gap-1.5">
+            <div className="w-[60%]">
               <h2 className={titleClass}>＜その他＞</h2>
               <div className="grid max-h-[265px] gap-2.5">
                 {/* 最終入金 */}
@@ -144,7 +143,7 @@ function CheckCurrentMonthSalesStatusScreen() {
           </div>
 
           {/* Bottom: 自振情報 + コンビニ情報 */}
-          <div className="flex grid-cols-[6fr_4fr] gap-1.5 flex-col md:flex-row">
+          <div className="flex grid-cols-[6fr_4fr] gap-1.5 flex-col lg:flex-row">
             {/* ＜自振情報＞ */}
             <div>
               <label className={titleClass}>＜自振情報＞</label>

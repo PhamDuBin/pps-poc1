@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import BackButton from "../component/BackButton";
+import BackButton from "../../component/BackButton";
 
 export default function MouseTestPage() {
   const [loading, setLoading] = useState(false);

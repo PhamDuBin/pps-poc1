@@ -4,27 +4,27 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import CheckInputScreen from "./pages/CheckInputScreen";
-import CheckKeyScreen from "./pages/CheckKeyScreen";
-import Window3 from "./pages/Window_F3";
-import Window4 from "./pages/Window_F4";
-import LoginPage from "./pages/LoginPage";
+import CheckInputScreen from "./pages/test_key/CheckInputScreen";
+import CheckKeyScreen from "./pages/test_key/CheckKeyScreen";
+import Window3 from "./pages/test_key/Window_F3";
+import Window4 from "./pages/test_key/Window_F4";
+import LoginPage from "./pages/test_key/LoginPage";
 import HomePage from "./pages/HomePage";
 import PrivateRoute from "./component/PrivateRoute";
 import { AuthProvider } from "./context/AuthContext";
-import GragDropPage from "./pages/GragDropPage";
-import MouseTestPage from "./pages/MouseTestPage";
-import NotificationControlPage from "./pages/NotificationControlPage";
-import ScrollPage from "./pages/ScrollPage";
-import PrintPage from "./pages/PrintPage";
-import NextPage from "./pages/NextPage";
-import TankMeterPage from "./pages/TankMeterPage";
+import GragDropPage from "./pages/test_key/GragDropPage";
+import MouseTestPage from "./pages/test_key/MouseTestPage";
+import NotificationControlPage from "./pages/test_key/NotificationControlPage";
+import ScrollPage from "./pages/test_key/ScrollPage";
+import PrintPage from "./pages/test_key/PrintPage";
+import NextPage from "./pages/test_key/NextPage";
+import TankMeterPage from "./pages/test_key/TankMeterPage";
 import TrancInfoScreen from "./pages/transaction_information_01.01.01/TrancInfoScreen";
 import CheckSaleByCategoryScreen from "./component/transaction_information/1.1.1_03/CheckSaleByCategoryScreen";
 import CheckCurrentMonthSalesStatusScreen from "./component/transaction_information/1.1.1_03/CheckCurrentMonthSalesStatus";
 import LinkDestinationScreen from "./component/transaction_information/1.1.1_03/LinkDestinationScreen";
 import SaleSlipEntryScreen from "./pages/sale_slip_entry_03.03.01/SaleSlipEntryScreen";
-import SaleDetailModal from "./component/sale_slip_entry/3.3.3_01/SaleDetail/SaleDetailModal.tsx"
+import SaleDetailModal from "./component/sale_slip_entry/3.3.3_01/SaleDetail/SaleDetailModal.tsx";
 
 function App() {
   return (
@@ -159,7 +159,7 @@ function App() {
                 <SaleSlipEntryScreen />
               </PrivateRoute>
             }
-          />          
+          />
           <Route
             path="/link-destination"
             element={

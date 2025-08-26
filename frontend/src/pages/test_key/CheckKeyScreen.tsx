@@ -1,10 +1,10 @@
 "use client";
 import React, { JSX, useEffect, useState } from "react";
 import { Card, CardBody, Button } from "@nextui-org/react";
-import ModalF1 from "../component/modal/Modal_F1";
-import ModalF2 from "../component/modal/Modal_F2";
-import SearchModal from "../component/modal/Search_Modal";
-import BackButton from "../component/BackButton";
+import ModalF1 from "../../component/modal/Modal_F1";
+import ModalF2 from "../../component/modal/Modal_F2";
+import SearchModal from "../../component/modal/Search_Modal";
+import BackButton from "../../component/BackButton";
 
 export default function CheckKeyScreen(): JSX.Element {
   const [modalF1Open, setModalF1Open] = useState<boolean>(false);

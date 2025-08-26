@@ -6,7 +6,7 @@ import React, {
   ChangeEvent,
 } from "react";
 import { Card, CardBody, Radio, RadioGroup } from "@nextui-org/react";
-import BackButton from "../component/BackButton";
+import BackButton from "../../component/BackButton";
 
 import {
   handleDigitInput,
@@ -18,7 +18,7 @@ import {
   convertToHalfWidthAndRemoveKana,
   convertToFullWidth,
   removeAllWhitespace,
-} from "../utils/InputHandlers";
+} from "../../utils/InputHandlers";
 
 interface CodeOption {
   code: string;

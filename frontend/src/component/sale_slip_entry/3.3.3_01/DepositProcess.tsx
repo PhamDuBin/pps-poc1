@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { DownArrowIcon } from "../../transaction_information/LeftPanel";
+import { CustomDatePicker } from "../../../context/CustomDatePicker";
+import { format, parse, isValid } from "date-fns";
 
 type Props = {
   isDeposited: boolean;
@@ -28,26 +30,43 @@ export default function DepositProcess({
   onClose,
   onSave,
 }: Props) {
-  const today = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
+  const [keiriDate, setKeiriDate] = useState<Date | undefined>(new Date());
+  const [inputValue, setInputValue] = useState(
+    format(new Date(), "yyyy/MM/dd")
+  );
 
-  const [keiriDate, setKeiriDate] = useState(today);
   const [showDatePicker, setShowDatePicker] = useState(false);
-
   const [shukin, setShukin] = useState("集金");
   const [nyukin, setNyukin] = useState("現金");
 
-  // Xóa state không cần thiết
-  // const [showShukinSelect, setShowShukinSelect] = useState(false);
-  // const [showNyukinSelect, setShowNyukinSelect] = useState(false);
-
   const firstInputRef = useRef<HTMLInputElement>(null);
-  
-  useEffect(() => {
-      if(firstInputRef.current) {
-        firstInputRef.current.focus();
-      }
-  })
 
+  useEffect(() => {
+    if (firstInputRef.current) {
+      firstInputRef.current.focus();
+    }
+  }, []);
+
+  // 3. useEffect để đồng bộ từ Date -> sang String (khi chọn từ lịch)
+  useEffect(() => {
+    if (keiriDate && isValid(keiriDate)) {
+      setInputValue(format(keiriDate, "yyyy/MM/dd"));
+    }
+  }, [keiriDate]);
+
+  // 4. Hàm xử lý khi nhập tay vào input
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Cập nhật giá trị hiển thị ngay lập tức
+    setInputValue(e.target.value);
+
+    // Cố gắng chuyển chuỗi thành ngày
+    const parsedDate = parse(e.target.value, "yyyy/MM/dd", new Date());
+
+    // Nếu chuỗi hợp lệ, cập nhật lại state Date
+    if (isValid(parsedDate)) {
+      setKeiriDate(parsedDate);
+    }
+  };
   return (
     <div className="flex flex-col w-full border border-black">
       {/* --- Top Fields --- */}
@@ -61,12 +80,9 @@ export default function DepositProcess({
             {/* THAY ĐỔI 1: Cho phép nhập tay và xử lý định dạng */}
             <input
               type="text"
-              value={keiriDate.replace(/-/g, "/")} // Hiển thị YYYY/MM/DD
-              // Gỡ bỏ readOnly
-              onChange={(e) => {
-                // Cập nhật state với định dạng YYYY-MM-DD
-                setKeiriDate(e.target.value.replace(/\//g, "-"));
-              }}
+              value={inputValue}
+              onChange={handleInputChange} // Gọi hàm xử lý nhập tay
+              placeholder="yyyy/MM/dd"
               className="w-full border border-black px-2 py-1 pr-8"
             />
             <button
@@ -77,14 +93,10 @@ export default function DepositProcess({
             </button>
 
             {showDatePicker && (
-              <input
-                type="date"
-                className="absolute top-full right-0 mt-1 border border-black bg-white text-black z-10"
-                value={keiriDate}
-                onChange={(e) => {
-                  setKeiriDate(e.target.value);
-                  setShowDatePicker(false);
-                }}
+              <CustomDatePicker
+                selectedDate={keiriDate}
+                onDateChange={setKeiriDate}
+                onClose={() => setShowDatePicker(false)}
               />
             )}
           </div>
@@ -99,7 +111,7 @@ export default function DepositProcess({
           <select
             value={shukin}
             onChange={(e) => setShukin(e.target.value)}
-            className="ml-1 w-1/2 border border-black text-black px-2 py-1 appearance-none bg-no-repeat bg-right"
+            className="ml-1 w-1/2 border border-black text-black px-1 py-1 appearance-none bg-no-repeat bg-right"
             style={{
               backgroundImage: `url('data:image/svg+xml;utf8,<svg class="w-3 h-3 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7"></path></svg>')`,
               backgroundPosition: "right 0.5rem center",
@@ -147,10 +159,10 @@ export default function DepositProcess({
               入金項目
             </label>
             <input
-              ref = {firstInputRef}
+              ref={firstInputRef}
               type="text"
               defaultValue="現金"
-              className="ml-1 w-1/2 border border-black text-black px-2 py-1"
+              className="ml-1 w-1/2 border border-black text-black px-1 py-1"
             />
           </div>
           <div className="flex items-center">
@@ -160,7 +172,7 @@ export default function DepositProcess({
             <input
               type="text"
               defaultValue="値引き"
-              className="ml-1 w-1/2 border border-black text-black px-2 py-1"
+              className="ml-1 w-1/2 border border-black text-black px-1 py-1"
             />
           </div>
         </div>
@@ -172,7 +184,7 @@ export default function DepositProcess({
             <input
               type="text"
               defaultValue="10,000"
-              className="ml-1 w-1/2 border border-black text-black px-2 py-1"
+              className="ml-1 w-1/2 border border-black text-black px-1 py-1"
             />
           </div>
           <div className="flex items-center">
@@ -182,7 +194,7 @@ export default function DepositProcess({
             <input
               type="text"
               defaultValue="0"
-              className="ml-1 w-1/2 border border-black text-black px-2 py-1"
+              className="ml-1 w-1/2 border border-black text-black px-1 py-1"
             />
           </div>
           <div className="flex items-center">
@@ -192,7 +204,7 @@ export default function DepositProcess({
             <input
               type="text"
               defaultValue="10,000"
-              className="ml-1 w-1/2 border border-black text-black px-2 py-1"
+              className="ml-1 w-1/2 border border-black text-black px-1 py-1"
             />
           </div>
         </div>

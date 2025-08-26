@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { setCookie, getCookie } from "../context/cookieUtils";
-import BackButton from "../component/BackButton";
+import { setCookie, getCookie } from "../../context/cookieUtils";
+import BackButton from "../../component/BackButton";
 
 export default function NotificationControlPage() {
   const [showModal, setShowModal] = useState(false);

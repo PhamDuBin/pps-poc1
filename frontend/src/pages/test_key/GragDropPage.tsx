@@ -14,7 +14,7 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { restrictToParentElement } from "@dnd-kit/modifiers";
-import BackButton from "../component/BackButton";
+import BackButton from "../../component/BackButton";
 
 const blocks = [
   "ブロックA",

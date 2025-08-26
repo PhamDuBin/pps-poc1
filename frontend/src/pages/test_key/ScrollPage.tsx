@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import BackButton from "../component/BackButton";
+import BackButton from "../../component/BackButton";
 
 const generateMockData = (total = 500) => {
   return Array.from({ length: total }, (_, i) => ({
