@@ -10,10 +10,10 @@ const SaleDetailEntry3: React.FC<SaleDetailEntry3Props> = ({ onChange,formData }
   const firstInputRef = useRef<HTMLInputElement>(null);
     
   useEffect(() => {
-    if(firstInputRef.current) {
-      firstInputRef.current.focus();
-    }
-  })
+      if(firstInputRef.current) {
+        firstInputRef.current.focus();
+      }
+    }, [])
   return (
     <div className='flex gap-1 '>
       <div className='flex gap-2 p-1 border border-black h-40'>
