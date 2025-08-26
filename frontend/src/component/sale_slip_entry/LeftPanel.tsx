@@ -94,7 +94,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
       if(firstInputRef.current) {
         firstInputRef.current.focus();
       }
-    })
+    }, [])
 
   const fieldDefinitions = [
     { id: "customerCode", label: "顧客コード", type: "double" },

@@ -101,7 +101,7 @@ export default function SalesSlipEntry({
   const handleOpenCategorySelection = () => {
     setActiveSlipIndex(null);
     setIsOpenCategorySelection(true);
-    setRowEdit(null);
+    setRowEdit(undefined);
   };
 
   const handleCategorySelect = (categoryName: string) => {
@@ -109,11 +109,13 @@ export default function SalesSlipEntry({
     setIsOpenCategorySelection(false);
     setProductSearchModalOpen(true);
     setCurrentStep(2);
+    setRowEdit(undefined);
   };
 
   const handleBackToCategory = () => {
     setProductSearchModalOpen(false);
     setIsOpenCategorySelection(true);
+    setRowEdit(undefined);
   };
   useEffect(() => {
     if (activeSlipIndex !== null && tooltipRef.current) {

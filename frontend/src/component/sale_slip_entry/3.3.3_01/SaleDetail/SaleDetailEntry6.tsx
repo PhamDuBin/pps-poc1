@@ -19,10 +19,10 @@ const SaleDetailEntry6: React.FC<SaleDetailEntry6Props> = ({ onChange, formData 
   const firstInputRef = useRef<HTMLInputElement>(null);
     
   useEffect(() => {
-      if(firstInputRef.current) {
-        firstInputRef.current.focus();
-      }
-    }, [])
+    if(firstInputRef.current) {
+      firstInputRef.current.focus();
+    }
+  }, [])
 
   return (
     <div className='flex gap-1 '>  
@@ -62,14 +62,14 @@ const SaleDetailEntry6: React.FC<SaleDetailEntry6Props> = ({ onChange, formData 
 
           {/* 売上単価 */}
           <div className='text-center h-[64px]'>
-            <div className='bg-[#80bad7] h-1/2'>売上単価</div>
+            <div className='bg-[#80bad7] h-1/2'>仕入単価</div>
             <div className='h-1/2'>
               <input
                 type="text"
                 placeholder='01234567.00'
                 className='h-full px-1 w-[120px] placeholder-black-200 border border-black'
-                value={formData.salesPrice ?? ''}
-                onChange={(e) => onChange("salesPrice", e.target.value)}
+                value={formData.purchasePrice ?? ''}
+                onChange={(e) => onChange("purchasePrice", e.target.value)}
               />
             </div>
           </div>
@@ -114,8 +114,8 @@ const SaleDetailEntry6: React.FC<SaleDetailEntry6Props> = ({ onChange, formData 
             <div className='bg-[#80bad7] h-1/2'>当月外</div>
             <select
               className="border border-black w-full h-1/2"
-              value={formData.outsideCurrentMonth !== undefined ? String(formData.outsideCurrentMonth) : "0"}
-              onChange={(e) => onChange("outsideCurrentMonth", e.target.value)}
+              value={formData.outsideMonth !== undefined ? String(formData.outsideMonth) : "0"}
+              onChange={(e) => onChange("outsideMonth", e.target.value)}
             >
               <option value="0">0 空欄</option>
               <option value="1">1 当月外</option>
@@ -128,8 +128,8 @@ const SaleDetailEntry6: React.FC<SaleDetailEntry6Props> = ({ onChange, formData 
             <input
               type="text"
               className='w-full h-1/2 border px-1 border-black placeholder-black-200'
-              value={formData.remarks ?? ''}
-              onChange={(e) => onChange("remarks", e.target.value)}
+              value={formData.note ?? ''}
+              onChange={(e) => onChange("note", e.target.value)}
             />
           </div>
         </div>
