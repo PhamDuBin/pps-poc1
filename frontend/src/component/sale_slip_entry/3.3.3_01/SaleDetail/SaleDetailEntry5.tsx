@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 
 const handleOpenWindow = () => {
   const win = window.open(
@@ -18,6 +18,15 @@ interface SaleDetailEntry5Props {
 }
 
 const SaleDetailEntry5: React.FC<SaleDetailEntry5Props> = ({ onChange, formData }) => {
+  
+  const firstInputRef = useRef<HTMLInputElement>(null);
+      
+  useEffect(() => {
+    if(firstInputRef.current) {
+      firstInputRef.current.focus();
+    }
+  })
+  
   return (
     <div className='flex gap-1 '>  
       <div className='flex gap-2 p-1 border border-black h-56'>

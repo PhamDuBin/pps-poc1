@@ -185,6 +185,14 @@ export default function SalesSlipEntry({
 
   console.log("rowedit:", rowEdit);
 
+  const firstInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+      if(firstInputRef.current) {
+        firstInputRef.current.focus();
+      }
+    })
+
   return (
     <div className=" w-full h-full flex flex-col items-center px-4 pt-4 2xl:text-[16px] text-[11px]">
       {/* Header */}
@@ -207,6 +215,7 @@ export default function SalesSlipEntry({
               売上日
             </label>
             <input
+              ref = {firstInputRef}
               type="text"
               defaultValue="2025/05/01"
               className="ml-1 w-1/2 border border-black px-2 py-1"

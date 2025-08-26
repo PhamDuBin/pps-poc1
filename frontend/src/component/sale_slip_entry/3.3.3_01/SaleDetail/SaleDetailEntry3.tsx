@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 
 interface SaleDetailEntry3Props {
   onChange: (field: string, value: string) => void;
@@ -6,6 +6,14 @@ interface SaleDetailEntry3Props {
 }
 
 const SaleDetailEntry3: React.FC<SaleDetailEntry3Props> = ({ onChange,formData }) => {
+  
+  const firstInputRef = useRef<HTMLInputElement>(null);
+    
+  useEffect(() => {
+    if(firstInputRef.current) {
+      firstInputRef.current.focus();
+    }
+  })
   return (
     <div className='flex gap-1 '>
       <div className='flex gap-2 p-1 border border-black h-40'>
@@ -14,11 +22,20 @@ const SaleDetailEntry3: React.FC<SaleDetailEntry3Props> = ({ onChange,formData }
           <div className='bg-[#80bad7]'>数量</div>
           <div>
             <input
+              ref = {firstInputRef}
               type="text"
-              placeholder='000'
+              placeholder='(0.00)'
               className='w-20 placeholder-black-200 border border-black'
               value={formData.quantity || ""}
-              onChange={(e) => onChange("quantity", e.target.value)}
+              // onChange={(e) => onChange("quantity", e.target.value)}
+              onChange={(e) => {
+                // Lấy giá trị input
+                const val = e.target.value;
+                // Lọc lấy số bên trong dấu ngoặc (nếu có)
+                const match = val.match(/\((\d*)\)/);
+                const newVal = match ? match[1] : val.replace(/[^\d]/g, ""); // hoặc nếu không có ngoặc thì lấy số thuần
+                onChange("quantity", newVal);
+              }}
             />
           </div>
         </div>

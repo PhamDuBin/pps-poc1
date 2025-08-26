@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 
 //■左カラム顧客検索＆情報表示ランチャー
 import { useEffect, useState } from "react";
@@ -87,6 +87,14 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
       setShowDepart(false);
     }
   };
+
+  const firstInputRef = useRef<HTMLInputElement>(null);
+      
+    useEffect(() => {
+      if(firstInputRef.current) {
+        firstInputRef.current.focus();
+      }
+    })
 
   const fieldDefinitions = [
     { id: "customerCode", label: "顧客コード", type: "double" },
@@ -322,6 +330,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
                 事務所
               </label>
               <input
+                ref = {firstInputRef}
                 type="text"
                 placeholder="0000"
                 className="w-20 p-1 border border-gray-500 bg-[#ebcec0]"

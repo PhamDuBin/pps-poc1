@@ -103,8 +103,8 @@ const SaleDetailModal: React.FC<SaleDetailModalProps> = ({
           supplierName: formData.supplierName || "",
         },
         detailInfo: {
-          quantity: formData.quantity || "0",
-          discountAmount: formData.discountAmount || "0",
+          quantity: formData.quantity || "(0.00)",
+          discountAmount: "-1,000,000",
           tax: formData.tax || "0",
         },
         note: formData.note || "",
@@ -168,12 +168,11 @@ const SaleDetailModal: React.FC<SaleDetailModalProps> = ({
   const data = {
     id: rowEdit?.id,
     headerRow: {
-      
       no: "",
       icon: "",
       categoryName,
-      outsideMonth: formData.outsideMonth || 0,
-      selfTransferTarget: formData.selfTransferTarget || 0,
+      outsideMonth: Number(formData.outsideMonth) || 0,
+      selfTransferTarget: Number(formData.selfTransferTarget) || 0,
     },
     bodyRow,
   };
@@ -194,8 +193,8 @@ const SaleDetailModal: React.FC<SaleDetailModalProps> = ({
     purchasePrice: rowEdit.bodyRow?.detailInfo?.purchasePrice || "",
     purchasePriceType: rowEdit.bodyRow?.detailInfo?.purchasePriceType ?? "0",
     purchaseAmount: rowEdit.bodyRow?.detailInfo?.purchaseAmount || "",
-    selfTransferTarget: rowEdit.headerRow?.selfTransferTarget || "0",
-    outsideMonth: rowEdit.headerRow?.outsideMonth || "0",
+    selfTransferTarget: Number(rowEdit.headerRow?.selfTransferTarget) || 0,
+    outsideMonth: Number(rowEdit.headerRow?.outsideMonth) || 0,
     discountAmount: rowEdit.headerRow?.discountAmount || "0",
     note: rowEdit.note || "",
     });

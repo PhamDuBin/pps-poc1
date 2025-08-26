@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { DownArrowIcon } from "../../transaction_information/LeftPanel";
 
 type Props = {
@@ -39,6 +39,14 @@ export default function DepositProcess({
   // Xóa state không cần thiết
   // const [showShukinSelect, setShowShukinSelect] = useState(false);
   // const [showNyukinSelect, setShowNyukinSelect] = useState(false);
+
+  const firstInputRef = useRef<HTMLInputElement>(null);
+  
+  useEffect(() => {
+      if(firstInputRef.current) {
+        firstInputRef.current.focus();
+      }
+  })
 
   return (
     <div className="flex flex-col w-full border border-black">
@@ -139,6 +147,7 @@ export default function DepositProcess({
               入金項目
             </label>
             <input
+              ref = {firstInputRef}
               type="text"
               defaultValue="現金"
               className="ml-1 w-1/2 border border-black text-black px-2 py-1"

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 
 interface SaleDetailEntry4Props {
   onChange: (field: string, value: string) => void;
@@ -18,6 +18,15 @@ const handleOpenWindow = () => {
 };
 
 const SaleDetailEntry4: React.FC<SaleDetailEntry4Props> = ({ onChange, formData }) => {
+  
+  const firstInputRef = useRef<HTMLInputElement>(null);
+      
+  useEffect(() => {
+    if(firstInputRef.current) {
+      firstInputRef.current.focus();
+    }
+  })
+
   return (
     <div className='flex gap-1 '>  
       {/* Left side */}
@@ -26,6 +35,7 @@ const SaleDetailEntry4: React.FC<SaleDetailEntry4Props> = ({ onChange, formData 
           <div className='bg-[#80bad7]'>数量</div>
           <div>
             <input
+              ref = {firstInputRef}
               type="text"
               placeholder='000'
               className='w-20 placeholder-black-200 border border-black'

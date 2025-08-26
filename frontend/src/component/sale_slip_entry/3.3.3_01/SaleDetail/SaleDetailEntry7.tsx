@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from 'react';
 
 interface SaleDetailEntry7Props {
   onChange: (field: string, value: string) => void;
@@ -6,11 +6,21 @@ interface SaleDetailEntry7Props {
 }
 
 const SaleDetailEntry7: React.FC<SaleDetailEntry7Props> = ({ onChange, formData }) => {
+  
+  const firstInputRef = useRef<HTMLInputElement>(null);
+      
+  useEffect(() => {
+    if(firstInputRef.current) {
+      firstInputRef.current.focus();
+    }
+  })
+  
   return (
     <div className="flex gap-2">
       <div className="h-[64px] w-[100px]">
         <div className="h-1/2 bg-[#80bad7] p-1">商品コード</div>
         <input
+          ref = {firstInputRef}
           type="text"
           className="h-1/2 w-full border border-black text-center"
           placeholder="96-0001"
