@@ -1,6 +1,159 @@
 import { DownArrowIcon } from "../transaction_information/LeftPanel";
+import AdvanceSearchModal from "../transaction_information/1.1.1_03/AdvanceSearchModal";
+import { useState } from "react";
+import { fieldDefinitions } from "../sale_slip_entry/LeftPanel";
+import React from "react";
 
 export const CustomerSearchModal = ({ onClose }: { onClose: () => void }) => {
+  type FieldId = (typeof fieldDefinitions)[number]["id"];
+  type FormValues = { [key in FieldId]?: string | string[] };
+  const [showAdvanceSearch, setShowAdvanceSearch] = useState(false);
+  const [selectedFieldId, setSelectedFieldId] = useState<FieldId>(
+    fieldDefinitions[0].id
+  );
+  const currentField = fieldDefinitions.find((f) => f.id === selectedFieldId);
+  const [formValues, setFormValues] = useState<FormValues>({});
+
+  if (showAdvanceSearch) {
+    return (
+      <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+        <div className="w-1/2">
+          <AdvanceSearchModal
+            showAdvanceSearch={showAdvanceSearch}
+            setShowAdvanceSearch={setShowAdvanceSearch}
+          />
+        </div>
+      </div>
+    );
+  }
+
+  const handleValueChange = (
+    value: string,
+    index: number | null = null
+  ): void => {
+    if (!currentField) return;
+    let newValues =
+      formValues[selectedFieldId] ||
+      (currentField.type === "multi" || currentField.type === "double"
+        ? []
+        : "");
+    if (
+      currentField.type === "multi" ||
+      currentField.type === "double" ||
+      currentField.type === "dropdown"
+    ) {
+      let tempArray: string[];
+      if (Array.isArray(newValues)) {
+        tempArray = [...newValues];
+      } else {
+        tempArray = currentField.type === "dropdown" ? ["0", ""] : [];
+      }
+      if (index !== null) {
+        tempArray[index] = value;
+      }
+      newValues = tempArray;
+    }
+    setFormValues((prev) => ({ ...prev, [selectedFieldId]: newValues }));
+  };
+
+  const renderDynamicInput = (): React.ReactNode => {
+    if (!currentField) return null;
+    const value = formValues[currentField.id];
+    switch (currentField.type) {
+      case "multi":
+        return (
+          <div className="flex items-center space-x-1">
+            {currentField.partSizes?.map((size, index) => (
+              <React.Fragment key={index}>
+                <input
+                  type="text"
+                  placeholder="000"
+                  className="w-20 h-6 border border-black p-1 text-center placeholder-gray-400 bg-[#ebcec0]"
+                  style={{ width: `${size}px` }}
+                  value={(Array.isArray(value) && value[index]) || ""}
+                  onChange={(e) => handleValueChange(e.target.value, index)}
+                />
+                {index < currentField.partSizes.length - 1 && <span>-</span>}
+              </React.Fragment>
+            ))}
+          </div>
+        );
+      case "dropdown":
+        return (
+          <div className="flex items-center space-x-1">
+            <input
+              type="text"
+              className="border border-black p-1 placeholder-gray-400 w-20 h-6 bg-[#ebcec0]"
+              placeholder="000000"
+              onChange={(e) => {
+                handleValueChange(e.target.value, 0);
+              }}
+            />
+            <span> - </span>
+            <input
+              type="text"
+              className="border w-20 h-6 border-gray-400 p-1 bg-[#ebcec0]"
+              value={(Array.isArray(value) && value[1]) || ""}
+              onChange={(e) => {
+                handleValueChange(e.target.value, 1);
+              }}
+              placeholder="000000"
+            />
+          </div>
+        );
+      case "double":
+        return (
+          <div className="flex gap-1">
+            <input
+              type="text"
+              className="border w-20 h-6 border-gray-400 p-1 placeholder-gray-400 bg-[#ebcec0]"
+              value={(Array.isArray(value) && value[0]) || ""}
+              onChange={(e) => {
+                handleValueChange(e.target.value, 0);
+              }}
+              placeholder="000000"
+            />
+            <div>-</div>
+            <input
+              type="text"
+              className="border w-20 h-6 border-gray-400 p-1 placeholder-gray-400 bg-[#ebcec0]"
+              value={(Array.isArray(value) && value[1]) || ""}
+              onChange={(e) => {
+                handleValueChange(e.target.value, 1);
+              }}
+              placeholder="000000"
+            />
+          </div>
+        );
+      default:
+        return (
+          <>
+            <input
+              type="text"
+              className="border h-6 border-black p-1 w-44 mr-1 bg-[#ebcec0]"
+              value={(typeof value === "string" && value) || ""}
+              onChange={(e) => {
+                handleValueChange(e.target.value);
+              }}
+            />
+          </>
+        );
+    }
+  };
+
+  const isCustomerCodeSelected = selectedFieldId === "customerCode";
+  const customerCodeValues = (formValues.customerCode as string[]) || [];
+  const areButtonsDisabled =
+    isCustomerCodeSelected &&
+    (!customerCodeValues[0] || !customerCodeValues[1]);
+
+  const handleResetCustomerCode = () => {
+    setFormValues((prev) => ({
+      ...prev,
+      customerCode: ["", ""],
+    }));
+  };
+
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
       <div className="border border-black bg-white p-2">
@@ -17,26 +170,59 @@ export const CustomerSearchModal = ({ onClose }: { onClose: () => void }) => {
                 <input className="w-16 h-6 border border-black" />
                 <p>-</p>
                 <input className="w-16 h-6 border border-black" />
-                <button className="w-[22px] h-[22px] flex items-center justify-center border border-gray-500">
+                <button
+                  onClick={() => setShowAdvanceSearch(true)}
+                  className="w-[22px] h-[22px] flex items-center justify-center border border-gray-500"
+                >
                   <DownArrowIcon />
                 </button>
                 <p>関東地方営業事務所</p>
               </div>
 
               <div className="flex flex-row items-center gap-4 mt-2">
-                <button className="w-28 h-6 bg-[#D9D9D9] flex justify-center items-center">
-                  顧客コード
-                </button>
-                <input className="w-16 h-6 border border-black" />
-                <p>-</p>
-                <input className="w-16 h-6 border border-black" />
-                <button className="w-[22px] h-[22px] flex items-center justify-center border border-gray-500">
+                <>
+                  <select
+                    className="bg-[#D9D9D9] w-28 h-6 text-center"
+                    value={selectedFieldId}
+                    onChange={(e) =>
+                      setSelectedFieldId(e.target.value as FieldId)
+                    }
+                  >
+                    {fieldDefinitions.map((field) => (
+                      <option key={field.id} value={field.id}>
+                        {field.label}
+                      </option>
+                    ))}
+                  </select>
+
+                  <div className="flex">{renderDynamicInput()}</div>
+                </>
+                <button
+                  onClick={() => setShowAdvanceSearch(true)}
+                  className="w-[22px] h-[22px] flex items-center justify-center border border-gray-500"
+                >
                   <DownArrowIcon />
                 </button>
-                <button className="w-11 h-6 flex justify-center items-center border border-b rounded-md">
+                <button
+                  onClick={onClose}
+                  disabled={areButtonsDisabled}
+                  className={`w-11 h-6 flex justify-center items-center border border-b rounded-md ${
+                    areButtonsDisabled
+                      ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                      : "bg-white"
+                  }`}
+                >
                   確定
                 </button>
-                <button className="w-14 h-6 flex justify-center items-center border border-b rounded-md">
+                <button
+                  onClick={handleResetCustomerCode}
+                  disabled={areButtonsDisabled}
+                  className={`w-14 h-6 flex justify-center items-center border border-b rounded-md ${
+                    areButtonsDisabled
+                      ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                      : "bg-white"
+                  }`}
+                >
                   再入力
                 </button>
               </div>

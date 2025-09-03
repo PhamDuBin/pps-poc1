@@ -1,10 +1,9 @@
 import { DownArrowIcon } from "../transaction_information/LeftPanel";
-import { DayPicker } from "react-day-picker";
 import "react-day-picker/dist/style.css";
-import { format, parse, isValid } from "date-fns";
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState } from "react";
 import { DatePickerInput } from "../../context/DatePickerInput";
 import CustomModal from "../../context/CustomModal";
+import { CustomerSearchModal } from "./CustomerSearchModal";
 
 const SurveyRow = ({ onOpenModal }: { onOpenModal: () => void }) => (
   <div className="flex flex-row relative w-full">
@@ -56,6 +55,7 @@ const RightPanel = () => {
   const [index2, setIndex2] = useState(0);
   const [index3, setIndex3] = useState(0);
   const [index4, setIndex4] = useState(0);
+  const [isCustomerModalOpen, setIsCustomerModalOpen] = useState(false);
 
   const handleClick = () => {
     setIndex((prev) => (prev + 1) % options.length);
@@ -528,10 +528,16 @@ const RightPanel = () => {
           <button className="w-1/4 border border-black rounded-lg">写真</button>
         </div>
         <div className="flex flex-row justify-between mt-2">
-          <button className="w-2/5 border border-black bg-[#D9D9D9]">
+          <button
+            onClick={() => setIsCustomerModalOpen(true)}
+            className="w-2/5 border border-black bg-[#D9D9D9]"
+          >
             保存（S)
           </button>
-          <button className="w-2/5 border border-black bg-[#D9D9D9]">
+          <button
+            onClick={() => setIsCustomerModalOpen(true)}
+            className="w-2/5 border border-black bg-[#D9D9D9]"
+          >
             閉じる（C)
           </button>
         </div>
@@ -541,6 +547,9 @@ const RightPanel = () => {
         onClose={() => setModalF2Open(false)}
         title={titleModal}
       />
+      {isCustomerModalOpen && (
+        <CustomerSearchModal onClose={() => setIsCustomerModalOpen(false)} />
+      )}
     </div>
   );
 };

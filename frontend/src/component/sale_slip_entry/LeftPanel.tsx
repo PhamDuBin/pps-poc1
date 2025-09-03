@@ -21,7 +21,7 @@ const DownArrowIcon = () => (
   </svg>
 );
 
-const kanaButtons = [
+export const kanaButtons = [
   "ア",
   "カ",
   "サ",
@@ -36,16 +36,59 @@ const kanaButtons = [
   { label: "全て", wide: true },
 ];
 
-const tableHeaders = ["コード", "氏名", "カナ氏名", "所属事務所名"];
+export const tableHeaders = ["コード", "氏名", "カナ氏名", "所属事務所名"];
 
-const rowData = [
+export const rowData = [
   "00000001",
   "担当者太郎",
   "タントウシャタロウ",
   "東京事務所03",
 ];
 
-const colWidths = ["15%", "25%", "25%", "35%"];
+export const colWidths = ["15%", "25%", "25%", "35%"];
+
+export const fieldDefinitions = [
+  { id: "customerCode", label: "顧客コード", type: "double" },
+  { id: "searchKey1", label: "検索キー１", type: "input" },
+  { id: "searchKey2", label: "検索キー２", type: "input" },
+  { id: "computerCode", label: "電算コード", type: "single" },
+  { id: "eavesbarCode", label: "軒先バーコード", type: "input" },
+  {
+    id: "deleveryOrderCode",
+    label: "配送順コード",
+    type: "multi",
+    partSizes: [50, 70, 50],
+  },
+  {
+    id: "inspectionOderCode",
+    label: "点検順コード",
+    type: "multi",
+    partSizes: [50, 70, 50],
+  },
+  {
+    id: "saleOrderCode",
+    label: "営業順コード",
+    type: "multi",
+    partSizes: [50, 70, 50],
+  },
+  {
+    id: "meterReadingOrderCode",
+    label: "検針順コード",
+    type: "multi",
+    partSizes: [50, 70, 50],
+  },
+  {
+    id: "collectionOderCode",
+    label: "集金順コード",
+    type: "multi",
+    partSizes: [50, 70, 50],
+  },
+  { id: "distributionCenterCD", label: "配送センターCD", type: "dropdown" },
+  { id: "securityAgencyCD", label: "保安機関CD", type: "dropdown" },
+  { id: "centralMonitoringCD", label: "集中監視CD", type: "dropdown" },
+  { id: "oderManagementNo", label: "受注管理No.", type: "input" },
+  { id: "deliverySlipNo", label: "出庫伝票No.", type: "input" },
+] as const;
 
 const rowCount = 8;
 
@@ -89,55 +132,12 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
   };
 
   const firstInputRef = useRef<HTMLInputElement>(null);
-      
-    useEffect(() => {
-      if(firstInputRef.current) {
-        firstInputRef.current.focus();
-      }
-    }, [])
 
-  const fieldDefinitions = [
-    { id: "customerCode", label: "顧客コード", type: "double" },
-    { id: "searchKey1", label: "検索キー１", type: "input" },
-    { id: "searchKey2", label: "検索キー２", type: "input" },
-    { id: "computerCode", label: "電算コード", type: "single" },
-    { id: "eavesbarCode", label: "軒先バーコード", type: "input" },
-    {
-      id: "deleveryOrderCode",
-      label: "配送順コード",
-      type: "multi",
-      partSizes: [50, 70, 50],
-    },
-    {
-      id: "inspectionOderCode",
-      label: "点検順コード",
-      type: "multi",
-      partSizes: [50, 70, 50],
-    },
-    {
-      id: "saleOrderCode",
-      label: "営業順コード",
-      type: "multi",
-      partSizes: [50, 70, 50],
-    },
-    {
-      id: "meterReadingOrderCode",
-      label: "検針順コード",
-      type: "multi",
-      partSizes: [50, 70, 50],
-    },
-    {
-      id: "collectionOderCode",
-      label: "集金順コード",
-      type: "multi",
-      partSizes: [50, 70, 50],
-    },
-    { id: "distributionCenterCD", label: "配送センターCD", type: "dropdown" },
-    { id: "securityAgencyCD", label: "保安機関CD", type: "dropdown" },
-    { id: "centralMonitoringCD", label: "集中監視CD", type: "dropdown" },
-    { id: "oderManagementNo", label: "受注管理No.", type: "input" },
-    { id: "deliverySlipNo", label: "出庫伝票No.", type: "input" },
-  ] as const;
+  useEffect(() => {
+    if (firstInputRef.current) {
+      firstInputRef.current.focus();
+    }
+  }, []);
 
   type FieldId = (typeof fieldDefinitions)[number]["id"];
   type FormValues = { [key in FieldId]?: string | string[] };
@@ -330,7 +330,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
                 事務所
               </label>
               <input
-                ref = {firstInputRef}
+                ref={firstInputRef}
                 type="text"
                 placeholder="0000"
                 className="w-20 p-1 border border-gray-500 bg-[#ebcec0]"
