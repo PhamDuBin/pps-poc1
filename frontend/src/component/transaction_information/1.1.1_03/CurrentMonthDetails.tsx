@@ -41,7 +41,7 @@ const CurrentMonthDetails = () => {
   const titleStyle =
     "font-semibold w-full text-sm p-1 text-center border bg-[#80bad7] my-1";
 
-  const buttonLabelStyle = `${labelStyle} text-left w-full cursor-pointer hover:bg-[#92ADF8]`;
+  const buttonLabelStyle = `${labelStyle} !bg-[#6685ec] text-left w-full cursor-pointer hover:bg-[#92ADF8] shadow-md transition-all duration-200 active:shadow-none active:translate-y-px border-2 border-black`;
 
   const verticalLabelStyle =
     "flex items-center justify-center text-sm font-semibold bg-[#80bad7] my-1";
@@ -49,12 +49,12 @@ const CurrentMonthDetails = () => {
   return (
     <>
       <div
-        className={`font-semibold text-sm p-1 mx-4 mt-4 text-center border bg-[#80bad7]`}
+        className={`font-semibold text-sm p-1 mx-4 mt-4 text-center border bg-[#80bad7] `}
       >
         ＜当月明細＞
       </div>
       <div className="px-4 flex lg:flex-row flex-col gap-4 text-black font-sans w-full">
-        <div className="flex flex-col items-center flex-shrink-0 w-[10%]">
+        <div className="flex flex-col items-center flex-shrink-0 w-[10%] ">
           <div className={titleStyle}>＜判定＞</div>
           <div className="p-1 border border-black bg-[#80bad7] w-full">
             <div className="p-0.5 border border-black flex flex-col justify-between items-center bg-white h-full">
@@ -82,21 +82,31 @@ const CurrentMonthDetails = () => {
               {balanceMonths.map((month) => (
                 <div key={month} className="flex flex-row items-center gap-1">
                   <div className={`${labelStyle} w-[30%]`}>{month}</div>
-                  <input type="text" className={`${inputStyle} w-[30%]`} />
                   <input
                     type="text"
-                    className={`${inputStyle} w-[20%] rounded`}
+                    className={`${inputStyle} w-[30%]`}
+                    disabled
                   />
                   <input
                     type="text"
                     className={`${inputStyle} w-[20%] rounded`}
+                    disabled
+                  />
+                  <input
+                    type="text"
+                    className={`${inputStyle} w-[20%] rounded`}
+                    disabled
                   />
                 </div>
               ))}
               <div className="border border-black my-1"></div>
               <div className="flex flex-row items-center gap-1">
                 <div className={`${labelStyle} w-[30%]`}>合計</div>
-                <input type="text" className={`${inputStyle} w-[30%]`} />
+                <input
+                  type="text"
+                  className={`${inputStyle} w-[30%]`}
+                  disabled
+                />
                 <div className="w-[20%] h-8"></div> {/* Placeholder */}
                 <div className="w-[20%] h-8"></div> {/* Placeholder */}
               </div>
@@ -104,7 +114,7 @@ const CurrentMonthDetails = () => {
           </div>
         </div>
         <div className="flex flex-col gap-1 w-[40%] font-sans">
-          <div className={titleStyle}>＜ガス料金・使用量・料金No.000＞</div>
+          <div className={titleStyle}>＜ガス料金・使用量・料金No.＞</div>
           <div className="border border-black p-1 w-full">
             <div className="flex gap-2 mb-2 w-full">
               <div className={`${verticalLabelStyle} w-[35%]`}>
@@ -117,6 +127,7 @@ const CurrentMonthDetails = () => {
                     placeholder="000"
                     type="text"
                     className={`${inputStyle} w-[40%]`}
+                    disabled
                   />
                 </div>
               </div>
@@ -133,6 +144,7 @@ const CurrentMonthDetails = () => {
                       placeholder="0"
                       type="text"
                       className={`${inputStyle} w-[40%]`}
+                      disabled
                     />
                   </div>
                 ))}
@@ -142,7 +154,7 @@ const CurrentMonthDetails = () => {
               <div className="flex">
                 <button
                   onClick={handleOpenWindow}
-                  className={`${buttonLabelStyle} w-[75%]`}
+                  className={`${buttonLabelStyle} !w-[75%]`}
                 >
                   警報器リース
                 </button>
@@ -150,12 +162,13 @@ const CurrentMonthDetails = () => {
                   placeholder="0"
                   type="text"
                   className={`${inputStyle} w-[25%]`}
+                  disabled
                 />
               </div>
               <div className="flex">
                 <button
                   onClick={handleOpenWindow}
-                  className={`${buttonLabelStyle} w-[75%]`}
+                  className={`${buttonLabelStyle} !w-[75%]`}
                 >
                   設備使用料
                 </button>
@@ -163,6 +176,7 @@ const CurrentMonthDetails = () => {
                   placeholder="0"
                   type="text"
                   className={`${inputStyle} w-[25%]`}
+                  disabled
                 />
               </div>
             </div>
@@ -177,6 +191,7 @@ const CurrentMonthDetails = () => {
                     placeholder="0"
                     type="text"
                     className={`${inputStyle}  w-[40%]`}
+                    disabled
                   />
                 </div>
                 <div className="flex items-center w-full">
@@ -185,6 +200,7 @@ const CurrentMonthDetails = () => {
                     placeholder="0"
                     type="text"
                     className={`${inputStyle} w-[40%]`}
+                    disabled
                   />
                 </div>
               </div>

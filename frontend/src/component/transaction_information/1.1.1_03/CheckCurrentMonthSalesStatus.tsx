@@ -72,6 +72,7 @@ function CheckCurrentMonthSalesStatusScreen() {
                       placeholder="000"
                       className={inputClass}
                       type="text"
+                      disabled
                     />
                   </div>
                 ))}
@@ -92,6 +93,7 @@ function CheckCurrentMonthSalesStatusScreen() {
                         placeholder="000"
                         className={`${inputClass} col-span-2`}
                         type="text"
+                        disabled
                       />
                     </div>
                   ))}
@@ -103,14 +105,15 @@ function CheckCurrentMonthSalesStatusScreen() {
                     <div className={containerClass} key={idx}>
                       <button
                         onClick={handleOpenWindow}
-                        className={`${labelClass} border border-black`}
+                        className={`${labelClass} !bg-[#6685ec] text-left w-full cursor-pointer hover:bg-[#92ADF8] shadow-md transition-all duration-200 active:shadow-none active:translate-y-px border-2 border-black`}
                       >
                         {label}
                       </button>
                       <input
                         placeholder="000"
-                        className={inputClass}
+                        className={`${inputClass}  border border-black`}
                         type="text"
+                        disabled
                       />
                     </div>
                   ))}
@@ -123,7 +126,7 @@ function CheckCurrentMonthSalesStatusScreen() {
                       {label === "保証金" ? (
                         <button
                           onClick={handleOpenWindow}
-                          className={`${labelClass} border border-black`}
+                          className={`${labelClass} !bg-[#6685ec] text-left w-full cursor-pointer hover:bg-[#92ADF8] shadow-md transition-all duration-200 active:shadow-none active:translate-y-px border-2 border-black`}
                         >
                           {label}
                         </button>
@@ -134,6 +137,7 @@ function CheckCurrentMonthSalesStatusScreen() {
                         placeholder="000"
                         className={inputClass}
                         type="text"
+                        disabled
                       />
                     </div>
                   ))}
@@ -153,7 +157,7 @@ function CheckCurrentMonthSalesStatusScreen() {
                     {label === "自振履歴" ? (
                       <button
                         onClick={handleOpenWindow}
-                        className={`${labelClass} border border-black`}
+                        className={`${labelClass} !bg-[#6685ec] text-left w-full cursor-pointer hover:bg-[#92ADF8] shadow-md transition-all duration-200 active:shadow-none active:translate-y-px border-2 border-black`}
                       >
                         {label}
                       </button>
@@ -166,6 +170,7 @@ function CheckCurrentMonthSalesStatusScreen() {
                           placeholder="000"
                           className={inputClass}
                           type="text"
+                          disabled
                         />
                         <label className="font-semibold col-span-2">
                           自振区分004
@@ -179,6 +184,7 @@ function CheckCurrentMonthSalesStatusScreen() {
                           placeholder="000"
                           className={inputClass}
                           type="text"
+                          disabled
                         />
                       </>
                     )}
@@ -199,6 +205,7 @@ function CheckCurrentMonthSalesStatusScreen() {
                         label === "請求金額" ? inputClass : halfInputClass
                       }
                       type="text"
+                      disabled
                     />
                   </div>
                 ))}

@@ -11,7 +11,7 @@ import CRM from "../../component/transaction_information/1.1.1_03/CRM";
 import LinkDestinationScreen from "../../component/transaction_information/1.1.1_03/LinkDestinationScreen";
 import { handleNavigationKey } from "../../utils/InputHandlers";
 const TrancInfoScreen = () => {
-  const [showLeftPanel, setShowLeftPanel] = useState(false);
+  const [showLeftPanel, setShowLeftPanel] = useState(true);
   const [activeScreen, setActiveScreen] = useState<string | null>(null);
   const [showAdvanceSearch, setShowAdvanceSearch] = useState(false);
 

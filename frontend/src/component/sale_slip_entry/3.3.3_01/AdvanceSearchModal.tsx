@@ -343,7 +343,7 @@ const AdvanceSearchModal: React.FC<{
           }}
           className="w-20 border border-black bg-[#80bad7] px-2 py-1 flex mt-2 justify-center"
         >
-          請求額
+          閉じる
         </button>
       </div>
     </div>

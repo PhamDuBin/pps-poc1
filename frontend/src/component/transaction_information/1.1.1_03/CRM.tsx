@@ -36,7 +36,9 @@ const CRM = () => {
 
   return (
     <div className="p-4 text-black w-full text-sm">
-      <div className="text-center font-bold bg-[#80bad7] border border-black p-2 mb-2">＜CRM＞</div>
+      <div className="text-center font-bold bg-[#80bad7] border border-black p-2 mb-2">
+        ＜CRM＞
+      </div>
       <div
         className="overflow-auto border border-black"
         style={{ height: "280px" }}
@@ -104,7 +106,7 @@ const CRM = () => {
         <div className="flex justify-end w-[10%]">
           <button
             onClick={handleOpenWindow}
-            className="bg-[#80bad7] border border-black px-6 py-1.5 rounded-sm shadow-sm font-semibold h-full"
+            className="bg-[#6685ec]  px-6 py-1.5 rounded-sm font-semibold h-full cursor-pointer hover:bg-[#92ADF8] shadow-md transition-all duration-200 active:shadow-none active:translate-y-px border-2 border-black"
           >
             CRM分析
           </button>

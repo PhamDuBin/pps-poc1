@@ -1,5 +1,10 @@
-import React, { useState } from "react";
-
+import React, { useEffect, useRef, useState } from "react";
+type TableRowData = {
+  kanaName: string;
+  name: string;
+  address: string;
+  building: string;
+};
 const fieldDefinitions = [
   { id: "allTel", label: "ALL電話番号", type: "single" },
   {
@@ -75,7 +80,10 @@ const fieldDefinitions = [
 type FieldId = (typeof fieldDefinitions)[number]["id"];
 type FormValues = { [key in FieldId]?: string | string[] };
 
-const AdvancedSearchForm: React.FC = () => {
+const AdvancedSearchForm: React.FC<{
+  onSearch: () => void;
+  onReset: () => void;
+}> = ({ onSearch, onReset }) => {
   const [selectedFieldId, setSelectedFieldId] = useState<FieldId>(
     fieldDefinitions[0].id
   );
@@ -187,10 +195,15 @@ const AdvancedSearchForm: React.FC = () => {
     }
   };
 
+  const handleResetForm = () => {
+    setFormValues({});
+    onReset();
+  };
+
   return (
     <div className="flex items-start space-x-2 mt-2 p-3 border z-30 border-black rounded-md bg-gray-50">
       <div className="flex flex-col">
-        <label className="text-xs  font-semibold text-gray-600 mb-1">
+        <label className="text-xs font-semibold text-gray-600 mb-1">
           検索種類 / 検索順
         </label>
         <select
@@ -214,10 +227,18 @@ const AdvancedSearchForm: React.FC = () => {
       </div>
 
       <div className="flex flex-col space-y-1">
-        <button className="bg-[#80bad7] border border-black px-4 py-1 h-[26px] flex items-center justify-center">
+        {/* MODIFIED: Thêm onClick cho nút 検索 */}
+        <button
+          onClick={onSearch}
+          className="bg-[#80bad7] border border-black px-4 py-1 h-[26px] flex items-center justify-center"
+        >
           検索
         </button>
-        <button className="bg-[#80bad7] border border-black px-4 py-1 h-[26px] flex items-center justify-center">
+        {/* MODIFIED: Thêm onClick cho nút 再入力 */}
+        <button
+          onClick={handleResetForm}
+          className="bg-[#80bad7] border border-black px-4 py-1 h-[26px] flex items-center justify-center"
+        >
           再入力
         </button>
       </div>
@@ -230,12 +251,47 @@ const AdvanceSearchModal: React.FC<{
   setShowAdvanceSearch: React.Dispatch<React.SetStateAction<boolean>>;
 }> = ({ showAdvanceSearch, setShowAdvanceSearch }) => {
   const [searchMode, setSearchMode] = useState<string>("overall");
-  const tableData = Array.from({ length: 12 }).map(() => ({
-    kanaName: "cell",
-    name: "cell",
-    address: "cell",
-    building: "cell",
-  }));
+
+  // NEW: Quản lý dữ liệu bảng bằng state, khởi tạo là mảng rỗng
+  const [tableData, setTableData] = useState<TableRowData[]>([]);
+
+  // NEW: Ref để tham chiếu đến tbody của bảng
+  const tbodyRef = useRef<HTMLTableSectionElement>(null);
+
+  // NEW: Hàm xử lý tìm kiếm
+  const handleSearch = () => {
+    // Tạo dữ liệu giả lập khi tìm kiếm
+    const mockData = Array.from({ length: 12 }).map((_, index) => ({
+      kanaName: `カナ ${index + 1}`,
+      name: `氏名 ${index + 1}`,
+      address: `住所 ${index + 1}`,
+      building: `建物 ${index + 1}`,
+    }));
+    setTableData(mockData);
+  };
+
+  // NEW: Hàm reset bảng
+  const handleReset = () => {
+    setTableData([]);
+  };
+
+  // NEW: useEffect để focus vào dòng đầu tiên sau khi có dữ liệu
+  useEffect(() => {
+    if (tableData.length > 0 && tbodyRef.current) {
+      const firstRow = tbodyRef.current.querySelector("tr");
+      if (firstRow) {
+        firstRow.focus();
+      }
+    }
+  }, [tableData]); // Chạy lại mỗi khi tableData thay đổi
+
+  // NEW: Hàm xử lý khi nhấn phím trên một dòng của bảng
+  const handleRowKeyDown = (e: React.KeyboardEvent<HTMLTableRowElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault(); // Ngăn hành vi mặc định của Enter
+      setShowAdvanceSearch(false); // Đóng modal
+    }
+  };
 
   return (
     <div className="p-4 bg-white text-black w-full text-sm">
@@ -299,7 +355,7 @@ const AdvanceSearchModal: React.FC<{
         </div>
       </div>
 
-      <AdvancedSearchForm />
+      <AdvancedSearchForm onSearch={handleSearch} onReset={handleReset} />
 
       <div
         className="overflow-auto border border-black mt-2"
@@ -314,9 +370,14 @@ const AdvanceSearchModal: React.FC<{
               <th className="border border-black p-1">住所名称 / 部屋番号</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody ref={tbodyRef}>
             {tableData.map((row, idx) => (
-              <tr key={idx} className="hover:bg-blue-50">
+              <tr
+                key={idx}
+                className="hover:bg-blue-50"
+                onKeyDown={handleRowKeyDown}
+                tabIndex={-1}
+              >
                 <td className="bg-[#ebcec0] border border-black p-1">
                   {row.kanaName}
                 </td>
@@ -341,7 +402,7 @@ const AdvanceSearchModal: React.FC<{
           }}
           className="w-20 border border-black bg-[#80bad7] px-2 py-1 flex mt-2 justify-center"
         >
-          請求額
+          閉じる
         </button>
       </div>
     </div>

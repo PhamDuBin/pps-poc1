@@ -17,7 +17,7 @@ const BalanceDetailScreen = () => {
   };
 
   const buttonStyle =
-    "bg-[#80bad7] border border-black  px-4 py-1.5 rounded-sm shadow-sm font-semibold w-[150px]";
+    "!bg-[#6685ec]  px-4 py-1.5 rounded-sm font-semibold w-[150px] cursor-pointer hover:bg-[#92ADF8] shadow-md transition-all duration-200 active:shadow-none active:translate-y-px border-2 border-black";
 
   const detailsHeaders = [
     "日付",
@@ -29,7 +29,8 @@ const BalanceDetailScreen = () => {
     "自振対象",
   ];
   const detailsRowCount = 15;
-  const detailsCellStyle = " bg-[#ebcec0] border-b border-r border-black p-2 h-9";
+  const detailsCellStyle =
+    " bg-[#ebcec0] border-b border-r border-black p-2 h-9";
   const detailsHeaderCellStyle =
     "bg-[#80bad7] border-b text-center p-2 font-semibold text-sm border-r border-black";
 
@@ -160,21 +161,11 @@ const BalanceDetailScreen = () => {
                   <div className="border-r border-black p-1 text-center">
                     {item}
                   </div>
-                  <div className="border-r border-black p-1 text-right">
-                    0
-                  </div>
-                  <div className="border-r border-black p-1 text-right">
-                    0
-                  </div>
-                  <div className="border-r border-black p-1 text-right">
-                    0
-                  </div>
-                  <div className="border-r border-black p-1 text-right">
-                    0
-                  </div>
-                  <div className="border-r border-black p-1 text-right">
-                    0
-                  </div>
+                  <div className="border-r border-black p-1 text-right">0</div>
+                  <div className="border-r border-black p-1 text-right">0</div>
+                  <div className="border-r border-black p-1 text-right">0</div>
+                  <div className="border-r border-black p-1 text-right">0</div>
+                  <div className="border-r border-black p-1 text-right">0</div>
                 </div>
               ))}
               <div className="grid grid-cols-[2.5fr_1fr_1fr_1fr_1fr_1.2fr] bg-[#80bad7] font-bold">

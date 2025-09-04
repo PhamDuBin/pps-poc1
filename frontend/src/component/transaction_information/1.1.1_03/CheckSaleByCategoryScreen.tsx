@@ -78,6 +78,7 @@ function CheckSaleByCategoryScreen() {
                       readOnly
                       value=""
                       className={inputClass}
+                      disabled
                     />
                   </div>
                 </div>
