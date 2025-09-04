@@ -12,7 +12,7 @@ const InspectionResultScreen = () => {
     <div className="w-full h-screen flex flex-col xl:text-base text-xs">
       <TopBar />
       <div className="flex-1 flex flex-row min-h-0">
-        <div className="w-full">
+        <div className="w-full overflow-x-auto">
           <MainBusinessScreen />
         </div>
         <RightPanel />

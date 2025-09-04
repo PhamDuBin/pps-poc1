@@ -1,11 +1,24 @@
+import { useState } from "react";
 import { DownArrowIcon } from "../../transaction_information/LeftPanel";
 import ModalF1 from "../../modal/Modal_F1";
-import { useState } from "react";
-const SurveyDate = () => {
+
+const Piping = () => {
   const [modalF1Open, setModalF1Open] = useState(false);
 
   const symbols = ["", "◯", "×", "✔"];
-  const warnings = ["", "使用注意", "換気注意", "危険", "使用禁止"];
+  const labels = ["空白", "有", "無"];
+  const [state, setState] = useState(0);
+
+  const inspectionMethods = [
+    { value: 0, label: "未選択" },
+    { value: 1, label: "掘出調査" },
+    { value: 2, label: "気密試験" },
+    { value: 3, label: "漏洩試験" },
+    { value: 4, label: "目視" },
+    { value: 5, label: "ボーリング調査" },
+    { value: 6, label: "検知装置" },
+    { value: 9, label: "その他" },
+  ];
 
   // Thay đổi để tạo 20 dòng dữ liệu
   const totalRows = 20;
@@ -25,34 +38,40 @@ const SurveyDate = () => {
     });
   };
 
-  const handleKeyDown = (
-    e: React.KeyboardEvent<HTMLTableCellElement>,
-    idx: number
+  const handleClickBtn = () => {
+    setState((prev) => (prev + 1) % labels.length);
+  };
+
+  const handleSelectChange = (
+    e: React.ChangeEvent<HTMLSelectElement>,
+    row: number
   ) => {
-    if (e.key === "ArrowUp") {
-      e.preventDefault();
-      setValues((prev) => {
-        const newVals = [...prev];
-        newVals[idx] = parseFloat((newVals[idx] + 0.0001).toFixed(4));
-        return newVals;
-      });
-    } else if (e.key === "ArrowDown") {
-      e.preventDefault();
-      setValues((prev) => {
-        const newVals = [...prev];
-        newVals[idx] = parseFloat((newVals[idx] - 0.0001).toFixed(4));
-        return newVals;
-      });
-    }
+    setValues((prev) => {
+      const newVals = [...prev];
+      newVals[row] = parseInt(e.target.value, 10);
+      return newVals;
+    });
   };
   return (
     <>
-      <span className="flex justify-start text-start font-bold p-1 bg-[#D9D9D9]">
-        今回調査日
+      <span className="flex justify-start text-start font-bold p-1 bg-[#D9D9D9] mt-4">
+        配管
       </span>
+      <div className="flex flex-row p-1 w-full text-xs">
+        <span className="w-1/12 border border-black p-1 flex justify-center min-w-[83px] bg-[#D9D9D9]">
+          埋設管
+        </span>
+
+        <button
+          className="border border-black w-12 ml-3"
+          onClick={handleClickBtn}
+        >
+          {labels[state]}
+        </button>
+      </div>
       <div className="flex justify-between text-xs space-x-2">
         {/* Bảng 1 với thanh cuộn */}
-        <div className="w-1/3 min-w-[400px]">
+        <div className="w-1/4 min-w-[300px]">
           <div className="overflow-y-auto h-40 border border-black">
             <table className="w-full table-fixed border-collapse">
               <thead className="h-[35px] bg-[#D9D9D9]">
@@ -60,14 +79,11 @@ const SurveyDate = () => {
                   <th className="border border-black text-center w-[10%]">
                     No.
                   </th>
-                  <th className="border border-black text-center w-[30%]">
-                    種別
+                  <th className="border border-black text-center w-[40%]">
+                    材料
                   </th>
-                  <th className="border border-black text-center w-[20%]">
-                    メーカー
-                  </th>
-                  <th className="border border-black text-center w-[30%]">
-                    型式
+                  <th className="border border-black text-center w-[40%]">
+                    埋設部
                   </th>
                   <th className="border border-black text-center w-[35px]">
                     詳細
@@ -83,14 +99,9 @@ const SurveyDate = () => {
                         {row + 1}
                       </td>
                       <td className="border border-black text-center">
-                        ◯◯◯コンロ
+                        材料名
                       </td>
-                      <td className="border border-black text-center">
-                        メーカー01
-                      </td>
-                      <td className="border border-black text-center">
-                        BGC001
-                      </td>
+                      <td className="border border-black text-center"></td>
                       <td
                         className={`border border-black text-center ${
                           rowHasCheck ? "bg-red-500" : ""
@@ -111,37 +122,28 @@ const SurveyDate = () => {
           </div>
         </div>
         {/* Bảng 2 với thanh cuộn */}
-        <div className="w-1/3 min-w-[600px]">
+        <div className="w-1/3 min-w-[500px]">
           <div className="overflow-y-auto h-40 border border-black">
             <table className="w-full table-fixed border-collapse">
               <thead className="h-[35px] bg-[#D9D9D9]">
                 <tr className="sticky top-0 bg-[#D9D9D9] z-10">
                   <th className="border border-black text-center w-[8%]">
-                    ガス栓 No.
+                    腐食等
                   </th>
                   <th className="border border-black text-center w-[8%]">
-                    規格 適合
+                    腐食 防止
                   </th>
                   <th className="border border-black text-center w-[8%]">
-                    安全 装置
+                    漏洩
+                  </th>
+                  <th className="border border-black text-center w-[30%]">
+                    点検方法
                   </th>
                   <th className="border border-black text-center w-[8%]">
-                    燃焼 状態
+                    破損 防止
                   </th>
                   <th className="border border-black text-center w-[8%]">
-                    接続 方法
-                  </th>
-                  <th className="border border-black text-center w-[8%]">
-                    接続 管
-                  </th>
-                  <th className="border border-black text-center w-[40px]">
-                    CO濃度（％）
-                  </th>
-                  <th className="border border-black text-center w-[8%]">
-                    CO 測定
-                  </th>
-                  <th className="border border-black text-center w-[10%]">
-                    CO周知
+                    危険 認識
                   </th>
                   <th className="border border-black text-center w-[8%]">
                     判定
@@ -152,51 +154,34 @@ const SurveyDate = () => {
                 {Array.from({ length: totalRows }).map((_, row) => {
                   return (
                     <tr key={row} className="bg-white hover:bg-gray-50">
-                      {Array.from({ length: 10 }).map((_, col) => {
-                        if (col === 0) {
+                      {Array.from({ length: 7 }).map((_, col) => {
+                        if (col === 3) {
                           return (
                             <td
                               key={col}
-                              className="border border-black text-center h-8"
+                              className="border border-black text-center p-0"
                             >
-                              0
-                            </td>
-                          );
-                        }
-                        if (col === 6) {
-                          return (
-                            <td
-                              key={col}
-                              className="border border-black text-center outline-none cursor-pointer focus:bg-blue-100"
-                              tabIndex={0}
-                              onKeyDown={(e) => handleKeyDown(e, row)}
-                            >
-                              {values[row].toFixed(4)}
-                            </td>
-                          );
-                        }
-                        if (col === 8) {
-                          return (
-                            <td
-                              key={col}
-                              className="border border-black text-center cursor-pointer"
-                              onClick={() =>
-                                setStates((prev) => {
-                                  const newStates = prev.map((r) => [...r]);
-                                  newStates[row][col] =
-                                    (newStates[row][col] + 1) % warnings.length;
-                                  return newStates;
-                                })
-                              }
-                            >
-                              {warnings[states[row][col]]}
+                              <select
+                                className="w-full h-full bg-transparent outline-none cursor-pointer text-center"
+                                value={values[row]}
+                                onChange={(e) => handleSelectChange(e, row)}
+                              >
+                                {inspectionMethods.map((option) => (
+                                  <option
+                                    key={option.value}
+                                    value={option.value}
+                                  >
+                                    {option.label}
+                                  </option>
+                                ))}
+                              </select>
                             </td>
                           );
                         }
                         return (
                           <td
                             key={col}
-                            className="border border-black text-center cursor-pointer"
+                            className="border border-black text-center cursor-pointer h-8"
                             onClick={() => handleClick(row, col)}
                           >
                             {symbols[states[row][col]]}
@@ -215,5 +200,4 @@ const SurveyDate = () => {
     </>
   );
 };
-
-export default SurveyDate;
+export default Piping;
