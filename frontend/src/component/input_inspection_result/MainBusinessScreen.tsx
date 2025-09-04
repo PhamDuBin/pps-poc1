@@ -6,9 +6,6 @@ const MainBusinessScreen = () => {
         消費設備
       </span>
       <div className="mt-1 text-sm">
-        <span className="flex justify-start text-start font-bold p-1 bg-[#D9D9D9]">
-          今回調査日
-        </span>
         <ServeyDate />
         <div></div>
       </div>
