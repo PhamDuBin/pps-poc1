@@ -1,13 +1,15 @@
-import React from "react";
+import React, { useRef } from "react";
 
 interface RightPanelProps {
   onButtonClick: (buttonName: string) => void;
   activeButton: string | null;
+  firstButtonRef: React.Ref<HTMLButtonElement>;
 }
 
 const RightPanel: React.FC<RightPanelProps> = ({
   onButtonClick,
   activeButton,
+  firstButtonRef,
 }) => {
   const buttons = [
     "当月明細",
@@ -23,15 +25,27 @@ const RightPanel: React.FC<RightPanelProps> = ({
     "大分類残高",
   ];
 
+  const buttonRefs = useRef<(HTMLButtonElement | null)[]>([]);
+
   const handleOpenWindow = () => {
     const win = window.open(
       "/link-destination",
       "_blank",
       "width=800,height=600,noopener,noreferrer"
     );
-
     if (win) {
       win.focus();
+    }
+  };
+
+  const handleKeyDown = (
+    e: React.KeyboardEvent<HTMLButtonElement>,
+    index: number
+  ) => {
+    if (e.key === "Tab" && e.shiftKey) {
+      e.preventDefault();
+      const prevIndex = index > 0 ? index - 1 : buttons.length - 1;
+      buttonRefs.current[prevIndex]?.focus();
     }
   };
 
@@ -50,10 +64,19 @@ const RightPanel: React.FC<RightPanelProps> = ({
 
           return (
             <button
+              ref={(el) => {
+                buttonRefs.current[index] = el;
+                if (index === 0 && typeof firstButtonRef !== "function") {
+                  (
+                    firstButtonRef as React.MutableRefObject<HTMLButtonElement | null>
+                  ).current = el;
+                }
+              }}
               key={index}
               onClick={
                 isSpecial ? handleOpenWindow : () => onButtonClick(label)
               }
+              onKeyDown={(e) => handleKeyDown(e, index)}
               className={`mb-3 h-10 border border-black shadow-md hover:bg-white ${
                 activeButton === label ? "bg-[#4d7a90]" : "bg-[#80bad7]"
               }`}

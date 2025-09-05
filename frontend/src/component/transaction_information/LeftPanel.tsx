@@ -23,11 +23,13 @@ export const DownArrowIcon = () => (
 type LeftPanelProps = {
   showAdvanceSearch: boolean;
   setShowAdvanceSearch: React.Dispatch<React.SetStateAction<boolean>>;
+  lastButtonRef: React.Ref<HTMLButtonElement>;
 };
 
 const LeftPanel: React.FC<LeftPanelProps> = ({
   showAdvanceSearch,
   setShowAdvanceSearch,
+  lastButtonRef,
 }) => {
   const [postcode1, setPostcode1] = useState("");
   const [postcode2, setPostcode2] = useState("");
@@ -44,6 +46,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
   });
   const tantoRef = useRef<HTMLButtonElement>(null);
   const bikouRef = useRef<HTMLButtonElement>(null);
+  const firstInputRef = useRef<HTMLInputElement>(null);
 
   const handleShowTooltip = (
     ref: React.RefObject<HTMLButtonElement | null>,
@@ -130,6 +133,12 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
     setShowCustomer(false);
   };
 
+  const handleShowHardcodedCustomer = () => {
+    setId1("000000");
+    setId2("000");
+    setShowCustomer(true);
+  };
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       const isMac = navigator.platform.toUpperCase().includes("MAC");
@@ -145,6 +154,12 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [showAdvanceSearch]);
+
+  useEffect(() => {
+    if (firstInputRef.current) {
+      firstInputRef.current.focus();
+    }
+  }, []);
 
   const handleOpenWindow = () => {
     const win = window.open(
@@ -168,6 +183,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
           {!showDepart ? (
             <>
               <input
+                ref={firstInputRef}
                 type="text"
                 placeholder="0000"
                 value={postcode1} // MODIFIED: Bind value
@@ -255,7 +271,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
                 {id1} - {id2}
               </span>
               <button
-                onClick={handleResetCustomerSearch} // MODIFIED: Added onClick
+                onClick={handleResetCustomerSearch}
                 className="border border-black rounded"
               >
                 <span className="w-[25%] m-2">再検索</span>
@@ -287,7 +303,6 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
                 <span className="ml-1">X0123:Y0315</span>
               </div>
             </div>
-            {/* Omitted for brevity... */}
           </div>
         )}
         <div className="text-xs mt-4 flex items-center flex-col gap-2">
@@ -322,6 +337,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
             顧客備考
           </button>
           <button
+            ref={lastButtonRef}
             onClick={handleOpenWindow}
             className="w-1/2 font-bold border text-center border-black p-2 bg-[#80bad7]"
           >
@@ -335,6 +351,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
             <AdvanceSearchModal
               showAdvanceSearch={showAdvanceSearch}
               setShowAdvanceSearch={setShowAdvanceSearch}
+              onRowEnter={handleShowHardcodedCustomer}
             />
           </div>
         </div>

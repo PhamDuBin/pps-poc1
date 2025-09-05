@@ -246,21 +246,22 @@ const AdvancedSearchForm: React.FC<{
   );
 };
 
-const AdvanceSearchModal: React.FC<{
+type AdvanceSearchModalProps = {
   showAdvanceSearch: boolean;
   setShowAdvanceSearch: React.Dispatch<React.SetStateAction<boolean>>;
-}> = ({ showAdvanceSearch, setShowAdvanceSearch }) => {
+  onRowEnter: () => void;
+};
+
+const AdvanceSearchModal: React.FC<AdvanceSearchModalProps> = ({
+  showAdvanceSearch,
+  setShowAdvanceSearch,
+  onRowEnter,
+}) => {
   const [searchMode, setSearchMode] = useState<string>("overall");
-
-  // NEW: Quản lý dữ liệu bảng bằng state, khởi tạo là mảng rỗng
   const [tableData, setTableData] = useState<TableRowData[]>([]);
-
-  // NEW: Ref để tham chiếu đến tbody của bảng
   const tbodyRef = useRef<HTMLTableSectionElement>(null);
 
-  // NEW: Hàm xử lý tìm kiếm
   const handleSearch = () => {
-    // Tạo dữ liệu giả lập khi tìm kiếm
     const mockData = Array.from({ length: 12 }).map((_, index) => ({
       kanaName: `カナ ${index + 1}`,
       name: `氏名 ${index + 1}`,
@@ -270,12 +271,10 @@ const AdvanceSearchModal: React.FC<{
     setTableData(mockData);
   };
 
-  // NEW: Hàm reset bảng
   const handleReset = () => {
     setTableData([]);
   };
 
-  // NEW: useEffect để focus vào dòng đầu tiên sau khi có dữ liệu
   useEffect(() => {
     if (tableData.length > 0 && tbodyRef.current) {
       const firstRow = tbodyRef.current.querySelector("tr");
@@ -283,13 +282,13 @@ const AdvanceSearchModal: React.FC<{
         firstRow.focus();
       }
     }
-  }, [tableData]); // Chạy lại mỗi khi tableData thay đổi
+  }, [tableData]);
 
-  // NEW: Hàm xử lý khi nhấn phím trên một dòng của bảng
   const handleRowKeyDown = (e: React.KeyboardEvent<HTMLTableRowElement>) => {
     if (e.key === "Enter") {
-      e.preventDefault(); // Ngăn hành vi mặc định của Enter
-      setShowAdvanceSearch(false); // Đóng modal
+      e.preventDefault();
+      onRowEnter();
+      setShowAdvanceSearch(false);
     }
   };
 
@@ -374,9 +373,9 @@ const AdvanceSearchModal: React.FC<{
             {tableData.map((row, idx) => (
               <tr
                 key={idx}
-                className="hover:bg-blue-50"
+                className="hover:bg-blue-50 focus:bg-blue-200 outline-none"
                 onKeyDown={handleRowKeyDown}
-                tabIndex={-1}
+                tabIndex={0}
               >
                 <td className="bg-[#ebcec0] border border-black p-1">
                   {row.kanaName}

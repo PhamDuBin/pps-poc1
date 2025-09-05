@@ -13,6 +13,7 @@ export const CustomerSearchModal = ({ onClose }: { onClose: () => void }) => {
   );
   const currentField = fieldDefinitions.find((f) => f.id === selectedFieldId);
   const [formValues, setFormValues] = useState<FormValues>({});
+  const handleShowHardcodedCustomer = () => {};
 
   if (showAdvanceSearch) {
     return (
@@ -21,6 +22,7 @@ export const CustomerSearchModal = ({ onClose }: { onClose: () => void }) => {
           <AdvanceSearchModal
             showAdvanceSearch={showAdvanceSearch}
             setShowAdvanceSearch={setShowAdvanceSearch}
+            onRowEnter={handleShowHardcodedCustomer}
           />
         </div>
       </div>

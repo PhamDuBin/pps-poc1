@@ -15,6 +15,8 @@ const TrancInfoScreen = () => {
   const [activeScreen, setActiveScreen] = useState<string | null>(null);
   const [showAdvanceSearch, setShowAdvanceSearch] = useState(false);
 
+  const lastLeftPanelButtonRef = useRef<HTMLButtonElement>(null);
+  const firstRightPanelButtonRef = useRef<HTMLButtonElement>(null);
   const handleButtonClick = (buttonName: string) => {
     setActiveScreen(buttonName);
   };
@@ -75,6 +77,24 @@ const TrancInfoScreen = () => {
     };
   }, []);
 
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+    const handleContainerKeyDown = (e: KeyboardEvent) => {
+      if (e.key !== "Tab") return;
+      const activeElement = document.activeElement as HTMLElement;
+      if (!e.shiftKey && activeElement === lastLeftPanelButtonRef.current) {
+        e.preventDefault();
+        firstRightPanelButtonRef.current?.focus();
+        return;
+      }
+    };
+    container.addEventListener("keydown", handleContainerKeyDown);
+    return () => {
+      container.removeEventListener("keydown", handleContainerKeyDown);
+    };
+  }, []);
+
   return (
     <div
       ref={containerRef}
@@ -88,6 +108,7 @@ const TrancInfoScreen = () => {
           <LeftPanel
             showAdvanceSearch={showAdvanceSearch}
             setShowAdvanceSearch={setShowAdvanceSearch}
+            lastButtonRef={lastLeftPanelButtonRef}
           />
           <CircleArrowLeft
             className={`absolute left-[17.3rem] top-1/2 -transl
@@ -111,6 +132,7 @@ const TrancInfoScreen = () => {
         <RightPanel
           onButtonClick={handleButtonClick}
           activeButton={activeScreen}
+          firstButtonRef={firstRightPanelButtonRef}
         />
       </div>
     </div>
