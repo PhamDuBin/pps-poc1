@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
 import StatusBar from "../StatusBar";
-import SaleDetailModal from "./SaleDetail/SaleDetailModal";
 
 interface ProductSearchModalProps {
   isOpen: boolean;
@@ -240,17 +239,48 @@ const ProductSearchModal: React.FC<ProductSearchModalProps> = ({
   categoryName,
   onNext,
 }) => {
-  const [currentStep, setCurrentStep] = useState(1);
   const [hasSearched, setHasSearched] = useState(false);
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const tableBodyRef = useRef<HTMLTableSectionElement>(null);
 
   const handleSearch = () => {
     setHasSearched(true);
+    setActiveIndex(0);
+  };
+
+  const handleReset = () => {
+    setHasSearched(false);
+    setActiveIndex(null);
+  };
+
+  useEffect(() => {
+    if (hasSearched && tableBodyRef.current && activeIndex !== null) {
+      const row = tableBodyRef.current.children[activeIndex] as HTMLElement;
+      if (row) {
+        row.focus();
+      }
+    }
+  }, [activeIndex, hasSearched]);
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (activeIndex === null) return;
+
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      const nextIndex = activeIndex + 1;
+      if (nextIndex < mockData.length) {
+        setActiveIndex(nextIndex);
+      }
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      const prevIndex = activeIndex - 1;
+      if (prevIndex >= 0) {
+        setActiveIndex(prevIndex);
+      }
+    }
   };
 
   if (!isOpen) return null;
-  const handleReset = () => {
-    setHasSearched(false);
-  };
 
   const openNewWindow = () => {
     const newWindow = window.open(
@@ -353,9 +383,17 @@ const ProductSearchModal: React.FC<ProductSearchModalProps> = ({
                   <th className="border border-gray-400 p-2">引当可能</th>
                 </tr>
               </thead>
-              <tbody>
-                {mockData.map((item) => (
-                  <tr key={item.id} className="hover:bg-blue-50">
+              <tbody ref={tableBodyRef} onKeyDown={handleKeyDown}>
+                {mockData.map((item, index) => (
+                  <tr
+                    key={item.id}
+                    tabIndex={-1}
+                    className={
+                      activeIndex === index
+                        ? "bg-blue-200 outline-none"
+                        : "hover:bg-blue-50"
+                    }
+                  >
                     <td className="border-b border-gray-300 p-2">
                       {item.productCode}
                       <br />
