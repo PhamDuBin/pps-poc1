@@ -1,6 +1,6 @@
 import { DownArrowIcon } from "../transaction_information/LeftPanel";
 import AdvanceSearchModal from "../transaction_information/1.1.1_03/AdvanceSearchModal";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { fieldDefinitions } from "../sale_slip_entry/LeftPanel";
 import React from "react";
 
@@ -14,6 +14,14 @@ export const CustomerSearchModal = ({ onClose }: { onClose: () => void }) => {
   const currentField = fieldDefinitions.find((f) => f.id === selectedFieldId);
   const [formValues, setFormValues] = useState<FormValues>({});
   const handleShowHardcodedCustomer = () => {};
+
+  const firstInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (firstInputRef.current) {
+      firstInputRef.current.focus();
+    }
+  }, []);
 
   if (showAdvanceSearch) {
     return (
@@ -169,7 +177,10 @@ export const CustomerSearchModal = ({ onClose }: { onClose: () => void }) => {
                 <span className="w-28 h-6 bg-[#D9D9D9] flex justify-center items-center">
                   事務所
                 </span>
-                <input className="w-16 h-6 border border-black" />
+                <input
+                  ref={firstInputRef}
+                  className="w-16 h-6 border border-black"
+                />
                 <p>-</p>
                 <input className="w-16 h-6 border border-black" />
                 <button

@@ -49,7 +49,7 @@ const TerminalGasValve = () => {
       </div>
       <div className="flex justify-between text-xs space-x-2">
         {/* Bảng 1 với thanh cuộn */}
-        <div className="w-2/3 min-w-[700px]">
+        <div className="w-11/12 min-w-[650px]">
           <div className="overflow-y-auto h-40 border border-black">
             <table className="w-full table-fixed border-collapse">
               <thead className="h-[35px] bg-[#D9D9D9]">

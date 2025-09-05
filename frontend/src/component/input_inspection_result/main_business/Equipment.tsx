@@ -17,7 +17,7 @@ const Equipment = () => {
         給排気設備
       </span>
       <div className="overflow-x-auto">
-        <table className="w-full border-collapse border border-gray-400 text-center text-sm">
+        <table className="w-full min-w-[710px] border-collapse border border-gray-400 text-center text-sm">
           <thead className="bg-[#D9D9D9]">
             <tr>
               <th rowSpan={2} className="border border-gray-400 p-1 w-32"></th>
