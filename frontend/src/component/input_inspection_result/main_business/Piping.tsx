@@ -71,7 +71,7 @@ const Piping = () => {
       </div>
       <div className="flex justify-between text-xs space-x-2">
         {/* Bảng 1 với thanh cuộn */}
-        <div className="2/3 min-w-[300px]">
+        <div className="2/3 min-w-[413px]">
           <div className="overflow-y-auto h-40 border border-black">
             <table className="w-full table-fixed border-collapse">
               <thead className="h-[35px] bg-[#D9D9D9]">
