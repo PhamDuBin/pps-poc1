@@ -90,7 +90,7 @@ const CRM = () => {
           </span>
           <textarea
             placeholder="400"
-            className=" bg-[#ebcec0] border border-black p-2 rounded-sm w-[80%] h-20"
+            className=" bg-[#ebcec0] border border-black p-2 rounded-sm w-[80%] h-20 resize-none"
           ></textarea>
         </div>
 
@@ -100,7 +100,7 @@ const CRM = () => {
           </span>
           <textarea
             placeholder="100"
-            className="border bg-[#ebcec0] border-black p-2 rounded-sm w-[80%] h-20"
+            className="border bg-[#ebcec0] border-black p-2 rounded-sm w-[80%] h-20 resize-none"
           ></textarea>
         </div>
         <div className="flex justify-end w-[10%]">

@@ -146,7 +146,7 @@ const Vessel = () => {
             {leftLabels.map((label, idx) => (
               <div key={idx} className="flex items-center">
                 {/* Label */}
-                <div className="border border-black h-8 flex items-center pl-2 text-sm bg-gray-100 w-36">
+                <div className="border border-black h-8 flex items-center pl-2 text-xs bg-gray-100 w-36">
                   {label}
                 </div>
 
@@ -169,7 +169,7 @@ const Vessel = () => {
             {rightLabels.map((label, idx) => (
               <div key={idx} className="flex items-center">
                 {/* Label */}
-                <div className="border border-black h-8 flex items-center pl-2 text-sm bg-gray-100 w-36">
+                <div className="border border-black h-8 flex items-center pl-2 text-xs bg-gray-100 w-36">
                   {label}
                 </div>
 

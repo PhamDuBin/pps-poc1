@@ -16,7 +16,7 @@ const MainBusinessScreen = () => {
       <span className="flex justify-center text-center items-center font-bold p-1 bg-[#D9D9D9] text-[20px]">
         消費設備
       </span>
-      <div className="mt-1 text-sm">
+      <div className="mt-1 text-xs">
         <ServeyDate />
         <TerminalGasValve />
         <Siren />
@@ -24,28 +24,28 @@ const MainBusinessScreen = () => {
         <Equipment />
       </div>
 
-      <div className="mt-1 text-sm">
+      <div className="mt-1 text-xs">
         <ConnectingPipe />
       </div>
-      <div className="mt-1 text-sm">
+      <div className="mt-1 text-xs">
         <SupplyPipe />
       </div>
-      <div className="mt-1 text-sm">
+      <div className="mt-1 text-xs">
         <CircuitBreaker />
       </div>
-      <div className="mt-1 text-sm">
+      <div className="mt-1 text-xs">
         <Regulator />
       </div>
-      <div className="mt-1 text-sm">
+      <div className="mt-1 text-xs">
         <Meter />
       </div>
-      <div className="mt-1 text-sm">
+      <div className="mt-1 text-xs">
         <Vessel />
       </div>
       <span className="flex justify-center text-center items-center font-bold p-1 bg-[#D9D9D9] text-[20px] mt-4 min-w-[919px]">
         試験測定
       </span>
-      <div className="mt-1 text-sm min-w-[919px]">
+      <div className="mt-1 text-xs min-w-[919px]">
         <TestMeasurement />
       </div>
     </div>
