@@ -56,7 +56,7 @@ export const DatePickerInput = () => {
   return (
     <div ref={containerRef} className="relative flex-grow">
       <input
-        className="w-full border border-black px-2 py-1 pr-8"
+        className="w-full border border-black bg-[#ebcec0] px-2 py-1 pr-8"
         type="text"
         placeholder="yyyy/MM/dd"
         value={inputValue}

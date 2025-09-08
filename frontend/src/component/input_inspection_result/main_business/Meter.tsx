@@ -1,5 +1,6 @@
 import { useState } from "react";
 import ModalF1 from "../../modal/Modal_F1";
+import { labelColor, inputColor } from "../../../constants/colors";
 
 const Meter = () => {
   const [modalF1Open, setModalF1Open] = useState(false);
@@ -67,7 +68,7 @@ const Meter = () => {
 
   return (
     <>
-      <span className="flex justify-start text-start font-bold p-1 my-1 bg-[#D9D9D9] ">
+      <span className={`flex justify-start text-start font-bold p-1 my-1 ${labelColor} mt-4`}>
         供給管
       </span>
 
@@ -75,7 +76,7 @@ const Meter = () => {
         <div>認定対象区分</div>
         <button
           onClick={handleClickSButton}
-          className="border border-black w-6 h-6 flex items-center justify-center"
+          className={`border border-black w-6 h-6 flex items-center justify-center ${inputColor}`}
         >
           {labels[statelabel]}
         </button>
@@ -86,13 +87,13 @@ const Meter = () => {
         <div className="w-3/5 min-w-[513px]">
           <div className=" border border-black h-20">
             <table className="w-full table-fixed border-collapse">
-              <thead className="h-[38px] bg-[#D9D9D9]">
+              <thead className={`h-[38px] ${labelColor}`}>
                 <tr>
                   <th className="border border-black text-center w-[25%]">種別</th>
                   <th className="border border-black text-center w-[25%]">メーカー</th>
                   <th className="border border-black text-center w-[25%]">型式</th>
-                  <th className="border border-black text-center w-[15%]">製造番号</th>
-                  <th className="border border-black text-center w-[60px]">詳細</th>
+                  <th className="border border-black text-center w-[25%]">製造番号</th>
+                  <th className="border border-black text-center w-[40px]">詳細</th>
                 </tr>
               </thead>
 
@@ -101,15 +102,21 @@ const Meter = () => {
                   const rowHasCheck = states[idx].some((s) => s === 3);
                   return (
                     <tr key={idx} className="h-[30px]">
-                      <td className="border border-black text-center">{row.type}</td>
-                      <td className="border border-black text-center">{row.manufacturer}</td>
-                      <td className="border border-black text-center">{row.model}</td>
+                      <td className={`border border-black text-center ${inputColor}`}>
+                        {row.type}
+                      </td>
+                      <td className={`border border-black text-center ${inputColor}`}>
+                        {row.manufacturer}
+                      </td>
+                      <td className={`border border-black text-center ${inputColor}`}>
+                        {row.model}
+                      </td>
                       <td
                         tabIndex={0}
                         onClick={() => setModalF1Open(true)}
                         onKeyDown={handleDetailKeyDown}
                         className={`border border-black text-center cursor-pointer ${
-                          rowHasCheck ? "bg-red-500" : ""
+                          rowHasCheck ? "bg-red-500" : inputColor
                         }`}
                       >
                         {row.製造番号}
@@ -118,7 +125,7 @@ const Meter = () => {
                         tabIndex={0}
                         onClick={() => setModalF1Open(true)}
                         onKeyDown={handleDetailKeyDown}
-                        className="border border-black text-center cursor-pointer"
+                        className={`border border-black text-center cursor-pointer ${inputColor}`}
                       >
                         ▼
                       </td>
@@ -134,8 +141,8 @@ const Meter = () => {
         <div className="w-2/5 min-w-[400px]">
           <div className="h-20 border border-black">
             <table className="w-full table-fixed border-collapse">
-              <thead className="h-[38px] bg-[#D9D9D9]">
-                <tr className="sticky top-0 bg-[#D9D9D9] z-10">
+              <thead className={`h-[38px] sticky top-0 z-10 ${labelColor}`}>
+                <tr>
                   <th className="border border-black text-center w-[25%]">指針</th>
                   <th className="border border-black text-center w-[40%]">常時監視</th>
                   <th className="border border-black text-center w-[10%]">適合</th>
@@ -144,12 +151,12 @@ const Meter = () => {
               </thead>
               <tbody className="h-[40px] ">
                 {Array.from({ length: totalRows }).map((_, row) => (
-                  <tr key={row} className="bg-white hover:bg-gray-50">
+                  <tr key={row}>
                     {Array.from({ length: 4 }).map((_, col) => {
                       if (col === 1) {
                         return (
-                          <td key={col} className="border border-black text-center h-8">
-                            <select className="w-full h-full font-medium">
+                          <td key={col} className={`border border-black text-center h-8 ${inputColor}`}>
+                            <select className={`w-full h-full font-medium bg-transparent outline-none ${inputColor}`}>
                               {options.map((opt, i) => (
                                 <option key={i} value={i}>
                                   {opt}
@@ -161,18 +168,18 @@ const Meter = () => {
                       }
                       if (col === 0) {
                         return (
-                          <td key={col} className="border border-black text-center h-8">
+                          <td key={col} className={`border border-black text-center h-8 ${inputColor}`}>
                             <input
                               type="number"
                               onClick={handleClickSButton2}
-                              className="has-spin w-full h-full border border-black-2"
+                              className={`w-full h-full border-none text-center bg-transparent outline-none ${inputColor}`}
                             />
                           </td>
                         );
                       }
                       if (col === 3) {
                         return (
-                          <td key={col} className="border border-black text-center h-8">
+                          <td key={col} className={`border border-black text-center h-8 ${inputColor}`}>
                             <button
                               onClick={handleClickSButton2}
                               className="text-center w-full h-full"
@@ -185,7 +192,7 @@ const Meter = () => {
                       return (
                         <td
                           key={col}
-                          className="border border-black text-center cursor-pointer w-[10%]"
+                          className={`border border-black text-center cursor-pointer w-[10%] ${inputColor}`}
                           onClick={() => handleClick(row, col)}
                         >
                           {symbols[states[row][col]]}

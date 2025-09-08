@@ -1,6 +1,9 @@
 import { DownArrowIcon } from "../../transaction_information/LeftPanel";
 import ModalF1 from "../../modal/Modal_F1";
 import { useState } from "react";
+import { labelColor, inputColor } from "../../../constants/colors";
+
+
 const TerminalGasValve = () => {
   const [modalF1Open, setModalF1Open] = useState(false);
 
@@ -26,34 +29,34 @@ const TerminalGasValve = () => {
 
   return (
     <>
-      <span className="flex justify-start text-start font-bold p-1 bg-[#D9D9D9] mt-4">
+      <span className={`flex justify-start text-start font-bold p-1 ${labelColor} mt-4`}>
         末端ガス栓
       </span>
       <div className="flex flex-row p-1 w-full text-xs">
-        <span className="w-1/12 border border-black p-1 flex justify-center min-w-[83px] bg-[#D9D9D9]">
+        <span className={`w-1/12 border border-black p-1 flex justify-center min-w-[83px] ${labelColor}`}>
           設置個数
         </span>
-        <input className="border border-black w-12 ml-3"></input>
-        <span className="w-1/12 border border-black p-1 flex justify-center min-w-[83px] bg-[#D9D9D9] ml-4">
+        <input className={`border border-black w-12 ml-3 ${inputColor}`}></input>
+        <span className={`w-1/12 border border-black p-1 flex justify-center min-w-[83px] ${labelColor} ml-4`}>
           合計口数
         </span>
-        <input className="border border-black w-12 ml-3"></input>
-        <span className="w-1/12 border border-black p-1 flex justify-center min-w-[83px] bg-[#D9D9D9] ml-4">
+        <input className={`border border-black w-12 ml-3 ${inputColor}`}></input>
+        <span className={`w-1/12 border border-black p-1 flex justify-center min-w-[83px] ${labelColor} ml-4`}>
           使用口数
         </span>
-        <input className="border border-black w-12 ml-3"></input>
-        <span className="w-1/12 border border-black p-1 flex justify-center min-w-[83px] bg-[#D9D9D9] ml-4">
+        <input className={`border border-black w-12 ml-3 ${inputColor}`}></input>
+        <span className={`w-1/12 border border-black p-1 flex justify-center min-w-[83px] ${labelColor} ml-4`}>
           未使用口数
         </span>
-        <input className="border border-black w-12 ml-3"></input>
+        <input className={`border border-black w-12 ml-3 ${inputColor}`}></input>
       </div>
       <div className="flex justify-between text-xs space-x-2">
         {/* Bảng 1 với thanh cuộn */}
         <div className="w-11/12 min-w-[763px]">
           <div className="overflow-y-auto h-40 border border-black">
             <table className="w-full table-fixed border-collapse">
-              <thead className="h-[35px] bg-[#D9D9D9]">
-                <tr className="sticky top-0 bg-[#D9D9D9] z-10">
+              <thead className={`h-[35px] ${labelColor}`}>
+                <tr className={`sticky top-0 ${labelColor} z-10`}>
                   <th className="border border-black text-center w-[10%]">
                     No.
                   </th>
@@ -84,7 +87,7 @@ const TerminalGasValve = () => {
                 {Array.from({ length: totalRows }).map((_, row) => {
                   const rowHasCheck = states[row].some((s) => s === 3);
                   return (
-                    <tr key={row} className="bg-white hover:bg-gray-50">
+                    <tr key={row} className={`${inputColor}`}>
                       <td className="border border-black text-center h-8">
                         {row + 1}
                       </td>
@@ -125,8 +128,8 @@ const TerminalGasValve = () => {
         <div className="w-1/12 min-w-[150px]">
           <div className="overflow-y-auto h-40 border border-black">
             <table className="w-full table-fixed border-collapse">
-              <thead className="h-[35px] bg-[#D9D9D9]">
-                <tr className="sticky top-0 bg-[#D9D9D9] z-10">
+              <thead className={`h-[35px] ${labelColor}`}>
+                <tr className={`sticky top-0 ${labelColor} z-10`}>
                   <th className="border border-black text-center w-[8%]">
                     規格
                   </th>
@@ -141,7 +144,7 @@ const TerminalGasValve = () => {
               <tbody>
                 {Array.from({ length: totalRows }).map((_, row) => {
                   return (
-                    <tr key={row} className="bg-white hover:bg-gray-50">
+                    <tr key={row} className={`${inputColor}`}>
                       {Array.from({ length: 3 }).map((_, col) => {
                         return (
                           <td

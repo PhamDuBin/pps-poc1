@@ -1,5 +1,6 @@
 import { useState } from "react";
 import ModalF1 from "../../modal/Modal_F1";
+import { labelColor, inputColor } from "../../../constants/colors";
 
 const Regulator = () => {
   const [modalF1Open, setModalF1Open] = useState(false);
@@ -49,7 +50,7 @@ const Regulator = () => {
 
   return (
     <>
-      <span className="flex justify-start text-start font-bold p-1 my-1 bg-[#D9D9D9] ">
+      <span className={`flex justify-start text-start font-bold p-1 my-1 ${labelColor} mt-4`}>
         調整器
       </span>
       <div className="flex justify-between text-xs space-x-2">
@@ -59,14 +60,14 @@ const Regulator = () => {
             <table className="w-full table-fixed border-collapse">
               <thead className="h-[40px] bg-[#D9D9D9]">
                 <tr>
-                  <th className="border border-black text-center w-[25px]">No.</th>
-                  <th className="border border-black text-center w-[12%]">種別</th>
-                  <th className="border border-black text-center w-[20%]">メーカー</th>
-                  <th className="border border-black text-center w-[20%]">型式</th>
-                  <th className="border border-black text-center w-[12%]">容量（kg/h）</th>
-                  <th className="border border-black text-center w-[12%]">製造年月</th>
-                  <th className="border border-black text-center w-[12%]">有効年月</th>
-                  <th className="border border-black text-center w-[60px]">詳細</th>
+                  <th className={`border border-black text-center w-[12%] ${labelColor}`}>No.</th>
+                  <th className={`border border-black text-center w-[12%] ${labelColor}`}>種別</th>
+                  <th className={`border border-black text-center w-[20%] ${labelColor}`}>メーカー</th>
+                  <th className={`border border-black text-center w-[20%] ${labelColor}`}>型式</th>
+                  <th className={`border border-black text-center w-[12%] ${labelColor}`}>容量（kg/h）</th>
+                  <th className={`border border-black text-center w-[12%] ${labelColor}`}>製造年月</th>
+                  <th className={`border border-black text-center w-[12%] ${labelColor}`}>有効年月</th>
+                  <th className={`border border-black text-center w-[40px] ${labelColor}`}>詳細</th>
                 </tr>
               </thead>
               <tbody>
@@ -74,17 +75,17 @@ const Regulator = () => {
                   const rowHasCheck = states[idx].some((s) => s === 3);
                   return (
                     <tr key={idx} className="h-[30px]">
-                      <td className="border border-black text-center">{row.no}</td>
-                      <td className="border border-black text-center">{row.type}</td>
-                      <td className="border border-black text-center">{row.maker}</td>
-                      <td className="border border-black text-center">{row.model}</td>
-                      <td className="border border-black text-center">{row.capacity}</td>
-                      <td className="border border-black text-center">{row.manufacture}</td>
-                      <td className="border border-black text-center">{row.valid}</td>
+                      <td className={`border border-black text-center ${inputColor}`}>{row.no}</td>
+                      <td className={`border border-black text-center ${inputColor}`}>{row.type}</td>
+                      <td className={`border border-black text-center ${inputColor}`}>{row.maker}</td>
+                      <td className={`border border-black text-center ${inputColor}`}>{row.model}</td>
+                      <td className={`border border-black text-center ${inputColor}`}>{row.capacity}</td>
+                      <td className={`border border-black text-center ${inputColor}`}>{row.manufacture}</td>
+                      <td className={`border border-black text-center ${inputColor}`}>{row.valid}</td>
                       <td
                         onClick={() => setModalF1Open(true)}
                         onKeyDown={handleDetailKeyDown}
-                        className={`border border-black text-center cursor-pointer ${
+                        className={`border border-black text-center cursor-pointer ${inputColor} ${
                           rowHasCheck ? "bg-red-500" : ""
                         }`}
                       >
@@ -104,9 +105,9 @@ const Regulator = () => {
             <table className="w-full table-fixed border-collapse">
               <thead className="h-9 bg-[#D9D9D9]">
                 <tr className="sticky top-0 bg-[#D9D9D9] z-10">
-                  <th className="border border-black text-center w-[4%]">腐食等</th>
-                  <th className="border border-black text-center w-[4%]">適合</th>
-                  <th className="border border-black text-center w-[4%]">判定</th>
+                  <th className={`border border-black text-center w-[4%] ${labelColor}`}>腐食等</th>
+                  <th className={`border border-black text-center w-[4%] ${labelColor}`}>適合</th>
+                  <th className={`border border-black text-center w-[4%] ${labelColor}`}>判定</th>
                 </tr>
               </thead>
               <tbody>
@@ -115,7 +116,7 @@ const Regulator = () => {
                     {Array.from({ length: 3 }).map((_, col) => (
                       <td
                         key={col}
-                        className="border border-black text-center cursor-pointer w-[10%] h-8"
+                        className={`border border-black text-center cursor-pointer w-[10%] h-8 ${inputColor}`}
                         onClick={() => handleClick(row, col)}
                       >
                         {symbols[states[row][col]]}

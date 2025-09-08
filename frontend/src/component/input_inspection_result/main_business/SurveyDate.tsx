@@ -1,6 +1,9 @@
 import { DownArrowIcon } from "../../transaction_information/LeftPanel";
 import ModalF1 from "../../modal/Modal_F1";
 import { useState } from "react";
+import { labelColor, inputColor } from "../../../constants/colors";
+
+
 const SurveyDate = () => {
   const [modalF1Open, setModalF1Open] = useState(false);
 
@@ -47,23 +50,23 @@ const SurveyDate = () => {
   };
   return (
     <>
-      <span className="flex justify-start text-start font-bold p-1 bg-[#D9D9D9]">
+      <span className={`flex justify-start text-start font-bold p-1 ${labelColor}`}>
         今回調査日
       </span>
-      <div className="flex justify-between text-xs space-x-2">
+      <div className="flex justify-between text-xs space-x-2 mt-1">
         {/* Bảng 1 với thanh cuộn */}
         <div className="w-2/3 min-w-[513px]">
           <div className="overflow-y-auto h-40 border border-black">
             <table className="w-full table-fixed border-collapse">
-              <thead className="h-[35px] bg-[#D9D9D9]">
-                <tr className="sticky top-0 bg-[#D9D9D9] z-10">
-                  <th className="border border-black text-center w-[10%]">
+              <thead className={`h-[35px] ${labelColor}`}>
+                <tr className={`sticky top-0 ${labelColor} z-10`}>
+                  <th className={`border border-black text-center w-[10%]`}>
                     No.
                   </th>
                   <th className="border border-black text-center w-[30%]">
                     種別
                   </th>
-                  <th className="border border-black text-center w-[20%]">
+                  <th className="border border-black text-center w-[30%]">
                     メーカー
                   </th>
                   <th className="border border-black text-center w-[30%]">
@@ -78,7 +81,7 @@ const SurveyDate = () => {
                 {Array.from({ length: totalRows }).map((_, row) => {
                   const rowHasCheck = states[row].some((s) => s === 3);
                   return (
-                    <tr key={row} className="bg-white hover:bg-gray-50">
+                    <tr key={row} className={`${inputColor}`}>
                       <td className="border border-black text-center h-8">
                         {row + 1}
                       </td>
@@ -114,9 +117,9 @@ const SurveyDate = () => {
         <div className="w-1/3 min-w-[400px]">
           <div className="overflow-y-auto h-40 border border-black">
             <table className="w-full table-fixed border-collapse">
-              <thead className="h-[35px] bg-[#D9D9D9]">
-                <tr className="sticky top-0 bg-[#D9D9D9] z-10">
-                  <th className="border border-black text-center w-[8%]">
+              <thead className={`h-[35px] ${labelColor}`}>
+                <tr className={`sticky top-0 ${labelColor} z-10`}>
+                  <th className={`border border-black text-center w-[8%]`}>
                     ガス栓 No.
                   </th>
                   <th className="border border-black text-center w-[8%]">
@@ -151,7 +154,7 @@ const SurveyDate = () => {
               <tbody>
                 {Array.from({ length: totalRows }).map((_, row) => {
                   return (
-                    <tr key={row} className="bg-white hover:bg-gray-50">
+                    <tr key={row} className={`${inputColor}`}>
                       {Array.from({ length: 10 }).map((_, col) => {
                         if (col === 0) {
                           return (

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { labelColor, inputColor } from "../../../constants/colors";
 
 const Vessel = () => {
   const symbols = ["", "◯", "×", "✔"];
@@ -33,7 +34,7 @@ const Vessel = () => {
 
   return (
     <>
-      <span className="flex justify-start font-bold p-1 my-1 bg-[#D9D9D9] min-w-[919px] mt-4">
+      <span className={`flex justify-start font-bold p-1 my-1 ${labelColor} min-w-[919px] mt-4`}>
         容器
       </span>
 
@@ -42,7 +43,7 @@ const Vessel = () => {
         <div className="flex my-2 gap-x-2 items-center">
           <input
             type="text"
-            className="text-right border border-black p-2 w-16 h-8 placeholder-slate-950"
+            className={`text-right border border-black p-2 w-16 h-8 placeholder-slate-950 ${inputColor}`}
             placeholder="0"
           />
           <div>kg</div>
@@ -50,7 +51,7 @@ const Vessel = () => {
         <div className="flex my-2 gap-x-2 items-center">
           <input
             type="text"
-            className="text-right border border-black p-2 w-12 h-8 placeholder-slate-950"
+            className={`text-right border border-black p-2 w-12 h-8 placeholder-slate-950 ${inputColor}`}
             placeholder="0"
           />
           <div>本</div>
@@ -58,7 +59,7 @@ const Vessel = () => {
         <div className="flex my-2 gap-x-2 items-center">
           <input
             type="text"
-            className="text-right border border-black p-2 w-16 h-8 placeholder-slate-950"
+            className={`text-right border border-black p-2 w-16 h-8 placeholder-slate-950 ${inputColor}`}
             placeholder="0"
           />
           <div>kg</div>
@@ -66,18 +67,18 @@ const Vessel = () => {
         <div className="flex my-2 gap-x-2 items-center">
           <input
             type="text"
-            className="text-right border border-black p-2 w-12 h-8 placeholder-slate-950"
+            className={`text-right border border-black p-2 w-12 h-8 placeholder-slate-950 ${inputColor}`}
             placeholder="0"
           />
           <div>本</div>
         </div>
-        <div className="flex justify-center items-center border border-black my-2 bg-gray-200 w-20 h-8">
+        <div className={`flex justify-center items-center border border-black my-2 ${labelColor} w-20 h-8`}>
           貯蔵
         </div>
         <div className="flex my-2 gap-x-2 items-center">
           <input
             type="text"
-            className="text-right border border-black p-2 w-16 h-8 placeholder-slate-950"
+            className={`text-right border border-black p-2 w-16 h-8 placeholder-slate-950 ${inputColor}`}
             placeholder="0"
           />
           <div>kg</div>
@@ -88,17 +89,17 @@ const Vessel = () => {
       <div className="flex gap-x-2 min-w-[919px]">
         {/* Bảng trái */}
         <div className="flex">
-          <div className="flex text-[12px] justify-center items-center font-bold bg-[#D9D9D9] border border-black w-36">
+          <div className={`flex text-[12px] justify-center items-center font-bold border border-black w-36 ${labelColor}`}>
             基本項目
           </div>
           <div className="grid grid-cols-3">
             {leftLabels.map((label, idx) => (
               <div key={idx} className="flex items-center">
-                <div className="border border-black h-8 flex items-center pl-2 text-xs bg-gray-100 w-36">
+                <div className={`border border-black h-8 flex items-center pl-2 text-xs w-36 ${labelColor}`}>
                   {label}
                 </div>
                 <button
-                  className="border border-slate-400 text-center cursor-pointer w-10 h-8"
+                  className={`border border-slate-400 text-center cursor-pointer w-10 h-8 ${inputColor}`}
                   onClick={() => handleClick(0, idx)}
                 >
                   {symbols[states[0][idx]] || ""}
@@ -110,17 +111,17 @@ const Vessel = () => {
 
         {/* Bảng phải */}
         <div className="flex">
-          <div className="flex text-[12px] justify-center items-center font-bold bg-[#D9D9D9] border border-black w-36">
+          <div className={`flex text-[12px] justify-center items-center font-bold border border-black w-36 ${labelColor}`}>
             1t以上の貯蔵設備を対象
           </div>
           <div className="grid grid-cols-3">
             {rightLabels.map((label, idx) => (
               <div key={idx} className="flex items-center">
-                <div className="border border-black h-8 flex items-center pl-2 text-xs bg-gray-100 w-36">
+                <div className={`border border-black h-8 flex items-center pl-2 text-xs w-36 ${labelColor}`}>
                   {label}
                 </div>
                 <button
-                  className="border border-slate-400 text-center cursor-pointer w-10 h-8"
+                  className={`border border-slate-400 text-center cursor-pointer w-10 h-8 ${inputColor}`}
                   onClick={() => handleClick(0, leftLabels.length + idx)}
                 >
                   {symbols[states[0][leftLabels.length + idx]] || ""}
