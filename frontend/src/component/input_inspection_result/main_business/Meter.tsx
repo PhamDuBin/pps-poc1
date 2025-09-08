@@ -5,8 +5,6 @@ const Meter = () => {
   const [modalF1Open, setModalF1Open] = useState(false);
 
   const symbols = ["", "◯", "×", "✔"];
-
-  // số hàng bảng phải định nghĩa
   const totalRows = 1;
 
   const options = [
@@ -32,10 +30,6 @@ const Meter = () => {
     "30: その他",
   ];
 
-  // state cho các giá trị số
-  const [values, setValues] = useState<number[]>(Array(totalRows).fill(0));
-
-  // state cho các ô (ký hiệu)
   const [states, setStates] = useState<number[][]>(
     Array.from({ length: totalRows }, () => Array(1).fill(0))
   );
@@ -49,36 +43,14 @@ const Meter = () => {
     },
   ];
 
-  const handleKeyDown = (
-    e: React.KeyboardEvent<HTMLTableCellElement>,
-    idx: number
-  ) => {
-    if (e.key === "ArrowUp" || e.key === "ArrowDown") {
-      e.preventDefault();
-      setValues((prev) => {
-        const newVals = [...prev];
-        newVals[idx] = parseFloat(
-          (newVals[idx] + (e.key === "ArrowUp" ? 0.0001 : -0.0001)).toFixed(4)
-        );
-        return newVals;
-      });
-    }
-  };
-
-  const [statelabel, setStatelabel] = useState<number>(0); // 0 = 空白, 1 = 有, 2 = 無
+  const [statelabel, setStatelabel] = useState(0); // 0 = 空白, 1 = 有, 2 = 無
+  const [statelabel2, setStatelabel2] = useState(0);
   const labels = ["", "有", "無"];
-  const [statelabel2, setStatelabel2] = useState<number>(0); // 0 = 空白, 1 = 有, 2 = 無
 
-  const handleClickSButton = () => {
-    setStatelabel((prev) => (prev + 1) % 3);
-  };
-  const handleClickSButton2 = () => {
-    setStatelabel2((prev) => (prev + 1) % 3);
-  };
+  const handleClickSButton = () => setStatelabel((prev) => (prev + 1) % 3);
+  const handleClickSButton2 = () => setStatelabel2((prev) => (prev + 1) % 3);
 
-  const handleDetailKeyDown = (
-    e: React.KeyboardEvent<HTMLTableCellElement>
-  ) => {
+  const handleDetailKeyDown = (e: React.KeyboardEvent<HTMLTableCellElement>) => {
     if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();
       setModalF1Open(true);
@@ -95,9 +67,10 @@ const Meter = () => {
 
   return (
     <>
-      <span className="flex justify-start text-start font-bold p-1 my-1 bg-[#D9D9D9]">
+      <span className="flex justify-start text-start font-bold p-1 my-1 bg-[#D9D9D9] ">
         供給管
       </span>
+
       <div className="flex gap-x-4 mb-1 p-2 border border-black">
         <div>認定対象区分</div>
         <button
@@ -107,6 +80,7 @@ const Meter = () => {
           {labels[statelabel]}
         </button>
       </div>
+
       <div className="flex justify-between text-xs space-x-2">
         {/* left-table */}
         <div className="w-3/5 min-w-[513px]">
@@ -114,47 +88,22 @@ const Meter = () => {
             <table className="w-full table-fixed border-collapse">
               <thead className="h-[38px] bg-[#D9D9D9]">
                 <tr>
-                  <th className="border border-black text-center w-[25%]">
-                    種別
-                  </th>
-                  <th className="border border-black text-center w-[25%]">
-                    メーカー
-                  </th>
-                  <th className="border border-black text-center w-[25%]">
-                    型式
-                  </th>
-                  <th className="border border-black text-center w-[15%]">
-                    製造番号
-                  </th>
-                  <th className="border border-black text-center w-[60px]">
-                    詳細
-                  </th>
+                  <th className="border border-black text-center w-[25%]">種別</th>
+                  <th className="border border-black text-center w-[25%]">メーカー</th>
+                  <th className="border border-black text-center w-[25%]">型式</th>
+                  <th className="border border-black text-center w-[15%]">製造番号</th>
+                  <th className="border border-black text-center w-[60px]">詳細</th>
                 </tr>
               </thead>
 
               <tbody className="h-[40px]">
                 {rows.map((row, idx) => {
                   const rowHasCheck = states[idx].some((s) => s === 3);
-
                   return (
                     <tr key={idx} className="h-[30px]">
-                      <td className="border border-black text-center">
-                        {row.type}
-                      </td>
-                      <td
-                        tabIndex={0}
-                        onKeyDown={(e) => handleKeyDown(e, idx)}
-                        className="border border-black text-center focus:bg-yellow-100"
-                      >
-                        {row.manufacturer}
-                      </td>
-                      <td
-                        tabIndex={0}
-                        onKeyDown={(e) => handleKeyDown(e, idx)}
-                        className="border border-black text-center focus:bg-yellow-100"
-                      >
-                        {row.model}
-                      </td>
+                      <td className="border border-black text-center">{row.type}</td>
+                      <td className="border border-black text-center">{row.manufacturer}</td>
+                      <td className="border border-black text-center">{row.model}</td>
                       <td
                         tabIndex={0}
                         onClick={() => setModalF1Open(true)}
@@ -187,84 +136,64 @@ const Meter = () => {
             <table className="w-full table-fixed border-collapse">
               <thead className="h-[38px] bg-[#D9D9D9]">
                 <tr className="sticky top-0 bg-[#D9D9D9] z-10">
-                  <th className="border border-black text-center w-[25%]">
-                    指針
-                  </th>
-                  <th className="border border-black text-center w-[40%]">
-                    常時監視
-                  </th>
-                  <th className="border border-black text-center w-[10%]">
-                    適合
-                  </th>
-                  <th className="border border-black text-center w-[25%]">
-                    中間ガス管
-                  </th>
+                  <th className="border border-black text-center w-[25%]">指針</th>
+                  <th className="border border-black text-center w-[40%]">常時監視</th>
+                  <th className="border border-black text-center w-[10%]">適合</th>
+                  <th className="border border-black text-center w-[25%]">中間ガス管</th>
                 </tr>
               </thead>
               <tbody className="h-[40px] ">
-                {Array.from({ length: totalRows }).map((_, row) => {
-                  return (
-                    <tr key={row} className="bg-white hover:bg-gray-50">
-                      {Array.from({ length: 4 }).map((_, col) => {
-                        if (col === 1) {
-                          return (
-                            <td
-                              key={col}
-                              className="border border-black text-center h-8"
-                            >
-                              <select className="w-full h-full font-medium">
-                                {options.map((opt, i) => (
-                                  <option className="" key={i} value={i}>
-                                    {opt}
-                                  </option>
-                                ))}
-                              </select>
-                            </td>
-                          );
-                        }
-                        if (col === 0) {
-                          return (
-                            <td
-                              key={col}
-                              className="border border-black text-center h-8"
-                            >
-                              <input
-                                type="number"
-                                onClick={handleClickSButton2}
-                                className="has-spin w-full h-full border border-black-2"
-                              />
-                            </td>
-                          );
-                        }
-                        if (col === 3) {
-                          return (
-                            <td
-                              key={col}
-                              className="border border-black text-center h-8"
-                            >
-                              <button
-                                onClick={handleClickSButton2}
-                                className="text-center w-full h-full"
-                              >
-                                {labels[statelabel2]}
-                              </button>
-                            </td>
-                          );
-                        }
-
+                {Array.from({ length: totalRows }).map((_, row) => (
+                  <tr key={row} className="bg-white hover:bg-gray-50">
+                    {Array.from({ length: 4 }).map((_, col) => {
+                      if (col === 1) {
                         return (
-                          <td
-                            key={col}
-                            className="border border-black text-center cursor-pointer w-[10%]"
-                            onClick={() => handleClick(row, col)}
-                          >
-                            {symbols[states[row][col]]}
+                          <td key={col} className="border border-black text-center h-8">
+                            <select className="w-full h-full font-medium">
+                              {options.map((opt, i) => (
+                                <option key={i} value={i}>
+                                  {opt}
+                                </option>
+                              ))}
+                            </select>
                           </td>
                         );
-                      })}
-                    </tr>
-                  );
-                })}
+                      }
+                      if (col === 0) {
+                        return (
+                          <td key={col} className="border border-black text-center h-8">
+                            <input
+                              type="number"
+                              onClick={handleClickSButton2}
+                              className="has-spin w-full h-full border border-black-2"
+                            />
+                          </td>
+                        );
+                      }
+                      if (col === 3) {
+                        return (
+                          <td key={col} className="border border-black text-center h-8">
+                            <button
+                              onClick={handleClickSButton2}
+                              className="text-center w-full h-full"
+                            >
+                              {labels[statelabel2]}
+                            </button>
+                          </td>
+                        );
+                      }
+                      return (
+                        <td
+                          key={col}
+                          className="border border-black text-center cursor-pointer w-[10%]"
+                          onClick={() => handleClick(row, col)}
+                        >
+                          {symbols[states[row][col]]}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
