@@ -76,6 +76,11 @@ export default function HomePage() {
           (02.04.05_点検調査結果入力_構成情報_250808)
         </Link>
       </div>
+      <div>
+        <Link to="/config-inf" className="text-blue-500 underline">
+          → Configuration Information Screen (04.05.04_請求書発行_構成情報_0808)
+        </Link>
+      </div>
       <button
         onClick={handleLogout}
         className="mt-6 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
