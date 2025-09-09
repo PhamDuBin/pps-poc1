@@ -42,10 +42,20 @@ const RightPanel: React.FC<RightPanelProps> = ({
     e: React.KeyboardEvent<HTMLButtonElement>,
     index: number
   ) => {
-    if (e.key === "Tab" && e.shiftKey) {
+    if (e.key === "Tab") {
       e.preventDefault();
-      const prevIndex = index > 0 ? index - 1 : buttons.length - 1;
-      buttonRefs.current[prevIndex]?.focus();
+
+      if (e.shiftKey) {
+        // Shift + Tab → sang trái
+        const prevIndex = index > 0 ? index - 1 : buttons.length - 1;
+        buttonRefs.current[prevIndex]?.focus();
+        onButtonClick(buttons[prevIndex]); // <-- gọi luôn để đổi màn hình
+      } else {
+        // Tab → sang phải
+        const nextIndex = index < buttons.length - 1 ? index + 1 : 0;
+        buttonRefs.current[nextIndex]?.focus();
+        onButtonClick(buttons[nextIndex]); // <-- gọi luôn để đổi màn hình
+      }
     }
   };
 

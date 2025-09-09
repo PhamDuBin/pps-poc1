@@ -57,6 +57,15 @@ const TrancInfoScreen = () => {
     if (!container) return;
 
     const handleContainerKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Tab" && !e.shiftKey) {
+        const activeElement = document.activeElement as HTMLElement;
+        if (activeElement === lastLeftPanelButtonRef.current) {
+          e.preventDefault();
+          firstRightPanelButtonRef.current?.focus();
+          return;
+        }
+      }
+
       const focusableElements = Array.from(
         container.querySelectorAll(
           'input, button, [role="button"], select, textarea'
@@ -71,24 +80,6 @@ const TrancInfoScreen = () => {
       }
     };
 
-    container.addEventListener("keydown", handleContainerKeyDown as any);
-    return () => {
-      container.removeEventListener("keydown", handleContainerKeyDown as any);
-    };
-  }, []);
-
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-    const handleContainerKeyDown = (e: KeyboardEvent) => {
-      if (e.key !== "Tab") return;
-      const activeElement = document.activeElement as HTMLElement;
-      if (!e.shiftKey && activeElement === lastLeftPanelButtonRef.current) {
-        e.preventDefault();
-        firstRightPanelButtonRef.current?.focus();
-        return;
-      }
-    };
     container.addEventListener("keydown", handleContainerKeyDown);
     return () => {
       container.removeEventListener("keydown", handleContainerKeyDown);

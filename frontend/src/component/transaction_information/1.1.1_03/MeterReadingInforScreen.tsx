@@ -98,7 +98,7 @@ const MeterReadingInforScreen = () => {
         </div>
         <button
           onClick={handleOpenWindow}
-          className="bg-[#6685ec] border border-black px-4 py-1.5 rounded-sm shadow-sm font-semibold"
+          className="bg-[#4770a5] px-4 py-1.5 cursor-pointer hover:bg-white shadow-md transition-all duration-200 active:shadow-none active:translate-y-px font-semibold"
         >
           顧客別ガス使用量
         </button>

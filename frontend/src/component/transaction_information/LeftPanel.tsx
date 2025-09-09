@@ -72,6 +72,18 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
         <span className="font-bold bg-gray-200 p-0.5 mr-2">営業</span> 001
         担当者名01
       </div>
+      <div className="mb-2">
+        <span className="font-bold bg-gray-200 p-0.5 mr-2">営業</span> 001
+        担当者名01
+      </div>
+      <div className="mb-2">
+        <span className="font-bold bg-gray-200 p-0.5 mr-2">営業</span> 001
+        担当者名01
+      </div>
+      <div className="mb-2">
+        <span className="font-bold bg-gray-200 p-0.5 mr-2">営業</span> 001
+        担当者名01
+      </div>
     </div>
   );
 
@@ -79,8 +91,23 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
     <div className="w-64 bg-white border border-gray-400 rounded shadow-lg p-2 text-xs">
       <div className="font-bold mb-1 text-center bg-gray-200 p-1">顧客備考</div>
       <div className="mb-2">
-        <span className="font-bold bg-gray-200 p-0.5 mr-2">顧客備考1</span>{" "}
+        <span className="font-bold bg-gray-200 p-0.5 mr-2">顧客備考1</span>
         住所仮のものになります。
+      </div>
+      <div className="mb-2">
+        <span className="font-bold bg-gray-200 p-0.5 mr-2">顧客備考2</span>
+        世帯主様に直接お伺い。
+      </div>
+      <div className="mb-2">
+        <span className="font-bold bg-gray-200 p-0.5 mr-2">顧客備考3</span>
+      </div>
+    </div>
+  );
+
+  const nippouTooltipContent = (
+    <div className="w-48 bg-white border border-gray-400 rounded shadow-lg p-2 text-xs">
+      <div className="font-bold text-center bg-gray-200 p-1">
+        日報入力画面を表示
       </div>
     </div>
   );
@@ -303,6 +330,51 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
                 <span className="ml-1">X0123:Y0315</span>
               </div>
             </div>
+            {/* black line */}
+            <div className="border border-black mt-4"></div>
+            <div className="mt-2 flex flex-col">
+              <div className="mb-2 flex flex-row items-center">
+                <label className="bg-gray-200 p-1 font-bold w-[80px] text-center">
+                  当月締日
+                </label>
+                <span className="ml-4">2025/05/31</span>
+              </div>
+              <div className="mb-2 flex flex-row items-center">
+                <label className="bg-gray-200 p-1 font-bold w-[80px] text-center">
+                  回収
+                </label>
+                <span className="ml-4">自振翌月</span>
+              </div>
+              <div className="mb-2 flex flex-row justify-between items-center">
+                <label className="bg-gray-200 p-1 font-bold w-[80px] text-center">
+                  締日
+                </label>
+                <span className="ml-4">31</span>
+                <label className="bg-gray-200 p-1 font-bold w-[80px] text-center">
+                  集金日
+                </label>
+                <span className="ml-4">14</span>
+              </div>
+            </div>
+            <div className="border border-black mt-4"></div>
+            <div className="mt-2 flex flex-col">
+              <div className="mb-2 flex flex-row items-center">
+                <label className="bg-gray-200 p-1 font-bold w-[80px] text-center">
+                  開閉栓区分
+                </label>
+                <span className="ml-4">新規開栓（2017/10/17）</span>
+              </div>
+              <div className="mb-2 flex flex-row items-center justify-between">
+                <label className="bg-gray-200 p-1 font-bold w-[80px] text-center">
+                  不可能回収
+                </label>
+                <span>0回</span>
+                <label className="bg-gray-200 p-1 font-bold w-[80px] text-center">
+                  回収日数
+                </label>
+                <span>0回</span>
+              </div>
+            </div>
           </div>
         )}
         <div className="text-xs mt-4 flex items-center flex-col gap-2">
@@ -339,6 +411,20 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
           <button
             ref={lastButtonRef}
             onClick={handleOpenWindow}
+            onMouseEnter={() =>
+              handleShowTooltip(
+                lastButtonRef as React.RefObject<HTMLButtonElement>,
+                nippouTooltipContent
+              )
+            }
+            onFocus={() =>
+              handleShowTooltip(
+                lastButtonRef as React.RefObject<HTMLButtonElement>,
+                nippouTooltipContent
+              )
+            }
+            onBlur={handleHideTooltip}
+            onMouseLeave={handleHideTooltip}
             className="w-1/2 font-bold border text-center border-black p-2 bg-[#80bad7]"
           >
             日報入力

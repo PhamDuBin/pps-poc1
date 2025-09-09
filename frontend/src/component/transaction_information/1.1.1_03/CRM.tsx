@@ -106,7 +106,7 @@ const CRM = () => {
         <div className="flex justify-end w-[10%]">
           <button
             onClick={handleOpenWindow}
-            className="bg-[#6685ec]  px-6 py-1.5 rounded-sm font-semibold h-full cursor-pointer hover:bg-[#92ADF8] shadow-md transition-all duration-200 active:shadow-none active:translate-y-px border-2 border-black"
+            className=" px-6 py-1.5 rounded-sm font-semibold h-full bg-[#4770a5] cursor-pointer hover:bg-white shadow-md transition-all duration-200 active:shadow-none active:translate-y-px "
           >
             CRM分析
           </button>

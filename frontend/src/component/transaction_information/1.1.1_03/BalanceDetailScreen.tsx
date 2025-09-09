@@ -17,7 +17,7 @@ const BalanceDetailScreen = () => {
   };
 
   const buttonStyle =
-    "!bg-[#6685ec]  px-4 py-1.5 rounded-sm font-semibold w-[150px] cursor-pointer hover:bg-[#92ADF8] shadow-md transition-all duration-200 active:shadow-none active:translate-y-px border-2 border-black";
+    "px-4 py-1.5 rounded-sm font-semibold w-[150px] bg-[#4770a5] cursor-pointer hover:bg-white shadow-md transition-all duration-200 active:shadow-none active:translate-y-px";
 
   const detailsHeaders = [
     "日付",

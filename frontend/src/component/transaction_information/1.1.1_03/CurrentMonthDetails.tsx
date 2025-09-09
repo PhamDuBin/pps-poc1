@@ -41,7 +41,7 @@ const CurrentMonthDetails = () => {
   const titleStyle =
     "font-semibold w-full text-sm p-1 text-center border bg-[#80bad7] my-1";
 
-  const buttonLabelStyle = `${labelStyle} !bg-[#6685ec] text-left w-full cursor-pointer hover:bg-[#92ADF8] shadow-md transition-all duration-200 active:shadow-none active:translate-y-px border-2 border-black`;
+  const buttonLabelStyle = `my-1 h-8 flex items-center justify-center font-semibold text-sm bg-[#4770a5] w-full cursor-pointer hover:bg-white shadow-md transition-all duration-200 active:shadow-none active:translate-y-px `;
 
   const verticalLabelStyle =
     "flex items-center justify-center text-sm font-semibold bg-[#80bad7] my-1";
@@ -56,7 +56,7 @@ const CurrentMonthDetails = () => {
       <div className="px-4 flex lg:flex-row flex-col gap-4 text-black font-sans w-full">
         <div className="flex flex-col items-center flex-shrink-0 w-[10%] ">
           <div className={titleStyle}>＜判定＞</div>
-          <div className="p-1 border border-black bg-[#80bad7] w-full">
+          <div className="p-1 border border-black bg-[#80bad7]   w-full">
             <div className="p-0.5 border border-black flex flex-col justify-between items-center bg-white h-full">
               <div className="w-full aspect-square rounded-full bg-red-300 border border-gray-400"></div>
               <div className="w-full aspect-square rounded-full bg-yellow-200 border border-gray-400"></div>

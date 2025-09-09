@@ -1,5 +1,5 @@
 // ■02当月売上状況
-import React from "react";
+import React, { useEffect, useRef } from "react";
 
 const billingLabels = [
   "前月繰越金",
@@ -105,7 +105,7 @@ function CheckCurrentMonthSalesStatusScreen() {
                     <div className={containerClass} key={idx}>
                       <button
                         onClick={handleOpenWindow}
-                        className={`${labelClass} !bg-[#6685ec] text-left w-full cursor-pointer hover:bg-[#92ADF8] shadow-md transition-all duration-200 active:shadow-none active:translate-y-px border-2 border-black`}
+                        className={`text-base font-medium h-8 flex items-center justify-center bg-[#4770a5] w-full cursor-pointer hover:bg-white shadow-md transition-all duration-200 active:shadow-none active:translate-y-px`}
                       >
                         {label}
                       </button>
@@ -126,7 +126,7 @@ function CheckCurrentMonthSalesStatusScreen() {
                       {label === "保証金" ? (
                         <button
                           onClick={handleOpenWindow}
-                          className={`${labelClass} !bg-[#6685ec] text-left w-full cursor-pointer hover:bg-[#92ADF8] shadow-md transition-all duration-200 active:shadow-none active:translate-y-px border-2 border-black`}
+                          className={`text-base font-medium h-8 flex items-center justify-center bg-[#4770a5] w-full cursor-pointer hover:bg-white shadow-md transition-all duration-200 active:shadow-none active:translate-y-px`}
                         >
                           {label}
                         </button>
@@ -157,7 +157,7 @@ function CheckCurrentMonthSalesStatusScreen() {
                     {label === "自振履歴" ? (
                       <button
                         onClick={handleOpenWindow}
-                        className={`${labelClass} !bg-[#6685ec] text-left w-full cursor-pointer hover:bg-[#92ADF8] shadow-md transition-all duration-200 active:shadow-none active:translate-y-px border-2 border-black`}
+                        className={`text-base font-medium h-8 flex items-center justify-center bg-[#4770a5] w-full cursor-pointer hover:bg-white shadow-md transition-all duration-200 active:shadow-none active:translate-y-px`}
                       >
                         {label}
                       </button>
