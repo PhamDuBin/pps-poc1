@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { labelColor, inputColor } from "../../../constants/colors";
 
 const Equipment = () => {
   const [rowStates, setRowStates] = useState([false, false, false]);
@@ -13,46 +14,46 @@ const Equipment = () => {
 
   return (
     <>
-      <span className="flex justify-start text-start font-bold p-1 bg-[#D9D9D9] mt-4">
+      <span className={`flex justify-start text-start font-bold p-1 ${labelColor} mt-4`}>
         給排気設備
       </span>
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto mt-1">
         <table className="w-full min-w-[921px] border-collapse border border-gray-400 text-center text-sm">
-          <thead className="bg-[#D9D9D9]">
+          <thead className={`bg-[#D9D9D9]`}>
             <tr>
-              <th rowSpan={2} className="border border-gray-400 p-1 w-32"></th>
-              <th rowSpan={2} className="border border-gray-400 p-1">
+              <th rowSpan={2} className={`border border-gray-400 p-1 ${labelColor} w-32`}></th>
+              <th rowSpan={2} className={`border border-gray-400 p-1 ${labelColor}`}>
                 1排気筒
               </th>
-              <th colSpan={5} className="border border-gray-400 p-1">
+              <th colSpan={5} className={`border border-gray-400 p-1 ${labelColor}`}>
                 2排気筒基準
               </th>
-              <th rowSpan={2} className="border border-gray-400 p-1">
+              <th rowSpan={2} className={`border border-gray-400 p-1 ${labelColor}`}>
                 3給排気設備
               </th>
-              <th rowSpan={2} className="border border-gray-400 p-1">
+              <th rowSpan={2} className={`border border-gray-400 p-1 ${labelColor}`}>
                 4排気排出確認
               </th>
-              <th rowSpan={2} className="border border-gray-400 p-1">
+              <th rowSpan={2} className={`border border-gray-400 p-1 ${labelColor}`}>
                 判定
               </th>
             </tr>
             <tr>
-              <th className="border border-gray-400 p-1 font-medium">材料</th>
-              <th className="border border-gray-400 p-1 font-medium">先端</th>
-              <th className="border border-gray-400 p-1 font-medium">
+              <th className={`border border-gray-400 p-1 font-medium ${labelColor}`}>材料</th>
+              <th className={`border border-gray-400 p-1 font-medium ${labelColor}`}>先端</th>
+              <th className={`border border-gray-400 p-1 font-medium ${labelColor}`}>
                 壁貫通部との隙間
               </th>
-              <th className="border border-gray-400 p-1 font-medium">逆風止</th>
-              <th className="border border-gray-400 p-1 font-medium">面積</th>
+              <th className={`border border-gray-400 p-1 font-medium ${labelColor}`}>逆風止</th>
+              <th className={`border border-gray-400 p-1 font-medium ${labelColor}`}>面積</th>
             </tr>
           </thead>
           <tbody>
             {headers.map((label, rowIndex) => (
               <tr key={rowIndex}>
-                <td className="border border-gray-400 p-0">
+                <td className={`border border-gray-400 p-0 ${labelColor}`}>
                   <button
-                    className="bg-[#D9D9D9] border-none p-2 font-bold w-full h-full"
+                    className={`border-none p-2 font-bold w-full h-full`}
                     onClick={() => toggleRow(rowIndex)}
                   >
                     {label}
@@ -63,7 +64,7 @@ const Equipment = () => {
                   .map((_, colIndex) => (
                     <td
                       key={colIndex}
-                      className="border border-gray-400 p-2 h-10"
+                      className={`border border-gray-400 p-2 h-10 ${inputColor}`}
                     >
                       {rowStates[rowIndex] ? "◯" : ""}
                     </td>

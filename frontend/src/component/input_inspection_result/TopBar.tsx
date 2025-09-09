@@ -1,6 +1,7 @@
 import { DownArrowIcon } from "../transaction_information/LeftPanel";
 import { useState } from "react";
 import PersonnelSearchModal from "./PersonnelSearchModal";
+import { inputColor, labelColor } from "../../constants/colors";
 
 const TopBar = () => {
   const [roleValue, setRoleValue] = useState("0");
@@ -20,8 +21,8 @@ const TopBar = () => {
       setWitnessName("");
     }
   };
-  const label = "bg-[#D9D9D9] w-[6%] flex justify-center items-center mr-2";
-  const input = "flex justify-center items-center mx-4";
+  const label = `${labelColor} w-[6%] flex justify-center items-center mr-2`;
+  const input = `${inputColor} flex justify-center items-center mx-4`;
 
   return (
     <>
@@ -33,7 +34,7 @@ const TopBar = () => {
           <p className={input}>鈴木　カンクロウ</p>
           <span className={label}>担当者</span>
           <input
-            className="border border-black w-[10%]"
+            className={`${inputColor} border border-black w-[10%]`}
             value={witnessName}
             onChange={(e) => setWitnessName(e.target.value)}
           />
@@ -45,7 +46,7 @@ const TopBar = () => {
           </button>
           <p className={input}>佐々木　担当タロウ</p>
           <select
-            className="border border-black rounded-lg mr-4 shadow-medium"
+            className={`${inputColor} border border-black rounded-lg mr-4 shadow-medium`}
             value={roleValue}
             onChange={handleRoleChange}
           >
@@ -59,7 +60,7 @@ const TopBar = () => {
             <option value="7">管理人</option>
             <option value="8">大家</option>
           </select>
-          <input className="border border-black w-[10%]"></input>
+          <input className={`${inputColor} border border-black w-[10%]`}></input>
         </div>
       </div>
 

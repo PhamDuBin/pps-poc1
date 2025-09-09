@@ -4,10 +4,11 @@ import React, { useState } from "react";
 import { DatePickerInput } from "../../context/DatePickerInput";
 import CustomModal from "../../context/CustomModal";
 import { CustomerSearchModal } from "./CustomerSearchModal";
+import { inputColor, labelColor } from "../../constants/colors";
 
 const SurveyRow = ({ onOpenModal }: { onOpenModal: () => void }) => (
   <div className="flex flex-row relative w-full">
-    <select className="border border-black rounded-lg w-[25%]">
+    <select className="border border-black rounded-lg bg-[#ebcec0] w-[25%]">
       <option value="0">空白</option>
       <option value="1">拒否</option>
       <option value="2">不在</option>
@@ -19,7 +20,7 @@ const SurveyRow = ({ onOpenModal }: { onOpenModal: () => void }) => (
     </div>
     <button
       onClick={onOpenModal}
-      className="w-[30%] border border-black bg-[#D9D9D9]"
+      className="w-[30%] border border-black bg-[#80bad7]"
     >
       備考
     </button>
@@ -202,7 +203,7 @@ const RightPanel = () => {
   };
 
   const label =
-    "bg-[#D9D9D9] h-[24px] flex justify-center items-center border border-black";
+    "bg-[#80bad7] h-[24px] flex justify-center items-center border border-black";
   return (
     <div className="w-[350px] border border-black p-2 h-full overflow-y-auto text-xs">
       <div className="flex flex-col">
@@ -217,7 +218,7 @@ const RightPanel = () => {
           </div>
         </div>
         <div className="flex flex-row w-full">
-          <span className="w-[10%] h-[120px] bg-[#D9D9D9] flex justify-center items-center text-center border border-black">
+          <span className="w-[10%] h-[120px] bg-[#80bad7] flex justify-center items-center text-center border border-black">
             調査区分
           </span>
           <div className="flex flex-col w-[35%]">
@@ -232,7 +233,7 @@ const RightPanel = () => {
               <button
                 key={i}
                 onClick={() => toggleCircle(i)}
-                className=" h-[24px] flex items-center justify-center border border-black bg-white"
+                className={` h-[24px] flex items-center justify-center border border-black ${inputColor}`}
               >
                 <div
                   className={`w-[15px] h-[15px] border border-black rounded-full 
@@ -253,7 +254,7 @@ const RightPanel = () => {
               <button
                 key={i}
                 onClick={() => toggleCircle2(i)}
-                className=" h-[24px] flex items-center justify-center border border-black bg-white"
+                className={` h-[24px] flex items-center justify-center border border-black ${inputColor}`}
               >
                 <div
                   className={`w-[15px] h-[15px] border border-black rounded-full 
@@ -263,7 +264,7 @@ const RightPanel = () => {
             ))}
           </div>
         </div>
-        <span className="h-[25px] rounded-md mt-2 w-full p-1 border border-black flex text-center justify-center items-center">
+        <span className="bg-[#80bad7] h-[25px] rounded-md mt-2 w-full p-1 border border-black flex text-center justify-center items-center">
           訪問履歴
         </span>
         <div className="mt-2">
@@ -278,13 +279,13 @@ const RightPanel = () => {
             />
           ))}
           <div className="flex flex-row mt-2">
-            <span className="w-[15%] flex items-center justify-center border border-black bg-[#D9D9D9]">
+            <span className={`w-[15%] flex items-center justify-center border border-black ${labelColor}`}>
               周知
             </span>
 
             <button
               onClick={handleClick2}
-              className="w-[28%] border border-black"
+              className={`w-[28%] border border-black ${inputColor}`}
             >
               {options[index2]}
             </button>
@@ -295,23 +296,23 @@ const RightPanel = () => {
                 setTitleModal("周知内容");
               }}
               disabled={options[index2] !== "済"}
-              className={`w-[22px] h-[22px] flex items-center justify-center border border-gray-500
+              className={`w-[22px] h-[22px] flex items-center justify-center border border-gray-500 
                 ${
                   options[index2] === "済"
-                    ? "bg-white cursor-pointer"
-                    : "bg-gray-200 cursor-not-allowed"
+                    ? `${inputColor} cursor-pointer`
+                    : `${inputColor} opacity-50 cursor-not-allowed`
                 }`}
             >
               <DownArrowIcon />
             </button>
 
-            <span className="w-[15%] flex items-center justify-center border border-black bg-[#D9D9D9]">
+            <span className="w-[15%] flex items-center justify-center border border-black bg-[#80bad7]">
               周知
             </span>
 
             <button
               onClick={handleClick}
-              className="w-[28%] border border-black"
+              className="w-[28%] border border-black bg-[#ebcec0]"
             >
               {options[index]}
             </button>
@@ -322,8 +323,8 @@ const RightPanel = () => {
               className={`w-[22px] h-[22px] flex items-center justify-center border border-gray-500
                 ${
                   options[index] === "済"
-                    ? "bg-white cursor-pointer"
-                    : "bg-gray-200 cursor-not-allowed"
+                    ? `${inputColor} cursor-pointer`
+                    : `${inputColor} opacity-50 cursor-not-allowed`
                 }`}
             >
               <DownArrowIcon />
@@ -350,7 +351,7 @@ const RightPanel = () => {
               <table className="w-full border-collapse">
                 <tbody>
                   {rows.map((row) => (
-                    <tr key={row} className="border border-black">
+                    <tr key={row} className="border border-black bg-[#ebcec0]">
                       <td className="border border-black text-center w-1/3"></td>
                       <td className="border border-black text-center w-1/3">
                         0.00
@@ -370,21 +371,21 @@ const RightPanel = () => {
             <span className={`${label} !w-3/5`}>消費設備調査</span>
             <button
               onClick={handleClick3}
-              className="w-2/5 border border-black"
+              className={`w-2/5 border border-black ${inputColor}`}
             >
               {options1[index3]}
             </button>
           </div>
           <div className=" w-full flex flex-row">
             <span
-              className={`w-[10%] h-[80px] bg-[#D9D9D9] flex justify-center items-center text-center border border-black`}
+              className={`w-[10%] h-[80px] bg-[#80bad7] flex justify-center items-center text-center border border-black`}
             >
               通知事項
             </span>
             <div className="flex flex-col w-[90%]">
               <input
                 value={notificationLabel}
-                className={`h-[40px] border border-black text-center transition-all duration-300 ${
+                className={`h-[40px] border border-black text-center transition-all duration-300 bg-[#ebcec0] ${
                   notificationValue === "0" ? "w-[20%]" : "w-full"
                 }`}
               />
@@ -394,8 +395,8 @@ const RightPanel = () => {
                 disabled={options1[index3] !== "否"}
                 className={`h-[40px] border  w-[20%] border-black text-center  ${
                   options1[index3] === "否"
-                    ? "bg-white cursor-pointer"
-                    : "bg-gray-200 cursor-not-allowed"
+                    ? `${inputColor} cursor-pointer`
+                    : `${inputColor} opacity-50 cursor-not-allowed`
                 }`}
               >
                 {notificationOptions.map((option) => (
@@ -408,14 +409,14 @@ const RightPanel = () => {
           </div>
           <div className=" w-full flex flex-row">
             <span
-              className={`w-[10%] h-[80px] bg-[#D9D9D9] flex justify-center items-center text-center border border-black`}
+              className={`w-[10%] h-[80px] bg-[#80bad7] flex justify-center items-center text-center border border-black`}
             >
               要改善
             </span>
             <div className="flex flex-col w-[90%]">
               <input
                 value={notificationLabel1}
-                className={`h-[40px] border border-black text-center transition-all duration-300 ${
+                className={`h-[40px] border border-black text-center transition-all duration-300 bg-[#ebcec0] ${
                   notificationValue1 === "0" ? "w-[20%]" : "w-full"
                 }`}
               />
@@ -425,8 +426,8 @@ const RightPanel = () => {
                 disabled={options1[index3] !== "否"}
                 className={`h-[40px] border  w-[20%] border-black text-center  ${
                   options1[index3] === "否"
-                    ? "bg-white cursor-pointer"
-                    : "bg-gray-200 cursor-not-allowed"
+                    ? `${inputColor} cursor-pointer`
+                    : `${inputColor} opacity-50 cursor-not-allowed`
                 }`}
               >
                 {notificationOptions1.map((option) => (
@@ -450,21 +451,21 @@ const RightPanel = () => {
             <span className={`${label} !w-3/5`}>供給設備点検</span>
             <button
               onClick={handleClick4}
-              className="w-2/5 border border-black"
+              className={`w-2/5 border border-black ${inputColor}`}
             >
               {options2[index4]}
             </button>
           </div>
           <div className=" w-full flex flex-row">
             <span
-              className={`w-[10%] h-[80px] bg-[#D9D9D9] flex justify-center items-center text-center border border-black`}
+              className={`w-[10%] h-[80px] bg-[#80bad7] flex justify-center items-center text-center border border-black`}
             >
               通知事項
             </span>
             <div className="flex flex-col w-[90%]">
               <input
                 value={notificationLabel2}
-                className={`h-[40px] border border-black text-center transition-all duration-300 ${
+                className={`h-[40px] border border-black text-center transition-all duration-300 bg-[#ebcec0] ${
                   notificationValue2 === "0" ? "w-[20%]" : "w-full"
                 }`}
               />
@@ -474,8 +475,8 @@ const RightPanel = () => {
                 disabled={options2[index4] !== "否"}
                 className={`h-[40px] border  w-[20%] border-black text-center  ${
                   options2[index4] === "否"
-                    ? "bg-white cursor-pointer"
-                    : "bg-gray-200 cursor-not-allowed"
+                    ? `${inputColor} cursor-pointer`
+                    : `${inputColor} opacity-50 cursor-not-allowed`
                 }`}
               >
                 {notificationOptions2.map((option) => (
@@ -488,14 +489,14 @@ const RightPanel = () => {
           </div>
           <div className=" w-full flex flex-row">
             <span
-              className={`w-[10%] h-[80px] bg-[#D9D9D9] flex justify-center items-center text-center border border-black`}
+              className={`w-[10%] h-[80px] bg-[#80bad7] flex justify-center items-center text-center border border-black`}
             >
               要改善
             </span>
             <div className="flex flex-col w-[90%]">
               <input
                 value={notificationLabel3}
-                className={`h-[40px] border border-black text-center transition-all duration-300 ${
+                className={`h-[40px] border border-black text-center transition-all duration-300 bg-[#ebcec0] ${
                   notificationValue3 === "0" ? "w-[20%]" : "w-full"
                 }`}
               />
@@ -503,10 +504,10 @@ const RightPanel = () => {
               <select
                 onChange={handleNotificationChange3}
                 disabled={options2[index4] !== "否"}
-                className={`h-[40px] border  w-[20%] border-black text-center  ${
+                className={`h-[40px] border  w-[20%] border-black text-center bg-[#ebcec0] ${
                   options2[index4] === "否"
-                    ? "bg-white cursor-pointer"
-                    : "bg-gray-200 cursor-not-allowed"
+                    ? `${inputColor} cursor-pointer`
+                    : `${inputColor} opacity-50 cursor-not-allowed`
                 }`}
               >
                 {notificationOptions3.map((option) => (
@@ -519,24 +520,24 @@ const RightPanel = () => {
           </div>
           <div className="flex flex-row relative">
             <span className={`${label} !h-[30px] w-[40%]`}>連絡済相手</span>
-            <input className="w-[60%] border border-black"></input>
+            <input className="w-[60%] border border-black bg-[#ebcec0]"></input>
           </div>
         </div>
         <div className="flex flex-row justify-between mt-2">
-          <button className="w-1/4 border border-black rounded-lg">地図</button>
-          <button className="w-1/4 border border-black rounded-lg">図面</button>
-          <button className="w-1/4 border border-black rounded-lg">写真</button>
+          <button className="w-1/4 border border-black rounded-lg bg-[#f0ff98] p-1">地図</button>
+          <button className="w-1/4 border border-black rounded-lg bg-[#f0ff98] p-1">図面</button>
+          <button className="w-1/4 border border-black rounded-lg bg-[#f0ff98] p-1">写真</button>
         </div>
         <div className="flex flex-row justify-between mt-2">
           <button
             onClick={() => setIsCustomerModalOpen(true)}
-            className="w-2/5 border border-black bg-[#D9D9D9]"
+            className="w-2/5 border border-black bg-[#f0ff98] shadow-xl p-2"
           >
             保存（S)
           </button>
           <button
             onClick={() => setIsCustomerModalOpen(true)}
-            className="w-2/5 border border-black bg-[#D9D9D9]"
+            className="w-2/5 border border-black bg-[#f0ff98] shadow-xl p-2"
           >
             閉じる（C)
           </button>

@@ -10,10 +10,11 @@ import CircuitBreaker from "./main_business/CircuitBreaker";
 import Regulator from "./main_business/Regulator";
 import Meter from "./main_business/Meter";
 import Vessel from "./main_business/Vessel";
+import { labelColor } from "../../constants/colors";
 const MainBusinessScreen = () => {
   return (
     <div className="w-full p-1 flex flex-col bg-gray-100 min-w-[930px]">
-      <span className="flex justify-center text-center items-center font-bold p-1 bg-[#D9D9D9] text-[20px]">
+      <span className={`flex justify-center text-center items-center font-bold p-1 ${labelColor} text-[20px]`}>
         消費設備
       </span>
       <div className="mt-1 text-xs">
@@ -26,23 +27,13 @@ const MainBusinessScreen = () => {
 
       <div className="mt-1 text-xs">
         <ConnectingPipe />
-      </div>
-      <div className="mt-1 text-xs">
         <SupplyPipe />
-      </div>
-      <div className="mt-1 text-xs">
         <CircuitBreaker />
-      </div>
-      <div className="mt-1 text-xs">
         <Regulator />
-      </div>
-      <div className="mt-1 text-xs">
         <Meter />
-      </div>
-      <div className="mt-1 text-xs">
         <Vessel />
       </div>
-      <span className="flex justify-center text-center items-center font-bold p-1 bg-[#D9D9D9] text-[20px] mt-4 min-w-[919px]">
+      <span className={`flex justify-center text-center items-center font-bold p-1 ${labelColor} text-[20px] mt-4 min-w-[919px]`}>
         試験測定
       </span>
       <div className="mt-1 text-xs min-w-[919px]">
