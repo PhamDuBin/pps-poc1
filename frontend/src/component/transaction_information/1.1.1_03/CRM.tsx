@@ -1,7 +1,8 @@
 // ■07CRM
 import React from "react";
+import { useScreenNavigation } from "../../../utils/useScreenNavigation";
 
-const CRM = () => {
+const CRM = ({ onSwitchScreen }: any) => {
   const tableHeaders = [
     "対応日",
     "内容",
@@ -33,9 +34,9 @@ const CRM = () => {
       win.focus();
     }
   };
-
+  const containerRef = useScreenNavigation<HTMLDivElement>(onSwitchScreen);
   return (
-    <div className="p-4 text-black w-full text-sm">
+    <div ref={containerRef} className="p-4 text-black w-full text-sm">
       <div className="text-center font-bold bg-[#80bad7] border border-black p-2 mb-2">
         ＜CRM＞
       </div>

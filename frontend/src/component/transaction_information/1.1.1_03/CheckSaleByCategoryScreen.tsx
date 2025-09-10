@@ -1,5 +1,6 @@
 //■03大分類別売上
 import clsx from "clsx";
+import { useScreenNavigation } from "../../../utils/useScreenNavigation";
 
 const labels = [
   "LPG",
@@ -37,18 +38,23 @@ const labels = [
   "合計",
 ];
 
-function CheckSaleByCategoryScreen() {
+function CheckSaleByCategoryScreen({ onSwitchScreen }: any) {
   const columns = [0, 1, 2].map((col) =>
     labels.slice(col * 11, (col + 1) * 11)
   );
 
   const labelClass =
-    "bg-[#80bad7] text-base font-medium w-full  h-8 flex items-center justify-center bg-[#80bad7]";
+    "bg-[#80bad7] text-base font-medium w-full h-8 flex items-center justify-center bg-[#80bad7]";
   const inputClass =
-    "border border-black text-base w-full  h-8 text-center bg-[#ebcec0]";
+    "border border-black text-base w-full h-8 text-center bg-[#ebcec0]";
+
+  const containerRef = useScreenNavigation<HTMLDivElement>(
+    onSwitchScreen,
+    false
+  );
 
   return (
-    <div className="p-4 w-full">
+    <div ref={containerRef} tabIndex={0} className="p-4 w-full outline-none">
       <div className="bg-[#80bad7] w-full h-8 text-center font-semibold text-lg mb-2 leading-8 border border-black">
         ＜大分類別売上＞
       </div>
@@ -66,7 +72,7 @@ function CheckSaleByCategoryScreen() {
               );
 
               return (
-                <div key={rowIndex} className="relative ">
+                <div key={rowIndex} className="relative">
                   {isTotal && (
                     <div className="relative bottom-0.5 left-0 border-t-2 border-black w-full" />
                   )}

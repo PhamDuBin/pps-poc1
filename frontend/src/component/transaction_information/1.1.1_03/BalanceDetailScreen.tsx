@@ -1,9 +1,10 @@
 // ■04残高内訳_明細
 import React, { useState } from "react";
+import { useScreenNavigation } from "../../../utils/useScreenNavigation";
 
-const BalanceDetailScreen = () => {
+const BalanceDetailScreen = ({ onSwitchScreen }: any) => {
   const [view, setView] = useState("category");
-
+  const containerRef = useScreenNavigation<HTMLDivElement>(onSwitchScreen);
   const handleOpenWindow = () => {
     const win = window.open(
       "/link-destination",
@@ -67,7 +68,7 @@ const BalanceDetailScreen = () => {
     "flex items-center justify-center text-2xl font-semibold px-2";
 
   return (
-    <div className="p-4 text-black w-full text-sm">
+    <div ref={containerRef} className="p-4 text-black w-full text-sm">
       <div className="text-center font-bold bg-[#80bad7] p-2 mb-1">
         ＜残高内訳＞
       </div>
@@ -135,7 +136,6 @@ const BalanceDetailScreen = () => {
               placeholder="0"
               type="text"
               className="border border-black h-9 w-48 text-right px-2"
-              readOnly
             />
           </div>
         </>

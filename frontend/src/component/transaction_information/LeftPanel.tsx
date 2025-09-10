@@ -24,12 +24,14 @@ type LeftPanelProps = {
   showAdvanceSearch: boolean;
   setShowAdvanceSearch: React.Dispatch<React.SetStateAction<boolean>>;
   lastButtonRef: React.Ref<HTMLButtonElement>;
+  firstInputRef: React.Ref<HTMLInputElement>;
 };
 
 const LeftPanel: React.FC<LeftPanelProps> = ({
   showAdvanceSearch,
   setShowAdvanceSearch,
   lastButtonRef,
+  firstInputRef,
 }) => {
   const [postcode1, setPostcode1] = useState("");
   const [postcode2, setPostcode2] = useState("");
@@ -46,7 +48,6 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
   });
   const tantoRef = useRef<HTMLButtonElement>(null);
   const bikouRef = useRef<HTMLButtonElement>(null);
-  const firstInputRef = useRef<HTMLInputElement>(null);
 
   const handleShowTooltip = (
     ref: React.RefObject<HTMLButtonElement | null>,
@@ -181,12 +182,6 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [showAdvanceSearch]);
-
-  useEffect(() => {
-    if (firstInputRef.current) {
-      firstInputRef.current.focus();
-    }
-  }, []);
 
   const handleOpenWindow = () => {
     const win = window.open(

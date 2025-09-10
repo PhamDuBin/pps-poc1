@@ -1,5 +1,6 @@
 // ■02当月売上状況
 import React, { useEffect, useRef } from "react";
+import { useScreenNavigation } from "../../../utils/useScreenNavigation";
 
 const billingLabels = [
   "前月繰越金",
@@ -31,7 +32,7 @@ const borderClass =
 const borderContainerClass = "border border-black p-1";
 const borderContainerBillingClass = "border border-black mb-1 p-1 h-[265px]";
 
-function CheckCurrentMonthSalesStatusScreen() {
+function CheckCurrentMonthSalesStatusScreen({ onSwitchScreen }: any) {
   const handleOpenWindow = () => {
     const win = window.open(
       "/link-destination",
@@ -43,6 +44,8 @@ function CheckCurrentMonthSalesStatusScreen() {
       win.focus();
     }
   };
+
+  const containerRef = useScreenNavigation<HTMLDivElement>(onSwitchScreen);
   return (
     <>
       <div
@@ -50,7 +53,7 @@ function CheckCurrentMonthSalesStatusScreen() {
       >
         ＜当月売上状況＞
       </div>
-      <div className="p-4 w-[70%] mx-auto">
+      <div ref={containerRef} className="p-4 w-[70%] mx-auto">
         <div className="grid grid-rows-2 gap-1.5">
           <div className="flex grid-cols-2 gap-1.5 flex-col lg:flex-row w-full">
             {/* ＜請求残高＞ */}

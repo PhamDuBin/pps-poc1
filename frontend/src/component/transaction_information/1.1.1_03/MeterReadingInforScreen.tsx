@@ -1,7 +1,8 @@
 // ■05検針情報
 import React from "react";
+import { useScreenNavigation } from "../../../utils/useScreenNavigation";
 
-const MeterReadingInforScreen = () => {
+const MeterReadingInforScreen = ({ onSwitchScreen }: any) => {
   const handleOpenWindow = () => {
     const win = window.open(
       "/link-destination",
@@ -79,8 +80,10 @@ const MeterReadingInforScreen = () => {
     "left-[26rem]", //  20rem + 6rem (w-24)
   ];
 
+  const containerRef = useScreenNavigation<HTMLDivElement>(onSwitchScreen);
+
   return (
-    <div className="p-4 text-black w-full text-sm">
+    <div ref={containerRef} className="p-4 text-black w-full text-sm">
       <div className="border border-black text-center font-bold bg-[#80bad7] p-2 mb-4">
         ＜検針情報＞
       </div>

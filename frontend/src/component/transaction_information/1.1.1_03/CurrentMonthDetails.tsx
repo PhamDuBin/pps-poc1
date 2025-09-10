@@ -1,7 +1,8 @@
 // ■01当月明細
 import React from "react";
+import { useScreenNavigation } from "../../../utils/useScreenNavigation";
 
-const CurrentMonthDetails = () => {
+const CurrentMonthDetails = ({ onSwitchScreen }: any) => {
   const handleOpenWindow = () => {
     const win = window.open(
       "/link-destination",
@@ -13,7 +14,7 @@ const CurrentMonthDetails = () => {
       win.focus();
     }
   };
-
+  const containerRef = useScreenNavigation<HTMLDivElement>(onSwitchScreen);
   const balanceMonths = [
     "2025年05月",
     "2025年04月",
@@ -150,7 +151,7 @@ const CurrentMonthDetails = () => {
                 ))}
               </div>
             </div>
-            <div className="flex flex-col gap-1 mt-1 w-full">
+            <div ref={containerRef} className="flex flex-col gap-1 mt-1 w-full">
               <div className="flex">
                 <button
                   onClick={handleOpenWindow}

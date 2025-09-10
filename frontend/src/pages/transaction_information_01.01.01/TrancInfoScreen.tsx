@@ -9,34 +9,101 @@ import BalanceDetailScreen from "../../component/transaction_information/1.1.1_0
 import MeterReadingInforScreen from "../../component/transaction_information/1.1.1_03/MeterReadingInforScreen";
 import CRM from "../../component/transaction_information/1.1.1_03/CRM";
 import LinkDestinationScreen from "../../component/transaction_information/1.1.1_03/LinkDestinationScreen";
-import { handleNavigationKey } from "../../utils/InputHandlers";
+export const handleNavigationKey = (
+  e: KeyboardEvent,
+  currentIndex: number,
+  focusableElements: HTMLElement[]
+) => {
+  if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key)) {
+    e.preventDefault();
+    let nextIndex = currentIndex;
+    const total = focusableElements.length;
+
+    if (e.key === "ArrowDown" || e.key === "ArrowRight") {
+      nextIndex = (currentIndex + 1) % total;
+    } else if (e.key === "ArrowUp" || e.key === "ArrowLeft") {
+      nextIndex = (currentIndex - 1 + total) % total;
+    }
+
+    focusableElements[nextIndex]?.focus();
+  }
+};
+
 const TrancInfoScreen = () => {
+  const screens = [
+    "当月明細",
+    "当月売上状況",
+    "大分類別売上",
+    "残高内訳",
+    "検針情報",
+    "年間明細",
+    "CRM",
+    "ポイント",
+    "印刷依頼情報",
+    "自振照会",
+    "大分類残高",
+  ];
   const [showLeftPanel, setShowLeftPanel] = useState(true);
-  const [activeScreen, setActiveScreen] = useState<string | null>(null);
+  const [activeScreen, setActiveScreen] = useState<string>(screens[0]);
   const [showAdvanceSearch, setShowAdvanceSearch] = useState(false);
+  const [isNavActive, setIsNavActive] = useState(false);
 
   const lastLeftPanelButtonRef = useRef<HTMLButtonElement>(null);
-  const firstRightPanelButtonRef = useRef<HTMLButtonElement>(null);
+  const rightPanelRef = useRef<HTMLDivElement>(null);
+  const mainScreenRef = useRef<HTMLDivElement>(null);
+  const leftPanelRef = useRef<HTMLDivElement>(null);
+  const firstInputRef = useRef<HTMLInputElement>(null);
+
   const handleButtonClick = (buttonName: string) => {
     setActiveScreen(buttonName);
   };
 
+  const handleSwitchScreen = (direction: "next" | "prev") => {
+    if (!activeScreen) {
+      setActiveScreen(screens[0]);
+      return;
+    }
+
+    const idx = screens.indexOf(activeScreen);
+    let newIndex = direction === "next" ? idx + 1 : idx - 1;
+    if (newIndex < 0) newIndex = screens.length - 1;
+    if (newIndex >= screens.length) newIndex = 0;
+    setActiveScreen(screens[newIndex]);
+  };
+
+  const handleFirstButtonFocus = () => {
+    setIsNavActive(true);
+  };
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      firstInputRef.current?.focus();
+    }, 0);
+    return () => clearTimeout(timer);
+  }, []);
+
   const renderActiveScreen = () => {
     switch (activeScreen) {
       case "大分類別売上":
-        return <CheckSaleByCategoryScreen />;
+        return (
+          <CheckSaleByCategoryScreen onSwitchScreen={handleSwitchScreen} />
+        );
       case "当月明細":
-        return <CurrentMonthDetails />;
+        return <CurrentMonthDetails onSwitchScreen={handleSwitchScreen} />;
       case "当月売上状況":
-        return <CheckCurrentMonthSalesStatusScreen />;
+        return (
+          <CheckCurrentMonthSalesStatusScreen
+            onSwitchScreen={handleSwitchScreen}
+          />
+        );
       case "残高内訳":
-        return <BalanceDetailScreen />;
+        return <BalanceDetailScreen onSwitchScreen={handleSwitchScreen} />;
       case "検針情報":
-        return <MeterReadingInforScreen />;
+        return <MeterReadingInforScreen onSwitchScreen={handleSwitchScreen} />;
       case "年間明細":
         return <LinkDestinationScreen />;
       case "CRM":
-        return <CRM />;
+        return <CRM onSwitchScreen={handleSwitchScreen} />;
       case "ポイント":
         return <LinkDestinationScreen />;
       case "印刷依頼情報":
@@ -50,60 +117,59 @@ const TrancInfoScreen = () => {
     }
   };
 
-  const containerRef = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
+    const handleGlobalKeyDown = (e: KeyboardEvent) => {
+      const activeElement = document.activeElement as HTMLElement;
+      const leftPanel = leftPanelRef.current;
+      if (leftPanel && leftPanel.contains(activeElement)) {
+        const focusableElements = Array.from(
+          leftPanel.querySelectorAll(
+            'input:not([disabled]), button:not([disabled]), [role="button"], select, textarea'
+          )
+        ) as HTMLElement[];
 
-    const handleContainerKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Tab" && !e.shiftKey) {
-        const activeElement = document.activeElement as HTMLElement;
-        if (activeElement === lastLeftPanelButtonRef.current) {
-          e.preventDefault();
-          firstRightPanelButtonRef.current?.focus();
-          return;
+        const currentIndex = focusableElements.indexOf(activeElement);
+        if (currentIndex !== -1) {
+          handleNavigationKey(e, currentIndex, focusableElements);
         }
       }
-
-      const focusableElements = Array.from(
-        container.querySelectorAll(
-          'input, button, [role="button"], select, textarea'
-        )
-      ) as HTMLElement[];
-
-      const activeElement = document.activeElement as HTMLElement;
-      const currentIndex = focusableElements.indexOf(activeElement);
-
-      if (currentIndex !== -1) {
-        handleNavigationKey(e, currentIndex, focusableElements);
+      if (isNavActive && e.key === "Tab") {
+        e.preventDefault();
+        handleSwitchScreen(e.shiftKey ? "prev" : "next");
+      }
+      const isInsideMainScreen = mainScreenRef.current?.contains(activeElement);
+      if (
+        isNavActive &&
+        isInsideMainScreen &&
+        ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key)
+      ) {
       }
     };
 
-    container.addEventListener("keydown", handleContainerKeyDown);
+    document.addEventListener("keydown", handleGlobalKeyDown);
     return () => {
-      container.removeEventListener("keydown", handleContainerKeyDown);
+      document.removeEventListener("keydown", handleGlobalKeyDown);
     };
-  }, []);
+  }, [activeScreen, isNavActive]);
 
   return (
-    <div
-      ref={containerRef}
-      className="w-full h-screen flex flex-row bg-[#d8dadc]"
-    >
+    <div className="w-full h-screen flex flex-row bg-[#d8dadc]">
       {!showLeftPanel && (
         <div className="relative flex items-center h-full w-2 bg-[#e6cfcf]"></div>
       )}
       {showLeftPanel ? (
-        <div className="transition-all absolute duration-300 z-20">
+        <div
+          ref={leftPanelRef}
+          className="transition-all absolute duration-300 z-20"
+        >
           <LeftPanel
             showAdvanceSearch={showAdvanceSearch}
             setShowAdvanceSearch={setShowAdvanceSearch}
             lastButtonRef={lastLeftPanelButtonRef}
+            firstInputRef={firstInputRef}
           />
           <CircleArrowLeft
-            className={`absolute left-[17.3rem] top-1/2 -transl
-                ate-y-1/2 text-black w-5 h-5 cursor-pointer bg-white rounded-full shadow
+            className={`absolute left-[17.3rem] top-1/2 -translate-y-1/2 text-black w-5 h-5 cursor-pointer bg-white rounded-full shadow
               ${showAdvanceSearch ? "z-0 hidden pointer-events-none" : "z-20"}`}
             onClick={() => setShowLeftPanel(false)}
           />
@@ -116,14 +182,19 @@ const TrancInfoScreen = () => {
         />
       )}
       <div className="my-3 ml-2 flex-1 h-[calc(100%-0.75rem*2)] flex flex-row z-10 w-full">
-        <div className="relative mr-2 border border-black w-10/12 text-black flex justify-center">
+        <div
+          ref={mainScreenRef}
+          className="relative mr-2 border border-black w-10/12 text-black flex justify-center"
+        >
           <div className="overflow-y-auto w-full">{renderActiveScreen()}</div>
         </div>
 
         <RightPanel
+          ref={rightPanelRef}
           onButtonClick={handleButtonClick}
           activeButton={activeScreen}
-          firstButtonRef={firstRightPanelButtonRef}
+          buttons={screens}
+          onFirstButtonFocus={handleFirstButtonFocus}
         />
       </div>
     </div>

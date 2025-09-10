@@ -292,6 +292,14 @@ const AdvanceSearchModal: React.FC<AdvanceSearchModalProps> = ({
     }
   };
 
+  const firstInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (firstInputRef.current) {
+      firstInputRef.current.focus();
+    }
+  }, []);
+
   return (
     <div className="p-4 bg-white text-black w-full text-sm">
       <div className="bg-[#80bad7] border border-black p-2 text-center font-bold mb-2">
@@ -305,6 +313,7 @@ const AdvanceSearchModal: React.FC<AdvanceSearchModalProps> = ({
         <div className="flex items-center space-x-4">
           <div className="flex items-center">
             <input
+              ref={firstInputRef}
               type="radio"
               id="overall"
               name="searchMode"
