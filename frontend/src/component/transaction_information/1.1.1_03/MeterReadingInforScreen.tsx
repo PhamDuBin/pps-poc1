@@ -84,7 +84,7 @@ const MeterReadingInforScreen = ({ onSwitchScreen }: any) => {
 
   return (
     <div ref={containerRef} className="p-4 text-black w-full text-sm">
-      <div className="border border-black text-center font-bold bg-[#80bad7] p-2 mb-4">
+      <div className=" text-center font-bold bg-[#80bad7] p-2 mb-4 h-8 text-lg flex justify-center items-center">
         ＜検針情報＞
       </div>
 

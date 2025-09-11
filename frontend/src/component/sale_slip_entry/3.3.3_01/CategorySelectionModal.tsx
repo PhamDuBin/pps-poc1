@@ -24,12 +24,56 @@ export default function CategorySelectionModal({
       firstButtonRef.current.focus();
     }
   }, []);
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.ctrlKey || event.metaKey) {
+        event.preventDefault();
+
+        switch (event.key) {
+          case "1":
+            handleButtonClick("1.売上");
+            break;
+          case "2":
+            handleButtonClick("2.直送売上");
+            break;
+          case "3":
+            handleButtonClick("3.売上値引");
+            break;
+          case "4":
+            handleButtonClick("4.返品");
+            break;
+          case "5":
+            handleButtonClick("5.経費");
+            break;
+          case "6":
+            handleButtonClick("6.資産");
+            break;
+          case "7":
+            handleButtonClick("7.消費税");
+            break;
+          case "c":
+          case "C":
+            onClose();
+            break;
+          default:
+            break;
+        }
+      }
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [onCategorySelect, onClose]);
+
   return (
     // Overlay
     <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
       {/* Modal content */}
-      <div className="bg-white w-full max-w-4xl rounded-lg shadow-lg border border-black p-6">
-        <StatusBar currentStep={1} />
+      <div className="bg-white w-full max-w-3xl rounded-lg shadow-lg border border-black p-6">
+        <div className="w-full flex justify-center items-center">
+          <StatusBar currentStep={1} />
+        </div>
 
         {/* Các nhóm button */}
         <div className="flex flex-col space-y-5 font-bold text-black mt-5 items-center">

@@ -4,12 +4,17 @@ import LeftPanel from "../../component/sale_slip_entry/LeftPanel";
 import { CircleArrowLeft, CircleArrowRight } from "lucide-react";
 import { handleNavigationKey } from "../../utils/InputHandlers";
 import SalesSlipEntry from "../../component/sale_slip_entry/3.3.3_01/SalesSlipEntry";
+
+type SalesSlipEntryHandle = {
+  focusUriageDateInput: () => void;
+};
+
 const SaleSlipEntryScreen = () => {
   const [showLeftPanel, setShowLeftPanel] = useState(true);
   const [activeScreen, setActiveScreen] = useState<string | null>(null);
   const [showAdvanceSearch, setShowAdvanceSearch] = useState(false);
   const [showCustomerInLeftPanel, setShowCustomerInLeftPanel] = useState(false);
-
+  const salesSlipEntryRef = useRef<SalesSlipEntryHandle>(null);
   const handleOpenAndResetLeftPanel = () => {
     setShowLeftPanel(true);
     setShowCustomerInLeftPanel(false);
@@ -45,6 +50,14 @@ const SaleSlipEntryScreen = () => {
     };
   }, []);
 
+  useEffect(() => {
+    if (!showLeftPanel) {
+      setTimeout(() => {
+        salesSlipEntryRef.current?.focusUriageDateInput();
+      }, 0);
+    }
+  }, [showLeftPanel]);
+
   return (
     <div
       ref={containerRef}
@@ -79,6 +92,7 @@ const SaleSlipEntryScreen = () => {
       <div className="my-3 ml-2 flex-1 h-[calc(100%-0.75rem*2)] flex flex-row min-w-0 z-10">
         <div className="relative mr-2 border border-black w-10/12 text-black flex justify-center overflow-auto bg-white">
           <SalesSlipEntry
+            ref={salesSlipEntryRef}
             onOpenLeftPanelForSearch={handleOpenAndResetLeftPanel}
           />
         </div>

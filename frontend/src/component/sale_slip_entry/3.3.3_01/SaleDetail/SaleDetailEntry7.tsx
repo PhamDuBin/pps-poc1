@@ -1,26 +1,28 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from "react";
 
 interface SaleDetailEntry7Props {
   onChange: (field: string, value: string) => void;
   formData: any;
 }
 
-const SaleDetailEntry7: React.FC<SaleDetailEntry7Props> = ({ onChange, formData }) => {
-  
+const SaleDetailEntry7: React.FC<SaleDetailEntry7Props> = ({
+  onChange,
+  formData,
+}) => {
   const firstInputRef = useRef<HTMLInputElement>(null);
-      
+
   useEffect(() => {
-      if(firstInputRef.current) {
-        firstInputRef.current.focus();
-      }
-    }, [])
-  
+    if (firstInputRef.current) {
+      firstInputRef.current.focus();
+    }
+  }, []);
+
   return (
     <div className="flex gap-2">
       <div className="h-[64px] w-[100px]">
         <div className="h-1/2 bg-[#80bad7] p-1">商品コード</div>
         <input
-          ref = {firstInputRef}
+          ref={firstInputRef}
           type="text"
           className="h-1/2 w-full border border-black text-center"
           placeholder="96-0001"
@@ -33,6 +35,7 @@ const SaleDetailEntry7: React.FC<SaleDetailEntry7Props> = ({ onChange, formData 
         <div className="h-1/2 bg-[#80bad7] p-1">商品名</div>
         <input
           type="text"
+          placeholder="消費税"
           className="h-1/2 w-full border border-black text-center"
           value={formData.productName ?? ""}
           onChange={(e) => onChange("productName", e.target.value)}
@@ -64,7 +67,11 @@ const SaleDetailEntry7: React.FC<SaleDetailEntry7Props> = ({ onChange, formData 
         <div className="h-1/2 bg-[#80bad7] p-1">自振対象</div>
         <select
           className="border border-black w-full h-1/2 text-center"
-          value={formData.selfSwingTarget !== undefined ? String(formData.selfSwingTarget) : "0"}
+          value={
+            formData.selfSwingTarget !== undefined
+              ? String(formData.selfSwingTarget)
+              : "0"
+          }
           onChange={(e) => onChange("selfSwingTarget", e.target.value)}
         >
           <option value="0">0 対象</option>
@@ -76,7 +83,11 @@ const SaleDetailEntry7: React.FC<SaleDetailEntry7Props> = ({ onChange, formData 
         <div className="h-1/2 bg-[#80bad7] p-1">当月外</div>
         <select
           className="border border-black w-full h-1/2 text-center"
-          value={formData.outsideMonth !== undefined ? String(formData.outsideMonth) : "0"}
+          value={
+            formData.outsideMonth !== undefined
+              ? String(formData.outsideMonth)
+              : "0"
+          }
           onChange={(e) => onChange("outsideMonth", e.target.value)}
         >
           <option value="0">0 空欄</option>
