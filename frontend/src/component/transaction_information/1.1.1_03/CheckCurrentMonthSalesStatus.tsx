@@ -49,7 +49,7 @@ function CheckCurrentMonthSalesStatusScreen({ onSwitchScreen }: any) {
   return (
     <>
       <div
-        className={`font-semibold text-sm p-1 mx-4 mt-4 text-center border bg-[#80bad7]`}
+        className={`font-semibold h-8 text-lg flex justify-center items-center p-1 mx-4 mt-4 text-center border bg-[#80bad7]`}
       >
         ＜当月売上状況＞
       </div>

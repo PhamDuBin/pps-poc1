@@ -49,6 +49,21 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
   const tantoRef = useRef<HTMLButtonElement>(null);
   const bikouRef = useRef<HTMLButtonElement>(null);
 
+  const customerId1Ref = useRef<HTMLInputElement>(null);
+  const advancedSearchButtonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (showDepart) {
+      customerId1Ref.current?.focus();
+    }
+  }, [showDepart]);
+
+  useEffect(() => {
+    if (showCustomer) {
+      advancedSearchButtonRef.current?.focus();
+    }
+  }, [showCustomer]);
+
   const handleShowTooltip = (
     ref: React.RefObject<HTMLButtonElement | null>,
     content: React.ReactNode
@@ -143,6 +158,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
     e: React.KeyboardEvent<HTMLInputElement>
   ) => {
     if (e.key === "Enter") {
+      e.preventDefault();
       handleSearchCustomer();
     }
   };
@@ -165,6 +181,9 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
     setId1("000000");
     setId2("000");
     setShowCustomer(true);
+    setPostcode1("000000");
+    setPostcode2("000");
+    setShowDepart(true);
   };
 
   useEffect(() => {
@@ -262,6 +281,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
           {!showCustomer ? (
             <>
               <input
+                ref={customerId1Ref}
                 type="text"
                 placeholder="000000"
                 value={id1} // MODIFIED: Bind value
@@ -374,6 +394,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
         )}
         <div className="text-xs mt-4 flex items-center flex-col gap-2">
           <button
+            ref={advancedSearchButtonRef}
             onClick={() => setShowAdvanceSearch(true)}
             className="border text-center border-black p-2 rounded-md shadow-md shadow-zinc-600"
           >
@@ -387,6 +408,12 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
             onMouseEnter={() =>
               handleShowTooltip(tantoRef, tantoTooltipContent)
             }
+            onFocus={() =>
+              handleShowTooltip(
+                tantoRef as React.RefObject<HTMLButtonElement>,
+                tantoTooltipContent
+              )
+            }
             onMouseLeave={handleHideTooltip}
             className="w-1/2 font-bold border text-center border-black p-2 bg-[#80bad7]"
           >
@@ -397,6 +424,12 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
             ref={bikouRef}
             onMouseEnter={() =>
               handleShowTooltip(bikouRef, bikouTooltipContent)
+            }
+            onFocus={() =>
+              handleShowTooltip(
+                bikouRef as React.RefObject<HTMLButtonElement>,
+                bikouTooltipContent
+              )
             }
             onMouseLeave={handleHideTooltip}
             className="w-1/2 font-bold border text-center border-black p-2 bg-[#80bad7]"

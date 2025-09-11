@@ -37,7 +37,7 @@ const CRM = ({ onSwitchScreen }: any) => {
   const containerRef = useScreenNavigation<HTMLDivElement>(onSwitchScreen);
   return (
     <div ref={containerRef} className="p-4 text-black w-full text-sm">
-      <div className="text-center font-bold bg-[#80bad7] border border-black p-2 mb-2">
+      <div className="text-center font-bold bg-[#80bad7] p-2 mb-2 h-8 text-lg flex justify-center items-center">
         ＜CRM＞
       </div>
       <div
