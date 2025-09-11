@@ -1,4 +1,18 @@
+import { useState } from "react";
+import OperatorSelectionModal from "./OperatorSelectionModal";
+
 const MainBusinessScreen = () => {
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  }
+
   const button =
     "flex text-center justify-center items-center bg-[#D9D9D9] border border-black shadow-xl font-bold";
   const span =
@@ -43,7 +57,7 @@ const MainBusinessScreen = () => {
         <button className={`${button} w-1/6`}>抽出条件 （1）</button>
         <button className={`${button} w-1/6`}>対象顧客（2）</button>
         <button className={`${button} w-1/6`}>印刷指定（3）</button>
-        <button className={`${button} w-1/6`}>タイトル・鑑設定（4）</button>
+        <button onClick={handleOpenModal} className={`${button} w-1/6`}>タイトル・鑑設定（4）</button>
       </div>
       <div className="mt-3 h-[80%] border border-black"></div>
       <div className="mt-2 flex flex-row justify-between">
@@ -55,6 +69,13 @@ const MainBusinessScreen = () => {
         <button className={`${button} w-[10%]`}>データ（H）</button>
         <button className={`${button} w-[10%]`}>閉じる（C）</button>
       </div>
+      {isModalOpen && 
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center z-50">
+          <OperatorSelectionModal 
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
+          />
+        </div>}
     </div>
   );
 };
