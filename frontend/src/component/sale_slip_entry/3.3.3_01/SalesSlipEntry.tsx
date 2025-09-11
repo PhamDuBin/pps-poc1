@@ -225,12 +225,12 @@ const SalesSlipEntry = forwardRef(
     return (
       <div className=" w-full h-full flex flex-col items-center px-4 pt-4 2xl:text-[16px] text-[11px]">
         {/* Header */}
-        <div className="w-3/4">
+        <div className="w-[85%]">
           <div className="bg-[#D9D9D9] text-center font-bold py-2">
             <h1 className="text-[24px] font-bold text-black">売上伝票入力</h1>
           </div>
         </div>
-        <div className="h-full w-[70%] mx-60 mt-4">
+        <div className="h-full w-[80%] mx-60 mt-4">
           {/* Customer Info */}
           <div className="w-full p-2 grid lg:grid-cols-4 grid-cols-3  gap-x-4 gap-y-2 whitespace-nowrap font-bold  text-black border border-black">
             <div className="flex items-center">
