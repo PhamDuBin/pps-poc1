@@ -265,20 +265,56 @@ const ProductSearchModal: React.FC<ProductSearchModalProps> = ({
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (activeIndex === null) return;
 
-    if (e.key === "ArrowDown") {
-      e.preventDefault();
-      const nextIndex = activeIndex + 1;
-      if (nextIndex < mockData.length) {
-        setActiveIndex(nextIndex);
-      }
-    } else if (e.key === "ArrowUp") {
-      e.preventDefault();
-      const prevIndex = activeIndex - 1;
-      if (prevIndex >= 0) {
-        setActiveIndex(prevIndex);
-      }
+    switch (e.key) {
+      case "ArrowDown":
+        e.preventDefault();
+        const nextIndex = activeIndex + 1;
+        if (nextIndex < mockData.length) {
+          setActiveIndex(nextIndex);
+        }
+        break;
+      case "ArrowUp":
+        e.preventDefault();
+        const prevIndex = activeIndex - 1;
+        if (prevIndex >= 0) {
+          setActiveIndex(prevIndex);
+        }
+        break;
+      case "Enter":
+        e.preventDefault();
+        if (activeIndex !== null) {
+          onNext();
+        }
+        break;
     }
   };
+
+  useEffect(() => {
+    const handleGlobalKeyDown = (event: KeyboardEvent) => {
+      if (event.altKey) {
+        switch (event.key.toLowerCase()) {
+          case "r":
+            event.preventDefault();
+            onClose();
+            break;
+          case "n":
+            if (activeIndex !== null) {
+              event.preventDefault();
+              onNext();
+            }
+            break;
+        }
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener("keydown", handleGlobalKeyDown);
+    }
+
+    return () => {
+      document.removeEventListener("keydown", handleGlobalKeyDown);
+    };
+  }, [isOpen, onClose, onNext, activeIndex]);
 
   if (!isOpen) return null;
 
@@ -311,10 +347,8 @@ const ProductSearchModal: React.FC<ProductSearchModalProps> = ({
           </div>
 
           {/* StatusBar + Title */}
-          <div className="flex-1 flex flex-col items-center justify-center mr-24">
-            <div className="w-1/2">
-              <StatusBar currentStep={2} />
-            </div>
+          <div className="flex-1 flex flex-col items-center justify-center mr-20">
+            <StatusBar currentStep={2} />
           </div>
         </div>
 
@@ -454,7 +488,12 @@ const ProductSearchModal: React.FC<ProductSearchModalProps> = ({
           </button>
           <button
             onClick={onNext}
-            className="bg-gray-300 border border-gray-500 rounded px-10 py-2 font-bold hover:bg-gray-400"
+            disabled={activeIndex === null}
+            className={`border border-gray-500 rounded px-10 py-2 font-bold ${
+              activeIndex !== null
+                ? "bg-gray-300 hover:bg-gray-400"
+                : "bg-gray-200 text-gray-400 cursor-not-allowed"
+            }`}
           >
             選択 (N)
           </button>
