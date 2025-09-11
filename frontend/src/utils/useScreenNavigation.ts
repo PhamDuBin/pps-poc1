@@ -1,5 +1,3 @@
-// useScreenNavigation.ts
-
 import { useEffect, useRef } from "react";
 
 export function useScreenNavigation<T extends HTMLElement>(
@@ -11,27 +9,22 @@ export function useScreenNavigation<T extends HTMLElement>(
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
-
-    // LOG SỐ 1: KIỂM TRA XEM HOOK ĐÃ GẮN ĐÚNG CHỖ CHƯA
-    console.log("useScreenNavigation attached to:", container);
+    if (container.tabIndex === -1) {
+      container.setAttribute("tabindex", "-1");
+    }
 
     const focusable = Array.from(
       container.querySelectorAll<HTMLElement>(
-        "button:not([disabled]):not([tabindex='-1']), input:not([disabled]), textarea, select, [tabindex]:not([tabindex='-1'])"
+        "button, input:not([disabled]), textarea, select, [tabindex]:not([tabindex='-1'])"
       )
     );
 
-    // LOG SỐ 2: ĐÂY LÀ DÒNG QUAN TRỌNG NHẤT
-    console.log("Found focusable elements:", focusable);
-
     if (focusFirstElement && focusable.length > 0) {
-      // LOG SỐ 3: XEM NÓ ĐANG FOCUS VÀO ĐÂU
-      console.log("Attempting to focus first element:", focusable[0]);
       focusable[0].focus();
+    } else {
     }
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      // ... phần còn lại của code giữ nguyên
       if (
         focusFirstElement &&
         ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key)
