@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { labelColor } from "../../constants/colors";
-import { set } from "date-fns";
 
 interface TransferItem {
   name: string;
@@ -13,11 +12,6 @@ interface OperatorSelectionModalProps {
 }
 
 const OperatorSelectionModal: React.FC<OperatorSelectionModalProps> = ({ isOpen, onClose }) => {
-
-  
-
-  const [IsCheckedAllRight, setIsCheckedAllRight] = useState(false);
-  
 
   const [placeholder1, setPlaceholder1] = useState("🔍️ 項目を検索する");
   const [placeholder2, setPlaceholder2] = useState("🔍️ 項目を検索する");
@@ -45,23 +39,21 @@ const OperatorSelectionModal: React.FC<OperatorSelectionModalProps> = ({ isOpen,
   const [selectedRight, setSelectedRight] = useState<string[]>([]);
 
   const isCheckedAllLeft = leftItems.length > 0 && selectedLeft.length === leftItems.length;
+  const isCheckedAllRight = rightItems.length > 0 && selectedRight.length === rightItems.length;
 
   const moveToRight = () => {
     const itemsToMove = leftItems.filter(item => selectedLeft.includes(item.id));
-    setRightItems(prev => [...prev, ...itemsToMove]);
+    setRightItems(prev => [...prev, ...itemsToMove].sort((a,b) => Number(a.id) - Number(b.id)));
     setLeftItems(prev => prev.filter(item => !selectedLeft.includes(item.id)));
     setSelectedLeft([]);
-    console.log("rightItems", rightItems);
   }
 
   const moveToLeft = () => {
     const itemsToMove = rightItems.filter(item => selectedRight.includes(item.id));
-    setLeftItems(prev => [...prev, ...itemsToMove]);
+    setLeftItems(prev => [...prev, ...itemsToMove].sort((a,b) => Number(a.id) - Number(b.id)));
     setRightItems(prev => prev.filter(item => !selectedRight.includes(item.id)));
-    console.log("itemsToMove", itemsToMove);
-    console.log(selectedRight)
     setSelectedRight([]);
-  } 
+  }
 
   const toggleSelection = (
     id: string,
@@ -83,11 +75,23 @@ const OperatorSelectionModal: React.FC<OperatorSelectionModalProps> = ({ isOpen,
 
     const handleClickAllLeft = () => {
         if (isCheckedAllLeft) {
-            setSelectedLeft([]); // bỏ chọn tất cả
+            setSelectedLeft([]); 
         } else {
-            setSelectedLeft(leftItems.map(item => item.id)); // chọn tất cả
+            setSelectedLeft(leftItems.map(item => item.id)); 
         }
     };
+
+    
+
+    const handleClickAllRight = () => {
+    if (isCheckedAllRight) {
+        setSelectedRight([]);
+    } else {
+        setSelectedRight(rightItems.map(item => item.id));
+    }
+    };
+
+
 
   return (
     <>
@@ -145,7 +149,11 @@ const OperatorSelectionModal: React.FC<OperatorSelectionModalProps> = ({ isOpen,
                 <div className="w-[40%] h-full ">
                     <div className={`${labelColor} px-2 border border-black`}>
                         <div className="flex items-center mt-1">
-                            <input type="checkbox" className="w-5 h-5 mr-3" />
+                            <input 
+                            checked={isCheckedAllRight}
+                            onChange={handleClickAllRight}
+                            type="checkbox" 
+                            className="w-5 h-5 mr-3" />
                             <span>選択済み項目（全10件）</span>
                         </div>
                         <input type="search"
@@ -159,6 +167,7 @@ const OperatorSelectionModal: React.FC<OperatorSelectionModalProps> = ({ isOpen,
                             <div key={item.id} className="flex items-center border border-gray-300 p-2 cursor-pointer">
                                 <input 
                                 onChange={() => toggleSelection(item.id, selectedRight, setSelectedRight)}
+                                checked = {selectedRight.includes(item.id)}
                                 type="checkbox" className="mr-3 w-5 h-5"/>
                                 <span>{item.name}</span>
                             </div>
