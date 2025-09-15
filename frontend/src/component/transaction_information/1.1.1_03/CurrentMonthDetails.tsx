@@ -42,7 +42,7 @@ const CurrentMonthDetails = ({ onSwitchScreen }: any) => {
   const titleStyle =
     "font-semibold w-full text-sm p-1 text-center border bg-[#80bad7] my-1";
 
-  const buttonLabelStyle = `my-1 h-8 flex items-center justify-center font-semibold text-sm bg-[#4770a5] w-full cursor-pointer hover:bg-white shadow-md transition-all duration-200 active:shadow-none active:translate-y-px `;
+  const buttonLabelStyle = `my-1 h-8 flex items-center justify-center font-semibold text-sm bg-[#4770a5] w-full cursor-pointer hover:bg-white shadow-md shadow-zinc-600 transition-all duration-200 active:shadow-none active:translate-y-px `;
 
   const verticalLabelStyle =
     "flex items-center justify-center text-sm font-semibold bg-[#80bad7] my-1";

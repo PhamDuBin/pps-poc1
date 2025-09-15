@@ -108,7 +108,7 @@ function CheckCurrentMonthSalesStatusScreen({ onSwitchScreen }: any) {
                     <div className={containerClass} key={idx}>
                       <button
                         onClick={handleOpenWindow}
-                        className={`text-base font-medium h-8 flex items-center justify-center bg-[#4770a5] w-full cursor-pointer hover:bg-white shadow-md transition-all duration-200 active:shadow-none active:translate-y-px`}
+                        className={`text-base font-medium h-8 flex items-center justify-center bg-[#4770a5] w-full cursor-pointer hover:bg-white shadow-md shadow-zinc-600 transition-all duration-200 active:shadow-none active:translate-y-px`}
                       >
                         {label}
                       </button>
@@ -129,7 +129,7 @@ function CheckCurrentMonthSalesStatusScreen({ onSwitchScreen }: any) {
                       {label === "保証金" ? (
                         <button
                           onClick={handleOpenWindow}
-                          className={`text-base font-medium h-8 flex items-center justify-center bg-[#4770a5] w-full cursor-pointer hover:bg-white shadow-md transition-all duration-200 active:shadow-none active:translate-y-px`}
+                          className={`text-base font-medium h-8 flex items-center justify-center bg-[#4770a5] w-full cursor-pointer hover:bg-white shadow-md shadow-zinc-600 transition-all duration-200 active:shadow-none active:translate-y-px`}
                         >
                           {label}
                         </button>
@@ -160,7 +160,7 @@ function CheckCurrentMonthSalesStatusScreen({ onSwitchScreen }: any) {
                     {label === "自振履歴" ? (
                       <button
                         onClick={handleOpenWindow}
-                        className={`text-base font-medium h-8 flex items-center justify-center bg-[#4770a5] w-full cursor-pointer hover:bg-white shadow-md transition-all duration-200 active:shadow-none active:translate-y-px`}
+                        className={`text-base font-medium h-8 flex items-center justify-center bg-[#4770a5] w-full cursor-pointer hover:bg-white shadow-md shadow-zinc-600 transition-all duration-200 active:shadow-none active:translate-y-px`}
                       >
                         {label}
                       </button>

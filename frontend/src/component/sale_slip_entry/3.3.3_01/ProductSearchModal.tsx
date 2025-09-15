@@ -218,13 +218,13 @@ const AdvancedSearchForm: React.FC<{
       <div className="flex flex-col gap-1 h-[64px]">
         <button
           onClick={handleSearchClick}
-          className="bg-gray-300 border border-gray-500 rounded px-8 font-bold hover:bg-gray-400 h-[30px]"
+          className="bg-gray-300 border border-gray-500 rounded px-8 font-bold hover:bg-gray-400 h-[30px] shadow-md shadow-zinc-600"
         >
           検索
         </button>
         <button
           onClick={handleResetClick}
-          className="bg-gray-300 border border-gray-500 rounded px-8 font-bold hover:bg-gray-400 h-[30px]"
+          className="bg-gray-300 border border-gray-500 rounded px-8 font-bold hover:bg-gray-400 h-[30px] shadow-md shadow-zinc-600"
         >
           再入力
         </button>
@@ -340,7 +340,7 @@ const ProductSearchModal: React.FC<ProductSearchModalProps> = ({
           <div className="flex items-center justify-center mb-8">
             <button
               onClick={onClose}
-              className="text-black border bg-[#D9D9D9] p-4"
+              className="text-black border bg-[#D9D9D9] p-4 shadow-md shadow-zinc-600"
             >
               {categoryName}
             </button>
@@ -467,13 +467,13 @@ const ProductSearchModal: React.FC<ProductSearchModalProps> = ({
           <div className="flex gap-2">
             <button
               onClick={openNewWindow}
-              className="bg-gray-700 text-white px-3 py-1 rounded text-sm"
+              className="bg-gray-700 text-white px-3 py-1 rounded text-sm shadow-md shadow-zinc-600"
             >
               F5引当済状況
             </button>
             <button
               onClick={openNewWindow}
-              className="bg-gray-700 text-white px-3 py-1 rounded text-sm"
+              className="bg-gray-700 text-white px-3 py-1 rounded text-sm shadow-md shadow-zinc-600"
             >
               F6在庫詳細表示
             </button>
@@ -482,14 +482,14 @@ const ProductSearchModal: React.FC<ProductSearchModalProps> = ({
         <div className="flex gap-4 w-full justify-center items-center">
           <button
             onClick={onClose}
-            className="bg-gray-300 border border-gray-500 rounded px-10 py-2 font-bold hover:bg-gray-400"
+            className="bg-gray-300 border border-gray-500 rounded px-10 py-2 font-bold hover:bg-gray-400 shadow-md shadow-zinc-600"
           >
             戻る (R)
           </button>
           <button
             onClick={onNext}
             disabled={activeIndex === null}
-            className={`border border-gray-500 rounded px-10 py-2 font-bold ${
+            className={`border border-gray-500 rounded px-10 py-2 font-bold shadow-md shadow-zinc-600 ${
               activeIndex !== null
                 ? "bg-gray-300 hover:bg-gray-400"
                 : "bg-gray-200 text-gray-400 cursor-not-allowed"

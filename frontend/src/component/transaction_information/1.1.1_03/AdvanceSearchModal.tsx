@@ -247,13 +247,13 @@ const AdvancedSearchForm: React.FC<{
       <div className="flex flex-col space-y-1">
         <button
           onClick={onSearch}
-          className="bg-[#80bad7] border border-black px-4 py-1 h-[26px] flex items-center justify-center"
+          className="bg-[#80bad7] border border-black px-4 py-1 h-[26px] flex items-center justify-center shadow-md shadow-zinc-600"
         >
           検索
         </button>
         <button
           onClick={handleResetForm}
-          className="bg-[#80bad7] border border-black px-4 py-1 h-[26px] flex items-center justify-center"
+          className="bg-[#80bad7] border border-black px-4 py-1 h-[26px] flex items-center justify-center shadow-md shadow-zinc-600"
         >
           再入力
         </button>
@@ -420,7 +420,7 @@ const AdvanceSearchModal: React.FC<AdvanceSearchModalProps> = ({
       <div className="flex justify-center">
         <button
           onClick={() => setShowAdvanceSearch(false)}
-          className="w-20 border border-black bg-[#80bad7] px-2 py-1 flex mt-2 justify-center"
+          className="w-20 border border-black bg-[#80bad7] px-2 py-1 flex mt-2 justify-center shadow-md shadow-zinc-600"
         >
           閉じる
         </button>

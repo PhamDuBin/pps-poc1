@@ -433,7 +433,7 @@ const SalesSlipEntry = forwardRef(
         </div>
         <div className="w-3/5 bottom-0 flex justify-center items-center mt-12 font-bold text-[16px] text-black">
           <button
-            className="bg-[#D9D9D9] border border-black px-12 py-2 rounded"
+            className="bg-[#D9D9D9] border border-black px-12 py-2 rounded shadow-md shadow-zinc-600"
             onClick={() => setIsOpenDepositProcess(!isOpenDepositProcess)}
           >
             {labelDeposit}

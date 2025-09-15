@@ -18,7 +18,7 @@ const BalanceDetailScreen = ({ onSwitchScreen }: any) => {
   };
 
   const buttonStyle =
-    "px-4 py-1.5 rounded-sm font-semibold w-[150px] bg-[#4770a5] cursor-pointer hover:bg-white shadow-md transition-all duration-200 active:shadow-none active:translate-y-px";
+    "px-4 py-1.5 rounded-sm font-semibold w-[150px] bg-[#4770a5] cursor-pointer hover:bg-white shadow-md shadow-zinc-600 transition-all duration-200 active:shadow-none active:translate-y-px";
 
   const detailsHeaders = [
     "日付",

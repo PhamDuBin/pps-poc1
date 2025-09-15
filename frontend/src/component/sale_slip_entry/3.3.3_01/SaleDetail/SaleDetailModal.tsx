@@ -280,7 +280,7 @@ const SaleDetailModal: React.FC<SaleDetailModalProps> = ({
           {/* Button */}
           <button
             onClick={onBackToCategorySelection}
-            className="flex items-center justify-center mb-8"
+            className="flex items-center justify-center mb-8 shadow-md shadow-zinc-600"
           >
             <span className="text-black border bg-[#D9D9D9] p-4">
               {categoryName}
@@ -305,7 +305,7 @@ const SaleDetailModal: React.FC<SaleDetailModalProps> = ({
         <div className="flex gap-4 w-full justify-center items-center">
           <button
             onClick={onClose}
-            className="bg-gray-300 border border-gray-500 rounded px-10 py-2 font-bold hover:bg-gray-400"
+            className="bg-gray-300 border border-gray-500 rounded px-10 py-2 font-bold hover:bg-gray-400 shadow-md shadow-zinc-600"
           >
             戻る (R)
           </button>
@@ -313,7 +313,7 @@ const SaleDetailModal: React.FC<SaleDetailModalProps> = ({
             onClick={() => {
               handleNext();
             }}
-            className="bg-gray-300 border border-gray-500 rounded px-10 py-2 font-bold hover:bg-gray-400"
+            className="bg-gray-300 border border-gray-500 rounded px-10 py-2 font-bold hover:bg-gray-400 shadow-md shadow-zinc-600"
           >
             選択 (N)
           </button>

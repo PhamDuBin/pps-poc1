@@ -25,7 +25,7 @@ const SaleDetailSelector: React.FC<SaleDetailSelectorProps> = ({
       </div>
       <button
         onClick={onReSearch}
-        className=" border border-black rounded px-1 shadow-lg"
+        className=" border border-black rounded px-1 shadow-md shadow-zinc-600"
       >
         <span className="w-[25%] m-2">再検索</span>
       </button>

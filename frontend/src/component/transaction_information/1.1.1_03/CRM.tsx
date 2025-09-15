@@ -107,7 +107,7 @@ const CRM = ({ onSwitchScreen }: any) => {
         <div className="flex justify-end w-[10%]">
           <button
             onClick={handleOpenWindow}
-            className=" px-6 py-1.5 rounded-sm font-semibold h-full bg-[#4770a5] cursor-pointer hover:bg-white shadow-md transition-all duration-200 active:shadow-none active:translate-y-px "
+            className=" px-6 py-1.5 rounded-sm shadow-zinc-600 font-semibold h-full bg-[#4770a5] cursor-pointer hover:bg-white shadow-md transition-all duration-200 active:shadow-none active:translate-y-px "
           >
             CRM分析
           </button>

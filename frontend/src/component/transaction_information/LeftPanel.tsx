@@ -400,7 +400,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
           >
             詳細検索（S）
           </button>
-          <button className="w-1/2 font-bold border text-center border-black p-2 text-white bg-[#4d7a90]">
+          <button className="w-1/2 font-bold border text-center border-black p-2 text-white bg-[#4d7a90] shadow-md shadow-zinc-600">
             請求親
           </button>
           <button
@@ -415,7 +415,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
               )
             }
             onMouseLeave={handleHideTooltip}
-            className="w-1/2 font-bold border text-center border-black p-2 bg-[#80bad7]"
+            className="w-1/2 font-bold border text-center border-black p-2 bg-[#80bad7] shadow-md shadow-zinc-600"
           >
             担当者
           </button>
@@ -432,7 +432,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
               )
             }
             onMouseLeave={handleHideTooltip}
-            className="w-1/2 font-bold border text-center border-black p-2 bg-[#80bad7]"
+            className="w-1/2 font-bold border text-center border-black p-2 bg-[#80bad7] shadow-md shadow-zinc-600"
           >
             顧客備考
           </button>
@@ -453,7 +453,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
             }
             onBlur={handleHideTooltip}
             onMouseLeave={handleHideTooltip}
-            className="w-1/2 font-bold border text-center border-black p-2 bg-[#80bad7]"
+            className="w-1/2 font-bold border text-center border-black p-2 bg-[#80bad7] shadow-md shadow-zinc-600"
           >
             日報入力
           </button>
