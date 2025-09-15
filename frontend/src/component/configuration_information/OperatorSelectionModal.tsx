@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { Transfer, Button } from "antd";
 import type { TransferProps } from "antd";
 import type { Key } from "react";
+import Title from "antd/es/skeleton/Title";
 
 interface TransferItem {
   key: string;
@@ -13,9 +14,10 @@ interface TransferItem {
 interface OperatorSelectionModalProps {
   isOpen: boolean;
   onClose: () => void;
+  title?: string;
 }
 
-const OperatorSelectionModal: React.FC<OperatorSelectionModalProps> = ({ isOpen, onClose }) => {
+const OperatorSelectionModal: React.FC<OperatorSelectionModalProps> = ({ isOpen, onClose , title}) => {
   // mock data
   const mockData: TransferItem[] = Array.from({ length: 20 }, (_, i) => ({
     key: (i + 1).toString(),
@@ -38,7 +40,7 @@ const OperatorSelectionModal: React.FC<OperatorSelectionModalProps> = ({ isOpen,
 
   return (
     <div className="bg-white rounded-lg shadow-xl w-[800px] h-[500px] p-4 flex flex-col">
-      <h2 className="text-xl font-bold text-center mb-4 bg-[#D9D9D9] py-2">事業者</h2>
+      <h2 className="text-xl font-bold text-center mb-4 bg-[#D9D9D9] py-2">{title}</h2>
 
       <div className="flex-1 flex justify-center items-center">
         <Transfer

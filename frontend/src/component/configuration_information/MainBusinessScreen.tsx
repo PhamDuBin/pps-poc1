@@ -1,9 +1,18 @@
 import { useState } from "react";
 import OperatorSelectionModal from "./OperatorSelectionModal";
+import ContinuousIssue from "./MainBusinessAreas/ContinuousIssue";
+import IndividualIssue from "./MainBusinessAreas/IndividualIssue";
+import { Target } from "lucide-react";
+import TargetCustomer from "./MainBusinessAreas/TargetCustomer";
+
 
 const MainBusinessScreen = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [condition, setCondition] = useState("連続発行");
+  const [isShowExtraForm, setIsShowExtraForm] = useState(false);
+  const [isShowTargetCustomer, setIsShowTargetCustomer] = useState(false);
+  const [selectedLabel, setSelectedLabel] = useState<string | null>(null);
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
@@ -12,6 +21,20 @@ const MainBusinessScreen = () => {
   const handleOpenModal = () => {
     setIsModalOpen(true);
   }
+
+  const handleChangeCondition = (value: string) => {
+    setCondition(value);
+  };
+
+  const handleShowExtraForm = () => {
+    setIsShowExtraForm(!isShowExtraForm);
+  };
+
+  const handleShowTargetCustomer = () => {
+    setIsShowTargetCustomer(!isShowTargetCustomer);
+  }
+
+
 
   const button =
     "flex text-center justify-center items-center bg-[#D9D9D9] border border-black shadow-xl font-bold";
@@ -45,21 +68,65 @@ const MainBusinessScreen = () => {
         </select>
         <span className={`${span}`}>発行方法</span>
         <div className="flex items-center">
-          <input type="radio" id="overall" className="mr-1" />
+          <input
+            type="radio"
+            id="overall"
+            name="issueMethod"
+            defaultChecked
+            value="連続発行"
+            className="mr-1"
+            onChange={(e) => handleChangeCondition(e.target.value)}
+          />
           <label htmlFor="overall">連続発行</label>
         </div>
         <div className="flex items-center">
-          <input type="radio" id="collective" className="mr-1" />
+          <input
+            type="radio"
+            id="collective"
+            name="issueMethod"
+            value={"個別発行"}
+            className="mr-1"
+            onChange={(e) => handleChangeCondition(e.target.value)}
+          />
           <label htmlFor="collective">個別発行</label>
         </div>
       </div>
       <div className="mt-3 flex flex-row px-40 font-bold text-lg justify-between h-10">
-        <button className={`${button} w-1/6`}>抽出条件 （1）</button>
-        <button className={`${button} w-1/6`}>対象顧客（2）</button>
+        <button onClick={handleShowExtraForm} className={`${button} w-1/6`}>抽出条件 （1）</button>
+        <button onClick={handleShowTargetCustomer} className={`${button} w-1/6`}>対象顧客（2）</button>
         <button className={`${button} w-1/6`}>印刷指定（3）</button>
         <button onClick={handleOpenModal} className={`${button} w-1/6`}>タイトル・鑑設定（4）</button>
       </div>
-      <div className="mt-3 h-[80%] border border-black"></div>
+      <div className="mt-3 h-[80%] border border-black p-4 overflow-auto">
+        <div>
+          {isShowExtraForm && 
+            <div>
+              {condition === "連続発行" ? (
+                <>
+                  {/* ContinuousIssue component */}
+                  <ContinuousIssue />
+                </>
+              ) : (
+                <>
+                  {/* IndividualIssue component */}
+                  <IndividualIssue />
+                </>
+              )}
+            </div>
+          }
+          
+        </div>
+        <div>
+          {isShowTargetCustomer && 
+            <div className="mt-2">
+                <TargetCustomer onLabelClick={(title) => {
+                  setSelectedLabel(title);
+                  setIsModalOpen(true);
+                }} />
+            </div>
+          }
+        </div>
+      </div>
       <div className="mt-2 flex flex-row justify-between">
         <button className={`${button} w-[10%]`}>条件保存（F3）</button>
         <button className={`${button} w-[10%]`}>伝票メモ設定（F7）</button>
@@ -72,6 +139,7 @@ const MainBusinessScreen = () => {
       {isModalOpen && 
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center z-50">
           <OperatorSelectionModal 
+          title={selectedLabel ?? ""} 
           isOpen={isModalOpen}
           onClose={handleCloseModal}
           />
