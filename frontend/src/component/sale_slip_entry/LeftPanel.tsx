@@ -45,6 +45,57 @@ export const rowData = [
   "東京事務所03",
 ];
 
+const tableData = [
+  {
+    code: "00000001",
+    name: "担当者 太郎",
+    kana: "タントウシャ タロウ",
+    office: "東京事務所03",
+  },
+  {
+    code: "00000002",
+    name: "顧客 次郎",
+    kana: "コキャク ジロウ",
+    office: "大阪事務所01",
+  },
+  {
+    code: "00000003",
+    name: "商品 三郎",
+    kana: "ショウヒン サブロウ",
+    office: "名古屋事務所02",
+  },
+  {
+    code: "00000004",
+    name: "山田 花子",
+    kana: "ヤマダ ハナコ",
+    office: "福岡事務所04",
+  },
+  {
+    code: "00000005",
+    name: "佐藤 一郎",
+    kana: "サトウ イチロウ",
+    office: "札幌事務所05",
+  },
+  {
+    code: "00000006",
+    name: "鈴木 健太",
+    kana: "スズキ ケンタ",
+    office: "東京事務所03",
+  },
+  {
+    code: "00000007",
+    name: "高橋 直子",
+    kana: "タカハシ ナオコ",
+    office: "広島事務所06",
+  },
+  {
+    code: "00000008",
+    name: "田中 雄大",
+    kana: "タナカ ユウダイ",
+    office: "仙台事務所07",
+  },
+];
+
 export const colWidths = ["15%", "25%", "25%", "35%"];
 
 export const fieldDefinitions = [
@@ -90,8 +141,6 @@ export const fieldDefinitions = [
   { id: "deliverySlipNo", label: "出庫伝票No.", type: "input" },
 ] as const;
 
-const rowCount = 8;
-
 type LeftPanelProps = {
   showAdvanceSearch: boolean;
   setShowAdvanceSearch: React.Dispatch<React.SetStateAction<boolean>>;
@@ -134,12 +183,60 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
 
   const firstInputRef = useRef<HTMLInputElement>(null);
   const customerCodeSelectRef = useRef<HTMLSelectElement>(null);
+  const kanaInputRef = useRef<HTMLInputElement>(null);
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const tableBodyRef = useRef<HTMLTableSectionElement>(null);
+
+  const handleTableKeyDown = (e: React.KeyboardEvent) => {
+    if (activeIndex === null) return;
+
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      const nextIndex = Math.min(activeIndex + 1, tableData.length - 1);
+      setActiveIndex(nextIndex);
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      const prevIndex = Math.max(activeIndex - 1, 0);
+      setActiveIndex(prevIndex);
+    } else if (e.key === "Enter") {
+      e.preventDefault();
+      setSelectedRow(true);
+    }
+  };
+
+  useEffect(() => {
+    if (showTable) {
+      setActiveIndex(0);
+    } else {
+      setActiveIndex(null);
+    }
+  }, [showTable]);
+
+  useEffect(() => {
+    if (activeIndex !== null && tableBodyRef.current) {
+      const row = tableBodyRef.current.children[activeIndex] as HTMLElement;
+      if (row) {
+        row.focus();
+        row.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+      }
+    }
+  }, [activeIndex]);
 
   useEffect(() => {
     if (firstInputRef.current) {
       firstInputRef.current.focus();
     }
   }, []);
+  useEffect(() => {
+    if (showCustomer) {
+      setTimeout(() => {
+        kanaInputRef.current?.focus();
+      }, 0);
+    }
+  }, [showCustomer]);
 
   type FieldId = (typeof fieldDefinitions)[number]["id"];
   type FormValues = { [key in FieldId]?: string | string[] };
@@ -402,7 +499,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
                 </div>
                 <button
                   onClick={() => setShowDepart(false)}
-                  className=" border border-black rounded p-1"
+                  className=" border border-black rounded p-1 shadow-md shadow-zinc-600"
                 >
                   <span className="w-[25%] m-2">再検索</span>
                 </button>
@@ -451,7 +548,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
                       customerCode: ["", ""],
                     }));
                   }}
-                  className=" border border-black rounded p-1"
+                  className=" border border-black rounded p-1 shadow-md shadow-zinc-600"
                 >
                   <span className="w-[25%] m-2">再検索</span>
                 </button>
@@ -559,7 +656,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
                       <label className="bg-[#80bad7] p-1 font-bold w-24 text-center  mr-2">
                         検索種類
                       </label>
-                      <label className="bg-[#ebcec0] w-64 p-1 font-bold text-center">
+                      <label className="bg-[#80bad7] w-64 p-1 font-bold text-center">
                         カナ
                       </label>
                     </>
@@ -573,6 +670,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
                         </select>
                       </form>
                       <input
+                        ref={kanaInputRef}
                         type="text"
                         className="w-64 p-1 border border-gray-500 bg-[#ebcec0]"
                         value={kanaInput}
@@ -649,7 +747,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
                   <button
                     disabled
                     key={index}
-                    className={`border text-center bg-white border-black p-0.5 mr-1 ${
+                    className={`border text-center bg-white border-black p-0.5 mr-1 shadow-md shadow-zinc-600 ${
                       isWide ? "w-20" : "w-8"
                     }`}
                   >
@@ -659,36 +757,70 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
               })}
             </div>
             {showTable && (
-              <div>
-                <div className="flex w-full">
-                  {tableHeaders.map((header, colIndex) => (
-                    <div
-                      key={header}
-                      style={{ width: colWidths[colIndex] }}
-                      className="flex pl-1 text-sm bg-[#80bad7] font-semibold border border-[#5D5D5D] m-0.5 h-8 items-center"
-                    >
-                      {header}
-                    </div>
-                  ))}
-                </div>
-                <div className="h-48 overflow-y-auto">
-                  {Array.from({ length: rowCount }).map((_, rowIndex) => (
-                    <div
-                      key={rowIndex}
-                      className="flex"
-                      onClick={() => setSelectedRow(true)}
-                    >
-                      {rowData.map((data, cellIndex) => (
-                        <div
-                          key={cellIndex}
-                          style={{ width: colWidths[cellIndex] }}
-                          className=" pl-1 flex items-center border border-[#DFDEDE] text-sm m-0.5 bg-[#ebcec0] h-8"
+              <div className="mt-4">
+                <div className="h-48 overflow-y-auto border border-[#5D5D5D]">
+                  <table className="w-full border-collapse">
+                    <thead className="bg-[#80bad7] sticky top-0 z-10">
+                      <tr>
+                        {tableHeaders.map((header, colIndex) => (
+                          <th
+                            key={header}
+                            style={{ width: colWidths[colIndex] }}
+                            className="pl-1 text-sm font-semibold border-b border-r border-[#5D5D5D] h-8 items-center text-left"
+                          >
+                            {header}
+                          </th>
+                        ))}
+                      </tr>
+                    </thead>
+
+                    <tbody ref={tableBodyRef} onKeyDown={handleTableKeyDown}>
+                      {tableData.map((row, rowIndex) => (
+                        <tr
+                          key={row.code}
+                          tabIndex={-1}
+                          onClick={() => {
+                            setActiveIndex(rowIndex);
+                            setSelectedRow(true);
+                          }}
+                          onDoubleClick={() => {
+                            setActiveIndex(rowIndex);
+                            setSelectedRow(true);
+                          }}
+                          className={`cursor-pointer focus:outline-none ${
+                            activeIndex === rowIndex
+                              ? "bg-blue-300 "
+                              : "hover:bg-yellow-200"
+                          }`}
                         >
-                          {data}
-                        </div>
+                          <td
+                            style={{ width: colWidths[0] }}
+                            className="pl-1 border-r border-b border-[#DFDEDE] text-sm m-0.5  h-8"
+                          >
+                            {row.code}
+                          </td>
+                          <td
+                            style={{ width: colWidths[1] }}
+                            className="pl-1 border-r border-b border-[#DFDEDE] text-sm m-0.5  h-8"
+                          >
+                            {row.name}
+                          </td>
+                          <td
+                            style={{ width: colWidths[2] }}
+                            className="pl-1 border-r border-b border-[#DFDEDE] text-sm m-0.5  h-8"
+                          >
+                            {row.kana}
+                          </td>
+                          <td
+                            style={{ width: colWidths[3] }}
+                            className="pl-1 border-b border-[#DFDEDE] text-sm m-0.5  h-8"
+                          >
+                            {row.office}
+                          </td>
+                        </tr>
                       ))}
-                    </div>
-                  ))}
+                    </tbody>
+                  </table>
                 </div>
               </div>
             )}
@@ -705,7 +837,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
               </div>
               <button
                 onClick={() => setSelectedRow(false)}
-                className=" border border-black rounded p-1"
+                className=" border border-black rounded p-1 shadow-md shadow-zinc-600"
               >
                 <span className="w-[25%] m-2">再検索</span>
               </button>

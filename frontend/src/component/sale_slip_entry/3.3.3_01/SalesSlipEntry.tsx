@@ -51,9 +51,20 @@ const SalesSlipEntry = forwardRef(
     const [showUriageDatePicker, setShowUriageDatePicker] = useState(false);
 
     const uriageDateInputRef = useRef<HTMLInputElement>(null);
+    const billingDateButtonRef = useRef<HTMLInputElement>(null);
+
     useImperativeHandle(ref, () => ({
       focusUriageDateInput: () => {
         uriageDateInputRef.current?.focus();
+      },
+      openCategorySelection: () => {
+        setIsOpenCategorySelection(true);
+      },
+      focusBillingDatePicker: () => {
+        billingDateButtonRef.current?.focus();
+      },
+      toggleDepositProcess: () => {
+        setIsOpenDepositProcess((prev) => !prev);
       },
     }));
     const handleClickSlip = (index: number) => {
@@ -225,12 +236,12 @@ const SalesSlipEntry = forwardRef(
     return (
       <div className=" w-full h-full flex flex-col items-center px-4 pt-4 2xl:text-[16px] text-[11px]">
         {/* Header */}
-        <div className="w-[85%]">
+        <div className="w-full">
           <div className="bg-[#D9D9D9] text-center font-bold py-2">
             <h1 className="text-[24px] font-bold text-black">売上伝票入力</h1>
           </div>
         </div>
-        <div className="h-full w-[80%] mx-60 mt-4">
+        <div className="h-full w-[95%] mx-60 mt-4">
           {/* Customer Info */}
           <div className="w-full p-2 grid lg:grid-cols-4 grid-cols-3  gap-x-4 gap-y-2 whitespace-nowrap font-bold  text-black border border-black">
             <div className="flex items-center">
@@ -295,6 +306,7 @@ const SalesSlipEntry = forwardRef(
               </label>
               <div className="relative ml-1 w-1/2">
                 <input
+                  ref={billingDateButtonRef}
                   type="text"
                   value={keiriDate ? format(keiriDate, "yyyy/MM") : ""}
                   readOnly

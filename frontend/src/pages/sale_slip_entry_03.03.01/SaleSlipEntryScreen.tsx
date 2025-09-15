@@ -7,6 +7,9 @@ import SalesSlipEntry from "../../component/sale_slip_entry/3.3.3_01/SalesSlipEn
 
 type SalesSlipEntryHandle = {
   focusUriageDateInput: () => void;
+  openCategorySelection: () => void;
+  focusBillingDatePicker: () => void;
+  toggleDepositProcess: () => void;
 };
 
 const SaleSlipEntryScreen = () => {
@@ -22,6 +25,19 @@ const SaleSlipEntryScreen = () => {
 
   const handleButtonClick = (buttonName: string) => {
     setActiveScreen(buttonName);
+    switch (buttonName) {
+      case "行追加":
+        salesSlipEntryRef.current?.openCategorySelection();
+        break;
+      case "請求年月変更":
+        salesSlipEntryRef.current?.focusBillingDatePicker();
+        break;
+      case "入金処理":
+        salesSlipEntryRef.current?.toggleDepositProcess();
+        break;
+      default:
+        break;
+    }
   };
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -66,16 +82,22 @@ const SaleSlipEntryScreen = () => {
       {!showLeftPanel && (
         <div className="relative flex items-center h-full w-2 bg-[#e6cfcf]"></div>
       )}
-      {showLeftPanel && (
-        <div className="w-[600px] transition-all duration-300 absolute z-20">
-          <LeftPanel
-            showAdvanceSearch={showAdvanceSearch}
-            setShowAdvanceSearch={setShowAdvanceSearch}
-            showCustomer={showCustomerInLeftPanel}
-            setShowCustomer={setShowCustomerInLeftPanel}
-          />
-        </div>
-      )}
+
+      <div
+        className={
+          showLeftPanel
+            ? "w-[600px] transition-all duration-300 absolute z-20"
+            : "hidden"
+        }
+      >
+        <LeftPanel
+          showAdvanceSearch={showAdvanceSearch}
+          setShowAdvanceSearch={setShowAdvanceSearch}
+          showCustomer={showCustomerInLeftPanel}
+          setShowCustomer={setShowCustomerInLeftPanel}
+        />
+      </div>
+
       {showLeftPanel ? (
         <CircleArrowLeft
           className={`absolute left-[36.8rem] top-1/2 -translate-y-1/2 text-black w-5 h-5 cursor-pointer bg-[#d8dadc] rounded-full shadow 

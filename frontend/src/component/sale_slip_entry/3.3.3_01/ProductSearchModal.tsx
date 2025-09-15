@@ -57,6 +57,126 @@ const mockData = [
     allocated: "2.00",
     available: "8.00",
   },
+  {
+    id: 5,
+    productCode: "1900004",
+    makerCode: "メーカ084",
+    no: "KP-20",
+    name: "二連二重コンローバー",
+    warehouse: "事務所0001-001",
+    price: "12,000.00",
+    stock: "10.00",
+    allocated: "2.00",
+    available: "8.00",
+  },
+  {
+    id: 6,
+    productCode: "1900004",
+    makerCode: "メーカ084",
+    no: "KP-20",
+    name: "二連二重コンローバー",
+    warehouse: "事務所0001-001",
+    price: "12,000.00",
+    stock: "10.00",
+    allocated: "2.00",
+    available: "8.00",
+  },
+  {
+    id: 7,
+    productCode: "1900004",
+    makerCode: "メーカ084",
+    no: "KP-20",
+    name: "二連二重コンローバー",
+    warehouse: "事務所0001-001",
+    price: "12,000.00",
+    stock: "10.00",
+    allocated: "2.00",
+    available: "8.00",
+  },
+  {
+    id: 1,
+    productCode: "1900004",
+    makerCode: "メーカ084",
+    no: "KP-20",
+    name: "二連二重コンローバー",
+    warehouse: "0001-001",
+    price: "12,000.00",
+    stock: "10.00",
+    allocated: "2.00",
+    available: "8.00",
+  },
+  {
+    id: 2,
+    productCode: "1900004",
+    makerCode: "メーカ084",
+    no: "KP-20",
+    name: "二連二重コンローバー",
+    warehouse: "事務所0001-001",
+    price: "12,000.00",
+    stock: "10.00",
+    allocated: "2.00",
+    available: "8.00",
+  },
+  {
+    id: 3,
+    productCode: "1900004",
+    makerCode: "メーカ084",
+    no: "KP-20",
+    name: "二連二重コンローバー",
+    warehouse: "0001-001",
+    price: "12,000.00",
+    stock: "10.00",
+    allocated: "2.00",
+    available: "8.00",
+  },
+  {
+    id: 4,
+    productCode: "1900004",
+    makerCode: "メーカ084",
+    no: "KP-20",
+    name: "二連二重コンローバー",
+    warehouse: "事務所0001-001",
+    price: "12,000.00",
+    stock: "10.00",
+    allocated: "2.00",
+    available: "8.00",
+  },
+  {
+    id: 5,
+    productCode: "1900004",
+    makerCode: "メーカ084",
+    no: "KP-20",
+    name: "二連二重コンローバー",
+    warehouse: "事務所0001-001",
+    price: "12,000.00",
+    stock: "10.00",
+    allocated: "2.00",
+    available: "8.00",
+  },
+  {
+    id: 6,
+    productCode: "1900004",
+    makerCode: "メーカ084",
+    no: "KP-20",
+    name: "二連二重コンローバー",
+    warehouse: "事務所0001-001",
+    price: "12,000.00",
+    stock: "10.00",
+    allocated: "2.00",
+    available: "8.00",
+  },
+  {
+    id: 7,
+    productCode: "1900004",
+    makerCode: "メーカ084",
+    no: "KP-20",
+    name: "二連二重コンローバー",
+    warehouse: "事務所0001-001",
+    price: "12,000.00",
+    stock: "10.00",
+    allocated: "2.00",
+    available: "8.00",
+  },
 ];
 
 const fieldDefinitions = [
@@ -254,10 +374,14 @@ const ProductSearchModal: React.FC<ProductSearchModalProps> = ({
   };
 
   useEffect(() => {
-    if (hasSearched && tableBodyRef.current && activeIndex !== null) {
+    if (activeIndex !== null && tableBodyRef.current) {
       const row = tableBodyRef.current.children[activeIndex] as HTMLElement;
       if (row) {
         row.focus();
+        row.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
       }
     }
   }, [activeIndex, hasSearched]);

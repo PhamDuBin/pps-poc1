@@ -26,7 +26,7 @@ export default function CategorySelectionModal({
   }, []);
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.ctrlKey || event.metaKey) {
+      if (event.ctrlKey || event.metaKey || event.altKey) {
         event.preventDefault();
 
         switch (event.key) {

@@ -276,6 +276,7 @@ const AdvanceSearchModal: React.FC<AdvanceSearchModalProps> = ({
   const [searchMode, setSearchMode] = useState<string>("overall");
   const [tableData, setTableData] = useState<TableRowData[]>([]);
   const tbodyRef = useRef<HTMLTableSectionElement>(null);
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
   const handleSearch = () => {
     const mockData = Array.from({ length: 12 }).map((_, index) => ({
@@ -285,42 +286,50 @@ const AdvanceSearchModal: React.FC<AdvanceSearchModalProps> = ({
       building: `建物 ${index + 1}`,
     }));
     setTableData(mockData);
+    setActiveIndex(0);
   };
 
   const handleReset = () => {
     setTableData([]);
+    setActiveIndex(null);
   };
 
   useEffect(() => {
-    if (tableData.length > 0 && tbodyRef.current) {
-      const firstRow = tbodyRef.current.querySelector("tr");
-      if (firstRow) {
-        firstRow.focus();
+    if (activeIndex !== null && tbodyRef.current) {
+      const row = tbodyRef.current.children[activeIndex] as HTMLElement;
+      if (row) {
+        row.focus();
+        row.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
       }
     }
-  }, [tableData]);
+  }, [activeIndex]);
 
-  const handleRowKeyDown = (e: React.KeyboardEvent<HTMLTableRowElement>) => {
-    const currentRow = e.currentTarget;
+  const handleTableKeyDown = (
+    e: React.KeyboardEvent<HTMLTableSectionElement>
+  ) => {
+    if (activeIndex === null) return;
 
-    if (e.key === "Enter") {
-      e.preventDefault();
-      onRowEnter();
-      setShowAdvanceSearch(false);
-    } else if (e.key === "ArrowUp") {
-      e.preventDefault();
-      const prevRow =
-        currentRow.previousElementSibling as HTMLTableRowElement | null;
-      if (prevRow) {
-        prevRow.focus();
-      }
-    } else if (e.key === "ArrowDown") {
-      e.preventDefault();
-      const nextRow =
-        currentRow.nextElementSibling as HTMLTableRowElement | null;
-      if (nextRow) {
-        nextRow.focus();
-      }
+    switch (e.key) {
+      case "ArrowDown":
+        e.preventDefault();
+        const nextIndex = Math.min(activeIndex + 1, tableData.length - 1);
+        setActiveIndex(nextIndex);
+        break;
+      case "ArrowUp":
+        e.preventDefault();
+        const prevIndex = Math.max(activeIndex - 1, 0);
+        setActiveIndex(prevIndex);
+        break;
+      case "Enter":
+        e.preventDefault();
+        onRowEnter();
+        setShowAdvanceSearch(false);
+        break;
+      default:
+        break;
     }
   };
 
@@ -377,13 +386,22 @@ const AdvanceSearchModal: React.FC<AdvanceSearchModalProps> = ({
               <th className="border border-black p-1">住所名称 / 部屋番号</th>
             </tr>
           </thead>
-          <tbody ref={tbodyRef}>
+          <tbody ref={tbodyRef} onKeyDown={handleTableKeyDown}>
             {tableData.map((row, idx) => (
               <tr
                 key={idx}
-                className="group hover:bg-blue-50 focus:bg-blue-200 outline-none"
-                onKeyDown={handleRowKeyDown}
-                tabIndex={0}
+                className={`outline-none ${
+                  activeIndex === idx ? "bg-blue-300" : "hover:bg-blue-200"
+                }`}
+                onClick={() => {
+                  setActiveIndex(idx);
+                }}
+                onDoubleClick={() => {
+                  setActiveIndex(idx);
+                  onRowEnter();
+                  setShowAdvanceSearch(false);
+                }}
+                tabIndex={-1}
               >
                 <td
                   onClick={() => setShowAdvanceSearch(false)}

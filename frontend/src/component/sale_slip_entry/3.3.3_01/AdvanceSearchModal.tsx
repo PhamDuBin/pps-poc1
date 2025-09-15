@@ -6,7 +6,7 @@ type TableRowData = {
   building: string;
 };
 const fieldDefinitions = [
-  { id: "allTel", label: "ALL電話番号", type: "single" },
+  { id: "allTel", label: "カナ氏名（あいまい）", type: "single" },
   {
     id: "customerCode",
     label: "顧客コード",
@@ -89,6 +89,13 @@ const AdvancedSearchForm: React.FC<{
   );
   const [formValues, setFormValues] = useState<FormValues>({});
   const currentField = fieldDefinitions.find((f) => f.id === selectedFieldId);
+  const firstInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (firstInputRef.current) {
+      firstInputRef.current.focus();
+    }
+  }, []);
 
   const handleValueChange = (
     value: string,
@@ -187,6 +194,7 @@ const AdvancedSearchForm: React.FC<{
         return (
           <input
             type="text"
+            ref={firstInputRef}
             className="border border-black p-1 w-full"
             value={(typeof value === "string" && value) || ""}
             onChange={(e) => handleValueChange(e.target.value)}
@@ -258,6 +266,7 @@ const AdvanceSearchModal: React.FC<AdvanceSearchModalProps> = ({
   const [searchMode, setSearchMode] = useState<string>("overall");
   const [tableData, setTableData] = useState<TableRowData[]>([]);
   const tbodyRef = useRef<HTMLTableSectionElement>(null);
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
   const handleSearch = () => {
     const mockData = Array.from({ length: 12 }).map((_, index) => ({
@@ -267,36 +276,52 @@ const AdvanceSearchModal: React.FC<AdvanceSearchModalProps> = ({
       building: `建物 ${index + 1}`,
     }));
     setTableData(mockData);
+    setActiveIndex(0);
   };
 
   const handleReset = () => {
     setTableData([]);
+    setActiveIndex(null);
   };
 
   useEffect(() => {
-    if (tableData.length > 0 && tbodyRef.current) {
-      const firstRow = tbodyRef.current.querySelector("tr");
-      if (firstRow) {
-        firstRow.focus();
+    if (activeIndex !== null && tbodyRef.current) {
+      const row = tbodyRef.current.children[activeIndex] as HTMLElement;
+      if (row) {
+        row.focus();
+        row.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
       }
     }
-  }, [tableData]);
+  }, [activeIndex]);
 
-  const handleRowKeyDown = (e: React.KeyboardEvent<HTMLTableRowElement>) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      onRowEnter();
-      setShowAdvanceSearch(false);
+  const handleTableKeyDown = (
+    e: React.KeyboardEvent<HTMLTableSectionElement>
+  ) => {
+    if (activeIndex === null) return;
+
+    switch (e.key) {
+      case "ArrowDown":
+        e.preventDefault();
+        const nextIndex = Math.min(activeIndex + 1, tableData.length - 1);
+        setActiveIndex(nextIndex);
+        break;
+      case "ArrowUp":
+        e.preventDefault();
+        const prevIndex = Math.max(activeIndex - 1, 0);
+        setActiveIndex(prevIndex);
+        break;
+      case "Enter":
+        e.preventDefault();
+        onRowEnter();
+        setShowAdvanceSearch(false);
+        break;
+      default:
+        break;
     }
   };
-
-  const firstInputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    if (firstInputRef.current) {
-      firstInputRef.current.focus();
-    }
-  }, []);
 
   return (
     <div className="p-4 bg-white text-black w-full text-sm">
@@ -311,7 +336,6 @@ const AdvanceSearchModal: React.FC<AdvanceSearchModalProps> = ({
         <div className="flex items-center space-x-4">
           <div className="flex items-center">
             <input
-              ref={firstInputRef}
               type="radio"
               id="overall"
               name="searchMode"
@@ -376,35 +400,36 @@ const AdvanceSearchModal: React.FC<AdvanceSearchModalProps> = ({
               <th className="border border-black p-1">住所名称 / 部屋番号</th>
             </tr>
           </thead>
-          <tbody ref={tbodyRef}>
+          <tbody ref={tbodyRef} onKeyDown={handleTableKeyDown}>
             {tableData.map((row, idx) => (
               <tr
                 key={idx}
-                className="hover:bg-blue-50 focus:bg-blue-200 outline-none"
-                onKeyDown={handleRowKeyDown}
-                tabIndex={0}
+                className={`outline-none ${
+                  activeIndex === idx ? "bg-blue-300" : "hover:bg-blue-200"
+                }`}
+                tabIndex={-1}
               >
                 <td
                   onClick={() => setShowAdvanceSearch(false)}
-                  className="bg-[#ebcec0] border border-black p-1 cursor-pointer"
+                  className=" border border-black p-1 cursor-pointer"
                 >
                   {row.kanaName}
                 </td>
                 <td
                   onClick={() => setShowAdvanceSearch(false)}
-                  className="bg-[#ebcec0] border border-black p-1 cursor-pointer"
+                  className=" border border-black p-1 cursor-pointer"
                 >
                   {row.name}
                 </td>
                 <td
                   onClick={() => setShowAdvanceSearch(false)}
-                  className="bg-[#ebcec0] border border-black p-1 cursor-pointer"
+                  className=" border border-black p-1 cursor-pointer"
                 >
                   {row.address}
                 </td>
                 <td
                   onClick={() => setShowAdvanceSearch(false)}
-                  className="bg-[#ebcec0] border border-black p-1 cursor-pointer"
+                  className=" border border-black p-1 cursor-pointer"
                 >
                   {row.building}
                 </td>
