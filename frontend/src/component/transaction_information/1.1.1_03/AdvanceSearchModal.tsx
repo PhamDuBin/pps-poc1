@@ -1,12 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
+
 type TableRowData = {
   kanaName: string;
   name: string;
   address: string;
   building: string;
 };
+
 const fieldDefinitions = [
-  { id: "allTel", label: "ALL電話番号", type: "single" },
+  { id: "allTel", label: "カナ氏名（あいまい）", type: "single" },
   {
     id: "customerCode",
     label: "顧客コード",
@@ -90,40 +92,52 @@ const AdvancedSearchForm: React.FC<{
   const [formValues, setFormValues] = useState<FormValues>({});
   const currentField = fieldDefinitions.find((f) => f.id === selectedFieldId);
 
-  const handleValueChange = (
-    value: string,
-    index: number | null = null
-  ): void => {
+  const firstInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (firstInputRef.current) {
+      firstInputRef.current.focus();
+    }
+  }, []);
+
+  const handleValueChange = (value: string, index: number | null = null) => {
     if (!currentField) return;
+
     let newValues =
       formValues[selectedFieldId] ||
       (currentField.type === "multi" || currentField.type === "double"
         ? []
         : "");
+
     if (
       currentField.type === "multi" ||
       currentField.type === "double" ||
       currentField.type === "dropdown"
     ) {
       let tempArray: string[];
+
       if (Array.isArray(newValues)) {
         tempArray = [...newValues];
       } else {
         tempArray = currentField.type === "dropdown" ? ["0", ""] : [];
       }
+
       if (index !== null) {
         tempArray[index] = value;
       }
+
       newValues = tempArray;
     } else {
       newValues = value;
     }
+
     setFormValues((prev) => ({ ...prev, [selectedFieldId]: newValues }));
   };
 
   const renderDynamicInput = (): React.ReactNode => {
     if (!currentField) return null;
     const value = formValues[currentField.id];
+
     switch (currentField.type) {
       case "multi":
         return (
@@ -143,6 +157,7 @@ const AdvancedSearchForm: React.FC<{
             ))}
           </div>
         );
+
       case "dropdown":
         return (
           <div className="flex items-center space-x-1">
@@ -151,7 +166,7 @@ const AdvancedSearchForm: React.FC<{
               className="border border-black p-1 placeholder-black w-[40px]"
               placeholder="0"
             />
-            <span> - </span>
+            <span>-</span>
             <input
               type="text"
               className="border border-black p-1 flex-1"
@@ -160,10 +175,11 @@ const AdvancedSearchForm: React.FC<{
             />
           </div>
         );
+
       case "double":
         return (
           <div className="flex flex-col space-y-1">
-            <div className=" bg-gray-300 flex text-center justify-center p-1">
+            <div className="bg-gray-300 flex text-center justify-center p-1">
               {currentField.placeholders?.[0]}
             </div>
             <input
@@ -172,7 +188,7 @@ const AdvancedSearchForm: React.FC<{
               value={(Array.isArray(value) && value[0]) || ""}
               onChange={(e) => handleValueChange(e.target.value, 0)}
             />
-            <div className=" bg-gray-300 flex text-center justify-center p-1">
+            <div className="bg-gray-300 flex text-center justify-center p-1">
               {currentField.placeholders?.[1]}
             </div>
             <input
@@ -183,9 +199,11 @@ const AdvancedSearchForm: React.FC<{
             />
           </div>
         );
+
       default:
         return (
           <input
+            ref={firstInputRef}
             type="text"
             className="border border-black p-1 w-full"
             value={(typeof value === "string" && value) || ""}
@@ -220,21 +238,19 @@ const AdvancedSearchForm: React.FC<{
       </div>
 
       <div className="flex-grow">
-        <label className="flex text-center justify-center text-xs font-semibold mb-1 p-1 bg-[#80bad7] ">
+        <label className="flex text-center justify-center text-xs font-semibold mb-1 p-1 bg-[#80bad7]">
           {currentField?.label}
         </label>
         {renderDynamicInput()}
       </div>
 
       <div className="flex flex-col space-y-1">
-        {/* MODIFIED: Thêm onClick cho nút 検索 */}
         <button
           onClick={onSearch}
           className="bg-[#80bad7] border border-black px-4 py-1 h-[26px] flex items-center justify-center"
         >
           検索
         </button>
-        {/* MODIFIED: Thêm onClick cho nút 再入力 */}
         <button
           onClick={handleResetForm}
           className="bg-[#80bad7] border border-black px-4 py-1 h-[26px] flex items-center justify-center"
@@ -285,92 +301,75 @@ const AdvanceSearchModal: React.FC<AdvanceSearchModalProps> = ({
   }, [tableData]);
 
   const handleRowKeyDown = (e: React.KeyboardEvent<HTMLTableRowElement>) => {
+    const currentRow = e.currentTarget;
+
     if (e.key === "Enter") {
       e.preventDefault();
       onRowEnter();
       setShowAdvanceSearch(false);
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      const prevRow =
+        currentRow.previousElementSibling as HTMLTableRowElement | null;
+      if (prevRow) {
+        prevRow.focus();
+      }
+    } else if (e.key === "ArrowDown") {
+      e.preventDefault();
+      const nextRow =
+        currentRow.nextElementSibling as HTMLTableRowElement | null;
+      if (nextRow) {
+        nextRow.focus();
+      }
     }
   };
-
-  const firstInputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    if (firstInputRef.current) {
-      firstInputRef.current.focus();
-    }
-  }, []);
 
   return (
     <div className="p-4 bg-white text-black w-full text-sm">
       <div className="bg-[#80bad7] border border-black p-2 text-center font-bold mb-2">
         顧客検索
       </div>
-      <div className="flex items-center space-x-6 bg-[#80bad7]  p-2 border border-black">
+
+      {/* Search mode */}
+      <div className="flex items-center space-x-6 bg-[#80bad7] p-2 border border-black">
         <div className="flex items-center space-x-2">
           <label className="font-semibold">事務所</label>
           <span>0000-000 全指定</span>
         </div>
+
         <div className="flex items-center space-x-4">
-          <div className="flex items-center">
-            <input
-              ref={firstInputRef}
-              type="radio"
-              id="overall"
-              name="searchMode"
-              value="overall"
-              checked={searchMode === "overall"}
-              onChange={(e) => setSearchMode(e.target.value)}
-              className="mr-1"
-            />
-            <label htmlFor="overall">全体検索</label>
-          </div>
-          <div className="flex items-center">
-            <input
-              type="radio"
-              id="collective"
-              name="searchMode"
-              value="collective"
-              checked={searchMode === "collective"}
-              onChange={(e) => setSearchMode(e.target.value)}
-              className="mr-1"
-            />
-            <label htmlFor="collective">集合検索</label>
-          </div>
-          <div className="flex items-center">
-            <input
-              type="radio"
-              id="bulk"
-              name="searchMode"
-              value="bulk"
-              checked={searchMode === "bulk"}
-              onChange={(e) => setSearchMode(e.target.value)}
-              className="mr-1"
-            />
-            <label htmlFor="bulk">バルク</label>
-          </div>
-          <div className="flex items-center">
-            <input
-              type="radio"
-              id="kerosene"
-              name="searchMode"
-              value="kerosene"
-              checked={searchMode === "kerosene"}
-              onChange={(e) => setSearchMode(e.target.value)}
-              className="mr-1"
-            />
-            <label htmlFor="kerosene">灯油</label>
-          </div>
+          {[
+            { id: "overall", label: "全体検索" },
+            { id: "collective", label: "集合検索" },
+            { id: "bulk", label: "バルク" },
+            { id: "kerosene", label: "灯油" },
+          ].map((mode) => (
+            <div key={mode.id} className="flex items-center">
+              <input
+                type="radio"
+                id={mode.id}
+                name="searchMode"
+                value={mode.id}
+                checked={searchMode === mode.id}
+                onChange={(e) => setSearchMode(e.target.value)}
+                className="mr-1"
+              />
+              <label htmlFor={mode.id}>{mode.label}</label>
+            </div>
+          ))}
         </div>
       </div>
 
+      {/* Form */}
       <AdvancedSearchForm onSearch={handleSearch} onReset={handleReset} />
 
+      {/* Table */}
       <div
         className="overflow-auto border border-black mt-2"
         style={{ height: "200px" }}
       >
         <table className="min-w-full border-collapse border border-black text-sm">
-          <thead className="sticky top-0 bg-[#80bad7]">
+          <thead className="sticky top-0 bg-[#80bad7] z-50">
             <tr>
               <th className="border border-black p-1">カナ氏名</th>
               <th className="border border-black p-1">氏名</th>
@@ -382,31 +381,32 @@ const AdvanceSearchModal: React.FC<AdvanceSearchModalProps> = ({
             {tableData.map((row, idx) => (
               <tr
                 key={idx}
-                className="hover:bg-blue-50 focus:bg-blue-200 outline-none"
+                className="group hover:bg-blue-50 focus:bg-blue-200 outline-none"
                 onKeyDown={handleRowKeyDown}
                 tabIndex={0}
               >
                 <td
                   onClick={() => setShowAdvanceSearch(false)}
-                  className="bg-[#ebcec0] border border-black p-1 cursor-pointer"
+                  className="relative  border border-black p-1 pl-8 cursor-pointer"
                 >
+                  <div className="absolute left-2 top-1/2 -translate-y-1/2 w-3 h-3" />
                   {row.kanaName}
                 </td>
                 <td
                   onClick={() => setShowAdvanceSearch(false)}
-                  className="bg-[#ebcec0] border border-black p-1 cursor-pointer"
+                  className=" border border-black p-1 cursor-pointer"
                 >
                   {row.name}
                 </td>
                 <td
                   onClick={() => setShowAdvanceSearch(false)}
-                  className="bg-[#ebcec0] border border-black p-1 cursor-pointer"
+                  className=" border border-black p-1 cursor-pointer"
                 >
                   {row.address}
                 </td>
                 <td
                   onClick={() => setShowAdvanceSearch(false)}
-                  className="bg-[#ebcec0] border border-black p-1 cursor-pointer"
+                  className=" border border-black p-1 cursor-pointer"
                 >
                   {row.building}
                 </td>
@@ -415,11 +415,11 @@ const AdvanceSearchModal: React.FC<AdvanceSearchModalProps> = ({
           </tbody>
         </table>
       </div>
+
+      {/* Close button */}
       <div className="flex justify-center">
         <button
-          onClick={() => {
-            setShowAdvanceSearch(false);
-          }}
+          onClick={() => setShowAdvanceSearch(false)}
           className="w-20 border border-black bg-[#80bad7] px-2 py-1 flex mt-2 justify-center"
         >
           閉じる

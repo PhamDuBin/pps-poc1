@@ -155,32 +155,34 @@ const TrancInfoScreen = () => {
   return (
     <div className="w-full h-screen flex flex-row bg-[#d8dadc]">
       {!showLeftPanel && (
-        <div className="relative flex items-center h-full w-2 bg-[#e6cfcf]"></div>
+        <>
+          <div className="relative flex items-center h-full w-2 bg-[#e6cfcf]"></div>
+          <CircleArrowRight
+            className={`absolute left-2 top-1/2 -translate-y-1/2 text-black w-5 h-5 cursor-pointer bg-white rounded-full
+                  ${showAdvanceSearch ? "z-0 pointer-events-none" : "z-20"}`}
+            onClick={() => setShowLeftPanel(true)}
+          />
+        </>
       )}
-      {showLeftPanel ? (
-        <div
-          ref={leftPanelRef}
-          className="transition-all absolute duration-300 z-20"
-        >
-          <LeftPanel
-            showAdvanceSearch={showAdvanceSearch}
-            setShowAdvanceSearch={setShowAdvanceSearch}
-            lastButtonRef={lastLeftPanelButtonRef}
-            firstInputRef={firstInputRef}
-          />
-          <CircleArrowLeft
-            className={`absolute left-[17.3rem] top-1/2 -translate-y-1/2 text-black w-5 h-5 cursor-pointer bg-white rounded-full shadow
-              ${showAdvanceSearch ? "z-0 hidden pointer-events-none" : "z-20"}`}
-            onClick={() => setShowLeftPanel(false)}
-          />
-        </div>
-      ) : (
-        <CircleArrowRight
-          className={`absolute left-2 top-1/2 -translate-y-1/2 text-black w-5 h-5 cursor-pointer bg-white rounded-full
-              ${showAdvanceSearch ? "z-0 pointer-events-none" : "z-20"}`}
-          onClick={() => setShowLeftPanel(true)}
+      <div
+        ref={leftPanelRef}
+        className={`transition-all absolute duration-300 z-20 ${
+          showLeftPanel ? "" : "hidden"
+        }`}
+      >
+        <LeftPanel
+          showAdvanceSearch={showAdvanceSearch}
+          setShowAdvanceSearch={setShowAdvanceSearch}
+          lastButtonRef={lastLeftPanelButtonRef}
+          firstInputRef={firstInputRef}
         />
-      )}
+        <CircleArrowLeft
+          className={`absolute left-[17.3rem] top-1/2 -translate-y-1/2 text-black w-5 h-5 cursor-pointer bg-white rounded-full shadow
+              ${showAdvanceSearch ? "z-0 hidden pointer-events-none" : "z-20"}`}
+          onClick={() => setShowLeftPanel(false)}
+        />
+      </div>
+
       <div className="my-3 ml-2 flex-1 h-[calc(100%-0.75rem*2)] flex flex-row z-10 w-full">
         <div
           ref={mainScreenRef}
@@ -188,7 +190,6 @@ const TrancInfoScreen = () => {
         >
           <div className="overflow-y-auto w-full">{renderActiveScreen()}</div>
         </div>
-
         <RightPanel
           ref={rightPanelRef}
           onButtonClick={handleButtonClick}

@@ -114,6 +114,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
   const [id3, setId3] = useState("");
   const [selected, setSelected] = useState("1");
   const [selectedRow, setSelectedRow] = useState(false);
+  const [kanaInput, setKanaInput] = useState("");
 
   const handleSearch = (...ids: string[]) => {
     if (ids.some((id) => id)) {
@@ -132,6 +133,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
   };
 
   const firstInputRef = useRef<HTMLInputElement>(null);
+  const customerCodeSelectRef = useRef<HTMLSelectElement>(null);
 
   useEffect(() => {
     if (firstInputRef.current) {
@@ -185,6 +187,12 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
     }
     setFormValues((prev) => ({ ...prev, [selectedFieldId]: newValues }));
   };
+  const handleCustomerCodeKeyDown = (event: React.KeyboardEvent) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      handleSearch(id1, id2, id3);
+    }
+  };
 
   const renderDynamicInput = (): React.ReactNode => {
     if (!currentField) return null;
@@ -202,6 +210,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
                   style={{ width: `${size}px` }}
                   value={(Array.isArray(value) && value[index]) || ""}
                   onChange={(e) => handleValueChange(e.target.value, index)}
+                  onKeyDown={handleCustomerCodeKeyDown}
                 />
                 {index < currentField.partSizes.length - 1 && <span>-</span>}
               </React.Fragment>
@@ -227,6 +236,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
                 setId1(e.target.value);
                 handleValueChange(e.target.value, 0);
               }}
+              onKeyDown={handleCustomerCodeKeyDown}
             />
             <span> - </span>
             <input
@@ -238,6 +248,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
                 handleValueChange(e.target.value, 1);
               }}
               placeholder="000000"
+              onKeyDown={handleCustomerCodeKeyDown}
             />
             <button
               onClick={() => {
@@ -261,6 +272,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
                 handleValueChange(e.target.value, 0);
               }}
               placeholder="000000"
+              onKeyDown={handleCustomerCodeKeyDown}
             />
             <div>-</div>
             <input
@@ -272,6 +284,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
                 handleValueChange(e.target.value, 1);
               }}
               placeholder="000000"
+              onKeyDown={handleCustomerCodeKeyDown}
             />
             <button
               onClick={() => {
@@ -294,6 +307,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
                 setId1(e.target.value);
                 handleValueChange(e.target.value);
               }}
+              onKeyDown={handleCustomerCodeKeyDown}
             />
             <button
               onClick={() => {
@@ -315,6 +329,29 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
     }
     return value || "";
   };
+  const handleJimushoKeyDown = (
+    event: React.KeyboardEvent<HTMLInputElement>
+  ) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      handleSearchDepartment(postcode1, postcode2);
+      customerCodeSelectRef.current?.focus();
+    }
+  };
+  const handleKanaKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      if (showCustomer && kanaInput) {
+        setShowTable(true);
+      }
+    }
+  };
+
+  const handleShowHardcodedCustomer = () => {
+    setId1("000000");
+    setId2("000");
+    setShowCustomer(true);
+  };
 
   return (
     <div className="h-screen p-3 bg-[#d8dadc] border-2 border-gray-400 font-sans">
@@ -335,6 +372,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
                 placeholder="0000"
                 className="w-20 p-1 border border-gray-500 bg-[#ebcec0]"
                 onChange={(e) => setPostcode1(e.target.value)}
+                onKeyDown={handleJimushoKeyDown}
               />
               <span className="mx-1">-</span>
               <input
@@ -342,6 +380,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
                 placeholder="000"
                 className="w-20 p-1 border border-gray-500 bg-[#ebcec0]"
                 onChange={(e) => setPostcode2(e.target.value)}
+                onKeyDown={handleJimushoKeyDown}
               />
               <button
                 onClick={() => {
@@ -380,6 +419,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
           {!showCustomer ? (
             <>
               <select
+                ref={customerCodeSelectRef}
                 className="bg-[#80bad7] p-1 font-bold w-24 text-center mr-2"
                 value={selectedFieldId}
                 onChange={(e) => setSelectedFieldId(e.target.value as FieldId)}
@@ -499,6 +539,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
               <AdvanceSearchModal
                 setShowAdvanceSearch={setShowAdvanceSearch}
                 showAdvanceSearch={showAdvanceSearch}
+                onRowEnter={handleShowHardcodedCustomer}
               />
             </div>
           </div>
@@ -534,6 +575,9 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
                       <input
                         type="text"
                         className="w-64 p-1 border border-gray-500 bg-[#ebcec0]"
+                        value={kanaInput}
+                        onChange={(e) => setKanaInput(e.target.value)}
+                        onKeyDown={handleKanaKeyDown}
                       />
                     </>
                   </div>
@@ -603,6 +647,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
                 const isWide = isObject && item.wide;
                 return (
                   <button
+                    disabled
                     key={index}
                     className={`border text-center bg-white border-black p-0.5 mr-1 ${
                       isWide ? "w-20" : "w-8"
@@ -614,19 +659,19 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
               })}
             </div>
             {showTable && (
-              <div className="h-48 overflow-y-auto">
-                <div className="flex w-full ">
+              <div>
+                <div className="flex w-full">
                   {tableHeaders.map((header, colIndex) => (
                     <div
                       key={header}
                       style={{ width: colWidths[colIndex] }}
-                      className="flex pl-1 text-sm  bg-[#80bad7] font-semibold border border-[#5D5D5D] m-0.5 h-8 items-center"
+                      className="flex pl-1 text-sm bg-[#80bad7] font-semibold border border-[#5D5D5D] m-0.5 h-8 items-center"
                     >
                       {header}
                     </div>
                   ))}
                 </div>
-                <div>
+                <div className="h-48 overflow-y-auto">
                   {Array.from({ length: rowCount }).map((_, rowIndex) => (
                     <div
                       key={rowIndex}

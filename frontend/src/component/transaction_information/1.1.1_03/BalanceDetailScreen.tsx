@@ -69,7 +69,7 @@ const BalanceDetailScreen = ({ onSwitchScreen }: any) => {
 
   return (
     <div ref={containerRef} className="p-4 text-black w-full text-sm">
-      <div className="text-center font-bold bg-[#80bad7] p-2 mb-1">
+      <div className="text-center h-8 text-lg flex justify-center items-center font-bold bg-[#80bad7] p-2 mb-1">
         ＜残高内訳＞
       </div>
 

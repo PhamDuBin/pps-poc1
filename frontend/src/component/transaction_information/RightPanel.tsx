@@ -41,6 +41,7 @@ const RightPanel = forwardRef<HTMLDivElement, RightPanelProps>(
                   isSpecial ? handleOpenWindow : () => onButtonClick(label)
                 }
                 onFocus={index === 0 ? onFirstButtonFocus : undefined}
+                tabIndex={isSpecial ? -1 : 0}
                 className={`mb-3 h-10 border border-black shadow-md hover:bg-white ${
                   activeButton === label ? "bg-[#4d7a90]" : "bg-[#80bad7]"
                 }`}

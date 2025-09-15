@@ -50,7 +50,7 @@ const CurrentMonthDetails = ({ onSwitchScreen }: any) => {
   return (
     <>
       <div
-        className={`font-semibold text-sm p-1 mx-4 mt-4 text-center border bg-[#80bad7] `}
+        className={`font-semibold h-8 text-lg p-1 flex justify-center items-center mx-4 mt-4 text-center border bg-[#80bad7] `}
       >
         ＜当月明細＞
       </div>

@@ -14,7 +14,7 @@ const StatusBar: React.FC<StatusBarProps> = ({ currentStep }) => {
   const activeStep = steps.find((step) => step.id === currentStep);
 
   return (
-    <div className="w-full">
+    <div className="w-[500px]">
       <div className="px-4 sm:px-8 pt-8 pb-4">
         <div className="flex items-center">
           {steps.map((step, index) => {
