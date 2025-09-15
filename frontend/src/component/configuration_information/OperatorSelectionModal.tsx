@@ -1,10 +1,13 @@
-import React, { useEffect, useState } from "react";
-import { labelColor } from "../../constants/colors";
-import { set } from "date-fns";
+"use client";
+
+import React, { useState } from "react";
+import { Transfer, Button } from "antd";
+import type { TransferProps } from "antd";
+import type { Key } from "react";
 
 interface TransferItem {
-  name: string;
-  id: string;
+  key: string;
+  title: string;
 }
 
 interface OperatorSelectionModalProps {
@@ -13,168 +16,53 @@ interface OperatorSelectionModalProps {
 }
 
 const OperatorSelectionModal: React.FC<OperatorSelectionModalProps> = ({ isOpen, onClose }) => {
-
-  
-
-  const [IsCheckedAllRight, setIsCheckedAllRight] = useState(false);
-  
-
-  const [placeholder1, setPlaceholder1] = useState("🔍️ 項目を検索する");
-  const [placeholder2, setPlaceholder2] = useState("🔍️ 項目を検索する");
-
-  const [leftItems, setLeftItems] = useState<TransferItem[]>([]);
-  const [rightItems, setRightItems] = useState<TransferItem[]>([]);
-
-  const leftData: TransferItem[] = Array.from({ length: 10 }, (_, i) => ({
-    name: `事業者${i + 1}`,
-    id: `${i + 1}`,
+  // mock data
+  const mockData: TransferItem[] = Array.from({ length: 20 }, (_, i) => ({
+    key: (i + 1).toString(),
+    title: `事業者${(i + 1).toString().padStart(2, "0")}`,
   }));
 
-  const rightData: TransferItem[] = Array.from({ length: 10 }, (_, i) => ({
-    name: `事業者${i + 11}`,
-    id: `${i + 11}`,
-  }));
+  const [targetKeys, setTargetKeys] = useState<Key[]>([]);
+  const [selectedKeys, setSelectedKeys] = useState<Key[]>([]);
 
-  useEffect(() => {
-    setLeftItems(leftData);
-    setRightItems(rightData);
-  }, []);
+  const onChange: TransferProps["onChange"] = (nextTargetKeys) => {
+    setTargetKeys(nextTargetKeys);
+  };
 
-
-  const [selectedLeft, setSelectedLeft] = useState<string[]>([]);
-  const [selectedRight, setSelectedRight] = useState<string[]>([]);
-
-  const isCheckedAllLeft = leftItems.length > 0 && selectedLeft.length === leftItems.length;
-
-  const moveToRight = () => {
-    const itemsToMove = leftItems.filter(item => selectedLeft.includes(item.id));
-    setRightItems(prev => [...prev, ...itemsToMove]);
-    setLeftItems(prev => prev.filter(item => !selectedLeft.includes(item.id)));
-    setSelectedLeft([]);
-    console.log("rightItems", rightItems);
-  }
-
-  const moveToLeft = () => {
-    const itemsToMove = rightItems.filter(item => selectedRight.includes(item.id));
-    setLeftItems(prev => [...prev, ...itemsToMove]);
-    setRightItems(prev => prev.filter(item => !selectedRight.includes(item.id)));
-    console.log("itemsToMove", itemsToMove);
-    console.log(selectedRight)
-    setSelectedRight([]);
-  } 
-
-  const toggleSelection = (
-    id: string,
-    _selected: string[],
-    setSelected: React.Dispatch<React.SetStateAction<string[]>>
+  const onSelectChange: TransferProps["onSelectChange"] = (
+    sourceSelectedKeys,
+    targetSelectedKeys
   ) => {
-    console.log("id", id);
-    console.log("_selected", _selected);
-    console.log(leftItems)
-    setSelected(prev => {
-        const isSelected = prev.includes(id);
-        if (isSelected) {
-        return prev.filter(itemId => itemId !== id);
-        } else {
-        return [...prev, id];
-        }
-    });
-    };
-
-    const handleClickAllLeft = () => {
-        if (isCheckedAllLeft) {
-            setSelectedLeft([]); // bỏ chọn tất cả
-        } else {
-            setSelectedLeft(leftItems.map(item => item.id)); // chọn tất cả
-        }
-    };
+    setSelectedKeys([...sourceSelectedKeys, ...targetSelectedKeys]);
+  };
 
   return (
-    <>
-        <div className="w-[720px] h-[440px] bg-white border border-black p-4 z-50">
-            <div className={`w-full h-10 ${labelColor} border border-black flex justify-center items-center mb-4`}>
-                <span className="font-bold text-lg">事業者</span>
-            </div>
-                
-            <div className="flex flex-row justify-between h-[300px]">
-                <div className="w-[40%] h-full ">
-                    <div className={`${labelColor} px-2 border border-black`}>
-                        <div className="flex items-center mt-1">
-                            <input 
-                            checked={isCheckedAllLeft}
-                            onChange={handleClickAllLeft}
-                            type="checkbox" className="w-5 h-5 mr-3" />
-                            <span>対象項目（全10件）</span>
-                        </div>
-                        <input type="search" 
-                        placeholder={placeholder1}
-                        onFocus={() => setPlaceholder1("")}
-                        onBlur={() => setPlaceholder1("🔍️ 項目を検索する")}
-                        className="border border-black rounded-sm my-2 w-[80%]" />
-                    </div>
-                    <div className="overflow-auto h-[200px]">
-                        {leftItems.map((item) => (
-                            <div key={item.id} className="flex items-center border border-gray-300 p-2 cursor-pointer">
-                                <input 
-                                checked={selectedLeft.includes(item.id)}
-                                onChange={() => toggleSelection(item.id, selectedLeft, setSelectedLeft)}
-                                type="checkbox" className="mr-3 w-5 h-5 border border-black"/>
-                                <span>{item.name}</span>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-                <div className="w-[20%]">
-                    <div className="flex flex-col justify-center items-center h-full">
-                        <div>
-                            <button 
-                            onClick={moveToRight}
-                            className="bg-gray-200 border border-black p-2 w-full h-8 mb-2 flex justify-center items-center">
-                                追加する⏩️
-                            </button>
-                        </div>
-                        <div>
-                            <button 
-                            onClick={moveToLeft}
-                            className="bg-gray-200 border border-black p-2 w-full h-8 mt-2 flex justify-center items-center">
-                                ⏪️削除する️
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div className="w-[40%] h-full ">
-                    <div className={`${labelColor} px-2 border border-black`}>
-                        <div className="flex items-center mt-1">
-                            <input type="checkbox" className="w-5 h-5 mr-3" />
-                            <span>選択済み項目（全10件）</span>
-                        </div>
-                        <input type="search"
-                        placeholder={placeholder2}
-                        onFocus={() => setPlaceholder2("")}
-                        onBlur={() => setPlaceholder2("🔍️ 項目を検索する")}
-                        className="border border-black rounded-sm my-2 w-[80%]" />
-                    </div>
-                    <div className="overflow-auto h-[200px]">
-                        {rightItems.map((item) => (
-                            <div key={item.id} className="flex items-center border border-gray-300 p-2 cursor-pointer">
-                                <input 
-                                onChange={() => toggleSelection(item.id, selectedRight, setSelectedRight)}
-                                type="checkbox" className="mr-3 w-5 h-5"/>
-                                <span>{item.name}</span>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </div>
+    <div className="bg-white rounded-lg shadow-xl w-[800px] h-[500px] p-4 flex flex-col">
+      <h2 className="text-xl font-bold text-center mb-4 bg-[#D9D9D9] py-2">事業者</h2>
 
-            <div className="w-full h-10 flex justify-center items-center">
-                <button 
-                onClick={onClose}
-                className="bg-gray-200 border border-black p-2 w-40 h-10 font-bold flex justify-center items-center">閉じる</button>
-            </div>
-        </div>
-    </>
-  )
+      <div className="flex-1 flex justify-center items-center">
+        <Transfer
+          dataSource={mockData}
+          titles={["対象項目", "選択済み項目"]}
+          targetKeys={targetKeys}
+          selectedKeys={selectedKeys}
+          onChange={onChange}
+          onSelectChange={onSelectChange}
+          render={(item) => item.title}
+          listStyle={{
+            width: 300,
+            height: 350,
+          }}
+          showSearch
+          operations={["追加する", "削除する"]}
+        />
+      </div>
+
+      <div className="flex justify-center mt-4">
+        <Button onClick={onClose}>閉じる</Button>
+      </div>
+    </div>
+  );
 };
 
 export default OperatorSelectionModal;
