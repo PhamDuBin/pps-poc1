@@ -2,7 +2,7 @@ import React, { useRef } from "react";
 
 //■左カラム顧客検索＆情報表示ランチャー
 import { useEffect, useState } from "react";
-import AdvanceSearchModal from "./3.3.3_01/AdvanceSearchModal";
+import AdvanceSearchModal from "../transaction_information/1.1.1_03/AdvanceSearchModal";
 
 const DownArrowIcon = () => (
   <svg
@@ -447,7 +447,10 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
   const handleShowHardcodedCustomer = () => {
     setId1("000000");
     setId2("000");
+    setPostcode1("000000");
+    setPostcode2("000");
     setShowCustomer(true);
+    setShowDepart(true);
   };
 
   return (
