@@ -96,7 +96,11 @@ const AdvancedSearchForm: React.FC<{
 
   useEffect(() => {
     if (firstInputRef.current) {
-      firstInputRef.current.focus();
+      const timer = setTimeout(() => {
+        firstInputRef.current?.focus();
+      }, 150);
+
+      return () => clearTimeout(timer);
     }
   }, []);
 
