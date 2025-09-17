@@ -1,105 +1,120 @@
 "use client";
 
-import { DatePicker, Select, Checkbox, Form, Row, Col } from "antd";
+import { useState } from "react";
+import { DatePicker, Select, Checkbox } from "antd";
 import dayjs from "dayjs";
 
-const { MonthPicker, RangePicker } = DatePicker;
-
-const labelClass =
-  "bg-[#D9D9D9] border border-gray-400 font-bold px-2 flex items-center justify-center min-h-[32px] w-[120px]";
-
-
 const ContinuousIssue = () => {
+  const [month, setMonth] = useState(dayjs("2025-05", "YYYY-MM"));
+  const [rangeStart, setRangeStart] = useState<dayjs.Dayjs | null>(null);
+  const [rangeEnd, setRangeEnd] = useState<dayjs.Dayjs | null>(null);
+
+  const labelClass =
+    "bg-[#D9D9D9] border border-gray-400 text-sm font-bold flex items-center justify-center min-h-[32px] w-[120px] px-2";
+
   return (
-    <div className="border border-black min-h-[120px]">
+    <div className="border border-black w-full text-sm p-2">
+      {/* Title */}
       <div className="bg-[#D9D9D9] font-bold text-center py-2">
         抽出条件｜連続発行
       </div>
 
-      <Form layout="horizontal" colon={false} className="p-2">
-  <Row gutter={[16, 16]}>
-    {/* 1 hàng */}
-    <Col span={8}>
-      <Form.Item
-        label={<div className={labelClass}>月度</div>}
-        labelCol={{ span: 6 }}
-        wrapperCol={{ span: 8 }}
-      >
-        <MonthPicker
-          defaultValue={dayjs("2025-05", "YYYY-MM")}
-          format="YYYY/MM"
-          style={{ width: "100%" }}
-        />
-      </Form.Item>
-    </Col>
+      {/* Form grid */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-x-4 gap-y-3 py-4">
+        {/* 月度 */}
+        <div className="flex items-center">
+          <div className={labelClass}>月度</div>
+          <DatePicker
+            picker="month"
+            value={month}
+            onChange={(date) => setMonth(date)}
+            className="ml-2 max-w-[160px] w-full"
+            format="YYYY-MM"
+            style={{ width: "160px" }}
+          />
+        </div>
 
-    <Col span={8}>
-      <Form.Item
-        label={<div className={labelClass}>締切指定</div>}
-        labelCol={{ span: 6 }}
-        wrapperCol={{ span: 8 }}
-      >
-        <Select defaultValue="締切残" style={{ width: "100%" }}>
-          <Select.Option value="締切残">締切残</Select.Option>
-          <Select.Option value="現在残">現在残</Select.Option>
-          <Select.Option value="当月分">当月分</Select.Option>
-        </Select>
-      </Form.Item>
-    </Col>
+        {/* 締切指定 */}
+        <div className="flex items-center">
+          <div className={labelClass}>締切指定</div>
+          <Select
+            defaultValue="締切残"
+            className="ml-2 max-w-[160px] w-full"
+            options={[
+              { value: "締切残", label: "締切残" },
+              { value: "現在残", label: "現在残" },
+              { value: "当月分", label: "当月分" },
+            ]}
+          />
+        </div>
 
-    <Col span={8}>
-      <Form.Item
-        label={<div className={labelClass}>残高指定</div>}
-        labelCol={{ span: 6 }}
-        wrapperCol={{ span: 8 }}
-      >
-        <Select defaultValue="残有り" style={{ width: "100%" }}>
-          <Select.Option value="残有り">残有り</Select.Option>
-          <Select.Option value="取引有り">取引有り</Select.Option>
-          <Select.Option value="無条件">無条件</Select.Option>
-        </Select>
-      </Form.Item>
-    </Col>
+        {/* 残高指定 */}
+        <div className="flex items-center">
+          <div className={labelClass}>残高指定</div>
+          <Select
+            defaultValue="残有り"
+            className="ml-2 max-w-[160px] w-full"
+            options={[
+              { value: "残有り", label: "残有り" },
+              { value: "取引有り", label: "取引有り" },
+              { value: "無条件", label: "無条件" },
+            ]}
+          />
+        </div>
 
-    {/* 2 hàng */}
-    <Col span={8}>
-      <Form.Item
-        label={<div className={labelClass}>今回検計日</div>}
-        labelCol={{ span: 6 }}
-        wrapperCol={{ span: 12 }}
-      >
-        <RangePicker format="YYYY/MM/DD" style={{ width: "100%" }} />
-      </Form.Item>
-    </Col>
+        {/* 今回検計日 */}
+        <div className="flex items-center md:col-span-1">
+          <div className={labelClass}>今回検計日</div>
+          <div
+            className="flex items-center ml-2 gap-2"
+            style={{
+              minWidth: "160px",
+              maxWidth: "100%",
+              width: "100%",
+              // Đặt flex-basis tối đa để co lại khi cần
+              flexBasis: "320px",
+            }}
+          >
+            <DatePicker
+              value={rangeStart}
+              onChange={(date) => setRangeStart(date)}
+              format="YYYY/MM/DD"
+              style={{ flex: 1, minWidth: 0 }}
+              placeholder="開始日"
+            />
+            <span className="select-none">〜</span>
+            <DatePicker
+              value={rangeEnd}
+              onChange={(date) => setRangeEnd(date)}
+              format="YYYY/MM/DD"
+              style={{ flex: 1, minWidth: 0 }}
+              placeholder="終了日"
+            />
+          </div>
+        </div>
 
-    <Col span={8}>
-      <Form.Item
-        label={<div className={labelClass}>売上の条件</div>}
-        labelCol={{ span: 6 }}
-        wrapperCol={{ span: 8 }}
-      >
-        <Select defaultValue="無条件" style={{ width: "100%" }}>
-          <Select.Option value="無条件">無条件</Select.Option>
-          <Select.Option value="検針後売上有り ">検針後売上有り</Select.Option>
-        </Select>
-      </Form.Item>
-    </Col>
+        {/* 売上の条件 */}
+        <div className="flex items-center">
+          <div className={labelClass}>売上の条件</div>
+          <Select
+            defaultValue="無条件"
+            className="ml-2 max-w-[160px] w-full"
+            options={[
+              { value: "無条件", label: "無条件" },
+              { value: "検針後売上有り", label: "検針後売上有り" },
+            ]}
+          />
+        </div>
 
-    <Col span={8}>
-      <Form.Item
-        label={<div className={labelClass}>取引区分</div>}
-        labelCol={{ span: 6 }}
-        wrapperCol={{ span: 6 }}
-      >
-        <Checkbox.Group defaultValue={["直売", "卸"]}>
-          <Checkbox value="直売">直売</Checkbox>
-          <Checkbox value="卸">卸</Checkbox>
-        </Checkbox.Group>
-      </Form.Item>
-    </Col>
-  </Row>
-</Form>
-
+        {/* 取引区分 */}
+        <div className="flex items-center sm:col-span-1">
+          <div className={labelClass}>取引区分</div>
+          <Checkbox.Group defaultValue={["直売", "卸"]} className="ml-2 flex gap-4">
+            <Checkbox value="直売">直売</Checkbox>
+            <Checkbox value="卸">卸</Checkbox>
+          </Checkbox.Group>
+        </div>
+      </div>
     </div>
   );
 };

@@ -1,8 +1,12 @@
+import { useState } from "react";
+import ModalF1 from "../../modal/Modal_F1";
 interface TargetCustomerProps {
   onLabelClick?: (title: string) => void;
 }
 
 const TargetCustomer: React.FC<TargetCustomerProps> = ({onLabelClick }) => {
+
+    const [isOpenModalF1, setModalF1Open] = useState(false);
 
     const labelClass ="bg-[#D9D9D9] border border-gray-400 px-2 flex items-center justify-center min-h-[32px] w-[160px]";
 
@@ -25,40 +29,44 @@ const TargetCustomer: React.FC<TargetCustomerProps> = ({onLabelClick }) => {
     
   return (
     <>
-        <div className="border border-black min-h-[120px]">
+        <div className="border border-black min-h-[120px] p-2">
             <div className="bg-[#D9D9D9] font-bold text-center py-2">
                 対象顧客
             </div>
             <div className="grid grid-cols-4 my-2">
                 {buttonTitle.map((title) => (
-                    <div className="flex p-2 font-bold gap-2" key={title}>
+                    <div className="flex py-2 font-bold gap-2" key={title}>
                         <button 
                         onClick={() => onLabelClick?.(title)}
-                        className={labelClass}>
+                        className={`${labelClass } shadow-lg`} >
                             {title}
                         </button>
                         <div>指定済み</div>
                     </div>
                 ))}
             </div>
-            <div className="flex font-bold px-2 justify-between items-center pb-6">
-                <button className="bg-[#D9D9D9] border border-gray-400 flex items-center justify-center h-[60px] w-[160px]">
+            <div className="flex font-bold justify-between items-center pb-6">
+                <button 
+                onClick = {() => setModalF1Open(true)}
+                className="bg-[#D9D9D9] border border-gray-400 flex items-center justify-center h-[60px] w-[160px]">
                     顧客抽出
                 </button>
-                <div className="overflow-x-auto h-[60px] border border-black">
-                    <div className="grid grid-cols-6 border border-gray-300 ">
-                        {Array.from({ length: 12 }).map((_, i) => (
-                        <div
-                            key={i}
-                            className="border border-gray-300 px-4 py-2 text-center w-[150px] "
-                        >
-                            cell
-                        </div>
+                <div className="overflow-x-auto h-[60px] border border-black mr-10">
+                    <div className="grid grid-cols-6">
+                        {buttonTitle.map((title) => (
+                            <div
+                            key={title}
+                            className="border px-4 py-2 text-center w-[150px]"
+                            >
+                            {title}
+                            </div>
                         ))}
                     </div>
                 </div>
             </div>
         </div>
+        {isOpenModalF1 && <ModalF1 isOpen={isOpenModalF1} onClose={() => setModalF1Open(false)} />}
+
     </>
   );
 };

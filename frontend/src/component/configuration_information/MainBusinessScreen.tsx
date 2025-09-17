@@ -2,8 +2,9 @@ import { useState } from "react";
 import OperatorSelectionModal from "./OperatorSelectionModal";
 import ContinuousIssue from "./MainBusinessAreas/ContinuousIssue";
 import IndividualIssue from "./MainBusinessAreas/IndividualIssue";
-import { Target } from "lucide-react";
 import TargetCustomer from "./MainBusinessAreas/TargetCustomer";
+import PrintingDesignation from "./MainBusinessAreas/PrintingDesignation"
+import TitleFormSetting from "./MainBusinessAreas/TitleFormSetting";
 
 
 const MainBusinessScreen = () => {
@@ -12,15 +13,13 @@ const MainBusinessScreen = () => {
   const [condition, setCondition] = useState("連続発行");
   const [isShowExtraForm, setIsShowExtraForm] = useState(false);
   const [isShowTargetCustomer, setIsShowTargetCustomer] = useState(false);
+  const [isShowPrintingDesignation, setIsShowPrintingDesignation] = useState(false);
+  const [isShowTitleFormSetting, setIsShowTitleFormSetting] = useState(false);
   const [selectedLabel, setSelectedLabel] = useState<string | null>(null);
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
-
-  const handleOpenModal = () => {
-    setIsModalOpen(true);
-  }
 
   const handleChangeCondition = (value: string) => {
     setCondition(value);
@@ -34,6 +33,13 @@ const MainBusinessScreen = () => {
     setIsShowTargetCustomer(!isShowTargetCustomer);
   }
 
+  const handleShowPrintingDesignation = () => {
+    setIsShowPrintingDesignation(!isShowPrintingDesignation);
+  }
+
+  const handleShowTitleFormSetting = () => {
+    setIsShowTitleFormSetting(!isShowTitleFormSetting);
+  }
 
 
   const button =
@@ -94,8 +100,8 @@ const MainBusinessScreen = () => {
       <div className="mt-3 flex flex-row px-40 font-bold text-lg justify-between h-10">
         <button onClick={handleShowExtraForm} className={`${button} w-1/6`}>抽出条件 （1）</button>
         <button onClick={handleShowTargetCustomer} className={`${button} w-1/6`}>対象顧客（2）</button>
-        <button className={`${button} w-1/6`}>印刷指定（3）</button>
-        <button onClick={handleOpenModal} className={`${button} w-1/6`}>タイトル・鑑設定（4）</button>
+        <button onClick={handleShowPrintingDesignation} className={`${button} w-1/6`}>印刷指定（3）</button>
+        <button onClick={handleShowTitleFormSetting} className={`${button} w-1/6`}>タイトル・鑑設定（4）</button>
       </div>
       <div className="mt-3 h-[80%] border border-black p-4 overflow-auto">
         <div>
@@ -123,6 +129,20 @@ const MainBusinessScreen = () => {
                   setSelectedLabel(title);
                   setIsModalOpen(true);
                 }} />
+            </div>
+          }
+        </div>
+        <div>
+          {isShowPrintingDesignation && 
+            <div>
+              < PrintingDesignation />
+            </div>
+          }
+        </div>
+        <div>
+          {isShowTitleFormSetting && 
+            <div>
+              < TitleFormSetting />
             </div>
           }
         </div>

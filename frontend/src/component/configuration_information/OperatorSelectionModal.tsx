@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import { Transfer, Button } from "antd";
 import type { TransferProps } from "antd";
 import type { Key } from "react";
-import Title from "antd/es/skeleton/Title";
 
 interface TransferItem {
   key: string;
@@ -24,7 +23,9 @@ const OperatorSelectionModal: React.FC<OperatorSelectionModalProps> = ({ isOpen,
     title: `事業者${(i + 1).toString().padStart(2, "0")}`,
   }));
 
-  const [targetKeys, setTargetKeys] = useState<Key[]>([]);
+  const [targetKeys, setTargetKeys] = useState<Key[]>(
+    Array.from({ length: 10 }, (_, i) => (i + 11).toString())
+  );
   const [selectedKeys, setSelectedKeys] = useState<Key[]>([]);
 
   const onChange: TransferProps["onChange"] = (nextTargetKeys) => {
