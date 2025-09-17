@@ -1,4 +1,10 @@
 import React, { useEffect, useRef } from "react";
+import {
+  extractHalfWidthDigits,
+  handleFormatting,
+  allowDecimalInput,
+  convertToFullWidth,
+} from "../../../../utils/InputHandlers";
 
 const handleOpenWindow = () => {
   const win = window.open(
@@ -40,7 +46,13 @@ const SaleDetailEntry5: React.FC<SaleDetailEntry5Props> = ({
               placeholder="0.00"
               className="w-20 h-full placeholder-black-200 border border-black"
               value={formData.purchasePrice ?? ""}
-              onChange={(e) => onChange("purchasePrice", e.target.value)}
+              onChange={(e) =>
+                onChange(
+                  "purchasePrice",
+                  extractHalfWidthDigits(e.target.value)
+                )
+              }
+              onKeyDown={allowDecimalInput}
             />
           </div>
         </div>
@@ -52,7 +64,10 @@ const SaleDetailEntry5: React.FC<SaleDetailEntry5Props> = ({
               placeholder="000"
               className="w-14 h-full placeholder-black-200 border border-black"
               value={formData.quantity ?? ""}
-              onChange={(e) => onChange("quantity", e.target.value)}
+              onChange={(e) =>
+                onChange("quantity", extractHalfWidthDigits(e.target.value))
+              }
+              onKeyDown={allowDecimalInput}
             />
           </div>
         </div>
@@ -68,7 +83,10 @@ const SaleDetailEntry5: React.FC<SaleDetailEntry5Props> = ({
                 placeholder="01234567.00"
                 className="h-full px-1 w-[120px] placeholder-black-200 border border-black"
                 value={formData.salesPrice ?? ""}
-                onChange={(e) => onChange("salesPrice", e.target.value)}
+                onChange={(e) =>
+                  onChange("salesPrice", extractHalfWidthDigits(e.target.value))
+                }
+                onKeyDown={allowDecimalInput}
               />
             </div>
           </div>
@@ -96,7 +114,13 @@ const SaleDetailEntry5: React.FC<SaleDetailEntry5Props> = ({
               placeholder="0"
               className="w-[120px] h-1/2 border px-1 border-black placeholder-black-200"
               value={formData.purchaseAmount ?? ""}
-              onChange={(e) => onChange("purchaseAmount", e.target.value)}
+              onChange={(e) =>
+                onChange(
+                  "purchaseAmount",
+                  extractHalfWidthDigits(e.target.value)
+                )
+              }
+              onKeyDown={allowDecimalInput}
             />
           </div>
 
@@ -160,7 +184,12 @@ const SaleDetailEntry5: React.FC<SaleDetailEntry5Props> = ({
               type="text"
               className="w-full h-1/2 border px-1 border-black placeholder-black-200"
               value={formData.note ?? ""}
-              onChange={(e) => onChange("note", e.target.value)}
+              onChange={(e) =>
+                onChange("note", convertToFullWidth(e.target.value))
+              }
+              onKeyDown={(e) => {
+                handleFormatting(e, convertToFullWidth);
+              }}
             />
           </div>
         </div>

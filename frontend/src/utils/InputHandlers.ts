@@ -4,6 +4,8 @@
  * @param inputs
  * @param radios
  */
+
+import { KeyboardEvent as ReactKeyboardEvent } from "react";
 export function handleDigitInput(
   e: Event,
   index: number,
@@ -316,3 +318,27 @@ export const convertToFullWidth = (str: string): string => {
 
 export const removeAllWhitespace = (str: string): string =>
   str.replace(/[\s\r\n\t]/g, "");
+
+export const handleFormatting = (
+  e: ReactKeyboardEvent<HTMLInputElement>,
+  formatter: (str: string) => string
+): void => {
+  if (["Tab", "Enter", "ArrowDown", "ArrowUp"].includes(e.key)) {
+    e.preventDefault();
+    const input = e.currentTarget;
+    input.value = formatter(input.value);
+  }
+};
+
+// Chỉ cho phép nhập số
+export function allowDecimalInput(e: React.FormEvent<HTMLInputElement>) {
+  const target = e.currentTarget;
+  // Chỉ giữ lại số và dấu chấm
+  target.value = target.value.replace(/[^0-9.]/g, "");
+
+  // Nếu có nhiều dấu chấm thì chỉ giữ lại dấu chấm đầu tiên
+  const parts = target.value.split(".");
+  if (parts.length > 2) {
+    target.value = parts[0] + "." + parts.slice(1).join("");
+  }
+}

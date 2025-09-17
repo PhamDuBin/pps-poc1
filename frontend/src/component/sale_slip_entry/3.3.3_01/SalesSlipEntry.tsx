@@ -16,6 +16,11 @@ import SaleDetailModal from "./SaleDetail/SaleDetailModal";
 import { createPortal } from "react-dom";
 import { MonthYearPicker } from "../../../context/MonthYearPicker";
 import { format } from "date-fns";
+import {
+  extractHalfWidthDigits,
+  handleFormatting,
+  allowDecimalInput,
+} from "../../../utils/InputHandlers";
 
 type SalesSlipEntryProps = {
   onOpenLeftPanelForSearch: () => void;
@@ -287,6 +292,7 @@ const SalesSlipEntry = forwardRef(
                 type="text"
                 defaultValue="0000000000"
                 className="ml-1 w-1/2 border border-black text-black px-1 py-1"
+                onKeyDown={allowDecimalInput}
               />
             </div>
             <div className="flex items-center">
@@ -297,6 +303,7 @@ const SalesSlipEntry = forwardRef(
                 type="text"
                 defaultValue="0000000000"
                 className="ml-1 w-1/2 border border-black px-2 py-1"
+                onKeyDown={allowDecimalInput}
               />
             </div>
 

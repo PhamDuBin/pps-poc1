@@ -18,6 +18,7 @@ import {
   convertToHalfWidthAndRemoveKana,
   convertToFullWidth,
   removeAllWhitespace,
+  handleFormatting,
 } from "../../utils/InputHandlers";
 
 interface CodeOption {
@@ -238,17 +239,6 @@ export default function CheckInputScreen() {
     if (newIndex !== idx) setValue(codeOptions[newIndex].code);
   };
 
-  // Handle format text in 入力制御テスト
-  const handleFormatting = (
-    e: ReactKeyboardEvent<HTMLInputElement>,
-    formatter: (str: string) => string
-  ): void => {
-    if (["Tab", "Enter", "ArrowDown", "ArrowUp"].includes(e.key)) {
-      e.preventDefault();
-      const input = e.currentTarget;
-      input.value = formatter(input.value);
-    }
-  };
   const btnBaseStyle =
     "font-semibold py-1 px-4 rounded-lg transition-all duration-200 shadow-md";
   const btnActiveStyle = "bg-blue-600 text-white scale-110";

@@ -3,7 +3,12 @@ import React, { useRef } from "react";
 //■左カラム顧客検索＆情報表示ランチャー
 import { useEffect, useState } from "react";
 import AdvanceSearchModal from "../transaction_information/1.1.1_03/AdvanceSearchModal";
-
+import {
+  extractHalfWidthDigits,
+  convertToFullWidth,
+  handleFormatting,
+  allowDecimalInput,
+} from "../../utils/InputHandlers";
 const DownArrowIcon = () => (
   <svg
     className="w-3 h-3 text-black"
@@ -306,8 +311,16 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
                   className="w-20 border border-black p-1 text-center placeholder-gray-400 bg-[#ebcec0]"
                   style={{ width: `${size}px` }}
                   value={(Array.isArray(value) && value[index]) || ""}
-                  onChange={(e) => handleValueChange(e.target.value, index)}
-                  onKeyDown={handleCustomerCodeKeyDown}
+                  onChange={(e) =>
+                    handleValueChange(
+                      extractHalfWidthDigits(e.target.value),
+                      index
+                    )
+                  }
+                  onKeyDown={(e) => {
+                    handleCustomerCodeKeyDown(e);
+                    handleFormatting(e, extractHalfWidthDigits);
+                  }}
                 />
                 {index < currentField.partSizes.length - 1 && <span>-</span>}
               </React.Fragment>
@@ -328,12 +341,15 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
             <input
               type="text"
               className="border border-black p-1 placeholder-gray-400 w-20 bg-[#ebcec0]"
-              placeholder="000000"
               onChange={(e) => {
-                setId1(e.target.value);
-                handleValueChange(e.target.value, 0);
+                setId1(extractHalfWidthDigits(e.target.value));
+                handleValueChange(extractHalfWidthDigits(e.target.value), 0);
               }}
-              onKeyDown={handleCustomerCodeKeyDown}
+              placeholder="000000"
+              onKeyDown={(e) => {
+                handleCustomerCodeKeyDown(e);
+                handleFormatting(e, extractHalfWidthDigits);
+              }}
             />
             <span> - </span>
             <input
@@ -341,11 +357,14 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
               className="border w-20 border-gray-400 p-1 bg-[#ebcec0]"
               value={(Array.isArray(value) && value[1]) || ""}
               onChange={(e) => {
-                setId2(e.target.value);
-                handleValueChange(e.target.value, 1);
+                setId2(extractHalfWidthDigits(e.target.value));
+                handleValueChange(extractHalfWidthDigits(e.target.value), 1);
               }}
               placeholder="000000"
-              onKeyDown={handleCustomerCodeKeyDown}
+              onKeyDown={(e) => {
+                handleCustomerCodeKeyDown(e);
+                handleFormatting(e, extractHalfWidthDigits);
+              }}
             />
             <button
               onClick={() => {
@@ -365,23 +384,29 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
               className="border w-20 border-gray-400 p-1 placeholder-gray-400 bg-[#ebcec0]"
               value={(Array.isArray(value) && value[0]) || ""}
               onChange={(e) => {
-                setId1(e.target.value);
-                handleValueChange(e.target.value, 0);
+                setId1(extractHalfWidthDigits(e.target.value));
+                handleValueChange(extractHalfWidthDigits(e.target.value), 0);
               }}
               placeholder="000000"
-              onKeyDown={handleCustomerCodeKeyDown}
+              onKeyDown={(e) => {
+                handleCustomerCodeKeyDown(e);
+                handleFormatting(e, extractHalfWidthDigits);
+              }}
             />
-            <div>-</div>
+            <span> - </span>
             <input
               type="text"
               className="border w-20 border-gray-400 p-1 placeholder-gray-400 bg-[#ebcec0]"
               value={(Array.isArray(value) && value[1]) || ""}
               onChange={(e) => {
-                setId2(e.target.value);
-                handleValueChange(e.target.value, 1);
+                setId2(extractHalfWidthDigits(e.target.value));
+                handleValueChange(extractHalfWidthDigits(e.target.value), 1);
               }}
               placeholder="000000"
-              onKeyDown={handleCustomerCodeKeyDown}
+              onKeyDown={(e) => {
+                handleCustomerCodeKeyDown(e);
+                handleFormatting(e, extractHalfWidthDigits);
+              }}
             />
             <button
               onClick={() => {
@@ -401,10 +426,13 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
               className="border border-black p-1 w-44 mr-1 bg-[#ebcec0]"
               value={(typeof value === "string" && value) || ""}
               onChange={(e) => {
-                setId1(e.target.value);
-                handleValueChange(e.target.value);
+                setId1(extractHalfWidthDigits(e.target.value));
+                handleValueChange(extractHalfWidthDigits(e.target.value), 1);
               }}
-              onKeyDown={handleCustomerCodeKeyDown}
+              onKeyDown={(e) => {
+                handleCustomerCodeKeyDown(e);
+                handleFormatting(e, extractHalfWidthDigits);
+              }}
             />
             <button
               onClick={() => {
@@ -471,16 +499,26 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
                 type="text"
                 placeholder="0000"
                 className="w-20 p-1 border border-gray-500 bg-[#ebcec0]"
-                onChange={(e) => setPostcode1(e.target.value)}
-                onKeyDown={handleJimushoKeyDown}
+                onChange={(e) =>
+                  setPostcode1(extractHalfWidthDigits(e.target.value))
+                }
+                onKeyDown={(e) => {
+                  handleJimushoKeyDown(e);
+                  allowDecimalInput(e);
+                }}
               />
               <span className="mx-1">-</span>
               <input
                 type="text"
                 placeholder="000"
                 className="w-20 p-1 border border-gray-500 bg-[#ebcec0]"
-                onChange={(e) => setPostcode2(e.target.value)}
-                onKeyDown={handleJimushoKeyDown}
+                onChange={(e) =>
+                  setPostcode2(extractHalfWidthDigits(e.target.value))
+                }
+                onKeyDown={(e) => {
+                  handleJimushoKeyDown(e);
+                  allowDecimalInput(e);
+                }}
               />
               <button
                 onClick={() => {
@@ -677,8 +715,13 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
                         type="text"
                         className="w-64 p-1 border border-gray-500 bg-[#ebcec0]"
                         value={kanaInput}
-                        onChange={(e) => setKanaInput(e.target.value)}
-                        onKeyDown={handleKanaKeyDown}
+                        onChange={(e) =>
+                          setKanaInput(convertToFullWidth(e.target.value))
+                        }
+                        onKeyDown={(e) => {
+                          handleKanaKeyDown(e);
+                          handleFormatting(e, convertToFullWidth);
+                        }}
                       />
                     </>
                   </div>

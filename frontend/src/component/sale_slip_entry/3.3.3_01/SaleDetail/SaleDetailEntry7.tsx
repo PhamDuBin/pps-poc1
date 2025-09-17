@@ -1,4 +1,8 @@
 import React, { useEffect, useRef } from "react";
+import {
+  allowDecimalInput,
+  extractHalfWidthDigits,
+} from "../../../../utils/InputHandlers";
 
 interface SaleDetailEntry7Props {
   onChange: (field: string, value: string) => void;
@@ -22,18 +26,18 @@ const SaleDetailEntry7: React.FC<SaleDetailEntry7Props> = ({
       <div className="h-[64px] w-[100px]">
         <div className="h-1/2 bg-[#80bad7] p-1">商品コード</div>
         <input
-          ref={firstInputRef}
           type="text"
-          className="h-1/2 w-full border border-black text-center"
+          className="h-1/2 w-full border border-black text-center placeholder-black"
           placeholder="96-0001"
           value={formData.productCode ?? ""}
-          onChange={(e) => onChange("productCode", e.target.value)}
+          disabled
         />
       </div>
 
       <div className="h-[64px] w-[100px]">
         <div className="h-1/2 bg-[#80bad7] p-1">商品名</div>
         <input
+          ref={firstInputRef}
           type="text"
           placeholder="消費税"
           className="h-1/2 w-full border border-black text-center"
@@ -59,7 +63,10 @@ const SaleDetailEntry7: React.FC<SaleDetailEntry7Props> = ({
           className="h-1/2 w-full border border-black text-center"
           placeholder="0"
           value={formData.tax ?? ""}
-          onChange={(e) => onChange("tax", e.target.value)}
+          onChange={(e) =>
+            onChange("tax", extractHalfWidthDigits(e.target.value))
+          }
+          onKeyDown={allowDecimalInput}
         />
       </div>
 

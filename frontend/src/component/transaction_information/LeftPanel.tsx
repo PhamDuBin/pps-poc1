@@ -2,6 +2,12 @@
 import { useEffect, useRef, useState } from "react";
 import AdvanceSearchModal from "./1.1.1_03/AdvanceSearchModal";
 import TooltipPortal from "./1.1.1_03/TooltipPortal";
+import {
+  extractHalfWidthDigits,
+  convertToFullWidth,
+  handleFormatting,
+  allowDecimalInput,
+} from "../../utils/InputHandlers";
 
 export const DownArrowIcon = () => (
   <svg
@@ -229,8 +235,13 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
                 placeholder="0000"
                 value={postcode1} // MODIFIED: Bind value
                 className="w-[30%] bg-[#ebcec0] px-1 py-0.5 border border-black"
-                onChange={(e) => setPostcode1(e.target.value)}
-                onKeyDown={handlePostcodeKeyDown}
+                onChange={(e) =>
+                  setPostcode1(extractHalfWidthDigits(e.target.value))
+                }
+                onKeyDown={(e) => {
+                  handlePostcodeKeyDown(e);
+                  allowDecimalInput(e);
+                }}
               />
               <span className="mx-1">-</span>
               <input
@@ -238,8 +249,13 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
                 placeholder="000"
                 value={postcode2} // MODIFIED: Bind value
                 className="w-[30%] bg-[#ebcec0] px-1 py-0.5 border border-black "
-                onChange={(e) => setPostcode2(e.target.value)}
-                onKeyDown={handlePostcodeKeyDown}
+                onChange={(e) =>
+                  setPostcode2(extractHalfWidthDigits(e.target.value))
+                }
+                onKeyDown={(e) => {
+                  handlePostcodeKeyDown(e);
+                  allowDecimalInput(e);
+                }}
               />
               <button
                 onClick={() => {
@@ -286,8 +302,11 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
                 placeholder="000000"
                 value={id1} // MODIFIED: Bind value
                 className="w-[30%] bg-[#ebcec0] px-1 py-0.5 border border-gray-500"
-                onChange={(e) => setId1(e.target.value)}
-                onKeyDown={handleCustomerIdKeyDown}
+                onChange={(e) => setId1(extractHalfWidthDigits(e.target.value))}
+                onKeyDown={(e) => {
+                  handleCustomerIdKeyDown(e);
+                  allowDecimalInput(e);
+                }}
               />
               <span className="mx-1">-</span>
               <input
@@ -295,8 +314,11 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
                 placeholder="000"
                 value={id2} // MODIFIED: Bind value
                 className="w-[30%] bg-[#ebcec0] px-1 py-0.5 border border-gray-500"
-                onChange={(e) => setId2(e.target.value)}
-                onKeyDown={handleCustomerIdKeyDown}
+                onChange={(e) => setId2(extractHalfWidthDigits(e.target.value))}
+                onKeyDown={(e) => {
+                  handleCustomerIdKeyDown(e);
+                  allowDecimalInput(e);
+                }}
               />
               <button
                 onClick={() => {
