@@ -33,7 +33,9 @@ const Regulator = () => {
     },
   ];
 
-  const handleDetailKeyDown = (e: React.KeyboardEvent<HTMLTableCellElement>) => {
+  const handleDetailKeyDown = (
+    e: React.KeyboardEvent<HTMLTableCellElement>
+  ) => {
     if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();
       setModalF1Open(true);
@@ -50,86 +52,96 @@ const Regulator = () => {
 
   return (
     <>
-      <span className={`flex justify-start text-start font-bold p-1 my-1 ${labelColor} mt-4`}>
+      <span
+        className={`flex justify-start text-start font-bold p-1 my-1 ${labelColor} mt-4`}
+      >
         調整器
       </span>
-      <div className="flex justify-between text-xs space-x-2">
-        {/* left-table */}
-        <div className="w-5/6 min-w-[761px]">
-          <div className="border border-black">
-            <table className="w-full table-fixed border-collapse">
-              <thead className="h-[40px] bg-[#D9D9D9]">
-                <tr>
-                  <th className={`border border-black text-center w-[12%] ${labelColor}`}>No.</th>
-                  <th className={`border border-black text-center w-[12%] ${labelColor}`}>種別</th>
-                  <th className={`border border-black text-center w-[20%] ${labelColor}`}>メーカー</th>
-                  <th className={`border border-black text-center w-[20%] ${labelColor}`}>型式</th>
-                  <th className={`border border-black text-center w-[12%] ${labelColor}`}>容量（kg/h）</th>
-                  <th className={`border border-black text-center w-[12%] ${labelColor}`}>製造年月</th>
-                  <th className={`border border-black text-center w-[12%] ${labelColor}`}>有効年月</th>
-                  <th className={`border border-black text-center w-[40px] ${labelColor}`}>詳細</th>
-                </tr>
-              </thead>
-              <tbody>
-                {rows.map((row, idx) => {
-                  const rowHasCheck = states[idx].some((s) => s === 3);
-                  return (
-                    <tr key={idx} className="h-[30px]">
-                      <td className={`border border-black text-center ${inputColor}`}>{row.no}</td>
-                      <td className={`border border-black text-center ${inputColor}`}>{row.type}</td>
-                      <td className={`border border-black text-center ${inputColor}`}>{row.maker}</td>
-                      <td className={`border border-black text-center ${inputColor}`}>{row.model}</td>
-                      <td className={`border border-black text-center ${inputColor}`}>{row.capacity}</td>
-                      <td className={`border border-black text-center ${inputColor}`}>{row.manufacture}</td>
-                      <td className={`border border-black text-center ${inputColor}`}>{row.valid}</td>
-                      <td
-                        onClick={() => setModalF1Open(true)}
-                        onKeyDown={handleDetailKeyDown}
-                        className={`border border-black text-center cursor-pointer ${inputColor} ${
-                          rowHasCheck ? "bg-red-500" : ""
-                        }`}
-                      >
-                        ▼
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        {/* right-table */}
-        <div className="w-1/6 min-w-[150px]">
-          <div className="overflow-y-auto h-30 border border-black">
-            <table className="w-full table-fixed border-collapse">
-              <thead className="h-9 bg-[#D9D9D9]">
-                <tr className="sticky top-0 bg-[#D9D9D9] z-10">
-                  <th className={`border border-black text-center w-[4%] ${labelColor}`}>腐食等</th>
-                  <th className={`border border-black text-center w-[4%] ${labelColor}`}>適合</th>
-                  <th className={`border border-black text-center w-[4%] ${labelColor}`}>判定</th>
-                </tr>
-              </thead>
-              <tbody>
-                {Array.from({ length: totalRows }).map((_, row) => (
-                  <tr key={row} className="bg-white hover:bg-gray-50">
+      <div className="w-full min-w-[922px] text-xs">
+        <div className="overflow-auto border border-black">
+          <table className="w-full  table-fixed border-collapse">
+            <thead className={`h-[40px] ${labelColor}`}>
+              <tr>
+                <th className="border border-black text-center">No.</th>
+                <th className="border border-black text-center">種別</th>
+                <th className="border border-black text-center">メーカー</th>
+                <th className="border border-black text-center">型式</th>
+                <th className="border border-black text-center">
+                  容量（kg/h）
+                </th>
+                <th className="border border-black text-center">製造年月</th>
+                <th className="border border-black text-center">有効年月</th>
+                <th className="border border-black text-center w-10">詳細</th>
+                <th className="border border-black text-center w-10">腐食等</th>
+                <th className="border border-black text-center w-10">適合</th>
+                <th className="border border-black text-center w-10">判定</th>
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((row, idx) => {
+                const rowHasCheck = states[idx].some((s) => s === 3);
+                return (
+                  <tr key={idx} className="h-10">
+                    <td
+                      className={`border border-black text-center ${inputColor}`}
+                    >
+                      {row.no}
+                    </td>
+                    <td
+                      className={`border border-black text-center ${inputColor}`}
+                    >
+                      {row.type}
+                    </td>
+                    <td
+                      className={`border border-black text-center ${inputColor}`}
+                    >
+                      {row.maker}
+                    </td>
+                    <td
+                      className={`border border-black text-center ${inputColor}`}
+                    >
+                      {row.model}
+                    </td>
+                    <td
+                      className={`border border-black text-center ${inputColor}`}
+                    >
+                      {row.capacity}
+                    </td>
+                    <td
+                      className={`border border-black text-center ${inputColor}`}
+                    >
+                      {row.manufacture}
+                    </td>
+                    <td
+                      className={`border border-black text-center ${inputColor}`}
+                    >
+                      {row.valid}
+                    </td>
+                    <td
+                      onClick={() => setModalF1Open(true)}
+                      onKeyDown={handleDetailKeyDown}
+                      className={`border border-black text-center cursor-pointer ${inputColor} ${
+                        rowHasCheck ? "bg-red-500" : ""
+                      }`}
+                    >
+                      ▼
+                    </td>
                     {Array.from({ length: 3 }).map((_, col) => (
                       <td
                         key={col}
-                        className={`border border-black text-center cursor-pointer w-[10%] h-8 ${inputColor}`}
-                        onClick={() => handleClick(row, col)}
+                        className={`border border-black text-center cursor-pointer ${inputColor}`}
+                        onClick={() => handleClick(idx, col)}
                       >
-                        {symbols[states[row][col]]}
+                        {symbols[states[idx][col]]}
                       </td>
                     ))}
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                );
+              })}
+            </tbody>
+          </table>
         </div>
       </div>
-
       <ModalF1 isOpen={modalF1Open} onClose={() => setModalF1Open(false)} />
     </>
   );

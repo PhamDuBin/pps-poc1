@@ -1,5 +1,9 @@
 import { useState } from "react";
 import { kanaButtons } from "../sale_slip_entry/LeftPanel";
+import {
+  convertToFullWidth,
+  handleFormatting,
+} from "../../utils/InputHandlers";
 type PersonnelSearchModalProps = {
   onClose: () => void;
 };
@@ -40,7 +44,7 @@ const PersonnelSearchModal: React.FC<PersonnelSearchModalProps> = ({
                   <label className="bg-[#80bad7] p-1 font-bold w-24 text-center mr-2">
                     検索種類
                   </label>
-                  <label className="bg-[#ebcec0] w-64 p-1 font-bold text-center">
+                  <label className="bg-[#80bad7] w-64 p-1 font-bold text-center">
                     カナ
                   </label>
                 </>
@@ -56,6 +60,10 @@ const PersonnelSearchModal: React.FC<PersonnelSearchModalProps> = ({
                   <input
                     type="text"
                     className="w-64 p-1 border border-gray-500 bg-[#ebcec0]"
+                    onKeyDown={(e) => {
+                      handleFormatting(e, convertToFullWidth);
+                    }}
+                    onChange={(e) => convertToFullWidth(e.target.value)}
                   />
                 </>
               </div>

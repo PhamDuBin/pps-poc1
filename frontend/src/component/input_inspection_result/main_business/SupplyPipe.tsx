@@ -6,8 +6,6 @@ const SupplyPipe = () => {
   const [modalF1Open, setModalF1Open] = useState(false);
 
   const symbols = ["", "◯", "×", "✔"];
-
-  // số hàng bảng
   const totalRows = 4;
 
   const options = [
@@ -21,9 +19,8 @@ const SupplyPipe = () => {
     "9: その他",
   ];
 
-  // state cho các ô (ký hiệu)
   const [states, setStates] = useState<number[][]>(
-    Array.from({ length: totalRows }, () => Array(7).fill(0)) // chỉ cần 7 cột bên phải
+    Array.from({ length: totalRows }, () => Array(7).fill(0))
   );
 
   const rows = [
@@ -40,7 +37,9 @@ const SupplyPipe = () => {
   const handleClickSButton = () => setStatelabel((prev) => (prev + 1) % 3);
   const handleClickSButton2 = () => setStatelabel2((prev) => (prev + 1) % 3);
 
-  const handleDetailKeyDown = (e: React.KeyboardEvent<HTMLTableCellElement>) => {
+  const handleDetailKeyDown = (
+    e: React.KeyboardEvent<HTMLTableCellElement>
+  ) => {
     if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();
       setModalF1Open(true);
@@ -57,12 +56,12 @@ const SupplyPipe = () => {
 
   return (
     <>
-      <span className={`flex justify-start font-bold p-1 my-1 mt-4 ${labelColor}`}>
+      <span
+        className={`flex justify-start font-bold p-1 my-1 mt-4 ${labelColor}`}
+      >
         供給管
       </span>
-
-      {/* 2 nút toggle */}
-      <div className="flex gap-x-4 mb-1 p-2 border border-black items-center">
+      <div className="flex gap-x-4 mb-1 p-2 border border-black items-center text-xs">
         <div>埋設管</div>
         <button
           onClick={handleClickSButton}
@@ -79,84 +78,87 @@ const SupplyPipe = () => {
         </button>
       </div>
 
-      <div className="flex justify-between text-xs space-x-2">
-        {/* left-table */}
-        <div className="w-2/3 min-w-[650px]">
-          <div className="border border-black">
-            <table className="w-full table-fixed border-collapse">
-              <thead className={`h-[38px] ${labelColor}`}>
-                <tr>
-                  <th className="border border-black text-center w-[30%]"></th>
-                  <th className="border border-black text-center w-[50px]">No.</th>
-                  <th className="border border-black text-center w-[40%]">材料</th>
-                  <th className="border border-black text-center w-[30%]">埋設部</th>
-                  <th className="border border-black text-center w-[40px]">詳細</th>
-                </tr>
-              </thead>
-              <tbody>
-                {rows.map((row, idx) => {
-                  const rowHasCheck = states[idx].some((s) => s === 3);
-                  const showGroup = idx === 0 || row.group !== rows[idx - 1].group;
+      <div className="w-full min-w-[922px] text-xs">
+        <div className="overflow-auto border border-black">
+          <table className="w-full  table-fixed border-collapse">
+            <thead className={`h-[38px] ${labelColor}`}>
+              <tr>
+                <th className="border border-black text-center"></th>
+                <th className="border border-black text-center">No.</th>
+                <th className="border border-black text-center">材料</th>
+                <th className="border border-black text-center">埋設部</th>
+                <th className="border border-black text-center w-10">詳細</th>
+                <th className="border border-black text-center w-10">腐食等</th>
+                <th className="border border-black text-center w-10">
+                  腐食
+                  <br />
+                  防止
+                </th>
+                <th className="border border-black text-center w-10">漏洩</th>
+                <th className="border border-black text-center">点検方法</th>
+                <th className="border border-black text-center w-10">
+                  破損
+                  <br />
+                  防止
+                </th>
+                <th className="border border-black text-center w-10">
+                  危険
+                  <br />
+                  認識
+                </th>
+                <th className="border border-black text-center w-10">判定</th>
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((row, idx) => {
+                const rowHasCheck = states[idx].some((s) => s === 3);
+                const showGroup =
+                  idx === 0 || row.group !== rows[idx - 1].group;
 
-                  return (
-                    <tr key={idx} className="h-[30px]">
-                      {showGroup && (
-                        <th
-                          rowSpan={2}
-                          className={`border border-black text-center ${labelColor}`}
-                        >
-                          {row.group}
-                        </th>
-                      )}
-                      <td className={`border border-black text-center ${inputColor}`}>
-                        {row.no}
-                      </td>
-                      <td className={`border border-black text-center ${inputColor}`}>
-                        材料名
-                      </td>
-                      <td className={`border border-black text-center ${inputColor}`}>
-                        -
-                      </td>
-                      <td
-                        tabIndex={0}
-                        onClick={() => setModalF1Open(true)}
-                        onKeyDown={handleDetailKeyDown}
-                        className={`border border-black text-center cursor-pointer ${inputColor} ${
-                          rowHasCheck ? "bg-red-500" : inputColor
-                        }`}
+                return (
+                  <tr key={idx} className="h-10">
+                    {showGroup && (
+                      <th
+                        rowSpan={2}
+                        className={`border border-black text-center ${labelColor}`}
                       >
-                        ▼
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        {/* right-table */}
-        <div className="w-1/3 min-w-[260px]">
-          <div className="overflow-y-auto h-40 border border-black">
-            <table className="w-full table-fixed border-collapse">
-              <thead className={`h-8 sticky top-0 z-10 ${labelColor}`}>
-                <tr>
-                  <th className="border border-black text-center">腐食等</th>
-                  <th className="border border-black text-center">腐食<br/>防止</th>
-                  <th className="border border-black text-center">漏洩</th>
-                  <th className="border border-black text-center w-[25%]">点検方法</th>
-                  <th className="border border-black text-center">破損<br/>防止</th>
-                  <th className="border border-black text-center">危険<br/>認識</th>
-                  <th className="border border-black text-center">判定</th>
-                </tr>
-              </thead>
-              <tbody>
-                {Array.from({ length: totalRows }).map((_, row) => (
-                  <tr key={row} className="hover:bg-gray-50">
+                        {row.group}
+                      </th>
+                    )}
+                    <td
+                      className={`border border-black text-center ${inputColor}`}
+                    >
+                      {row.no}
+                    </td>
+                    <td
+                      className={`border border-black text-center ${inputColor}`}
+                    >
+                      材料名
+                    </td>
+                    <td
+                      className={`border border-black text-center ${inputColor}`}
+                    >
+                      -
+                    </td>
+                    <td
+                      tabIndex={0}
+                      onClick={() => setModalF1Open(true)}
+                      onKeyDown={handleDetailKeyDown}
+                      className={`border border-black text-center cursor-pointer ${
+                        rowHasCheck ? "bg-red-500" : inputColor
+                      }`}
+                    >
+                      ▼
+                    </td>
                     {Array.from({ length: 7 }).map((_, col) =>
                       col === 3 ? (
-                        <td key={col} className={`border border-black text-center h-8 ${inputColor}`}>
-                          <select className={`w-full h-full font-medium bg-transparent outline-none ${inputColor}`}>
+                        <td
+                          key={col}
+                          className={`border border-black p-0 ${inputColor}`}
+                        >
+                          <select
+                            className={`w-full h-full font-medium bg-transparent outline-none text-center ${inputColor}`}
+                          >
                             {options.map((opt, i) => (
                               <option key={i} value={i}>
                                 {opt}
@@ -167,21 +169,20 @@ const SupplyPipe = () => {
                       ) : (
                         <td
                           key={col}
-                          className={`border border-black text-center cursor-pointer w-[10%] ${inputColor}`}
-                          onClick={() => handleClick(row, col)}
+                          className={`border border-black text-center cursor-pointer ${inputColor}`}
+                          onClick={() => handleClick(idx, col)}
                         >
-                          {symbols[states[row][col]]}
+                          {symbols[states[idx][col]]}
                         </td>
                       )
                     )}
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                );
+              })}
+            </tbody>
+          </table>
         </div>
       </div>
-
       <ModalF1 isOpen={modalF1Open} onClose={() => setModalF1Open(false)} />
     </>
   );

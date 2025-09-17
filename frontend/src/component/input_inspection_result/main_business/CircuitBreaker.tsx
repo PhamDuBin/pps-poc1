@@ -37,131 +37,103 @@ const CircuitBreaker = () => {
 
   return (
     <>
-      <span className={`flex justify-start text-start font-bold p-1 my-1 ${labelColor} mt-4`}>
+      <span
+        className={`flex justify-start text-start font-bold p-1 my-1 ${labelColor} mt-4`}
+      >
         遮断器
       </span>
-      <div className="flex justify-between text-xs space-x-2">
-        {/* left-table */}
-        <div className="w-11/12 min-w-[837px]">
-          <div className="border border-black">
-            <table className="w-full table-fixed border-collapse">
-              <thead className="h-[40px] bg-[#D9D9D9]">
-                <tr>
-                  <th className={`border border-black text-center w-[30%] ${labelColor}`}></th>
-                  <th className={`border border-black text-center w-[40%] ${labelColor}`}>
-                    型式
-                  </th>
-                  <th className={`border border-black text-center w-[30%] ${labelColor}`}>個</th>
-                  <th className={`border border-black text-center w-[40px] ${labelColor}`}>
-                    詳細
-                  </th>
-                </tr>
-              </thead>
+      <div className="w-full min-w-[922px] text-xs">
+        <div className="overflow-auto border border-black">
+          <table className="w-full  table-fixed border-collapse">
+            <thead className={`h-[40px] ${labelColor}`}>
+              <tr>
+                <th className="border border-black text-center"></th>
+                <th className="border border-black text-center">型式</th>
+                <th className="border border-black text-center">個</th>
+                <th className="border border-black text-center w-10">詳細</th>
+                <th className="border border-black text-center w-10">判定</th>
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((row, idx) => {
+                const showGroup =
+                  row.group &&
+                  (idx === 0 || row.group !== rows[idx - 1]?.group);
+                const isSpecial = !row.model && !row.count;
 
-              <tbody>
-                {rows.map((row, idx) => {
-                  const showGroup =
-                    row.group &&
-                    (idx === 0 || row.group !== rows[idx - 1]?.group);
+                return (
+                  <tr key={idx} className="h-10">
+                    {showGroup && (
+                      <th
+                        rowSpan={
+                          rows.filter((r) => r.group === row.group).length
+                        }
+                        className={`border border-black text-center ${labelColor}`}
+                      >
+                        {row.group}
+                      </th>
+                    )}
 
-                  const isSpecial = !row.model && !row.count;
-
-                  return (
-                    <tr key={idx} className="h-[30px]">
-                      {showGroup && (
+                    {!isSpecial ? (
+                      <>
                         <th
-                          rowSpan={
-                            rows.filter((r) => r.group === row.group).length
-                          }
-                          className={`border border-black text-center ${labelColor}`}
-                        >
-                          {row.group}
-                        </th>
-                      )}
-
-                      {!isSpecial ? (
-                        <>
-                          <th className={`border border-black text-center ${labelColor}`}>
-                            {row.label}
-                          </th>
-                          <td className="border border-black text-center bg-[#ebcec0]">
-                            {row.model}
-                          </td>
-                          <td className="border border-black text-center bg-[#ebcec0]">
-                            {row.count}
-                          </td>
-                          <td
-                            onClick={() => setModalF1Open(true)}
-                            onKeyDown={handleDetailKeyDown}
-                            className={`border border-black text-center w-[60px] cursor-pointer ${inputColor} ${
-                              states[idx] === 3 ? "bg-red-500" : ""
-                            }`}
-                          >
-                            ▼
-                          </td>
-                        </>
-                      ) : (
-                        <th
-                          colSpan={3}
-                          className={`border border-black pl-2 text-left font-semibold ${labelColor}`}
+                          className={`border border-black text-center font-semibold ${labelColor}`}
                         >
                           {row.label}
                         </th>
-                      )}
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        {/* right-table */}
-        <div className="w-1/12 min-w-[70px]">
-          <div className="overflow-y-auto h-48 border border-black">
-            <table className="w-full table-fixed border-collapse">
-              <thead className="h-8 bg-[#D9D9D9]">
-                <tr className="sticky top-0 bg-[#D9D9D9] z-10">
-                  <th className={`border border-black text-center w-[4%] ${labelColor}`}>
-                    判定
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {Array.from({ length: totalRows }).map((_, row) => {
-                  if (row === 3) {
-                    return (
-                      <tr key={row} className="bg-[#ebcec0]">
                         <td
-                          className="border border-black text-center cursor-pointer h-16"
-                          rowSpan={2}
-                          onClick={() => handleClick(row)}
+                          className={`border border-black text-center ${inputColor}`}
                         >
-                          {symbols[states[row]]}
+                          {row.model}
                         </td>
-                      </tr>
-                    );
-                  }
-
-                  if (row === 4) return null;
-
-                  return (
-                    <tr key={row} className="bg-[#ebcec0]">
-                      <td
-                        className="border border-black text-center cursor-pointer h-8"
-                        onClick={() => handleClick(row)}
+                        <td
+                          className={`border border-black text-center ${inputColor}`}
+                        >
+                          {row.count}
+                        </td>
+                        <td
+                          onClick={() => setModalF1Open(true)}
+                          onKeyDown={handleDetailKeyDown}
+                          className={`border border-black text-center cursor-pointer ${inputColor} ${
+                            states[idx] === 3 ? "bg-red-500" : ""
+                          }`}
+                        >
+                          ▼
+                        </td>
+                      </>
+                    ) : (
+                      <th
+                        colSpan={3}
+                        className={`border border-black pl-2 text-left font-semibold ${labelColor}`}
                       >
-                        {symbols[states[row]]}
+                        {row.label}
+                      </th>
+                    )}
+                    {idx < 3 && (
+                      <td
+                        className={`border border-black text-center cursor-pointer ${inputColor}`}
+                        onClick={() => handleClick(idx)}
+                      >
+                        {symbols[states[idx]]}
                       </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
+                    )}
+                    {idx === 3 && (
+                      <td
+                        rowSpan={2}
+                        className={`border border-black text-center cursor-pointer ${inputColor}`}
+                        onClick={() => handleClick(idx)}
+                      >
+                        {symbols[states[idx]]}
+                      </td>
+                    )}
+                    {/* Bỏ qua idx === 4 vì đã được rowSpan từ idx === 3 */}
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
         </div>
       </div>
-
       <ModalF1 isOpen={modalF1Open} onClose={() => setModalF1Open(false)} />
     </>
   );

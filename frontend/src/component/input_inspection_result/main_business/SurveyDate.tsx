@@ -1,8 +1,6 @@
-import { DownArrowIcon } from "../../transaction_information/LeftPanel";
 import ModalF1 from "../../modal/Modal_F1";
 import { useState } from "react";
 import { labelColor, inputColor } from "../../../constants/colors";
-
 
 const SurveyDate = () => {
   const [modalF1Open, setModalF1Open] = useState(false);
@@ -10,7 +8,6 @@ const SurveyDate = () => {
   const symbols = ["", "◯", "×", "✔"];
   const warnings = ["", "使用注意", "換気注意", "危険", "使用禁止"];
 
-  // Thay đổi để tạo 20 dòng dữ liệu
   const totalRows = 20;
 
   const [states, setStates] = useState(
@@ -50,39 +47,58 @@ const SurveyDate = () => {
   };
   return (
     <>
-      <span className={`flex justify-start text-start font-bold p-1 ${labelColor}`}>
+      <span
+        className={`flex justify-start text-start font-bold p-1 ${labelColor}`}
+      >
         今回調査日
       </span>
       <div className="flex justify-between text-xs space-x-2 mt-1">
-        {/* Bảng 1 với thanh cuộn */}
-        <div className="w-2/3 min-w-[513px]">
-          <div className="overflow-y-auto h-40 border border-black">
+        <div className="w-full min-w-[922px]">
+          <div className="overflow-auto h-40 border border-black">
             <table className="w-full table-fixed border-collapse">
               <thead className={`h-[35px] ${labelColor}`}>
                 <tr className={`sticky top-0 ${labelColor} z-10`}>
-                  <th className={`border border-black text-center w-[10%]`}>
-                    No.
+                  <th className="border border-black text-center">No.</th>
+                  <th className="border border-black text-center">種別</th>
+                  <th className="border border-black text-center">メーカー</th>
+                  <th className="border border-black text-center">型式</th>
+                  <th className="border border-black text-center w-10">詳細</th>
+                  <th className="border border-black text-center w-10">
+                    ガス栓 No.
                   </th>
-                  <th className="border border-black text-center w-[30%]">
-                    種別
+                  <th className="border border-black text-center w-10">
+                    規格 適合
                   </th>
-                  <th className="border border-black text-center w-[30%]">
-                    メーカー
+                  <th className="border border-black text-center w-10">
+                    安全 装置
                   </th>
-                  <th className="border border-black text-center w-[30%]">
-                    型式
+                  <th className="border border-black text-center w-10">
+                    燃焼 状態
                   </th>
-                  <th className="border border-black text-center w-[35px]">
-                    詳細
+                  <th className="border border-black text-center w-10">
+                    接続 方法
                   </th>
+                  <th className="border border-black text-center w-10">
+                    接続 管
+                  </th>
+                  <th className="border border-black text-center">
+                    CO濃度（％）
+                  </th>
+                  <th className="border border-black text-center w-10">
+                    CO 測定
+                  </th>
+                  <th className="border border-black text-center w-10">
+                    CO周知
+                  </th>
+                  <th className="border border-black text-center w-10">判定</th>
                 </tr>
               </thead>
               <tbody>
                 {Array.from({ length: totalRows }).map((_, row) => {
                   const rowHasCheck = states[row].some((s) => s === 3);
                   return (
-                    <tr key={row} className={`${inputColor}`}>
-                      <td className="border border-black text-center h-8">
+                    <tr key={row} className={`${inputColor} h-10`}>
+                      <td className="border border-black text-center">
                         {row + 1}
                       </td>
                       <td className="border border-black text-center">
@@ -101,66 +117,17 @@ const SurveyDate = () => {
                       >
                         <button
                           onClick={() => setModalF1Open(true)}
-                          className="flex items-center justify-center w-full"
+                          className="flex items-center justify-center w-full h-full"
                         >
-                          <DownArrowIcon />
+                          ▼
                         </button>
                       </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        </div>
-        {/* Bảng 2 với thanh cuộn */}
-        <div className="w-1/3 min-w-[400px]">
-          <div className="overflow-y-auto h-40 border border-black">
-            <table className="w-full table-fixed border-collapse">
-              <thead className={`h-[35px] ${labelColor}`}>
-                <tr className={`sticky top-0 ${labelColor} z-10`}>
-                  <th className={`border border-black text-center w-[8%]`}>
-                    ガス栓 No.
-                  </th>
-                  <th className="border border-black text-center w-[8%]">
-                    規格 適合
-                  </th>
-                  <th className="border border-black text-center w-[8%]">
-                    安全 装置
-                  </th>
-                  <th className="border border-black text-center w-[8%]">
-                    燃焼 状態
-                  </th>
-                  <th className="border border-black text-center w-[8%]">
-                    接続 方法
-                  </th>
-                  <th className="border border-black text-center w-[8%]">
-                    接続 管
-                  </th>
-                  <th className="border border-black text-center w-[40px]">
-                    CO濃度（％）
-                  </th>
-                  <th className="border border-black text-center w-[8%]">
-                    CO 測定
-                  </th>
-                  <th className="border border-black text-center w-[10%]">
-                    CO周知
-                  </th>
-                  <th className="border border-black text-center w-[8%]">
-                    判定
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {Array.from({ length: totalRows }).map((_, row) => {
-                  return (
-                    <tr key={row} className={`${inputColor}`}>
                       {Array.from({ length: 10 }).map((_, col) => {
                         if (col === 0) {
                           return (
                             <td
                               key={col}
-                              className="border border-black text-center h-8"
+                              className="border border-black text-center"
                             >
                               0
                             </td>

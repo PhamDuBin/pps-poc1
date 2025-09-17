@@ -49,112 +49,115 @@ const ConnectingPipe = () => {
 
   return (
     <>
-      <div className={`flex justify-center text-center items-center font-bold p-2 ${labelColor} text-[20px] mt-4`}>
+      <div
+        className={`flex justify-center text-center items-center font-bold p-2 ${labelColor} text-[20px] mt-4`}
+      >
         供給設備
       </div>
-      <span className={`flex justify-start text-start font-bold p-1 my-1 ${labelColor}`}>
+      <span
+        className={`flex justify-start text-start font-bold p-1 my-1 ${labelColor}`}
+      >
         接続管
       </span>
-      <div className="flex justify-between text-xs space-x-2">
-        {/* left-table */}
-        <div className="w-2/3 min-w-[650px]">
-          <div className="border border-black">
-            <table className="w-full table-fixed border-collapse">
-              <thead className="h-[38px] bg-[#D9D9D9]">
-                <tr>
-                  <th className={`border border-black text-center w-[30%] ${labelColor}`}></th>
-                  <th className={`border border-black text-center w-[30%] ${labelColor}`}>
-                    No.
-                  </th>
-                  <th className={`border border-black text-center w-[40%] ${labelColor}`}>
-                    材料
-                  </th>
-                  <th className={`border border-black text-center w-[40px] ${labelColor}`}>
-                    詳細
-                  </th>
-                </tr>
-              </thead>
+      <div className="w-full min-w-[922px] text-xs mt-2">
+        <div className="overflow-auto border border-black">
+          <table className="w-full  table-fixed border-collapse">
+            <thead className="h-[38px]">
+              <tr className={`sticky top-0 ${labelColor} z-10`}>
+                <th
+                  className={`border border-black text-center ${labelColor}`}
+                ></th>
+                <th className={`border border-black text-center ${labelColor}`}>
+                  No.
+                </th>
+                <th className={`border border-black text-center ${labelColor}`}>
+                  材料
+                </th>
+                <th
+                  className={`border border-black text-center w-10 ${labelColor}`}
+                >
+                  詳細
+                </th>
+                <th
+                  className={`border border-black text-center w-10 ${labelColor}`}
+                >
+                  腐食等
+                </th>
+                <th
+                  className={`border border-black text-center w-10 ${labelColor}`}
+                >
+                  腐食
+                  <br />
+                  防止
+                </th>
+                <th
+                  className={`border border-black text-center w-10 ${labelColor}`}
+                >
+                  漏洩
+                </th>
+                <th className={`border border-black text-center ${labelColor}`}>
+                  点検方法
+                </th>
+                <th
+                  className={`border border-black text-center w-10 ${labelColor}`}
+                >
+                  破損
+                  <br />
+                  防止
+                </th>
+                <th
+                  className={`border border-black text-center w-10 ${labelColor}`}
+                >
+                  判定
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((row, idx) => {
+                const rowHasCheck = states[idx].some((s) => s === 3);
+                const showGroup =
+                  idx === 0 || row.group !== rows[idx - 1].group;
 
-              <tbody>
-                {rows.map((row, idx) => {
-                  const rowHasCheck = states[idx].some((s) => s === 3);
-                  const showGroup =
-                    idx === 0 || row.group !== rows[idx - 1].group;
-
-                  return (
-                    <tr key={idx} className="h-[30px]">
-                      {showGroup && (
-                        <th
-                          rowSpan={2}
-                          className={`border border-black text-center ${labelColor}`}
-                        >
-                          {row.group}
-                        </th>
-                      )}
-                      <td className={`border border-black text-center ${inputColor}`}>
-                        {row.no}
-                      </td>
-                      <td className={`border border-black text-center ${inputColor}`}>
-                        材料名
-                      </td>
-                      <td
-                        tabIndex={0}
-                        onClick={() => setModalF1Open(true)}
-                        onKeyDown={handleDetailKeyDown}
-                        className={`border border-black text-center cursor-pointer ${inputColor}${
-                          rowHasCheck ? "bg-red-500" : ""
-                        }`}
+                return (
+                  <tr key={idx} className="h-10">
+                    {showGroup && (
+                      <th
+                        rowSpan={2}
+                        className={`border border-black text-center ${labelColor}`}
                       >
-                        ▼
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        {/* right-table */}
-        <div className="w-1/3 min-w-[260px]">
-          <div className="overflow-y-auto h-40 border border-black">
-            <table className="w-full table-fixed border-collapse">
-              <thead className="h-8 bg-[#D9D9D9]">
-                <tr className="sticky top-0 bg-[#D9D9D9] z-10">
-                  <th className={`border border-black text-center w-[4%] ${labelColor}`}>
-                    腐食等
-                  </th>
-                  <th className={`border border-black text-center w-[4%] ${labelColor}`}>
-                    腐食 <br />
-                    防止
-                  </th>
-                  <th className={`border border-black text-center w-[4%] ${labelColor}`}>
-                    漏洩
-                  </th>
-                  <th className={`border border-black text-center w-[10%] ${labelColor}`}>
-                    点検方法
-                  </th>
-                  <th className={`border border-black text-center w-[4%] ${labelColor}`}>
-                    破損
-                    <br />
-                    防止
-                  </th>
-                  <th className={`border border-black text-center w-[4%] ${labelColor}`}>
-                    判定
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {Array.from({ length: totalRows }).map((_, row) => (
-                  <tr key={row} className="">
+                        {row.group}
+                      </th>
+                    )}
+                    <td
+                      className={`border border-black text-center ${inputColor}`}
+                    >
+                      {row.no}
+                    </td>
+                    <td
+                      className={`border border-black text-center ${inputColor}`}
+                    >
+                      材料名
+                    </td>
+                    <td
+                      tabIndex={0}
+                      onClick={() => setModalF1Open(true)}
+                      onKeyDown={handleDetailKeyDown}
+                      className={`border border-black text-center cursor-pointer ${inputColor} ${
+                        rowHasCheck ? "bg-red-500" : ""
+                      }`}
+                    >
+                      ▼
+                    </td>
                     {Array.from({ length: 6 }).map((_, col) => {
                       if (col === 3) {
                         return (
                           <td
                             key={col}
-                            className={`border border-black text-center h-8 ${inputColor}`}
+                            className={`border border-black p-0 ${inputColor}`}
                           >
-                            <select className={`w-full h-full font-medium bg-transparent outline-none ${inputColor}`}>
+                            <select
+                              className={`w-full h-full font-medium bg-transparent outline-none text-center ${inputColor}`}
+                            >
                               {options.map((opt, i) => (
                                 <option key={i} value={i}>
                                   {opt}
@@ -164,25 +167,23 @@ const ConnectingPipe = () => {
                           </td>
                         );
                       }
-
                       return (
                         <td
                           key={col}
-                          className={`border border-black text-center cursor-pointer w-[10%] ${inputColor}`}
-                          onClick={() => handleClick(row, col)}
+                          className={`border border-black text-center cursor-pointer ${inputColor}`}
+                          onClick={() => handleClick(idx, col)}
                         >
-                          {symbols[states[row][col]]}
+                          {symbols[states[idx][col]]}
                         </td>
                       );
                     })}
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                );
+              })}
+            </tbody>
+          </table>
         </div>
       </div>
-
       <ModalF1 isOpen={modalF1Open} onClose={() => setModalF1Open(false)} />
     </>
   );
