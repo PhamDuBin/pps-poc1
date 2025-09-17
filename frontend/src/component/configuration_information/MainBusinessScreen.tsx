@@ -1,4 +1,9 @@
+import React, { useState } from "react";
+import PaperSelectionModal from "./PaperSelectionModal";
+
 const MainBusinessScreen = () => {
+  const [isModalOpen, setIsModalOpen] = useState(true);
+
   const button =
     "flex text-center justify-center items-center bg-[#D9D9D9] border border-black shadow-xl font-bold";
   const span =
@@ -11,7 +16,10 @@ const MainBusinessScreen = () => {
       <div className="flex flex-row items-center text-base mt-3 h-8 px-8 justify-between">
         <span className={`${span}`}>用紙設定</span>
         <p className="ml-3">伝票請｜請求書（15日）〇〇商社様用</p>
-        <button className="p-2 rounded-md border border-black h-6 w-14 text-xs flex text-center justify-center items-center shadow-lg">
+        <button 
+          className="p-2 rounded-md border border-black h-6 w-14 text-xs flex text-center justify-center items-center shadow-lg"
+          onClick={() => setIsModalOpen(true)}
+          >
           再設定
         </button>
         <span className={`${span}`}>フォーム選択</span>
@@ -55,6 +63,10 @@ const MainBusinessScreen = () => {
         <button className={`${button} w-[10%]`}>データ（H）</button>
         <button className={`${button} w-[10%]`}>閉じる（C）</button>
       </div>
+      <PaperSelectionModal 
+        open={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+      />
     </div>
   );
 };

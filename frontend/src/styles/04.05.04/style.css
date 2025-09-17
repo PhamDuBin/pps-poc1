@@ -1,0 +1,36 @@
+.ant-table-thead>tr>th {
+    position: sticky !important;
+    top: 0 !important;
+    background: #D9D9D9 !important;
+    color: #000000 !important;
+    font-weight: 600 !important;
+    text-align: center !important;
+    padding: 8px !important;
+}
+
+.custom-table-row td {
+    background: #F8F8F8 !important;
+    border: 1px solid #DFDEDE !important;
+    font-size: 16px !important;
+    color: #000000 !important;
+    padding: 8px !important;
+}
+
+.ant-table-body:focus {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.custom-table-row:hover td {
+    background: #E6F7FF !important;
+}
+
+.selected-row td {
+    background: #CCE5FF !important;
+    font-weight: 600 !important;
+}
+
+.ant-select-item-option-active {
+  background-color: #CCE5FF !important;
+}
+
