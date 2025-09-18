@@ -266,13 +266,14 @@ type AdvanceSearchModalProps = {
   showAdvanceSearch: boolean;
   setShowAdvanceSearch: React.Dispatch<React.SetStateAction<boolean>>;
   onRowEnter: () => void;
+  onClose: () => void;
 };
 
 const AdvanceSearchModal: React.FC<AdvanceSearchModalProps> = ({
   showAdvanceSearch,
   setShowAdvanceSearch,
   onRowEnter,
-  
+  onClose
 }) => {
   const [searchMode, setSearchMode] = useState<string>("overall");
   const [tableData, setTableData] = useState<TableRowData[]>([]);
@@ -420,7 +421,7 @@ const AdvanceSearchModal: React.FC<AdvanceSearchModalProps> = ({
       {/* Close button */}
       <div className="flex justify-center">
         <button
-          onClick={() => setShowAdvanceSearch(false)}
+          onClick={() => {setShowAdvanceSearch(false); onClose();}}
           
           className="w-20 border border-black bg-[#80bad7] px-2 py-1 flex mt-2 justify-center shadow-md shadow-zinc-600"
         >

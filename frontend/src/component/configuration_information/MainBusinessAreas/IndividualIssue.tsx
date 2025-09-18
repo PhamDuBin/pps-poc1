@@ -54,6 +54,9 @@ const IndividualIssue = forwardRef<any>((props, ref) => {
               <AdvanceSearchModal
                 showAdvanceSearch={showAdvanceSearch}
                 setShowAdvanceSearch={setShowAdvanceSearch}
+                onClose={() => {
+                  setShowCustomerInfor(true);
+                }}
                 onRowEnter={() => console.log("Selected from modal")}
               />
             </div>
@@ -85,7 +88,7 @@ const IndividualIssue = forwardRef<any>((props, ref) => {
             <Input disabled={showCustomerInfor} className={`w-[100px] ${showCustomerInfor ? '' : 'disabled:bg-gray-300 disabled:cursor-not-allowed'}`} placeholder="0000000" />
             <div>-</div>
             <Input disabled={showCustomerInfor} className={`w-[100px] ${showCustomerInfor ? '' : 'disabled:bg-gray-300 disabled:cursor-not-allowed'}`} placeholder="0000000" />
-            <Button onClick={() => {setShowAdvanceSearch(true);setShowCustomerInfor(true)}} className="h-8 w-8  !bg-blue-600 !text-white hover:!bg-blue-400">
+            <Button onClick={() => {setShowAdvanceSearch(true)}} className="h-8 w-8  !bg-blue-600 !text-white hover:!bg-blue-400">
               ▼
             </Button>
             <div>関東地方営業事務所</div>
@@ -107,7 +110,7 @@ const IndividualIssue = forwardRef<any>((props, ref) => {
             <Input disabled={showCustomerInfor} className={`w-[100px] ${showCustomerInfor ? '' : 'disabled:bg-gray-300 disabled:cursor-not-allowed'}`} placeholder="0000000" />
             <div>-</div>
             <Input disabled={showCustomerInfor} className={`w-[100px] ${showCustomerInfor ? '' : 'disabled:bg-gray-300 disabled:cursor-not-allowed'}`} placeholder="0000000" />
-            <Button onClick={() => {setShowAdvanceSearch(true);setShowCustomerInfor(true)}} className="h-8 w-8  !bg-blue-600 !text-white hover:!bg-blue-400">
+            <Button onClick={() => {setShowAdvanceSearch(true)}} className="h-8 w-8  !bg-blue-600 !text-white hover:!bg-blue-400">
               ▼
             </Button>
             <Button onClick={handleShowCustomerInfor} className="px-2 !bg-blue-600 !text-white hover:!bg-blue-400">確定</Button>
