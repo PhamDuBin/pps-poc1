@@ -88,7 +88,12 @@ const PrintingDesignation = forwardRef<any>((props, ref) => {
     }));
   };
 
-  const clearSelection = () => setSelected([]);
+  const clearSelection = () => setSelectedGroup({
+    group1: null,
+    group2: null,
+    group3: null,
+    group4: null,     
+  });
 
   const createOptions = (optionsArray: string[]) =>
     optionsArray.map((opt, idx) => ({ value: String(idx), label: opt }));
