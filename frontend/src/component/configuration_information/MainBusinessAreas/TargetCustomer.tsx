@@ -1,6 +1,6 @@
 import { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import ModalF1 from "../../modal/Modal_F1";
-import { labelColor } from "../../../constants/colors";
+import { inputColor, labelColor } from "../../../constants/colors";
 interface TargetCustomerProps {
   onLabelClick?: (title: string) => void;
 }
@@ -60,18 +60,18 @@ const TargetCustomer = forwardRef<TargetCustomerRef, TargetCustomerProps>(
                     </div>
                 ))}
             </div>
-            <div className="flex font-bold justify-between items-center pb-6">
+            <div className="flex font-bold justify-between items-center pb-6 ">
                 <button 
                 onClick = {() => setModalF1Open(true)}
                 className={`${labelColor} border border-gray-400 flex items-center justify-center h-[60px] w-[160px]`}>
                     顧客抽出
                 </button>
-                <div className="overflow-x-auto h-[60px] border border-black mr-10">
+                <div className={`overflow-x-auto h-[60px] border border-black mr-10  ${inputColor}`}>
                     <div className="grid grid-cols-6">
                         {buttonTitle.map((title) => (
                             <div
                             key={title}
-                            className="border px-4 py-2 text-center w-[150px]"
+                            className="border border-black px-4 text-center h-[30px] w-[150px]"
                             >
                             {title}
                             </div>

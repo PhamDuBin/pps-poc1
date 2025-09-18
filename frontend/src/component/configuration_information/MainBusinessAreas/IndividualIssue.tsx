@@ -5,7 +5,7 @@ import dayjs from "dayjs";
 import AdvanceSearchModal from "../../transaction_information/1.1.1_03/AdvanceSearchModal";
 import { useRef, useState } from "react";
 import { forwardRef } from "react";
-import { labelColor } from "../../../constants/colors";
+import { labelColor, inputColor } from "../../../constants/colors";
 
 const { MonthPicker } = DatePicker;
 const { Option } = Select;
@@ -72,7 +72,12 @@ const IndividualIssue = forwardRef<any>((props, ref) => {
           {/* 月度 */}
           <span className="flex gap-4">
             <div className={labelClass}>月度</div>
-            <MonthPicker ref={ref} defaultValue={dayjs()} format="YYYY-MM" />
+            <MonthPicker
+              ref={ref}
+              defaultValue={dayjs()}
+              format="YYYY-MM"
+              className={`${inputColor}`}
+            />
           </span>
 
           {/* 事務所 */}
@@ -80,20 +85,20 @@ const IndividualIssue = forwardRef<any>((props, ref) => {
             <div className={labelClass}>事務所</div>
             <Input
               disabled={showCustomerInfor}
-              className={`w-[100px] ${
+              className={`w-[100px] ${inputColor} ${
                 showCustomerInfor
                   ? ""
-                  : "disabled:bg-gray-300 disabled:cursor-not-allowed"
+                  : "disabled:bg-[#f2e2dc] disabled:cursor-not-allowed"
               }`}
               placeholder="0000000"
             />
             <div>-</div>
             <Input
               disabled={showCustomerInfor}
-              className={`w-[100px] ${
+              className={`w-[100px] ${inputColor} ${
                 showCustomerInfor
                   ? ""
-                  : "disabled:bg-gray-300 disabled:cursor-not-allowed"
+                  : "disabled:bg-[#f2e2dc] disabled:cursor-not-allowed"
               }`}
               placeholder="0000000"
             />
@@ -123,7 +128,7 @@ const IndividualIssue = forwardRef<any>((props, ref) => {
             </Select>
             <Input
               disabled={showCustomerInfor}
-              className={`w-[100px] ${
+              className={`w-[100px] ${inputColor}  ${
                 showCustomerInfor
                   ? ""
                   : "disabled:bg-gray-300 disabled:cursor-not-allowed"
@@ -133,7 +138,7 @@ const IndividualIssue = forwardRef<any>((props, ref) => {
             <div>-</div>
             <Input
               disabled={showCustomerInfor}
-              className={`w-[100px] ${
+              className={`w-[100px] ${inputColor}  ${
                 showCustomerInfor
                   ? ""
                   : "disabled:bg-gray-300 disabled:cursor-not-allowed"
