@@ -3,6 +3,8 @@
 import { forwardRef, useState } from "react";
 import { DatePicker, Select, Checkbox } from "antd";
 import dayjs from "dayjs";
+import { inputColor } from "../../../constants/colors";
+import { input } from "@nextui-org/react";
 
 const ContinuousIssue = forwardRef<any>((props, ref) => {
   const [month, setMonth] = useState(dayjs());
@@ -29,7 +31,7 @@ const ContinuousIssue = forwardRef<any>((props, ref) => {
             picker="month"
             value={month}
             onChange={(date) => setMonth(date)}
-            className="ml-2 max-w-[160px] w-full"
+            className={`ml-2 max-w-[160px] w-full ${inputColor}`}
             format="YYYY-MM"
             style={{ width: "160px" }}
           />
@@ -40,7 +42,7 @@ const ContinuousIssue = forwardRef<any>((props, ref) => {
           <div className={labelClass}>締切指定</div>
           <Select
             defaultValue="締切残"
-            className="ml-2 max-w-[160px] w-full"
+            className={`ml-2 max-w-[160px] w-full [&>.ant-select-selector]:!bg-[#ebcec0] `}
             options={[
               { value: "締切残", label: "締切残" },
               { value: "現在残", label: "現在残" },
@@ -54,7 +56,7 @@ const ContinuousIssue = forwardRef<any>((props, ref) => {
           <div className={labelClass}>残高指定</div>
           <Select
             defaultValue="残有り"
-            className="ml-2 max-w-[160px] w-full"
+            className={`ml-2 max-w-[160px] w-full [&>.ant-select-selector]:!bg-[#ebcec0] `}
             options={[
               { value: "残有り", label: "残有り" },
               { value: "取引有り", label: "取引有り" },
@@ -82,6 +84,7 @@ const ContinuousIssue = forwardRef<any>((props, ref) => {
               format="YYYY/MM/DD"
               style={{ flex: 1, minWidth: 0 }}
               placeholder="開始日"
+              className={`bg-[#ebcec0] `}
             />
             <span className="select-none">〜</span>
             <DatePicker
@@ -90,6 +93,7 @@ const ContinuousIssue = forwardRef<any>((props, ref) => {
               format="YYYY/MM/DD"
               style={{ flex: 1, minWidth: 0 }}
               placeholder="終了日"
+              className={`bg-[#ebcec0] `}
             />
           </div>
         </div>
@@ -99,7 +103,7 @@ const ContinuousIssue = forwardRef<any>((props, ref) => {
           <div className={labelClass}>売上の条件</div>
           <Select
             defaultValue="無条件"
-            className="ml-2 max-w-[160px] w-full"
+            className={`ml-2 max-w-[160px] w-full [&>.ant-select-selector]:!bg-[#ebcec0] `}
             options={[
               { value: "無条件", label: "無条件" },
               { value: "検針後売上有り", label: "検針後売上有り" },

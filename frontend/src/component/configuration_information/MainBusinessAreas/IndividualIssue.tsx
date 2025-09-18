@@ -5,7 +5,7 @@ import dayjs from "dayjs";
 import AdvanceSearchModal from "../AdvanceSearchModal";
 import { useRef, useState } from "react";
 import { forwardRef } from "react";
-import { labelColor } from "../../../constants/colors";
+import { labelColor, inputColor } from "../../../constants/colors";
 
 const { MonthPicker } = DatePicker;
 const { Option } = Select;
@@ -76,18 +76,19 @@ const IndividualIssue = forwardRef<any>((props, ref) => {
           <span className="flex gap-4">
             <div className={labelClass}>月度</div>
             <MonthPicker
-              ref={ref}
-              defaultValue={dayjs()}
-              format="YYYY-MM"
-            />
+            ref={ref}
+            defaultValue={dayjs()}
+            format="YYYY-MM"
+            className={`${inputColor}`}
+          />
           </span>
 
           {/* 事務所 */}
           <span className="flex mt-2 gap-4 items-center">
             <div className={labelClass}>事務所</div>
-            <Input disabled={showCustomerInfor} className={`w-[100px] ${showCustomerInfor ? '' : 'disabled:bg-gray-300 disabled:cursor-not-allowed'}`} placeholder="0000000" />
+            <Input disabled={showCustomerInfor} className={`w-[100px] ${inputColor} ${showCustomerInfor ? '' : 'disabled:bg-[#f2e2dc] disabled:cursor-not-allowed'}`} placeholder="0000000" />
             <div>-</div>
-            <Input disabled={showCustomerInfor} className={`w-[100px] ${showCustomerInfor ? '' : 'disabled:bg-gray-300 disabled:cursor-not-allowed'}`} placeholder="0000000" />
+            <Input disabled={showCustomerInfor} className={`w-[100px] ${inputColor} ${showCustomerInfor ? '' : 'disabled:bg-[#f2e2dc] disabled:cursor-not-allowed'}`} placeholder="0000000" />
             <Button onClick={() => {setShowAdvanceSearch(true)}} className="h-8 w-8  !bg-blue-600 !text-white hover:!bg-blue-400">
               ▼
             </Button>
@@ -107,9 +108,9 @@ const IndividualIssue = forwardRef<any>((props, ref) => {
                 </Option>
               ))}
             </Select>
-            <Input disabled={showCustomerInfor} className={`w-[100px] ${showCustomerInfor ? '' : 'disabled:bg-gray-300 disabled:cursor-not-allowed'}`} placeholder="0000000" />
+            <Input disabled={showCustomerInfor} className={`w-[100px] ${inputColor}  ${showCustomerInfor ? '' : 'disabled:bg-gray-300 disabled:cursor-not-allowed'}`} placeholder="0000000" />
             <div>-</div>
-            <Input disabled={showCustomerInfor} className={`w-[100px] ${showCustomerInfor ? '' : 'disabled:bg-gray-300 disabled:cursor-not-allowed'}`} placeholder="0000000" />
+            <Input disabled={showCustomerInfor} className={`w-[100px] ${inputColor}  ${showCustomerInfor ? '' : 'disabled:bg-gray-300 disabled:cursor-not-allowed'}`} placeholder="0000000" />
             <Button onClick={() => {setShowAdvanceSearch(true)}} className="h-8 w-8  !bg-blue-600 !text-white hover:!bg-blue-400">
               ▼
             </Button>

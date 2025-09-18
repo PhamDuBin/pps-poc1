@@ -1,5 +1,5 @@
 import { forwardRef, useState } from "react";
-import { labelColor } from "../../../constants/colors";
+import { inputColor, labelColor } from "../../../constants/colors";
 
 const printingButtons = [
   "事業者","事業所","部門","取引区分","営業地区","集金地区","検針地区","点検地区",
@@ -26,7 +26,7 @@ const SelectInput = ({ label, value, options, onChange }: any) => {
     <div className={`flex gap-3 ${containerWidth}`}>
       <div className={`flex items-center justify-center font-bold w-[200px] min-w-[120px] ${labelColor}`}>{label}</div>
       <select
-        className={`border border-black p-1 rounded-sm ${label === "原料費調整通知" ? 'w-1/5' : 'w-2/5'}`}
+        className={`border border-black p-1 rounded-sm ${inputColor} ${label === "原料費調整通知" ? 'w-1/5' : 'w-2/5'}`}
         value={value}
         onChange={(e) => onChange(e.target.value)}
       >
@@ -110,7 +110,7 @@ const PrintingDesignation = forwardRef<any>((props, ref) => {
       {/* 印刷区分指定 */}
       <div className={`flex gap-x-4 mt-4 w-full ${labelColor} p-2`}>
         <div className="min-w-[100px] font-bold">印刷区分指定</div>
-        <input ref={ref} type="text" className="w-[50%] border border-black" value={selected.join("・")} readOnly />
+        <input ref={ref} type="text" className={`w-[50%] border border-black ${inputColor}`} value={selected.join("・")} readOnly />
         <button onClick={clearSelection} className="w-[15%] bg-white border border-black rounded-md hover:bg-gray-200 transition">印刷区分クリア</button>
       </div>
 
@@ -119,7 +119,7 @@ const PrintingDesignation = forwardRef<any>((props, ref) => {
           const isActive = selected.includes(label);
           return (
             <button key={idx} onClick={() => handleSelectLabel(label)}
-              className={`px-4 py-1 border rounded transition ${isActive ? "bg-blue-400 text-black border-black" : "bg-blue-200 border-gray-400"}
+              className={`px-4 py-1 border rounded transition ${isActive ? "bg-blue-400 text-black border-black" : "bg-blue-200 border-gray-400 hover:bg-white"}
               ${label==="取引区分"||label==="請求書発行区分"||label==="集金方法"?"row-span-6":""}
               ${label==="事業者"||label==="事業所"||label==="部門"?"row-span-2":"row-span-3"}`}>
               {label}
@@ -152,7 +152,7 @@ const PrintingDesignation = forwardRef<any>((props, ref) => {
           <SelectInput label="印刷担当" value={printManager} options={["営業","集金"]} onChange={setPrintManager} />
           <div className="flex gap-3 w-[60%]">
             <div className={`flex items-center justify-center font-bold w-[200px] ${labelColor}`}>施設使用料とりまとめ名称</div>
-            <input type="text" placeholder="ここに入力してください" className="w-[20%] border border-black px-2 py-1 rounded" value={facilityUsageFee} onChange={(e)=>setFacilityUsageFee(e.target.value)} />
+            <input type="text" placeholder="ここに入力してください" className={`w-[20%] border border-black px-2 py-1 rounded ${inputColor}`} value={facilityUsageFee} onChange={(e)=>setFacilityUsageFee(e.target.value)} />
           </div>
         </div>
         <div className="flex justify-between">
