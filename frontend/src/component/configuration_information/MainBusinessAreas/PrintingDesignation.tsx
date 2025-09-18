@@ -2,24 +2,20 @@ import { forwardRef, useState } from "react";
 import { inputColor, labelColor } from "../../../constants/colors";
 import { Select, Checkbox, Radio, Input } from "antd";
 
-const printingButtons = [
-  "事業者",
-  "事業所",
-  "部門",
-  "取引区分",
-  "営業地区",
-  "集金地区",
-  "検針地区",
-  "点検地区",
-  "営業担当",
-  "集金担当",
-  "点検担当",
-  "検針担当",
-  "配送担当",
-  "保安担当",
-  "集金方法",
-  "請求書発行区分",
-];
+const printingButtons: { [key: string]: string[] } = {
+  group1: ["事業者", "事業所", "部門"],
+  group2: ["取引区分", "営業地区", "集金地区", "検針地区", "点検地区"],
+  group3: [
+    "営業担当",
+    "集金担当",
+    "点検担当",
+    "検針担当",
+    "配送担当",
+    "保安担当",
+  ],
+  group4: ["集金方法", "請求書発行区分"],
+};
+
 const printingOrderOptions = [
   "顧客コード",
   "五十音順",
@@ -71,15 +67,25 @@ const PrintingDesignation = forwardRef<any>((props, ref) => {
   const [selectedAddress, setSelectedAddress] = useState("0");
   const [selectedDetailOrder, setSelectedDetailOrder] = useState("0");
 
+  const [selectedGroup, setSelectedGroup] = useState<{
+    [key: string]: string | null;
+  }>({
+    group1: null,
+    group2: null,
+    group3: null,
+    group4: null,
+  });
+
   const [printManager, setPrintManager] = useState("0");
   const [receiptOfficer, setReceiptOfficer] = useState("0");
   const [facilityUsageFee, setFacilityUsageFee] = useState("");
   const [adjustmentNotice, setAdjustmentNotice] = useState("0");
 
-  const handleSelectLabel = (label: string) => {
-    setSelected((prev) =>
-      prev.includes(label) ? prev.filter((i) => i !== label) : [...prev, label]
-    );
+  const handleSelectLabel = (groupName: string, label: string) => {
+    setSelectedGroup((prev) => ({
+      ...prev,
+      [groupName]: prev[groupName] === label ? null : label,
+    }));
   };
 
   const clearSelection = () => setSelected([]);
@@ -102,46 +108,50 @@ const PrintingDesignation = forwardRef<any>((props, ref) => {
           ref={ref}
           type="text"
           className={`w-[50%] border border-black ${inputColor}`}
-          value={selected.join("・")}
+          value={Object.values(selectedGroup).filter(Boolean).join("・")}
           readOnly
         />
         <button
           onClick={clearSelection}
-          className="w-[15%] bg-white border border-black rounded-md hover:bg-gray-200 transition"
+          className="w-[15%] bg-blue-600 text-white hover:bg-white hover:text-black border border-black rounded-md  transition"
         >
           印刷区分クリア
         </button>
       </div>
 
       <div className="border border-black h-36 grid grid-rows-6 grid-cols-9 gap-1 py-2 px-[2%] grid-flow-col">
-        {printingButtons.map((label, idx) => {
-          const isActive = selected.includes(label);
-          return (
-            <button
-              key={idx}
-              onClick={() => handleSelectLabel(label)}
-              className={`px-4 py-1 border rounded transition ${
-                isActive
-                  ? "bg-blue-400 text-black border-black"
-                  : "bg-blue-200 border-gray-400 hover:bg-white"
-              }
-              ${
-                label === "取引区分" ||
-                label === "請求書発行区分" ||
-                label === "集金方法"
-                  ? "row-span-6"
-                  : ""
-              }
-              ${
-                label === "事業者" || label === "事業所" || label === "部門"
-                  ? "row-span-2"
-                  : "row-span-3"
-              }`}
-            >
-              {label}
-            </button>
-          );
-        })}
+        {Object.entries(printingButtons).map(([groupName, buttons]) =>
+          buttons.map((label, idx) => {
+            const isActive = selectedGroup[groupName] === label;
+            const isDisabled = selectedGroup[groupName] !== null && !isActive;
+            return (
+              <button
+                key={label}
+                onClick={() => handleSelectLabel(groupName, label)}
+                disabled={isDisabled}
+                className={`px-4 py-1 border rounded transition ${
+                  isActive
+                    ? "bg-blue-400 text-black border-black"
+                    : "bg-blue-200 border-gray-400 hover:bg-white disabled:bg-gray-300 disabled:text-gray-400"
+                }
+                ${
+                  label === "取引区分" ||
+                  label === "請求書発行区分" ||
+                  label === "集金方法"
+                    ? "row-span-6"
+                    : ""
+                }
+                ${
+                  label === "事業者" || label === "事業所" || label === "部門"
+                    ? "row-span-2"
+                    : "row-span-3"
+                }`}
+              >
+                {label}
+              </button>
+            );
+          })
+        )}
       </div>
 
       {/* Section Select + Radio + Checkbox - Refactored with Ant Design */}

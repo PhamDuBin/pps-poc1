@@ -8,6 +8,7 @@ import TitleFormSetting from "./MainBusinessAreas/TitleFormSetting";
 import PaperSelectionModal from "./PaperSelectionModal";
 import { labelColor } from "../../constants/colors";
 import { Select, Button, Radio } from "antd";
+import React from "react";
 
 const MainBusinessScreen = () => {
   const individualIssueRef = useRef<{ focusMonthPicker: () => void }>(null);
@@ -205,7 +206,7 @@ const MainBusinessScreen = () => {
         </Button>
       </div>
       {isOperationSeachModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+        <div className="${inputColor} fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
           <OperatorSelectionModal
             title={selectedLabel ?? ""}
             isOpen={isOperationSeachModalOpen}

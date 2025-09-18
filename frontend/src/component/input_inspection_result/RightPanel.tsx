@@ -15,7 +15,7 @@ const SurveyRow = ({ onOpenModal }: { onOpenModal: () => void }) => (
       <option value="3">その他</option>
     </select>
 
-    <div className="w-[70%] ml-auto">
+    <div className="w-[70%] ml-auto h-auto">
       <DatePickerInput />
     </div>
     <button
@@ -210,7 +210,7 @@ const RightPanel = () => {
         <div>
           <span className={`${label} font-bold  w-full`}>今回調査日</span>
           <div className="flex flex-row relative">
-            <span className={`${label} !h-[30px] w-[30%]`}>調査日</span>
+            <span className={`${label} !h-[32px] w-[30%]`}>調査日</span>
 
             <div className="w-[70%] ml-auto">
               <DatePickerInput />
@@ -439,7 +439,7 @@ const RightPanel = () => {
             </div>
           </div>
           <div className="flex flex-row relative">
-            <span className={`${label} !h-[30px] w-[40%]`}>再調査予定日</span>
+            <span className={`${label} !h-[32px] w-[40%]`}>再調査予定日</span>
 
             <div className="w-[70%] ml-auto">
               <DatePickerInput />
