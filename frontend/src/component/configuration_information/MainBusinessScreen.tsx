@@ -74,7 +74,7 @@ const MainBusinessScreen = () => {
     setIsPaperSelectionModalOpen(true);
   }, []);
 
-  const button = `flex text-center justify-center items-center ${labelColor} border border-black shadow-xl font-bold`;
+  const button = `flex text-center justify-center items-center ${labelColor} border border-black font-bold shadow-md shadow-zinc-600 hover:bg-white`;
   const span = `w-[10%] flex justify-center text-center items-center font-bold ${labelColor}`;
   return (
     <div className="h-screen w-full flex flex-col p-4">
@@ -86,7 +86,10 @@ const MainBusinessScreen = () => {
       <div className="flex flex-row items-center text-base mt-3 h-8 px-8 justify-between">
         <span className={`${span}`}>用紙設定</span>
         <p className="ml-3">伝票請｜請求書（15日）〇〇商社様用</p>
-        <button className="p-2 rounded-md border border-black h-6 w-14 text-xs flex text-center justify-center items-center shadow-lg">
+        <button
+          onClick={() => setIsPaperSelectionModalOpen(true)}
+          className="p-2 rounded-md border border-black h-6 w-14 text-xs flex text-cente justify-center items-center shadow-lg"
+        >
           再設定
         </button>
         <span className={`${span}`}>フォーム選択</span>
@@ -202,13 +205,13 @@ const MainBusinessScreen = () => {
           />
         </div>
       )}
-      {/* {isPaperSelectionModalOpen}
-        <div className="absolute bg-white rounded shadow-lg w-[60%] flex items-center justify-center p-4 z-10">
-          <PaperSelectionModal 
-          isOpen = {isPaperSelectionModalOpen}
+      {isPaperSelectionModalOpen}
+      <div className="absolute bg-white rounded shadow-lg w-[60%] flex items-center justify-center p-4 z-10">
+        <PaperSelectionModal
+          open={isPaperSelectionModalOpen}
           onClose={handleClosePaperSelectionModalOpen}
-          />
-        </div> */}
+        />
+      </div>
     </div>
   );
 };

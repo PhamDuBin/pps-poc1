@@ -2,7 +2,7 @@
 
 import { DatePicker, Input, Button, Select } from "antd";
 import dayjs from "dayjs";
-import AdvanceSearchModal from "../AdvanceSearchModal";
+import AdvanceSearchModal from "../../transaction_information/1.1.1_03/AdvanceSearchModal";
 import { useRef, useState } from "react";
 import { forwardRef } from "react";
 import { labelColor } from "../../../constants/colors";
@@ -10,10 +10,7 @@ import { labelColor } from "../../../constants/colors";
 const { MonthPicker } = DatePicker;
 const { Option } = Select;
 
-const labelClass =
-  `${labelColor} border border-black px-2 flex items-center justify-center min-h-[32px] w-[120px]`;
-
-
+const labelClass = `${labelColor} border border-black px-2 flex items-center justify-center min-h-[32px] w-[120px]`;
 
 const IndividualIssue = forwardRef<any>((props, ref) => {
   const [month, setMonth] = useState(dayjs());
@@ -23,11 +20,11 @@ const IndividualIssue = forwardRef<any>((props, ref) => {
 
   const handleShowCustomerInfor = () => {
     setShowCustomerInfor(true);
-  }
+  };
 
   const handleCloseCustomerInfor = () => {
     setShowCustomerInfor(false);
-  }
+  };
 
   const options = [
     { value: "0", label: "顧客コード" },
@@ -54,9 +51,9 @@ const IndividualIssue = forwardRef<any>((props, ref) => {
               <AdvanceSearchModal
                 showAdvanceSearch={showAdvanceSearch}
                 setShowAdvanceSearch={setShowAdvanceSearch}
-                onClose={() => {
-                  setShowCustomerInfor(true);
-                }}
+                // onClose={() => {
+                //   setShowCustomerInfor(true);
+                // }}
                 onRowEnter={() => console.log("Selected from modal")}
               />
             </div>
@@ -75,20 +72,37 @@ const IndividualIssue = forwardRef<any>((props, ref) => {
           {/* 月度 */}
           <span className="flex gap-4">
             <div className={labelClass}>月度</div>
-            <MonthPicker
-              ref={ref}
-              defaultValue={dayjs()}
-              format="YYYY-MM"
-            />
+            <MonthPicker ref={ref} defaultValue={dayjs()} format="YYYY-MM" />
           </span>
 
           {/* 事務所 */}
           <span className="flex mt-2 gap-4 items-center">
             <div className={labelClass}>事務所</div>
-            <Input disabled={showCustomerInfor} className={`w-[100px] ${showCustomerInfor ? '' : 'disabled:bg-gray-300 disabled:cursor-not-allowed'}`} placeholder="0000000" />
+            <Input
+              disabled={showCustomerInfor}
+              className={`w-[100px] ${
+                showCustomerInfor
+                  ? ""
+                  : "disabled:bg-gray-300 disabled:cursor-not-allowed"
+              }`}
+              placeholder="0000000"
+            />
             <div>-</div>
-            <Input disabled={showCustomerInfor} className={`w-[100px] ${showCustomerInfor ? '' : 'disabled:bg-gray-300 disabled:cursor-not-allowed'}`} placeholder="0000000" />
-            <Button onClick={() => {setShowAdvanceSearch(true)}} className="h-8 w-8  !bg-blue-600 !text-white hover:!bg-blue-400">
+            <Input
+              disabled={showCustomerInfor}
+              className={`w-[100px] ${
+                showCustomerInfor
+                  ? ""
+                  : "disabled:bg-gray-300 disabled:cursor-not-allowed"
+              }`}
+              placeholder="0000000"
+            />
+            <Button
+              onClick={() => {
+                setShowAdvanceSearch(true);
+              }}
+              className="h-8 w-8  !bg-blue-600 !text-white hover:!bg-blue-400"
+            >
               ▼
             </Button>
             <div>関東地方営業事務所</div>
@@ -107,14 +121,43 @@ const IndividualIssue = forwardRef<any>((props, ref) => {
                 </Option>
               ))}
             </Select>
-            <Input disabled={showCustomerInfor} className={`w-[100px] ${showCustomerInfor ? '' : 'disabled:bg-gray-300 disabled:cursor-not-allowed'}`} placeholder="0000000" />
+            <Input
+              disabled={showCustomerInfor}
+              className={`w-[100px] ${
+                showCustomerInfor
+                  ? ""
+                  : "disabled:bg-gray-300 disabled:cursor-not-allowed"
+              }`}
+              placeholder="0000000"
+            />
             <div>-</div>
-            <Input disabled={showCustomerInfor} className={`w-[100px] ${showCustomerInfor ? '' : 'disabled:bg-gray-300 disabled:cursor-not-allowed'}`} placeholder="0000000" />
-            <Button onClick={() => {setShowAdvanceSearch(true)}} className="h-8 w-8  !bg-blue-600 !text-white hover:!bg-blue-400">
+            <Input
+              disabled={showCustomerInfor}
+              className={`w-[100px] ${
+                showCustomerInfor
+                  ? ""
+                  : "disabled:bg-gray-300 disabled:cursor-not-allowed"
+              }`}
+              placeholder="0000000"
+            />
+            <Button
+              onClick={() => {
+                setShowAdvanceSearch(true);
+              }}
+              className="h-8 w-8  !bg-blue-600 !text-white hover:!bg-blue-400"
+            >
               ▼
             </Button>
-            <Button onClick={handleShowCustomerInfor} className="px-2 !bg-blue-600 !text-white hover:!bg-blue-400">確定</Button>
-            <Button onClick={() =>  handleCloseCustomerInfor()} className="px-2 !bg-blue-600 !text-white hover:!bg-blue-400">
+            <Button
+              onClick={handleShowCustomerInfor}
+              className="px-2 !bg-blue-600 !text-white hover:!bg-blue-400"
+            >
+              確定
+            </Button>
+            <Button
+              onClick={() => handleCloseCustomerInfor()}
+              className="px-2 !bg-blue-600 !text-white hover:!bg-blue-400"
+            >
               再入力
             </Button>
           </span>
@@ -122,7 +165,7 @@ const IndividualIssue = forwardRef<any>((props, ref) => {
       </div>
 
       {/* 顧客情報詳細 */}
-      {(showCustomerInfor) && 
+      {showCustomerInfor && (
         <div className="min-h-[120px] p-4">
           <div className="font-bold py-2">顧客情報詳細</div>
           <div className="border border-black">
@@ -163,7 +206,7 @@ const IndividualIssue = forwardRef<any>((props, ref) => {
             </div>
           </div>
         </div>
-      }
+      )}
     </div>
   );
 });
