@@ -1,6 +1,6 @@
 "use client";
 
-import { forwardRef, useState } from "react";
+import { forwardRef, useState} from "react";
 import { DatePicker, Select, Checkbox } from "antd";
 import dayjs from "dayjs";
 import { inputColor } from "../../../constants/colors";
@@ -53,7 +53,7 @@ const ContinuousIssue = forwardRef<any>((props, ref) => {
 
         {/* 残高指定 */}
         <div className="flex items-center">
-          <div className={labelClass}>残高指定</div>
+          <div className={labelClass}> 殊高指定 </div>
           <Select
             defaultValue="残有り"
             className={`ml-2 max-w-[160px] w-full [&>.ant-select-selector]:!bg-[#ebcec0] `}
@@ -114,10 +114,7 @@ const ContinuousIssue = forwardRef<any>((props, ref) => {
         {/* 取引区分 */}
         <div className="flex items-center sm:col-span-1">
           <div className={labelClass}>取引区分</div>
-          <Checkbox.Group
-            defaultValue={["直売", "卸"]}
-            className="ml-2 flex gap-4"
-          >
+          <Checkbox.Group defaultValue={["直売", "卸"]} className="ml-2 flex gap-4">
             <Checkbox value="直売">直売</Checkbox>
             <Checkbox value="卸">卸</Checkbox>
           </Checkbox.Group>

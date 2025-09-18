@@ -6,7 +6,8 @@ import TargetCustomer from "./MainBusinessAreas/TargetCustomer";
 import PrintingDesignation from "./MainBusinessAreas/PrintingDesignation";
 import TitleFormSetting from "./MainBusinessAreas/TitleFormSetting";
 import PaperSelectionModal from "./PaperSelectionModal";
-import { labelColor } from "../../constants/colors";
+import { inputColor, labelColor } from "../../constants/colors";
+import React from "react";
 
 const MainBusinessScreen = () => {
   const individualIssueRef = useRef<{ focusMonthPicker: () => void }>(null);
@@ -88,12 +89,12 @@ const MainBusinessScreen = () => {
         <p className="ml-3">伝票請｜請求書（15日）〇〇商社様用</p>
         <button
           onClick={() => setIsPaperSelectionModalOpen(true)}
-          className="p-2 rounded-md border border-black h-6 w-14 text-xs flex text-center justify-center items-center shadow-lg"
+          className="bg-blue-600 text-white hover:text-black hover:bg-blue-200 p-2 rounded-md border border-black h-6 w-14 text-xs flex text-center justify-center items-center shadow-lg"
         >
           再設定
         </button>
         <span className={`${span}`}>フォーム選択</span>
-        <select className="border border-black w-[15%] h-6">
+        <select className={`border border-black w-[15%] h-6 ${inputColor}`}>
           <option>請求書（大）</option>
           <option>請求書（小）</option>
           <option>請求書（小）</option>
@@ -211,7 +212,7 @@ const MainBusinessScreen = () => {
         </button>
       </div>
       {isOperationSeachModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+        <div className="${inputColor} fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
           <OperatorSelectionModal
             title={selectedLabel ?? ""}
             isOpen={isOperationSeachModalOpen}
