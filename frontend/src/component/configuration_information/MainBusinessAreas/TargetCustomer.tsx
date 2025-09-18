@@ -11,7 +11,6 @@ export interface TargetCustomerRef {
 
 const TargetCustomer = forwardRef<TargetCustomerRef, TargetCustomerProps>(
   ({ onLabelClick }, ref) => {
-
     const firstButtonRef = useRef<HTMLButtonElement | null>(null);
 
     useImperativeHandle(ref, () => ({
@@ -22,68 +21,76 @@ const TargetCustomer = forwardRef<TargetCustomerRef, TargetCustomerProps>(
 
     const [isOpenModalF1, setModalF1Open] = useState(false);
 
-    const labelClass =`${labelColor} border border-gray-400 px-2 flex items-center justify-center min-h-[32px] w-[160px]`;
+    const labelClass = `${labelColor} border border-gray-400 px-2 flex items-center justify-center min-h-[32px] w-[160px]`;
 
     const buttonTitle = [
-        "事業者",
-        "事業所",
-        "管理部門",
-        "開閉栓区分",
-        "供給業態",
-        "販売用途区分",
-        "締日",
-        "集金方法",
-        "集金日",
-        "自振区分",
-        "料金標No.",
-        "検針予定日",
-        "請求発行区分",
-    ]
+      "事業者",
+      "事業所",
+      "管理部門",
+      "開閉栓区分",
+      "供給業態",
+      "販売用途区分",
+      "締日",
+      "集金方法",
+      "集金日",
+      "自振区分",
+      "料金標No.",
+      "検針予定日",
+      "請求発行区分",
+    ];
 
-    
-  return (
-    <>
-        <div className="border border-black min-h-[120px] p-2">
-            <div className={`${labelColor} font-bold text-center py-2`}>
-                対象顧客
-            </div>
-            <div className="grid grid-cols-4 my-2">
-                {buttonTitle.map((title, index) => (
-                    <div className="flex py-2 font-bold gap-2" key={title}>
-                        <button 
-                        ref={index === 0 ? firstButtonRef : null}
-                        onClick={() => onLabelClick?.(title)}
-                        className={`${labelClass }  shadow-lg focus:border-2 focus:border-blue-600`} >
-                            {title}
-                        </button>
-                        <div>指定済み</div>
-                    </div>
-                ))}
-            </div>
-            <div className="flex font-bold justify-between items-center pb-6 ">
-                <button 
-                onClick = {() => setModalF1Open(true)}
-                className={`${labelColor} border border-gray-400 flex items-center justify-center h-[60px] w-[160px]`}>
-                    顧客抽出
+    return (
+      <>
+        <div className="border border-black min-h-[120px] p-2 xl:text-base text-sm">
+          <div className={`${labelColor} font-bold text-center py-2`}>
+            対象顧客
+          </div>
+          <div className="grid grid-cols-4 my-2">
+            {buttonTitle.map((title, index) => (
+              <div className="flex py-2 font-bold gap-2" key={title}>
+                <button
+                  ref={index === 0 ? firstButtonRef : null}
+                  onClick={() => onLabelClick?.(title)}
+                  className={`${labelClass}  shadow-md shadow-zinc-600 focus:border-2 focus:border-blue-600 hover:bg-white`}
+                >
+                  {title}
                 </button>
-                <div className={`overflow-x-auto h-[60px] border border-black mr-10  ${inputColor}`}>
-                    <div className="grid grid-cols-6">
-                        {buttonTitle.map((title) => (
-                            <div
-                            key={title}
-                            className="border border-black px-4 text-center h-[30px] w-[150px]"
-                            >
-                            {title}
-                            </div>
-                        ))}
-                    </div>
-                </div>
+                <div>指定済み</div>
+              </div>
+            ))}
+          </div>
+          <div className="flex font-bold justify-between items-center pb-6 ">
+            <button
+              onClick={() => setModalF1Open(true)}
+              className={`${labelColor} border shadow-md  hover:bg-white shadow-zinc-600 border-gray-400 flex items-center justify-center h-[60px] w-[160px]`}
+            >
+              顧客抽出
+            </button>
+            <div
+              className={`overflow-x-auto h-[60px] border border-black mr-10  ${inputColor}`}
+            >
+              <div className="grid grid-cols-6">
+                {buttonTitle.map((title) => (
+                  <div
+                    key={title}
+                    className="border border-black px-4 text-center h-[30px] w-[150px]"
+                  >
+                    {title}
+                  </div>
+                ))}
+              </div>
             </div>
+          </div>
         </div>
-        {isOpenModalF1 && <ModalF1 isOpen={isOpenModalF1} onClose={() => setModalF1Open(false)} />}
-
-    </>
-  );
-});
+        {isOpenModalF1 && (
+          <ModalF1
+            isOpen={isOpenModalF1}
+            onClose={() => setModalF1Open(false)}
+          />
+        )}
+      </>
+    );
+  }
+);
 
 export default TargetCustomer;

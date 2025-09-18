@@ -39,7 +39,7 @@ const IndividualIssue = forwardRef<any>((props, ref) => {
   ];
 
   return (
-    <div className="relative border border-black p-2">
+    <div className="relative border border-black p-2 xl:text-base text-sm">
       {showAdvanceSearch && (
         <>
           <div

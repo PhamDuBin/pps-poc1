@@ -114,7 +114,10 @@ const ContinuousIssue = forwardRef<any>((props, ref) => {
         {/* 取引区分 */}
         <div className="flex items-center sm:col-span-1">
           <div className={labelClass}>取引区分</div>
-          <Checkbox.Group defaultValue={["直売", "卸"]} className="ml-2 flex gap-4">
+          <Checkbox.Group
+            defaultValue={["直売", "卸"]}
+            className="ml-2 flex gap-4"
+          >
             <Checkbox value="直売">直売</Checkbox>
             <Checkbox value="卸">卸</Checkbox>
           </Checkbox.Group>

@@ -1,29 +1,26 @@
 import { forwardRef } from "react";
 import { labelColor, inputColor } from "../../../constants/colors";
 
-const labels = [
-  "ご請求",
-  "ご案内1",
-  "ご案内2",
-  "ご案内3",
-  "ご案内4（仮）",
-];
+const labels = ["ご請求", "ご案内1", "ご案内2", "ご案内3", "ご案内4（仮）"];
 
-const labelClass =
-  `${labelColor} border border-black px-2 flex items-center justify-center h-[32px] w-[180px]`;
+const labelClass = `${labelColor} border border-black px-2 flex items-center justify-center h-[32px] w-[180px]`;
 
 const TitleFormSetting = forwardRef<any>((props, ref) => {
   return (
-    <div className="p-2 border border-black mt-2">
+    <div className="p-2 border border-black mt-2 xl:text-base text-sm">
       {/* Header */}
-      <div className={`w-full ${labelColor} flex justify-center items-center p-2 font-bold`}>
+      <div
+        className={`w-full ${labelColor} flex justify-center items-center p-2 font-bold`}
+      >
         タイトル・鑑設定
       </div>
 
       {/* 請求書タイトル */}
       <div className="flex gap-10 mt-4 w-full ">
         <div className="flex gap-3 items-center">
-          <div className={`w-[160px] ${labelColor} flex justify-center items-center p-1 font-bold`}>
+          <div
+            className={`w-[160px] ${labelColor} flex justify-center items-center p-1 font-bold`}
+          >
             請求書タイトル
           </div>
           <input
@@ -34,7 +31,9 @@ const TitleFormSetting = forwardRef<any>((props, ref) => {
           />
         </div>
         <div className="flex gap-3 items-center w-[40%]">
-          <div className={`w-[160px] ${labelColor} flex justify-center items-center p-1 font-bold`}>
+          <div
+            className={`w-[160px] ${labelColor} flex justify-center items-center p-1 font-bold`}
+          >
             請求書タイトル
           </div>
           <input
@@ -42,9 +41,7 @@ const TitleFormSetting = forwardRef<any>((props, ref) => {
             type="number"
             placeholder="0"
           />
-          <select
-            className={`w-2/5 border border-black ${inputColor}`}
-          >
+          <select className={`w-2/5 border border-black ${inputColor}`}>
             {labels.map((lab, index) => (
               <option key={index} value={index}>
                 {lab}

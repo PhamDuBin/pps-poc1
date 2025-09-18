@@ -77,18 +77,18 @@ const MainBusinessScreen = () => {
   const button = `flex text-center justify-center items-center ${labelColor} border border-black font-bold shadow-md shadow-zinc-600 hover:bg-white`;
   const span = `w-[10%] flex justify-center text-center items-center font-bold ${labelColor}`;
   return (
-    <div className="h-screen w-full flex flex-col p-4">
+    <div className="h-screen w-full flex flex-col p-4 min-w-[1080px]">
       <span
-        className={`w-full h-10 font-bold text-2xl flex text-center justify-center items-center ${labelColor}`}
+        className={`w-full h-10 font-bold xl:text-2xl text-xl flex text-center justify-center items-center ${labelColor}`}
       >
         請求書発行
       </span>
-      <div className="flex flex-row items-center text-base mt-3 h-8 px-8 justify-between">
+      <div className="flex flex-row items-center xl:text-base text-sm mt-3 h-8 px-8 justify-between">
         <span className={`${span}`}>用紙設定</span>
         <p className="ml-3">伝票請｜請求書（15日）〇〇商社様用</p>
         <button
           onClick={() => setIsPaperSelectionModalOpen(true)}
-          className="p-2 rounded-md border border-black h-6 w-14 text-xs flex text-cente justify-center items-center shadow-lg"
+          className="p-2 rounded-md border border-black h-6 w-14 text-xs flex text-center justify-center items-center shadow-lg"
         >
           再設定
         </button>
@@ -132,7 +132,7 @@ const MainBusinessScreen = () => {
           <label htmlFor="collective">個別発行</label>
         </div>
       </div>
-      <div className="mt-3 flex flex-row px-40 font-bold text-lg justify-between h-10">
+      <div className="mt-3 flex flex-row px-40 font-bold xl:text-base text-sm justify-between h-10">
         <button onClick={handleShowExtraForm} className={`${button} w-1/6`}>
           抽出条件 （1）
         </button>
@@ -188,13 +188,27 @@ const MainBusinessScreen = () => {
         </div>
       </div>
       <div className="mt-2 flex flex-row justify-between">
-        <button className={`${button} w-[10%]`}>条件保存（F3）</button>
-        <button className={`${button} w-[10%]`}>伝票メモ設定（F7）</button>
-        <button className={`${button} w-[10%]`}>再入力（F8）</button>
-        <button className={`${button} w-[10%]`}>プレビュー（V）</button>
-        <button className={`${button} w-[10%]`}>印刷（P）</button>
-        <button className={`${button} w-[10%]`}>データ（H）</button>
-        <button className={`${button} w-[10%]`}>閉じる（C）</button>
+        <button className={`${button} w-[10%] xl:text-base text-sm`}>
+          条件保存（F3）
+        </button>
+        <button className={`${button} w-[10%] xl:text-base text-sm`}>
+          伝票メモ設定（F7）
+        </button>
+        <button className={`${button} w-[10%] xl:text-base text-sm`}>
+          再入力（F8）
+        </button>
+        <button className={`${button} w-[10%] xl:text-base text-sm`}>
+          プレビュー（V）
+        </button>
+        <button className={`${button} w-[10%] xl:text-base text-sm`}>
+          印刷（P）
+        </button>
+        <button className={`${button} w-[10%] xl:text-base text-sm`}>
+          データ（H）
+        </button>
+        <button className={`${button} w-[10%] xl:text-base text-sm`}>
+          閉じる（C）
+        </button>
       </div>
       {isOperationSeachModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
@@ -206,7 +220,7 @@ const MainBusinessScreen = () => {
         </div>
       )}
       {isPaperSelectionModalOpen}
-      <div className="absolute bg-white rounded shadow-lg w-[60%] flex items-center justify-center p-4 z-10">
+      <div>
         <PaperSelectionModal
           open={isPaperSelectionModalOpen}
           onClose={handleClosePaperSelectionModalOpen}
