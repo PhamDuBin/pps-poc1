@@ -1,6 +1,7 @@
 import { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import ModalF1 from "../../modal/Modal_F1";
 import { inputColor, labelColor } from "../../../constants/colors";
+import { Button } from "antd";
 interface TargetCustomerProps {
   onLabelClick?: (title: string) => void;
 }
@@ -48,24 +49,24 @@ const TargetCustomer = forwardRef<TargetCustomerRef, TargetCustomerProps>(
           <div className="grid grid-cols-4 my-2">
             {buttonTitle.map((title, index) => (
               <div className="flex py-2 font-bold gap-2" key={title}>
-                <button
+                <Button
                   ref={index === 0 ? firstButtonRef : null}
                   onClick={() => onLabelClick?.(title)}
-                  className={`${labelClass}  shadow-md shadow-zinc-600 focus:border-2 focus:border-blue-600 hover:bg-white`}
+                  className={`${labelClass} font-bold  shadow-md shadow-zinc-600 focus:border-2 focus:border-blue-600 hover:bg-white`}
                 >
                   {title}
-                </button>
+                </Button>
                 <div>指定済み</div>
               </div>
             ))}
           </div>
           <div className="flex font-bold justify-between items-center pb-6 ">
-            <button
+            <Button
               onClick={() => setModalF1Open(true)}
-              className={`${labelColor} border shadow-md  hover:bg-white shadow-zinc-600 border-gray-400 flex items-center justify-center h-[60px] w-[160px]`}
+              className={`${labelColor} border shadow-md font-bold hover:bg-white shadow-zinc-600 border-gray-400 flex items-center justify-center h-[60px] w-[160px]`}
             >
               顧客抽出
-            </button>
+            </Button>
             <div
               className={`overflow-x-auto h-[60px] border border-black mr-10  ${inputColor}`}
             >

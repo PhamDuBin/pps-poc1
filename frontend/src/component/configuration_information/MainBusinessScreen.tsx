@@ -7,6 +7,7 @@ import PrintingDesignation from "./MainBusinessAreas/PrintingDesignation";
 import TitleFormSetting from "./MainBusinessAreas/TitleFormSetting";
 import PaperSelectionModal from "./PaperSelectionModal";
 import { labelColor } from "../../constants/colors";
+import { Select, Button, Radio } from "antd";
 
 const MainBusinessScreen = () => {
   const individualIssueRef = useRef<{ focusMonthPicker: () => void }>(null);
@@ -74,7 +75,7 @@ const MainBusinessScreen = () => {
     setIsPaperSelectionModalOpen(true);
   }, []);
 
-  const button = `flex text-center justify-center items-center ${labelColor} border border-black font-bold shadow-md shadow-zinc-600 hover:bg-white`;
+  const button = `flex text-center justify-center items-center ${labelColor} border border-black xl:text-base text-xs font-bold shadow-md shadow-zinc-600 hover:bg-white`;
   const span = `w-[10%] flex justify-center text-center items-center font-bold ${labelColor}`;
   return (
     <div className="h-screen w-full flex flex-col p-4 min-w-[1080px]">
@@ -83,77 +84,70 @@ const MainBusinessScreen = () => {
       >
         請求書発行
       </span>
-      <div className="flex flex-row items-center xl:text-base text-sm mt-3 h-8 px-8 justify-between">
+      <div className="flex flex-row items-center xl:text-base text-xs mt-3 h-8 px-8 justify-between">
         <span className={`${span}`}>用紙設定</span>
         <p className="ml-3">伝票請｜請求書（15日）〇〇商社様用</p>
-        <button
+        <Button
           onClick={() => setIsPaperSelectionModalOpen(true)}
-          className="p-2 rounded-md border border-black h-6 w-14 text-xs flex text-center justify-center items-center shadow-lg"
+          className="p-2 rounded-md border border-black h-6 w-14 text-xs flex text-center justify-center items-center shadow-md shadow-zinc-600"
         >
           再設定
-        </button>
+        </Button>
         <span className={`${span}`}>フォーム選択</span>
-        <select className="border border-black w-[15%] h-6">
-          <option>請求書（大）</option>
-          <option>請求書（小）</option>
-          <option>請求書（小）</option>
-          <option>3部料金</option>
-          <option>請求書（中）</option>
-          <option>請求書（中）3部料金</option>
-          <option>請求書（大）レーザー用</option>
-          <option>請求書（小） レーザー用</option>
-          <option>請求書（小）レーザー用3部料金</option>
-          <option>請求書（WS01）</option>
-          <option>請求書（W02）</option>
-          <option>請求書（WK.01）</option>
-        </select>
+        <Select
+          className="w-[15%] h-7 [&>.ant-select-selector]:!bg-[#ebcec0] "
+          defaultValue="請求書（大）"
+          options={[
+            { value: "請求書（大）", label: "請求書（大）" },
+            { value: "請求書（小）", label: "請求書（小）" },
+            { value: "3部料金", label: "3部料金" },
+            { value: "請求書（中）", label: "請求書（中）" },
+            { value: "請求書（中）3部料金", label: "請求書（中）3部料金" },
+            {
+              value: "請求書（大）レーザー用",
+              label: "請求書（大）レーザー用",
+            },
+            {
+              value: "請求書（小）レーザー用3部料金",
+              label: "請求書（小）レーザー用3部料金",
+            },
+            { value: "請求書（WS01）", label: "請求書（WS01）" },
+            { value: "請求書（W02）", label: "請求書（W02）" },
+            { value: "請求書（WK.01）", label: "請求書（WK.01）" },
+          ]}
+        />
         <span className={`${span}`}>発行方法</span>
-        <div className="flex items-center">
-          <input
-            type="radio"
-            id="overall"
-            name="issueMethod"
-            defaultChecked
-            value="連続発行"
-            className="mr-1"
-            onChange={(e) => handleChangeCondition(e.target.value)}
-          />
-          <label htmlFor="overall">連続発行</label>
-        </div>
-        <div className="flex items-center">
-          <input
-            type="radio"
-            id="collective"
-            name="issueMethod"
-            value={"個別発行"}
-            className="mr-1"
-            onChange={(e) => handleChangeCondition(e.target.value)}
-          />
-          <label htmlFor="collective">個別発行</label>
-        </div>
+
+        <Radio.Group
+          defaultValue={["連続発行", "個別発行"]}
+          className="ml-2 flex gap-4"
+        >
+          <Radio value="連続発行">連続発行</Radio>
+          <Radio value="個別発行">個別発行</Radio>
+        </Radio.Group>
       </div>
-      <div className="mt-3 flex flex-row px-40 font-bold xl:text-base text-sm justify-between h-10">
-        <button onClick={handleShowExtraForm} className={`${button} w-1/6`}>
+      <div className="mt-3 flex flex-row px-40 font-bold xl:text-base text-xs justify-between h-10">
+        <Button onClick={handleShowExtraForm} className={`${button} w-1/6`}>
           抽出条件 （1）
-        </button>
-        <button
+        </Button>
+        <Button
           onClick={handleShowTargetCustomer}
           className={`${button} w-1/6`}
         >
           対象顧客（2）
-        </button>
-        <button
+        </Button>
+        <Button
           onClick={handleShowPrintingDesignation}
           className={`${button} w-1/6`}
         >
           印刷指定（3）
-        </button>
-        <button
+        </Button>
+        <Button
           onClick={handleShowTitleFormSetting}
-          className={`${button} w-1/6`}
+          className={`${button} w-1/6 `}
         >
-          タイトル・鑑設定（4）
-        </button>
+          タイトル ・鑑設定(4)
+        </Button>
       </div>
       <div className="mt-3 h-[80%] border border-black p-4 overflow-auto">
         <div>
@@ -188,27 +182,27 @@ const MainBusinessScreen = () => {
         </div>
       </div>
       <div className="mt-2 flex flex-row justify-between">
-        <button className={`${button} w-[10%] xl:text-base text-sm`}>
+        <Button className={`${button} w-[10%] xl:text-base text-xs`}>
           条件保存（F3）
-        </button>
-        <button className={`${button} w-[10%] xl:text-base text-sm`}>
-          伝票メモ設定（F7）
-        </button>
-        <button className={`${button} w-[10%] xl:text-base text-sm`}>
+        </Button>
+        <Button className={`${button} w-[10%] xl:text-base text-xs`}>
+          伝票メモ設定(F7)
+        </Button>
+        <Button className={`${button} w-[10%] xl:text-base text-xs`}>
           再入力（F8）
-        </button>
-        <button className={`${button} w-[10%] xl:text-base text-sm`}>
+        </Button>
+        <Button className={`${button} w-[10%] xl:text-base text-xs`}>
           プレビュー（V）
-        </button>
-        <button className={`${button} w-[10%] xl:text-base text-sm`}>
+        </Button>
+        <Button className={`${button} w-[10%] xl:text-base text-xs`}>
           印刷（P）
-        </button>
-        <button className={`${button} w-[10%] xl:text-base text-sm`}>
+        </Button>
+        <Button className={`${button} w-[10%] xl:text-base text-xs`}>
           データ（H）
-        </button>
-        <button className={`${button} w-[10%] xl:text-base text-sm`}>
+        </Button>
+        <Button className={`${button} w-[10%] xl:text-base text-xs`}>
           閉じる（C）
-        </button>
+        </Button>
       </div>
       {isOperationSeachModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">

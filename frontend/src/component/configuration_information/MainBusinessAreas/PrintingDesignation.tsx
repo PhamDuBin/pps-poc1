@@ -1,5 +1,6 @@
 import { forwardRef, useState } from "react";
 import { inputColor, labelColor } from "../../../constants/colors";
+import { Select, Checkbox, Radio, Input } from "antd";
 
 const printingButtons = [
   "事業者",
@@ -19,7 +20,6 @@ const printingButtons = [
   "集金方法",
   "請求書発行区分",
 ];
-
 const printingOrderOptions = [
   "顧客コード",
   "五十音順",
@@ -58,94 +58,6 @@ const detailOrderOptions = [
   "大分類・日付順",
 ];
 
-const SelectInput = ({ label, value, options, onChange }: any) => {
-  const containerWidth =
-    label === "明細順" || label === "原料費調整通知" ? "w-[60%]" : "w-[20%]";
-
-  return (
-    <div className={`flex gap-3 ${containerWidth}`}>
-      <div
-        className={`flex items-center justify-center font-bold w-[200px] min-w-[120px] ${labelColor}`}
-      >
-        {label}
-      </div>
-      <select
-        className={`border border-black p-1 rounded-sm ${inputColor} ${
-          label === "原料費調整通知" ? "w-1/5" : "w-2/5"
-        }`}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-      >
-        {options.map((opt: string, idx: number) => (
-          <option key={idx} value={idx}>
-            {opt}
-          </option>
-        ))}
-      </select>
-    </div>
-  );
-};
-
-const RadioGroup = ({ label, name, options, selected, onChange }: any) => (
-  <div className="flex w-[60%] gap-3 items-center">
-    <div
-      className={`${labelColor} ${
-        options === memoRadioOptions
-          ? ""
-          : "flex items-center p-1 justify-center font-bold w-[200px] "
-      }`}
-    >
-      {label}
-    </div>
-    <div className="flex gap-3">
-      {options.map((opt: string, idx: number) => (
-        <label key={idx} className="flex items-center gap-2">
-          <input
-            type="radio"
-            name={name}
-            value={idx}
-            checked={selected === String(idx)}
-            onChange={(e) => onChange(e.target.value)}
-          />
-          {opt}
-        </label>
-      ))}
-    </div>
-  </div>
-);
-
-const CheckboxGroup = ({ label, options, selected, onChange }: any) => (
-  <div className="flex justify-between gap-3 w-full relative">
-    <div className="w-[20%] flex gap-3">
-      <div
-        className={`flex items-center justify-center p-1 font-bold w-[200px] ${labelColor}`}
-      >
-        {label}
-      </div>
-      <div className="w-2/5">
-        <div className="flex gap-3 flex-wrap absolute">
-          {options.map((opt: string, idx: number) => (
-            <label key={idx} className="flex items-center gap-3">
-              <input
-                className="w-6 h-6"
-                type="checkbox"
-                checked={selected.includes(String(idx))}
-                onChange={(e) => {
-                  if (e.target.checked) onChange([...selected, String(idx)]);
-                  else
-                    onChange(selected.filter((i: string) => i !== String(idx)));
-                }}
-              />
-              {opt}
-            </label>
-          ))}
-        </div>
-      </div>
-    </div>
-    <div className="flex gap-3 w-[60%]"></div>
-  </div>
-);
-
 const PrintingDesignation = forwardRef<any>((props, ref) => {
   const [selected, setSelected] = useState<string[]>([]);
   const [selectedOrder, setSelectedOrder] = useState("0");
@@ -171,6 +83,9 @@ const PrintingDesignation = forwardRef<any>((props, ref) => {
   };
 
   const clearSelection = () => setSelected([]);
+
+  const createOptions = (optionsArray: string[]) =>
+    optionsArray.map((opt, idx) => ({ value: String(idx), label: opt }));
 
   return (
     <div className="p-2 border border-black mt-2 xl:text-base text-sm">
@@ -229,118 +144,216 @@ const PrintingDesignation = forwardRef<any>((props, ref) => {
         })}
       </div>
 
-      {/* Section Select + Radio + Checkbox */}
-      <div className="mt-4 flex flex-col gap-2">
-        <div className="flex justify-between">
-          <SelectInput
-            label="印刷順"
-            value={selectedOrder}
-            options={printingOrderOptions}
-            onChange={setSelectedOrder}
-          />
-          <RadioGroup
-            label="請求親子"
-            name="parentChild"
-            options={parentChildOptions}
-            selected={selectedParentChild}
-            onChange={setSelectedParentChild}
-          />
-        </div>
-        <div className="flex justify-between">
-          <SelectInput
-            label="自振顧客明細"
-            value={selectedDetail}
-            options={detailOptions}
-            onChange={setSelectedDetail}
-          />
-          <RadioGroup
-            label="宛先印字"
-            name="address"
-            options={addressOptions}
-            selected={selectedAddress}
-            onChange={setSelectedAddress}
-          />
-        </div>
-        <div className="flex justify-between">
-          <SelectInput
-            label="鑑部税表現"
-            value={selectedTaxType}
-            options={taxTypeOptions}
-            onChange={setSelectedTaxType}
-          />
-          <SelectInput
-            label="明細順"
-            value={selectedDetailOrder}
-            options={detailOrderOptions}
-            onChange={setSelectedDetailOrder}
-          />
-        </div>
-        <SelectInput
-          label="税取りまとめ"
-          value={selectedTaxCollect}
-          options={taxCollectOptions}
-          onChange={setSelectedTaxCollect}
-        />
-        <CheckboxGroup
-          label="印刷項目"
-          options={printItemOptions}
-          selected={selectedPrintItems}
-          onChange={setSelectedPrintItems}
-        />
-        <div className="flex gap-3">
-          <SelectInput
-            label="伝票メモ"
-            value={selectedMemo}
-            options={memoOptions}
-            onChange={setSelectedMemo}
-          />
-          <RadioGroup
-            label=""
-            name="memoRadio"
-            options={memoRadioOptions}
-            selected={selectedMemoRadio}
-            onChange={setSelectedMemoRadio}
-            gap="gap-1"
-          />
-        </div>
-        <div className="flex justify-between">
-          <SelectInput
-            label="印刷担当"
-            value={printManager}
-            options={["営業", "集金"]}
-            onChange={setPrintManager}
-          />
-          <div className="flex gap-3 w-[60%]">
+      {/* Section Select + Radio + Checkbox - Refactored with Ant Design */}
+      <div className="mt-4 flex flex-col gap-3 text-xs xl:text-sm">
+        <div className="flex justify-between items-center gap-3">
+          <div className="flex gap-3 items-center w-[40%]">
             <div
-              className={`flex items-center justify-center font-bold w-[200px] ${labelColor}`}
+              className={`flex items-center justify-center font-bold w-[120px] min-w-[120px] p-1 ${labelColor}`}
+            >
+              印刷順
+            </div>
+            <Select
+              className="w-[200px] [&>.ant-select-selector]:!bg-[#ebcec0]"
+              value={selectedOrder}
+              onChange={setSelectedOrder}
+              options={createOptions(printingOrderOptions)}
+            />
+          </div>
+          <div className="flex gap-3 items-center w-[60%]">
+            <div
+              className={`flex items-center justify-center font-bold w-[120px] min-w-[120px] p-1 ${labelColor}`}
+            >
+              請求親子
+            </div>
+            <Radio.Group
+              onChange={(e) => setSelectedParentChild(e.target.value)}
+              value={selectedParentChild}
+            >
+              {parentChildOptions.map((opt, idx) => (
+                <Radio key={idx} value={String(idx)}>
+                  {opt}
+                </Radio>
+              ))}
+            </Radio.Group>
+          </div>
+        </div>
+
+        <div className="flex justify-between items-center gap-3">
+          <div className="flex gap-3 items-center w-[40%]">
+            <div
+              className={`flex items-center justify-center font-bold w-[120px] min-w-[120px] p-1 ${labelColor}`}
+            >
+              自振顧客明細
+            </div>
+            <Select
+              className="w-[200px] [&>.ant-select-selector]:!bg-[#ebcec0]"
+              value={selectedDetail}
+              onChange={setSelectedDetail}
+              options={createOptions(detailOptions)}
+            />
+          </div>
+          <div className="flex gap-3 items-center w-[60%]">
+            <div
+              className={`flex items-center justify-center font-bold w-[120px] min-w-[120px] p-1 ${labelColor}`}
+            >
+              宛先印字
+            </div>
+            <Radio.Group
+              onChange={(e) => setSelectedAddress(e.target.value)}
+              value={selectedAddress}
+            >
+              {addressOptions.map((opt, idx) => (
+                <Radio key={idx} value={String(idx)}>
+                  {opt}
+                </Radio>
+              ))}
+            </Radio.Group>
+          </div>
+        </div>
+
+        <div className="flex justify-between items-center gap-3">
+          <div className="flex gap-3 items-center w-[40%]">
+            <div
+              className={`flex items-center justify-center font-bold w-[120px] min-w-[120px] p-1 ${labelColor}`}
+            >
+              鑑部税表現
+            </div>
+            <Select
+              className="w-[200px] [&>.ant-select-selector]:!bg-[#ebcec0]"
+              value={selectedTaxType}
+              onChange={setSelectedTaxType}
+              options={createOptions(taxTypeOptions)}
+            />
+          </div>
+          <div className="flex gap-3 items-center w-[60%]">
+            <div
+              className={`flex items-center justify-center font-bold w-[120px] min-w-[120px] p-1 ${labelColor}`}
+            >
+              明細順
+            </div>
+            <Select
+              className="w-[300px] [&>.ant-select-selector]:!bg-[#ebcec0]"
+              value={selectedDetailOrder}
+              onChange={setSelectedDetailOrder}
+              options={createOptions(detailOrderOptions)}
+            />
+          </div>
+        </div>
+
+        <div className="flex gap-3 items-center w-[40%]">
+          <div
+            className={`flex items-center justify-center font-bold w-[120px] min-w-[120px] p-1 ${labelColor}`}
+          >
+            税取りまとめ
+          </div>
+          <Select
+            className="w-[200px] [&>.ant-select-selector]:!bg-[#ebcec0]"
+            value={selectedTaxCollect}
+            onChange={setSelectedTaxCollect}
+            options={createOptions(taxCollectOptions)}
+          />
+        </div>
+
+        <div className="flex gap-3 items-start">
+          <div
+            className={`flex items-center justify-center font-bold w-[120px] min-w-[120px] p-1 ${labelColor}`}
+          >
+            印刷項目
+          </div>
+          <Checkbox.Group
+            className="flex flex-row gap-1"
+            options={createOptions(printItemOptions)}
+            value={selectedPrintItems}
+            onChange={setSelectedPrintItems}
+          />
+        </div>
+
+        <div className="flex items-center gap-3">
+          <div className="flex gap-3 items-center w-[40%]">
+            <div
+              className={`flex items-center justify-center font-bold w-[120px] min-w-[120px] p-1 ${labelColor}`}
+            >
+              伝票メモ
+            </div>
+            <Select
+              className="w-[200px] [&>.ant-select-selector]:!bg-[#ebcec0]"
+              value={selectedMemo}
+              onChange={setSelectedMemo}
+              options={createOptions(memoOptions)}
+            />
+          </div>
+          <Radio.Group
+            className="flex gap-2"
+            onChange={(e) => setSelectedMemoRadio(e.target.value)}
+            value={selectedMemoRadio}
+          >
+            {memoRadioOptions.map((opt, idx) => (
+              <Radio key={idx} value={String(idx)}>
+                {opt}
+              </Radio>
+            ))}
+          </Radio.Group>
+        </div>
+
+        <div className="flex justify-between items-center gap-3">
+          <div className="flex gap-3 items-center w-[40%]">
+            <div
+              className={`flex items-center justify-center font-bold w-[120px] min-w-[120px] p-1 ${labelColor}`}
+            >
+              印刷担当
+            </div>
+            <Select
+              className="w-[200px] [&>.ant-select-selector]:!bg-[#ebcec0]"
+              value={printManager}
+              onChange={setPrintManager}
+              options={createOptions(["営業", "集金"])}
+            />
+          </div>
+          <div className="flex gap-3 items-center w-[60%]">
+            <div
+              className={`flex text-center items-center justify-center font-bold w-[120px] min-w-[120px] p-1 ${labelColor}`}
             >
               施設使用料とりまとめ名称
             </div>
-            <input
-              type="text"
+            <Input
               placeholder="ここに入力してください"
-              className={`w-[20%] border border-black px-2 py-1 rounded ${inputColor}`}
+              className="w-full"
               value={facilityUsageFee}
               onChange={(e) => setFacilityUsageFee(e.target.value)}
             />
           </div>
         </div>
-        <div className="flex justify-between">
-          <SelectInput
-            label="領収書の担当"
-            value={receiptOfficer}
-            options={["印刷する", "印刷しない"]}
-            onChange={setReceiptOfficer}
-          />
-          <SelectInput
-            label="原料費調整通知"
-            value={adjustmentNotice}
-            options={["印刷する", "印刷しない"]}
-            onChange={setAdjustmentNotice}
-          />
+
+        <div className="flex justify-between items-center gap-3">
+          <div className="flex gap-3 items-center w-[40%]">
+            <div
+              className={`flex items-center justify-center font-bold w-[120px] min-w-[120px] p-1 ${labelColor}`}
+            >
+              領収書の担当
+            </div>
+            <Select
+              className="w-[200px] [&>.ant-select-selector]:!bg-[#ebcec0]"
+              value={receiptOfficer}
+              onChange={setReceiptOfficer}
+              options={createOptions(["印刷する", "印刷しない"])}
+            />
+          </div>
+          <div className="flex gap-3 items-center w-[60%]">
+            <div
+              className={`flex items-center justify-center font-bold w-[120px] min-w-[120px] p-1 ${labelColor}`}
+            >
+              原料費調整通知
+            </div>
+            <Select
+              className="w-[200px] [&>.ant-select-selector]:!bg-[#ebcec0]"
+              value={adjustmentNotice}
+              onChange={setAdjustmentNotice}
+              options={createOptions(["印刷する", "印刷しない"])}
+            />
+          </div>
         </div>
       </div>
-      <wbr></wbr>
     </div>
   );
 });

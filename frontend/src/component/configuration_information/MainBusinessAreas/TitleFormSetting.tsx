@@ -1,5 +1,6 @@
 import { forwardRef } from "react";
 import { labelColor, inputColor } from "../../../constants/colors";
+import { Input, Select } from "antd";
 
 const labels = ["ご請求", "ご案内1", "ご案内2", "ご案内3", "ご案内4（仮）"];
 
@@ -7,7 +8,7 @@ const labelClass = `${labelColor} border border-black px-2 flex items-center jus
 
 const TitleFormSetting = forwardRef<any>((props, ref) => {
   return (
-    <div className="p-2 border border-black mt-2 xl:text-base text-sm">
+    <div className="p-2 border border-black mt-2 xl:text-base text-xs">
       {/* Header */}
       <div
         className={`w-full ${labelColor} flex justify-center items-center p-2 font-bold`}
@@ -19,11 +20,11 @@ const TitleFormSetting = forwardRef<any>((props, ref) => {
       <div className="flex gap-10 mt-4 w-full ">
         <div className="flex gap-3 items-center">
           <div
-            className={`w-[160px] ${labelColor} flex justify-center items-center p-1 font-bold`}
+            className={`w-[200px] ${labelColor} flex justify-center items-center p-1 font-bold`}
           >
             請求書タイトル
           </div>
-          <input
+          <Input
             ref={ref}
             className={`border border-black h-6 px-2 ${inputColor}`}
             type="text"
@@ -36,18 +37,18 @@ const TitleFormSetting = forwardRef<any>((props, ref) => {
           >
             請求書タイトル
           </div>
-          <input
+          <Input
             className={`w-6 h-6 border border-black text-center ${inputColor}`}
             type="number"
             placeholder="0"
           />
-          <select className={`w-2/5 border border-black ${inputColor}`}>
+          <Select className={`w-2/5 [&>.ant-select-selector]:!bg-[#ebcec0]`}>
             {labels.map((lab, index) => (
               <option key={index} value={index}>
                 {lab}
               </option>
             ))}
-          </select>
+          </Select>
         </div>
       </div>
 
@@ -59,7 +60,7 @@ const TitleFormSetting = forwardRef<any>((props, ref) => {
           <div className="flex p-2 gap-5">
             <span className="flex gap-4 w-[40%]">
               <div className={`font-semibold ${labelClass}`}>前回ご請求</div>
-              <input
+              <Input
                 type="text"
                 placeholder="前回ご請求額"
                 className={`border border-black px-2 w-full ${inputColor}`}
@@ -67,7 +68,7 @@ const TitleFormSetting = forwardRef<any>((props, ref) => {
             </span>
             <span className="flex gap-5 w-[30%]">
               <div className={`font-semibold ${labelClass}`}>今回ご請求</div>
-              <input
+              <Input
                 type="text"
                 placeholder="今回ご請求額"
                 className={`border border-black px-2 w-full ${inputColor}`}
@@ -75,7 +76,7 @@ const TitleFormSetting = forwardRef<any>((props, ref) => {
             </span>
             <span className="flex gap-5 w-[30%]">
               <div className={`font-semibold ${labelClass}`}>当月ご入金額</div>
-              <input
+              <Input
                 type="text"
                 placeholder="当月ご入金額"
                 className={`border border-black px-2 w-full ${inputColor}`}
@@ -87,7 +88,7 @@ const TitleFormSetting = forwardRef<any>((props, ref) => {
           <div className="flex p-2 gap-4">
             <span className="flex gap-4 w-[40%]">
               <div className={`font-semibold ${labelClass}`}>差引金額</div>
-              <input
+              <Input
                 type="text"
                 placeholder="差引金額"
                 className={`border border-black px-2 w-full ${inputColor}`}
@@ -95,7 +96,7 @@ const TitleFormSetting = forwardRef<any>((props, ref) => {
             </span>
             <span className="flex gap-5 w-[30%]">
               <div className={`font-semibold ${labelClass}`}>当月お買上額</div>
-              <input
+              <Input
                 type="text"
                 placeholder="当月お買上額"
                 className={`border border-black px-2 w-full ${inputColor}`}
@@ -103,7 +104,7 @@ const TitleFormSetting = forwardRef<any>((props, ref) => {
             </span>
             <span className="flex gap-5 w-[30%]">
               <div className={`font-semibold ${labelClass}`}>当月外修正額</div>
-              <input
+              <Input
                 type="text"
                 placeholder="当月外修正額"
                 className={`border border-black px-2 w-full ${inputColor}`}
@@ -115,7 +116,7 @@ const TitleFormSetting = forwardRef<any>((props, ref) => {
           <div className="flex p-2 gap-5">
             <span className="flex gap-4 w-[40%] items-stretch">
               <div className={`font-semibold ${labelClass}`}>当月消費税額</div>
-              <input
+              <Input
                 type="text"
                 placeholder="当月消費税額"
                 className={`border border-black px-2 w-full ${inputColor}`}
