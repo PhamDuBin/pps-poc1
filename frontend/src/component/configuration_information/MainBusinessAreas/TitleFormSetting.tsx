@@ -1,11 +1,40 @@
-const labelClass =
-  "bg-[#D9D9D9] border border-black px-2 flex items-center justify-center h-[32px] w-[180px]";
+import { forwardRef } from "react";
+import { labelColor } from "../../../constants/colors";
 
-const TitleFormSetting = () => {
+const labels = [
+  "ご請求",
+  "ご案内1",
+  "ご案内2",
+  "ご案内3",
+  "ご案内4（仮）",
+];
+
+const labelClass =
+  `${labelColor} border border-black px-2 flex items-center justify-center h-[32px] w-[180px]`;
+
+const TitleFormSetting = forwardRef<any>((props, ref) => {
   return (
     <div className="p-2 border border-black mt-2">
-      <div className="w-full bg-[#D9D9D9] flex justify-center items-center p-2 font-bold">
+      <div className={`w-full ${labelColor} flex justify-center items-center p-2 font-bold`}>
         タイトル・鑑設定
+      </div>
+
+      <div className="flex gap-10 mt-4 w-full ">
+        <div className="flex gap-3 items-center">
+          <div className={`w-[160px] ${labelColor} flex justify-center items-center p-1 font-bold`}>請求書タイトル</div>
+          <input ref={ref} className="border border-black h-6" type="text" name="" id="" placeholder="ご請求書" />
+        </div>
+        <div className="flex gap-3 items-center w-[40%]">
+          <div className={`w-[160px] ${labelColor} flex justify-center items-center p-1 font-bold`}>請求書タイトル</div>
+          <input className="w-6 h-6 border border-black text-center" type="number" name="" id="" placeholder="0" />
+          <select className="w-2/5 border border-black" name="" id="">
+            {labels.map((lab, index) => (
+              <option key={index} value={index}>
+                {lab}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
       <div className=" p-4">
@@ -84,6 +113,6 @@ const TitleFormSetting = () => {
       </div>
     </div>
   );
-};
+})
 
 export default TitleFormSetting;

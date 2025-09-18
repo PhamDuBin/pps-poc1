@@ -1,21 +1,21 @@
 "use client";
 
-import { useState } from "react";
+import { forwardRef, useState } from "react";
 import { DatePicker, Select, Checkbox } from "antd";
 import dayjs from "dayjs";
 
-const ContinuousIssue = () => {
-  const [month, setMonth] = useState(dayjs("2025-05", "YYYY-MM"));
+const ContinuousIssue = forwardRef<any>((props, ref) => {
+  const [month, setMonth] = useState(dayjs());
   const [rangeStart, setRangeStart] = useState<dayjs.Dayjs | null>(null);
   const [rangeEnd, setRangeEnd] = useState<dayjs.Dayjs | null>(null);
 
   const labelClass =
-    "bg-[#D9D9D9] border border-gray-400 text-sm font-bold flex items-center justify-center min-h-[32px] w-[120px] px-2";
+    "bg-[#80bad7] border border-gray-400 text-sm font-bold flex items-center justify-center min-h-[32px] w-[120px] px-2";
 
   return (
-    <div className="border border-black w-full text-sm p-2">
+    <div className="border border-black w-full p-2">
       {/* Title */}
-      <div className="bg-[#D9D9D9] font-bold text-center py-2">
+      <div className="bg-[#80bad7] font-bold text-center py-2">
         抽出条件｜連続発行
       </div>
 
@@ -25,6 +25,7 @@ const ContinuousIssue = () => {
         <div className="flex items-center">
           <div className={labelClass}>月度</div>
           <DatePicker
+            ref={ref}
             picker="month"
             value={month}
             onChange={(date) => setMonth(date)}
@@ -117,6 +118,6 @@ const ContinuousIssue = () => {
       </div>
     </div>
   );
-};
+});
 
 export default ContinuousIssue;

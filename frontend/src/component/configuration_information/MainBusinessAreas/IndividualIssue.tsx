@@ -3,17 +3,31 @@
 import { DatePicker, Input, Button, Select } from "antd";
 import dayjs from "dayjs";
 import AdvanceSearchModal from "../AdvanceSearchModal";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { forwardRef } from "react";
+import { labelColor } from "../../../constants/colors";
 
 const { MonthPicker } = DatePicker;
 const { Option } = Select;
 
 const labelClass =
-  "bg-[#D9D9D9] border border-black px-2 flex items-center justify-center min-h-[32px] w-[120px]";
+  `${labelColor} border border-black px-2 flex items-center justify-center min-h-[32px] w-[120px]`;
 
-const IndividualIssue = () => {
+
+
+const IndividualIssue = forwardRef<any>((props, ref) => {
+  const [month, setMonth] = useState(dayjs());
   const [selected, setSelected] = useState("0");
   const [showAdvanceSearch, setShowAdvanceSearch] = useState(false);
+  const [showCustomerInfor, setShowCustomerInfor] = useState(false);
+
+  const handleShowCustomerInfor = () => {
+    setShowCustomerInfor(true);
+  }
+
+  const handleCloseCustomerInfor = () => {
+    setShowCustomerInfor(false);
+  }
 
   const options = [
     { value: "0", label: "顧客コード" },
@@ -48,7 +62,7 @@ const IndividualIssue = () => {
       )}
 
       {/* Header */}
-      <div className="bg-[#D9D9D9] font-bold text-center p-2">
+      <div className="bg-[#80bad7] font-bold text-center p-2">
         抽出条件｜個別発行
       </div>
 
@@ -58,16 +72,20 @@ const IndividualIssue = () => {
           {/* 月度 */}
           <span className="flex gap-4">
             <div className={labelClass}>月度</div>
-            <MonthPicker defaultValue={dayjs("2022-01", "YYYY-MM")} format="YYYY-MM" />
+            <MonthPicker
+              ref={ref}
+              defaultValue={dayjs()}
+              format="YYYY-MM"
+            />
           </span>
 
           {/* 事務所 */}
           <span className="flex mt-2 gap-4 items-center">
             <div className={labelClass}>事務所</div>
-            <Input className="w-[100px]" placeholder="0000000" />
+            <Input disabled={showCustomerInfor} className={`w-[100px] ${showCustomerInfor ? '' : 'disabled:bg-gray-300 disabled:cursor-not-allowed'}`} placeholder="0000000" />
             <div>-</div>
-            <Input className="w-[100px]" placeholder="0000000" />
-            <Button onClick={() => setShowAdvanceSearch(true)} className="h-8 w-8">
+            <Input disabled={showCustomerInfor} className={`w-[100px] ${showCustomerInfor ? '' : 'disabled:bg-gray-300 disabled:cursor-not-allowed'}`} placeholder="0000000" />
+            <Button onClick={() => {setShowAdvanceSearch(true);setShowCustomerInfor(true)}} className="h-8 w-8  !bg-blue-600 !text-white hover:!bg-blue-400">
               ▼
             </Button>
             <div>関東地方営業事務所</div>
@@ -78,7 +96,7 @@ const IndividualIssue = () => {
             <Select
               value={selected}
               onChange={(value) => setSelected(value)}
-              className="w-[120px] text-black [&>.ant-select-selector]:!bg-gray-400 [&>.ant-select-selector]:!border-black [&>.ant-select-selector]:!text-black [&>.ant-select-selector]:!rounded-none [&>.ant-select-selector]:!text-center"
+              className={`w-[120px] text-black [&>.ant-select-selector]:!bg-blue-300 [&>.ant-select-selector]:!border-black [&>.ant-select-selector]:!text-black [&>.ant-select-selector]:!rounded-none [&>.ant-select-selector]:!text-center`}
             >
               {options.map((option) => (
                 <Option key={option.value} value={option.value}>
@@ -86,14 +104,14 @@ const IndividualIssue = () => {
                 </Option>
               ))}
             </Select>
-            <Input className="w-[100px]" placeholder="0000000" />
+            <Input disabled={showCustomerInfor} className={`w-[100px] ${showCustomerInfor ? '' : 'disabled:bg-gray-300 disabled:cursor-not-allowed'}`} placeholder="0000000" />
             <div>-</div>
-            <Input className="w-[100px]" placeholder="0000000" />
-            <Button onClick={() => setShowAdvanceSearch(true)} className="h-8 w-8">
+            <Input disabled={showCustomerInfor} className={`w-[100px] ${showCustomerInfor ? '' : 'disabled:bg-gray-300 disabled:cursor-not-allowed'}`} placeholder="0000000" />
+            <Button onClick={() => {setShowAdvanceSearch(true);setShowCustomerInfor(true)}} className="h-8 w-8  !bg-blue-600 !text-white hover:!bg-blue-400">
               ▼
             </Button>
-            <Button className="px-2">確定</Button>
-            <Button onClick={() => setShowAdvanceSearch(true)} className="px-2">
+            <Button onClick={handleShowCustomerInfor} className="px-2 !bg-blue-600 !text-white hover:!bg-blue-400">確定</Button>
+            <Button onClick={() =>  handleCloseCustomerInfor()} className="px-2 !bg-blue-600 !text-white hover:!bg-blue-400">
               再入力
             </Button>
           </span>
@@ -101,48 +119,50 @@ const IndividualIssue = () => {
       </div>
 
       {/* 顧客情報詳細 */}
-      <div className="min-h-[120px] p-4">
-        <div className="font-bold py-2">顧客情報詳細</div>
-        <div className="border border-black">
-          <div className="flex flex-cols-3 p-2">
-            <span className="flex gap-4 w-[40%]">
-              <div className={`font-semibold ${labelClass}`}>氏名</div>
-              <div>鈴木　カンクロウ</div>
-            </span>
-            <span className="flex gap-5 w-[30%]">
-              <div className={`font-semibold ${labelClass}`}>開閉</div>
-              <div className="ml-2">新規開栓</div>
-              <div>自振</div>
-              <div>4</div>
-            </span>
-            <span className="flex gap-5 w-[30%]">
-              <div className={`font-semibold ${labelClass}`}>締日</div>
-              <div>31</div>
-            </span>
-          </div>
+      {(showCustomerInfor) && 
+        <div className="min-h-[120px] p-4">
+          <div className="font-bold py-2">顧客情報詳細</div>
+          <div className="border border-black">
+            <div className="flex flex-cols-3 p-2">
+              <span className="flex gap-4 w-[40%]">
+                <div className={`font-semibold ${labelClass}`}>氏名</div>
+                <div>鈴木　カンクロウ</div>
+              </span>
+              <span className="flex gap-5 w-[30%]">
+                <div className={`font-semibold ${labelClass}`}>開閉</div>
+                <div className="ml-2">新規開栓</div>
+                <div>自振</div>
+                <div>4</div>
+              </span>
+              <span className="flex gap-5 w-[30%]">
+                <div className={`font-semibold ${labelClass}`}>締日</div>
+                <div>31</div>
+              </span>
+            </div>
 
-          <div className="flex flex-cols-3 p-2">
-            <span className="flex w-[40%] gap-4">
-              <div className={`font-semibold ${labelClass}`}>住所</div>
-              <div>埼玉県さいたま市なんちゃら０００１</div>
-            </span>
-            <span className="flex gap-5 w-[30%]">
-              <div className={`font-semibold ${labelClass}`}>電話番号</div>
-              <div className="ml-2">03-1234-9999</div>
-            </span>
-            <span className="flex gap-5 w-[30%] items-center">
-              <div className={`font-semibold ${labelClass}`}>締切指定</div>
-              <Select defaultValue="締切残" className="w-[50%]">
-                <Option value="締切残">締切残</Option>
-                <Option value="現在残">現在残</Option>
-                <Option value="当月分">当月分</Option>
-              </Select>
-            </span>
+            <div className="flex flex-cols-3 p-2">
+              <span className="flex w-[40%] gap-4">
+                <div className={`font-semibold ${labelClass}`}>住所</div>
+                <div>埼玉県さいたま市なんちゃら０００１</div>
+              </span>
+              <span className="flex gap-5 w-[30%]">
+                <div className={`font-semibold ${labelClass}`}>電話番号</div>
+                <div className="ml-2">03-1234-9999</div>
+              </span>
+              <span className="flex gap-5 w-[30%] items-center">
+                <div className={`font-semibold ${labelClass}`}>締切指定</div>
+                <Select defaultValue="締切残" className="w-[50%]">
+                  <Option value="締切残">締切残</Option>
+                  <Option value="現在残">現在残</Option>
+                  <Option value="当月分">当月分</Option>
+                </Select>
+              </span>
+            </div>
           </div>
         </div>
-      </div>
+      }
     </div>
   );
-};
+});
 
 export default IndividualIssue;

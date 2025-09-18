@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { forwardRef, useState } from "react";
+import { labelColor } from "../../../constants/colors";
 
 const printingButtons = [
   "事業者","事業所","部門","取引区分","営業地区","集金地区","検針地区","点検地区",
@@ -19,13 +20,13 @@ const detailOrderOptions = ["日付順","大分類・商品コード・日付順
 
 
 const SelectInput = ({ label, value, options, onChange }: any) => {
-  const containerWidth = label === "明細順" ? "w-[60%]" : "w-[20%]";
+  const containerWidth = label === "明細順" || label === "原料費調整通知" ? "w-[60%]" : "w-[20%]";
 
   return (
     <div className={`flex gap-3 ${containerWidth}`}>
-      <div className="flex items-center justify-center font-bold w-[200px] min-w-[120px] bg-[#D9D9D9]">{label}</div>
+      <div className={`flex items-center justify-center font-bold w-[200px] min-w-[120px] ${labelColor}`}>{label}</div>
       <select
-        className={`border border-black p-1 rounded-sm ${options === detailOrderOptions ? ' w-1/5 ' : " w-2/5 " }`}
+        className={`border border-black p-1 rounded-sm ${label === "原料費調整通知" ? 'w-1/5' : 'w-2/5'}`}
         value={value}
         onChange={(e) => onChange(e.target.value)}
       >
@@ -39,7 +40,7 @@ const SelectInput = ({ label, value, options, onChange }: any) => {
 
 const RadioGroup = ({ label, name, options, selected, onChange }: any) => (
   <div className="flex w-[60%] gap-3 items-center">
-    <div className={` ${options === memoRadioOptions ? '' : 'flex items-center p-1 justify-center font-bold w-[200px] bg-[#D9D9D9]'}`}>
+    <div className={`${labelColor} ${options === memoRadioOptions ? '' : 'flex items-center p-1 justify-center font-bold w-[200px] '}`}>
       {label}
     </div>
     <div className="flex gap-3">
@@ -56,7 +57,7 @@ const RadioGroup = ({ label, name, options, selected, onChange }: any) => (
 const CheckboxGroup = ({ label, options, selected, onChange }: any) => (
   <div className="flex justify-between gap-3 w-full relative">
     <div className="w-[20%] flex gap-3">
-      <div className="flex items-center justify-center p-1 font-bold w-[200px] bg-[#D9D9D9]">{label}</div>
+      <div className={`flex items-center justify-center p-1 font-bold w-[200px] ${labelColor}`}>{label}</div>
       <div className="w-2/5">
         <div className="flex gap-3 flex-wrap absolute">
           {options.map((opt: string, idx: number) => (
@@ -78,7 +79,7 @@ const CheckboxGroup = ({ label, options, selected, onChange }: any) => (
   </div>
 );
 
-const PrintingDesignation = () => {
+const PrintingDesignation = forwardRef<any>((props, ref) => {
   const [selected, setSelected] = useState<string[]>([]);
   const [selectedOrder, setSelectedOrder] = useState("0"); 
   const [selectedDetail, setSelectedDetail] = useState("0");
@@ -104,12 +105,12 @@ const PrintingDesignation = () => {
 
   return (
     <div className="p-2 border border-black mt-2">
-      <div className="w-full bg-[#D9D9D9] flex justify-center items-center p-2 font-bold">印刷指定</div>
+      <div className={`w-full ${labelColor} flex justify-center items-center p-2 font-bold`}>印刷指定</div>
 
       {/* 印刷区分指定 */}
-      <div className="flex gap-x-4 mt-4 w-full bg-[#D9D9D9] p-2">
+      <div className={`flex gap-x-4 mt-4 w-full ${labelColor} p-2`}>
         <div className="min-w-[100px] font-bold">印刷区分指定</div>
-        <input type="text" className="w-[50%] border border-black" value={selected.join("・")} readOnly />
+        <input ref={ref} type="text" className="w-[50%] border border-black" value={selected.join("・")} readOnly />
         <button onClick={clearSelection} className="w-[15%] bg-white border border-black rounded-md hover:bg-gray-200 transition">印刷区分クリア</button>
       </div>
 
@@ -118,7 +119,7 @@ const PrintingDesignation = () => {
           const isActive = selected.includes(label);
           return (
             <button key={idx} onClick={() => handleSelectLabel(label)}
-              className={`px-4 py-1 border rounded transition ${isActive ? "bg-gray-300 text-black border-black" : "bg-[#F8F8F8] border-gray-400"}
+              className={`px-4 py-1 border rounded transition ${isActive ? "bg-blue-400 text-black border-black" : "bg-blue-200 border-gray-400"}
               ${label==="取引区分"||label==="請求書発行区分"||label==="集金方法"?"row-span-6":""}
               ${label==="事業者"||label==="事業所"||label==="部門"?"row-span-2":"row-span-3"}`}>
               {label}
@@ -150,17 +151,17 @@ const PrintingDesignation = () => {
         <div className="flex justify-between">
           <SelectInput label="印刷担当" value={printManager} options={["営業","集金"]} onChange={setPrintManager} />
           <div className="flex gap-3 w-[60%]">
-            <div className="flex items-center justify-center font-bold w-[200px] bg-[#D9D9D9]">施設使用料とりまとめ名称</div>
+            <div className={`flex items-center justify-center font-bold w-[200px] ${labelColor}`}>施設使用料とりまとめ名称</div>
             <input type="text" placeholder="ここに入力してください" className="w-[20%] border border-black px-2 py-1 rounded" value={facilityUsageFee} onChange={(e)=>setFacilityUsageFee(e.target.value)} />
           </div>
         </div>
         <div className="flex justify-between">
           <SelectInput label="領収書の担当" value={receiptOfficer} options={["印刷する","印刷しない"]} onChange={setReceiptOfficer} />
-          <RadioGroup label="原料費調整通知" name="adjustmentNotice" options={["印刷する","印刷しない"]} selected={adjustmentNotice} onChange={setAdjustmentNotice} />
+          <SelectInput label="原料費調整通知" value={adjustmentNotice} options={["印刷する", "印刷しない"]} onChange={setAdjustmentNotice}/>
         </div>
       </div><wbr></wbr>
     </div>
   );
-};
+})
 
 export default PrintingDesignation;

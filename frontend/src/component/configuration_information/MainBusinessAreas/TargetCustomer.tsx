@@ -1,14 +1,28 @@
-import { useState } from "react";
+import { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import ModalF1 from "../../modal/Modal_F1";
+import { labelColor } from "../../../constants/colors";
 interface TargetCustomerProps {
   onLabelClick?: (title: string) => void;
 }
 
-const TargetCustomer: React.FC<TargetCustomerProps> = ({onLabelClick }) => {
+export interface TargetCustomerRef {
+  focusFirstButton: () => void;
+}
+
+const TargetCustomer = forwardRef<TargetCustomerRef, TargetCustomerProps>(
+  ({ onLabelClick }, ref) => {
+
+    const firstButtonRef = useRef<HTMLButtonElement | null>(null);
+
+    useImperativeHandle(ref, () => ({
+      focusFirstButton: () => {
+        firstButtonRef.current?.focus();
+      },
+    }));
 
     const [isOpenModalF1, setModalF1Open] = useState(false);
 
-    const labelClass ="bg-[#D9D9D9] border border-gray-400 px-2 flex items-center justify-center min-h-[32px] w-[160px]";
+    const labelClass =`${labelColor} border border-gray-400 px-2 flex items-center justify-center min-h-[32px] w-[160px]`;
 
     const buttonTitle = [
         "事業者",
@@ -30,15 +44,16 @@ const TargetCustomer: React.FC<TargetCustomerProps> = ({onLabelClick }) => {
   return (
     <>
         <div className="border border-black min-h-[120px] p-2">
-            <div className="bg-[#D9D9D9] font-bold text-center py-2">
+            <div className={`${labelColor} font-bold text-center py-2`}>
                 対象顧客
             </div>
             <div className="grid grid-cols-4 my-2">
-                {buttonTitle.map((title) => (
+                {buttonTitle.map((title, index) => (
                     <div className="flex py-2 font-bold gap-2" key={title}>
                         <button 
+                        ref={index === 0 ? firstButtonRef : null}
                         onClick={() => onLabelClick?.(title)}
-                        className={`${labelClass } shadow-lg`} >
+                        className={`${labelClass }  shadow-lg focus:border-2 focus:border-blue-600`} >
                             {title}
                         </button>
                         <div>指定済み</div>
@@ -48,7 +63,7 @@ const TargetCustomer: React.FC<TargetCustomerProps> = ({onLabelClick }) => {
             <div className="flex font-bold justify-between items-center pb-6">
                 <button 
                 onClick = {() => setModalF1Open(true)}
-                className="bg-[#D9D9D9] border border-gray-400 flex items-center justify-center h-[60px] w-[160px]">
+                className={`${labelColor} border border-gray-400 flex items-center justify-center h-[60px] w-[160px]`}>
                     顧客抽出
                 </button>
                 <div className="overflow-x-auto h-[60px] border border-black mr-10">
@@ -69,6 +84,6 @@ const TargetCustomer: React.FC<TargetCustomerProps> = ({onLabelClick }) => {
 
     </>
   );
-};
+});
 
 export default TargetCustomer;

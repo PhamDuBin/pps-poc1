@@ -272,6 +272,7 @@ const AdvanceSearchModal: React.FC<AdvanceSearchModalProps> = ({
   showAdvanceSearch,
   setShowAdvanceSearch,
   onRowEnter,
+  
 }) => {
   const [searchMode, setSearchMode] = useState<string>("overall");
   const [tableData, setTableData] = useState<TableRowData[]>([]);
