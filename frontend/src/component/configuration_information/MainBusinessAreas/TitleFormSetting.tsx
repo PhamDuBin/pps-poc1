@@ -1,12 +1,46 @@
-import { forwardRef } from "react";
+import { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import { labelColor, inputColor } from "../../../constants/colors";
 import { Input, Select } from "antd";
+import { convertToFullWidth } from "../../../utils/InputHandlers";
 
 const labels = ["ご請求", "ご案内1", "ご案内2", "ご案内3", "ご案内4（仮）"];
 
 const labelClass = `${labelColor} border border-black px-2 flex items-center justify-center h-[32px] w-[180px]`;
 
 const TitleFormSetting = forwardRef<any>((props, ref) => {
+  const [formValues, setFormValues] = useState({
+    invoiceTitle: "",
+    previousBilling: "",
+    currentMonthPayment: "",
+    balance: "",
+    currentMonthPurchase: "",
+    otherAdjustments: "",
+    currentMonthTax: "",
+    currentBilling: "",
+  });
+
+  const firstInputRef = useRef<any>(null);
+
+  useImperativeHandle(ref, () => ({
+    focus: () => {
+      firstInputRef.current?.focus();
+    },
+  }));
+
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    fieldName: keyof typeof formValues
+  ) => {
+    const value = convertToFullWidth(e.target.value);
+    setFormValues((prev) => ({
+      ...prev,
+      [fieldName]: value,
+    }));
+  };
+
+  const createOptions = (optionsArray: string[]) =>
+    optionsArray.map((opt, idx) => ({ value: String(idx), label: opt }));
+
   return (
     <div className="p-2 border border-black mt-2 xl:text-base text-xs">
       {/* Header */}
@@ -25,10 +59,12 @@ const TitleFormSetting = forwardRef<any>((props, ref) => {
             請求書タイトル
           </div>
           <Input
-            ref={ref}
+            ref={firstInputRef}
             className={`border border-black h-6 px-2 ${inputColor}`}
             type="text"
             placeholder="ご請求書"
+            value={formValues.invoiceTitle}
+            onChange={(e) => handleInputChange(e, "invoiceTitle")}
           />
         </div>
         <div className="flex gap-3 items-center w-[40%]">
@@ -43,15 +79,10 @@ const TitleFormSetting = forwardRef<any>((props, ref) => {
             placeholder="0"
           />
           <Select
-            defaultValue={"ご請求"}
+            defaultValue={"0"}
             className={`w-2/5 [&>.ant-select-selector]:!bg-[#ebcec0]`}
-          >
-            {labels.map((lab, index) => (
-              <option key={index} value={index}>
-                {lab}
-              </option>
-            ))}
-          </Select>
+            options={createOptions(labels)}
+          />
         </div>
       </div>
 
@@ -67,6 +98,8 @@ const TitleFormSetting = forwardRef<any>((props, ref) => {
                 type="text"
                 placeholder="前回ご請求額"
                 className={`border border-black px-2 w-full ${inputColor}`}
+                value={formValues.previousBilling}
+                onChange={(e) => handleInputChange(e, "previousBilling")}
               />
             </span>
             <span className="flex gap-5 w-[30%]">
@@ -75,6 +108,8 @@ const TitleFormSetting = forwardRef<any>((props, ref) => {
                 type="text"
                 placeholder="今回ご請求額"
                 className={`border border-black px-2 w-full ${inputColor}`}
+                value={formValues.currentBilling}
+                onChange={(e) => handleInputChange(e, "currentBilling")}
               />
             </span>
             <span className="flex gap-5 w-[30%]">
@@ -83,6 +118,8 @@ const TitleFormSetting = forwardRef<any>((props, ref) => {
                 type="text"
                 placeholder="当月ご入金額"
                 className={`border border-black px-2 w-full ${inputColor}`}
+                value={formValues.currentMonthPayment}
+                onChange={(e) => handleInputChange(e, "currentMonthPayment")}
               />
             </span>
           </div>
@@ -95,6 +132,8 @@ const TitleFormSetting = forwardRef<any>((props, ref) => {
                 type="text"
                 placeholder="差引金額"
                 className={`border border-black px-2 w-full ${inputColor}`}
+                value={formValues.balance}
+                onChange={(e) => handleInputChange(e, "balance")}
               />
             </span>
             <span className="flex gap-5 w-[30%]">
@@ -103,6 +142,8 @@ const TitleFormSetting = forwardRef<any>((props, ref) => {
                 type="text"
                 placeholder="当月お買上額"
                 className={`border border-black px-2 w-full ${inputColor}`}
+                value={formValues.currentMonthPurchase}
+                onChange={(e) => handleInputChange(e, "currentMonthPurchase")}
               />
             </span>
             <span className="flex gap-5 w-[30%]">
@@ -111,6 +152,8 @@ const TitleFormSetting = forwardRef<any>((props, ref) => {
                 type="text"
                 placeholder="当月外修正額"
                 className={`border border-black px-2 w-full ${inputColor}`}
+                value={formValues.otherAdjustments}
+                onChange={(e) => handleInputChange(e, "otherAdjustments")}
               />
             </span>
           </div>
@@ -123,6 +166,8 @@ const TitleFormSetting = forwardRef<any>((props, ref) => {
                 type="text"
                 placeholder="当月消費税額"
                 className={`border border-black px-2 w-full ${inputColor}`}
+                value={formValues.currentMonthTax}
+                onChange={(e) => handleInputChange(e, "currentMonthTax")}
               />
             </span>
             <span className="flex gap-5 w-[30%]"></span>

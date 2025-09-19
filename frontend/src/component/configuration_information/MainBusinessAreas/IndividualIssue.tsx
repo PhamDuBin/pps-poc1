@@ -6,6 +6,7 @@ import AdvanceSearchModal from "../../transaction_information/1.1.1_03/AdvanceSe
 import { useRef, useState } from "react";
 import { forwardRef } from "react";
 import { labelColor, inputColor } from "../../../constants/colors";
+import { allowDecimalInput } from "../../../utils/InputHandlers";
 
 const { MonthPicker } = DatePicker;
 const { Option } = Select;
@@ -13,7 +14,6 @@ const { Option } = Select;
 const labelClass = `${labelColor} border border-black px-2 flex items-center justify-center min-h-[32px] w-[120px]`;
 
 const IndividualIssue = forwardRef<any>((props, ref) => {
-  const [month, setMonth] = useState(dayjs());
   const [selected, setSelected] = useState("0");
   const [showAdvanceSearch, setShowAdvanceSearch] = useState(false);
   const [showCustomerInfor, setShowCustomerInfor] = useState(false);
@@ -51,10 +51,7 @@ const IndividualIssue = forwardRef<any>((props, ref) => {
               <AdvanceSearchModal
                 showAdvanceSearch={showAdvanceSearch}
                 setShowAdvanceSearch={setShowAdvanceSearch}
-                // onClose={() => {
-                //   setShowCustomerInfor(true);
-                // }}
-                onRowEnter={() => console.log("Selected from modal")}
+                onRowEnter={() => setShowCustomerInfor(true)}
               />
             </div>
           </div>
@@ -91,6 +88,9 @@ const IndividualIssue = forwardRef<any>((props, ref) => {
                   : "disabled:bg-[#f2e2dc] disabled:cursor-not-allowed"
               }`}
               placeholder="0000000"
+              onKeyDown={(e) => {
+                allowDecimalInput(e);
+              }}
             />
             <div>-</div>
             <Input
@@ -101,6 +101,9 @@ const IndividualIssue = forwardRef<any>((props, ref) => {
                   : "disabled:bg-[#f2e2dc] disabled:cursor-not-allowed"
               }`}
               placeholder="0000000"
+              onKeyDown={(e) => {
+                allowDecimalInput(e);
+              }}
             />
             <Button
               onClick={() => {
@@ -134,6 +137,9 @@ const IndividualIssue = forwardRef<any>((props, ref) => {
                   : "disabled:bg-gray-300 disabled:cursor-not-allowed"
               }`}
               placeholder="0000000"
+              onKeyDown={(e) => {
+                allowDecimalInput(e);
+              }}
             />
             <div>-</div>
             <Input
@@ -144,6 +150,9 @@ const IndividualIssue = forwardRef<any>((props, ref) => {
                   : "disabled:bg-gray-300 disabled:cursor-not-allowed"
               }`}
               placeholder="0000000"
+              onKeyDown={(e) => {
+                allowDecimalInput(e);
+              }}
             />
             <Button
               onClick={() => {

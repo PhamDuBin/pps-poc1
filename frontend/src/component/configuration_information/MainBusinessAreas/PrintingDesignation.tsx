@@ -1,6 +1,12 @@
 import { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import { inputColor, labelColor } from "../../../constants/colors";
 import { Select, Checkbox, Radio, Input } from "antd";
+import {
+  extractHalfWidthDigits,
+  convertToFullWidth,
+  handleFormatting,
+  allowDecimalInput,
+} from "../../../utils/InputHandlers";
 
 const printingButtons: { [key: string]: string[] } = {
   group1: ["事業者", "事業所", "部門"],
@@ -59,7 +65,10 @@ const PrintingDesignation = forwardRef<any>((props, ref) => {
   const [selectedDetail, setSelectedDetail] = useState("0");
   const [selectedTaxType, setSelectedTaxType] = useState("0");
   const [selectedTaxCollect, setSelectedTaxCollect] = useState("1");
-  const [selectedPrintItems, setSelectedPrintItems] = useState<string[]>([]);
+  const [selectedPrintItems, setSelectedPrintItems] = useState<string[]>([
+    "0",
+    "4",
+  ]);
   const [selectedMemo, setSelectedMemo] = useState("0");
   const [selectedMemoRadio, setSelectedMemoRadio] = useState("0");
   const [selectedParentChild, setSelectedParentChild] = useState("0");
@@ -366,7 +375,12 @@ const PrintingDesignation = forwardRef<any>((props, ref) => {
               placeholder="ここに入力してください"
               className="w-full"
               value={facilityUsageFee}
-              onChange={(e) => setFacilityUsageFee(e.target.value)}
+              onChange={(e) =>
+                setFacilityUsageFee(convertToFullWidth(e.target.value))
+              }
+              onKeyDown={(e) => {
+                handleFormatting(e, convertToFullWidth);
+              }}
             />
           </div>
         </div>
