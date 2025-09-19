@@ -1,4 +1,4 @@
-import { forwardRef, useState } from "react";
+import { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import { inputColor, labelColor } from "../../../constants/colors";
 import { Select, Checkbox, Radio, Input } from "antd";
 
@@ -55,7 +55,6 @@ const detailOrderOptions = [
 ];
 
 const PrintingDesignation = forwardRef<any>((props, ref) => {
-  const [selected, setSelected] = useState<string[]>([]);
   const [selectedOrder, setSelectedOrder] = useState("0");
   const [selectedDetail, setSelectedDetail] = useState("0");
   const [selectedTaxType, setSelectedTaxType] = useState("0");
@@ -66,6 +65,10 @@ const PrintingDesignation = forwardRef<any>((props, ref) => {
   const [selectedParentChild, setSelectedParentChild] = useState("0");
   const [selectedAddress, setSelectedAddress] = useState("0");
   const [selectedDetailOrder, setSelectedDetailOrder] = useState("0");
+  const [printManager, setPrintManager] = useState("0");
+  const [receiptOfficer, setReceiptOfficer] = useState("0");
+  const [facilityUsageFee, setFacilityUsageFee] = useState("");
+  const [adjustmentNotice, setAdjustmentNotice] = useState("0");
 
   const [selectedGroup, setSelectedGroup] = useState<{
     [key: string]: string | null;
@@ -76,24 +79,45 @@ const PrintingDesignation = forwardRef<any>((props, ref) => {
     group4: null,
   });
 
-  const [printManager, setPrintManager] = useState("0");
-  const [receiptOfficer, setReceiptOfficer] = useState("0");
-  const [facilityUsageFee, setFacilityUsageFee] = useState("");
-  const [adjustmentNotice, setAdjustmentNotice] = useState("0");
+  const groupRefs = useRef<Record<string, HTMLButtonElement | null>>({});
+
+  useImperativeHandle(ref, () => ({
+    focus: () => {
+      setTimeout(() => {
+        groupRefs.current.group1?.focus();
+      }, 0);
+    },
+  }));
 
   const handleSelectLabel = (groupName: string, label: string) => {
     setSelectedGroup((prev) => ({
       ...prev,
       [groupName]: prev[groupName] === label ? null : label,
     }));
+
+    const groupKeys = Object.keys(printingButtons);
+    const currentIndex = groupKeys.indexOf(groupName);
+    const nextIndex = currentIndex + 1;
+
+    if (nextIndex < groupKeys.length) {
+      const nextGroupName = groupKeys[nextIndex];
+      setTimeout(() => {
+        groupRefs.current[nextGroupName]?.focus();
+      }, 0);
+    }
   };
 
-  const clearSelection = () => setSelectedGroup({
-    group1: null,
-    group2: null,
-    group3: null,
-    group4: null,     
-  });
+  const clearSelection = () => {
+    setSelectedGroup({
+      group1: null,
+      group2: null,
+      group3: null,
+      group4: null,
+    });
+    setTimeout(() => {
+      groupRefs.current.group1?.focus();
+    }, 0);
+  };
 
   const createOptions = (optionsArray: string[]) =>
     optionsArray.map((opt, idx) => ({ value: String(idx), label: opt }));
@@ -106,11 +130,9 @@ const PrintingDesignation = forwardRef<any>((props, ref) => {
         印刷指定
       </div>
 
-      {/* 印刷区分指定 */}
       <div className={`flex gap-x-4 mt-4 w-full ${labelColor} p-2`}>
         <div className="min-w-[100px] font-bold">印刷区分指定</div>
         <input
-          ref={ref}
           type="text"
           className={`w-[50%] border border-black ${inputColor}`}
           value={Object.values(selectedGroup).filter(Boolean).join("・")}
@@ -118,7 +140,7 @@ const PrintingDesignation = forwardRef<any>((props, ref) => {
         />
         <button
           onClick={clearSelection}
-          className="w-[15%] bg-blue-600 text-white hover:bg-white hover:text-black border border-black rounded-md  transition"
+          className="w-[15%] bg-blue-600 text-white hover:bg-white hover:text-black border border-black rounded-md transition"
         >
           印刷区分クリア
         </button>
@@ -132,13 +154,22 @@ const PrintingDesignation = forwardRef<any>((props, ref) => {
             return (
               <button
                 key={label}
+                ref={
+                  idx === 0
+                    ? (el) => {
+                        groupRefs.current[groupName] = el;
+                      }
+                    : undefined
+                }
                 onClick={() => handleSelectLabel(groupName, label)}
                 disabled={isDisabled}
-                className={`px-4 py-1 border rounded transition ${
-                  isActive
-                    ? "bg-blue-400 text-black border-black"
-                    : "bg-blue-200 border-gray-400 hover:bg-white disabled:bg-gray-300 disabled:text-gray-400"
-                }
+                className={`px-4 py-1 border rounded transition
+                  ${
+                    isActive
+                      ? "bg-blue-400 text-black border-black"
+                      : "bg-blue-200 border-gray-400 hover:bg-white disabled:bg-gray-300 disabled:text-gray-400"
+                  }
+                  focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1
                 ${
                   label === "取引区分" ||
                   label === "請求書発行区分" ||
@@ -159,7 +190,7 @@ const PrintingDesignation = forwardRef<any>((props, ref) => {
         )}
       </div>
 
-      {/* Section Select + Radio + Checkbox - Refactored with Ant Design */}
+      {/* Section Select + Radio + Checkbox */}
       <div className="mt-4 flex flex-col gap-3 text-xs xl:text-sm">
         <div className="flex justify-between items-center gap-3">
           <div className="flex gap-3 items-center w-[40%]">

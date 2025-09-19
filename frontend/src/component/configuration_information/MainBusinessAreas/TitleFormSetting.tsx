@@ -38,11 +38,14 @@ const TitleFormSetting = forwardRef<any>((props, ref) => {
             請求書タイトル
           </div>
           <Input
-            className={`w-6 h-6 border border-black text-center ${inputColor}`}
+            className={`w-6 h-6 !px-0 text-center ${inputColor}`}
             type="number"
             placeholder="0"
           />
-          <Select className={`w-2/5 [&>.ant-select-selector]:!bg-[#ebcec0]`}>
+          <Select
+            defaultValue={"ご請求"}
+            className={`w-2/5 [&>.ant-select-selector]:!bg-[#ebcec0]`}
+          >
             {labels.map((lab, index) => (
               <option key={index} value={index}>
                 {lab}
@@ -132,4 +135,3 @@ const TitleFormSetting = forwardRef<any>((props, ref) => {
 });
 
 export default TitleFormSetting;
-  

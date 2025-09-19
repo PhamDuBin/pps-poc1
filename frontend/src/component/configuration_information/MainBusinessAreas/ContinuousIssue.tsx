@@ -1,10 +1,9 @@
 "use client";
 
-import { forwardRef, useState} from "react";
+import { forwardRef, useState } from "react";
 import { DatePicker, Select, Checkbox } from "antd";
 import dayjs from "dayjs";
 import { inputColor } from "../../../constants/colors";
-import { input } from "@nextui-org/react";
 
 const ContinuousIssue = forwardRef<any>((props, ref) => {
   const [month, setMonth] = useState(dayjs());
@@ -32,7 +31,7 @@ const ContinuousIssue = forwardRef<any>((props, ref) => {
             value={month}
             onChange={(date) => setMonth(date)}
             className={`ml-2 max-w-[160px] w-full ${inputColor}`}
-            format="YYYY-MM"
+            format="YYYY/MM"
             style={{ width: "160px" }}
           />
         </div>
@@ -74,7 +73,6 @@ const ContinuousIssue = forwardRef<any>((props, ref) => {
               minWidth: "160px",
               maxWidth: "100%",
               width: "100%",
-              // Đặt flex-basis tối đa để co lại khi cần
               flexBasis: "320px",
             }}
           >
@@ -114,7 +112,10 @@ const ContinuousIssue = forwardRef<any>((props, ref) => {
         {/* 取引区分 */}
         <div className="flex items-center sm:col-span-1">
           <div className={labelClass}>取引区分</div>
-          <Checkbox.Group defaultValue={["直売", "卸"]} className="ml-2 flex gap-4">
+          <Checkbox.Group
+            defaultValue={["直売", "卸"]}
+            className="ml-2 flex gap-4"
+          >
             <Checkbox value="直売">直売</Checkbox>
             <Checkbox value="卸">卸</Checkbox>
           </Checkbox.Group>

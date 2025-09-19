@@ -8,21 +8,15 @@ import TitleFormSetting from "./MainBusinessAreas/TitleFormSetting";
 import PaperSelectionModal from "./PaperSelectionModal";
 import { labelColor } from "../../constants/colors";
 import { Select, Button, Radio } from "antd";
+import CustomModal from "../../context/CustomModal";
 import React from "react";
 
 const MainBusinessScreen = () => {
-  const individualIssueRef = useRef<{ focusMonthPicker: () => void }>(null);
-
   const [isOperationSeachModalOpen, setIsOperationSeachModalOpen] =
     useState(false);
   const [isPaperSelectionModalOpen, setIsPaperSelectionModalOpen] =
     useState(false);
   const [condition, setCondition] = useState("連続発行");
-  const [isShowExtraForm, setIsShowExtraForm] = useState(false);
-  const [isShowTargetCustomer, setIsShowTargetCustomer] = useState(false);
-  const [isShowPrintingDesignation, setIsShowPrintingDesignation] =
-    useState(false);
-  const [isShowTitleFormSetting, setIsShowTitleFormSetting] = useState(false);
   const [selectedLabel, setSelectedLabel] = useState<string | null>(null);
 
   const monthPickerRef = useRef<any>(null);
@@ -30,6 +24,9 @@ const MainBusinessScreen = () => {
   const targetCustomerRef = useRef<any>(null);
   const printingDesignationRef = useRef<any>(null);
   const TitleFormSettingRef = useRef<any>(null);
+  const [activeSection, setActiveSection] = useState<string | null>(null);
+  const [modalF2Open, setModalF2Open] = useState<boolean>(false);
+  const [titleModal, setTitleModal] = useState("");
 
   const handleCloseOperationSerachModal = () => {
     setIsOperationSeachModalOpen(false);
@@ -39,43 +36,31 @@ const MainBusinessScreen = () => {
     setIsPaperSelectionModalOpen(false);
   };
 
-  const handleChangeCondition = (value: string) => {
-    setCondition(value);
-  };
-
-  const handleShowExtraForm = () => {
-    setIsShowExtraForm(!isShowExtraForm);
+  const handleFocusSection = (sectionName: string) => {
+    setActiveSection(sectionName);
     setTimeout(() => {
-      monthPickerRef.current?.focus?.();
-      datePickerRef.current?.focus?.();
-    }, 0);
-  };
-
-  const handleShowTargetCustomer = () => {
-    setIsShowTargetCustomer(!isShowTargetCustomer);
-    setTimeout(() => {
-      targetCustomerRef.current?.focusFirstButton();
-    }, 0);
-  };
-
-  const handleShowPrintingDesignation = () => {
-    setIsShowPrintingDesignation(!isShowPrintingDesignation);
-    setTimeout(() => {
-      printingDesignationRef.current?.focus();
-    }, 0);
-  };
-
-  const handleShowTitleFormSetting = () => {
-    setIsShowTitleFormSetting(!isShowTitleFormSetting);
-    setTimeout(() => {
-      TitleFormSettingRef.current?.focus();
+      switch (sectionName) {
+        case "extraForm":
+          if (condition === "連続発行") datePickerRef.current?.focus();
+          else monthPickerRef.current?.focus();
+          break;
+        case "targetCustomer":
+          targetCustomerRef.current?.focusFirstButton();
+          break;
+        case "printingDesignation":
+          printingDesignationRef.current?.focus();
+          break;
+        case "titleFormSetting":
+          TitleFormSettingRef.current?.focus();
+          break;
+      }
     }, 0);
   };
 
   useEffect(() => {
     setIsPaperSelectionModalOpen(true);
   }, []);
-
+  const activeButton = `bg-yellow-300 border-yellow-400`;
   const button = `flex text-center justify-center items-center ${labelColor} border border-black xl:text-base text-xs font-bold shadow-md shadow-zinc-600 hover:bg-white`;
   const span = `w-[10%] flex justify-center text-center items-center font-bold ${labelColor}`;
   return (
@@ -120,53 +105,60 @@ const MainBusinessScreen = () => {
         <span className={`${span}`}>発行方法</span>
 
         <Radio.Group
-          defaultValue={["連続発行", "個別発行"]}
+          defaultValue="連続発行"
           className="ml-2 flex gap-4"
+          onChange={(e) => setCondition(e.target.value)}
         >
           <Radio value="連続発行">連続発行</Radio>
           <Radio value="個別発行">個別発行</Radio>
         </Radio.Group>
       </div>
       <div className="mt-3 flex flex-row px-40 font-bold xl:text-base text-xs justify-between h-10">
-        <Button onClick={handleShowExtraForm} className={`${button} w-1/6`}>
+        <Button
+          onClick={() => handleFocusSection("extraForm")}
+          className={`${button} w-1/6 ${
+            activeSection === "extraForm" ? activeButton : ""
+          }`}
+        >
           抽出条件 （1）
         </Button>
         <Button
-          onClick={handleShowTargetCustomer}
-          className={`${button} w-1/6`}
+          onClick={() => handleFocusSection("targetCustomer")}
+          className={`${button} w-1/6 ${
+            activeSection === "targetCustomer" ? activeButton : ""
+          }`}
         >
           対象顧客（2）
         </Button>
         <Button
-          onClick={handleShowPrintingDesignation}
-          className={`${button} w-1/6`}
+          onClick={() => handleFocusSection("printingDesignation")}
+          className={`${button} w-1/6 ${
+            activeSection === "printingDesignation" ? activeButton : ""
+          }`}
         >
           印刷指定（3）
         </Button>
         <Button
-          onClick={handleShowTitleFormSetting}
-          className={`${button} w-1/6 `}
+          onClick={() => handleFocusSection("titleFormSetting")}
+          className={`${button} w-1/6 ${
+            activeSection === "titleFormSetting" ? activeButton : ""
+          }`}
         >
           タイトル ・鑑設定(4)
         </Button>
       </div>
       <div className="mt-3 h-[80%] border border-black p-4 overflow-auto">
-        <div>
-          <div>
-            {condition === "連続発行" ? (
-              <>
-                {/* ContinuousIssue component */}
-                <ContinuousIssue ref={datePickerRef} />
-              </>
-            ) : (
-              <>
-                {/* IndividualIssue component */}
-                <IndividualIssue ref={monthPickerRef} />
-              </>
-            )}
-          </div>
+        <div onFocus={() => setActiveSection("extraForm")}>
+          {condition === "連続発行" ? (
+            <ContinuousIssue ref={datePickerRef} />
+          ) : (
+            <IndividualIssue ref={monthPickerRef} />
+          )}
         </div>
-        <div className="mt-2">
+        <div
+          className="mt-2"
+          onFocus={() => setActiveSection("targetCustomer")}
+        >
           <TargetCustomer
             ref={targetCustomerRef}
             onLabelClick={(title) => {
@@ -175,33 +167,69 @@ const MainBusinessScreen = () => {
             }}
           />
         </div>
-        <div>
+        <div onFocus={() => setActiveSection("printingDesignation")}>
           <PrintingDesignation ref={printingDesignationRef} />
         </div>
-        <div>
+        <div onFocus={() => setActiveSection("titleFormSetting")}>
           <TitleFormSetting ref={TitleFormSettingRef} />
         </div>
       </div>
       <div className="mt-2 flex flex-row justify-between">
-        <Button className={`${button} w-[10%] xl:text-base text-xs`}>
+        <Button
+          onClick={() => {
+            setModalF2Open(true);
+            setTitleModal("条件保存（F3）");
+          }}
+          className={`${button} w-[10%] xl:text-base text-xs`}
+        >
           条件保存（F3）
         </Button>
-        <Button className={`${button} w-[10%] xl:text-base text-xs`}>
+        <Button
+          onClick={() => {
+            setModalF2Open(true);
+            setTitleModal("伝票メモ設定(F7)");
+          }}
+          className={`${button} w-[10%] xl:text-base text-xs`}
+        >
           伝票メモ設定(F7)
         </Button>
-        <Button className={`${button} w-[10%] xl:text-base text-xs`}>
+        <Button
+          onClick={() => {
+            setModalF2Open(true);
+            setTitleModal("再入力（F8）");
+          }}
+          className={`${button} w-[10%] xl:text-base text-xs`}
+        >
           再入力（F8）
         </Button>
-        <Button className={`${button} w-[10%] xl:text-base text-xs`}>
+        <Button
+          onClick={() => {
+            setModalF2Open(true);
+            setTitleModal("プレビュー（V）");
+          }}
+          className={`${button} w-[10%] xl:text-base text-xs`}
+        >
           プレビュー（V）
         </Button>
-        <Button className={`${button} w-[10%] xl:text-base text-xs`}>
+        <Button
+          onClick={() => {
+            setModalF2Open(true);
+            setTitleModal("印刷（P）");
+          }}
+          className={`${button} w-[10%] xl:text-base text-xs`}
+        >
           印刷（P）
         </Button>
-        <Button className={`${button} w-[10%] xl:text-base text-xs`}>
+        <Button
+          onClick={() => {
+            setModalF2Open(true);
+            setTitleModal("データ（H）");
+          }}
+          className={`${button} w-[10%] xl:text-base text-xs`}
+        >
           データ（H）
         </Button>
-        <Button className={`${button} w-[10%] xl:text-base text-xs`}>
+        <Button href="/" className={`${button} w-[10%] xl:text-base text-xs`}>
           閉じる（C）
         </Button>
       </div>
@@ -221,6 +249,11 @@ const MainBusinessScreen = () => {
           onClose={handleClosePaperSelectionModalOpen}
         />
       </div>
+      <CustomModal
+        isOpen={modalF2Open}
+        onClose={() => setModalF2Open(false)}
+        title={titleModal}
+      />
     </div>
   );
 };

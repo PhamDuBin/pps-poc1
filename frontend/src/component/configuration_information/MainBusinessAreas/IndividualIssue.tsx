@@ -75,7 +75,7 @@ const IndividualIssue = forwardRef<any>((props, ref) => {
             <MonthPicker
               ref={ref}
               defaultValue={dayjs()}
-              format="YYYY-MM"
+              format="YYYY/MM"
               className={`${inputColor}`}
             />
           </span>
