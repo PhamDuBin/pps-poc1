@@ -26,6 +26,7 @@ import LinkDestinationScreen from "./component/transaction_information/1.1.1_03/
 import SaleSlipEntryScreen from "./pages/sale_slip_entry_03.03.01/SaleSlipEntryScreen";
 import InspectionResultScreen from "./pages/input_inspection_result_02.04.05/InspectionResultScreen.tsx";
 import InvoicingScreen from "./pages/configuration_information_04.05.04/InvoicingScreen.tsx";
+import "@ant-design/v5-patch-for-react-19";
 
 function App() {
   return (

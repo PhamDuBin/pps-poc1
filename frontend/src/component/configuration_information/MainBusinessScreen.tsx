@@ -74,7 +74,6 @@ const MainBusinessScreen = () => {
           if (sectionName === "targetCustomer" && targetCustomerRef.current) {
             const container = targetCustomerRef.current.getContainerNode();
             container?.scrollIntoView({
-              behavior: "smooth",
               block: "start",
             });
             targetCustomerRef.current.focusFirstButton();
@@ -87,7 +86,6 @@ const MainBusinessScreen = () => {
           ) {
             const container = printingDesignationRef.current.getContainerNode();
             container?.scrollIntoView({
-              behavior: "smooth",
               block: "start",
             });
             printingDesignationRef.current.focusFirstButton();
@@ -100,7 +98,6 @@ const MainBusinessScreen = () => {
           ) {
             const container = TitleFormSettingRef.current.getContainerNode();
             container?.scrollIntoView({
-              behavior: "smooth",
               block: "start",
             });
             TitleFormSettingRef.current.focusFirstButton();
@@ -313,7 +310,7 @@ const MainBusinessScreen = () => {
         </Button>
       </div>
       {isOperationSeachModalOpen && (
-        <div className="${inputColor} fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
           <OperatorSelectionModal
             title={selectedLabel ?? ""}
             isOpen={isOperationSeachModalOpen}
