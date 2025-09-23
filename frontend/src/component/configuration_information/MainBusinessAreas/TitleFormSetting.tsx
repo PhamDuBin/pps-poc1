@@ -20,10 +20,14 @@ const TitleFormSetting = forwardRef<any>((props, ref) => {
   });
 
   const firstInputRef = useRef<any>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useImperativeHandle(ref, () => ({
-    focus: () => {
+    focusFirstButton: () => {
       firstInputRef.current?.focus();
+    },
+    getContainerNode: () => {
+      return containerRef.current;
     },
   }));
 
@@ -42,7 +46,10 @@ const TitleFormSetting = forwardRef<any>((props, ref) => {
     optionsArray.map((opt, idx) => ({ value: String(idx), label: opt }));
 
   return (
-    <div className="p-2 border border-black mt-2 xl:text-base text-xs">
+    <div
+      ref={containerRef}
+      className="p-2 border border-black mt-2 xl:text-base text-xs"
+    >
       {/* Header */}
       <div
         className={`w-full ${labelColor} flex justify-center items-center p-2 font-bold`}

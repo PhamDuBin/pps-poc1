@@ -3,7 +3,7 @@
 import { DatePicker, Input, Button, Select } from "antd";
 import dayjs from "dayjs";
 import AdvanceSearchModal from "../../transaction_information/1.1.1_03/AdvanceSearchModal";
-import { useRef, useState } from "react";
+import { useRef, useState, KeyboardEvent } from "react";
 import { forwardRef } from "react";
 import { labelColor, inputColor } from "../../../constants/colors";
 import { allowDecimalInput } from "../../../utils/InputHandlers";
@@ -17,13 +17,43 @@ const IndividualIssue = forwardRef<any>((props, ref) => {
   const [selected, setSelected] = useState("0");
   const [showAdvanceSearch, setShowAdvanceSearch] = useState(false);
   const [showCustomerInfor, setShowCustomerInfor] = useState(false);
+  const [officeCode, setOfficeCode] = useState(["", ""]);
+  const [customerCode, setCustomerCode] = useState(["", ""]);
+  const [officeName, setOfficeName] = useState("");
 
-  const handleShowCustomerInfor = () => {
-    setShowCustomerInfor(true);
-  };
+  const btnRef = useRef<HTMLButtonElement>(null);
 
   const handleCloseCustomerInfor = () => {
     setShowCustomerInfor(false);
+  };
+
+  const handleCloseOfficeInfor = () => {
+    setOfficeName("");
+    setOfficeCode(["", ""]);
+  };
+
+  const handleOfficeSearch = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && officeCode[0] && officeCode[1]) {
+      e.preventDefault();
+      setOfficeName("関東地方営業事務所");
+    }
+  };
+
+  const handleShowCustomerInforKeyDown = (
+    e: KeyboardEvent<HTMLInputElement>
+  ) => {
+    if (e.key === "Enter" && customerCode[0] && customerCode[1]) {
+      e.preventDefault();
+      setShowCustomerInfor(true);
+      btnRef.current?.focus();
+    }
+  };
+
+  const handleShowCustomerInforClick = () => {
+    if (customerCode[0] && customerCode[1]) {
+      setShowCustomerInfor(true);
+      btnRef.current?.focus();
+    }
   };
 
   const options = [
@@ -51,7 +81,10 @@ const IndividualIssue = forwardRef<any>((props, ref) => {
               <AdvanceSearchModal
                 showAdvanceSearch={showAdvanceSearch}
                 setShowAdvanceSearch={setShowAdvanceSearch}
-                onRowEnter={() => setShowCustomerInfor(true)}
+                onRowEnter={() => {
+                  setShowCustomerInfor(true);
+                  btnRef.current?.focus();
+                }}
               />
             </div>
           </div>
@@ -91,6 +124,7 @@ const IndividualIssue = forwardRef<any>((props, ref) => {
               onKeyDown={(e) => {
                 allowDecimalInput(e);
               }}
+              onChange={(e) => setOfficeCode([officeCode[0], e.target.value])}
             />
             <div>-</div>
             <Input
@@ -100,9 +134,11 @@ const IndividualIssue = forwardRef<any>((props, ref) => {
                   ? ""
                   : "disabled:bg-[#f2e2dc] disabled:cursor-not-allowed"
               }`}
+              onChange={(e) => setOfficeCode([officeCode[1], e.target.value])}
               placeholder="0000000"
               onKeyDown={(e) => {
                 allowDecimalInput(e);
+                handleOfficeSearch(e);
               }}
             />
             <Button
@@ -113,7 +149,13 @@ const IndividualIssue = forwardRef<any>((props, ref) => {
             >
               ▼
             </Button>
-            <div>関東地方営業事務所</div>
+            <div>{officeName}</div>
+            <Button
+              onClick={() => handleCloseOfficeInfor()}
+              className="px-2 !bg-blue-600 !text-white hover:!bg-blue-400 ml-[3.1rem]"
+            >
+              再入力
+            </Button>
           </span>
 
           {/* 顧客コード */}
@@ -140,6 +182,9 @@ const IndividualIssue = forwardRef<any>((props, ref) => {
               onKeyDown={(e) => {
                 allowDecimalInput(e);
               }}
+              onChange={(e) =>
+                setCustomerCode([customerCode[0], e.target.value])
+              }
             />
             <div>-</div>
             <Input
@@ -152,7 +197,11 @@ const IndividualIssue = forwardRef<any>((props, ref) => {
               placeholder="0000000"
               onKeyDown={(e) => {
                 allowDecimalInput(e);
+                handleShowCustomerInforKeyDown(e);
               }}
+              onChange={(e) =>
+                setCustomerCode([customerCode[1], e.target.value])
+              }
             />
             <Button
               onClick={() => {
@@ -163,12 +212,13 @@ const IndividualIssue = forwardRef<any>((props, ref) => {
               ▼
             </Button>
             <Button
-              onClick={handleShowCustomerInfor}
+              onClick={handleShowCustomerInforClick}
               className="px-2 !bg-blue-600 !text-white hover:!bg-blue-400"
             >
               確定
             </Button>
             <Button
+              ref={btnRef}
               onClick={() => handleCloseCustomerInfor()}
               className="px-2 !bg-blue-600 !text-white hover:!bg-blue-400"
             >

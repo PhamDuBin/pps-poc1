@@ -89,12 +89,16 @@ const PrintingDesignation = forwardRef<any>((props, ref) => {
   });
 
   const groupRefs = useRef<Record<string, HTMLButtonElement | null>>({});
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useImperativeHandle(ref, () => ({
-    focus: () => {
+    focusFirstButton: () => {
       setTimeout(() => {
         groupRefs.current.group1?.focus();
       }, 0);
+    },
+    getContainerNode: () => {
+      return containerRef.current;
     },
   }));
 
@@ -132,7 +136,10 @@ const PrintingDesignation = forwardRef<any>((props, ref) => {
     optionsArray.map((opt, idx) => ({ value: String(idx), label: opt }));
 
   return (
-    <div className="p-2 border border-black mt-2 xl:text-base text-sm">
+    <div
+      ref={containerRef}
+      className="p-2 border border-black mt-2 xl:text-base text-sm"
+    >
       <div
         className={`w-full ${labelColor} flex justify-center items-center p-2 font-bold`}
       >

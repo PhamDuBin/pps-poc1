@@ -10,15 +10,35 @@ import { labelColor } from "../../constants/colors";
 import { Select, Button, Radio } from "antd";
 import CustomModal from "../../context/CustomModal";
 import React from "react";
+// import { handleNavigationKey } from "../../utils/InputHandlers";
+
+export const handleNavigationKey = (
+  e: KeyboardEvent,
+  currentIndex: number,
+  focusableElements: HTMLElement[]
+) => {
+  if (["ArrowLeft", "ArrowRight"].includes(e.key)) {
+    e.preventDefault();
+    let nextIndex = currentIndex;
+    const total = focusableElements.length;
+
+    if (e.key === "ArrowRight") {
+      nextIndex = (currentIndex + 1) % total;
+    } else if (e.key === "ArrowLeft") {
+      nextIndex = (currentIndex - 1 + total) % total;
+    }
+
+    focusableElements[nextIndex]?.focus();
+  }
+};
 
 const MainBusinessScreen = () => {
   const [isOperationSeachModalOpen, setIsOperationSeachModalOpen] =
     useState(false);
   const [isPaperSelectionModalOpen, setIsPaperSelectionModalOpen] =
-    useState(false);
+    useState(true);
   const [condition, setCondition] = useState("連続発行");
   const [selectedLabel, setSelectedLabel] = useState<string | null>(null);
-
   const monthPickerRef = useRef<any>(null);
   const datePickerRef = useRef<any>(null);
   const targetCustomerRef = useRef<any>(null);
@@ -28,12 +48,18 @@ const MainBusinessScreen = () => {
   const [modalF2Open, setModalF2Open] = useState<boolean>(false);
   const [titleModal, setTitleModal] = useState("");
 
+  const focusFirstButtonRef = useRef<HTMLButtonElement>(null);
+
   const handleCloseOperationSerachModal = () => {
     setIsOperationSeachModalOpen(false);
   };
 
   const handleClosePaperSelectionModalOpen = () => {
     setIsPaperSelectionModalOpen(false);
+
+    if (focusFirstButtonRef.current) {
+      focusFirstButtonRef.current.focus();
+    }
   };
 
   const handleFocusSection = (sectionName: string) => {
@@ -45,26 +71,78 @@ const MainBusinessScreen = () => {
           else monthPickerRef.current?.focus();
           break;
         case "targetCustomer":
-          targetCustomerRef.current?.focusFirstButton();
+          if (sectionName === "targetCustomer" && targetCustomerRef.current) {
+            const container = targetCustomerRef.current.getContainerNode();
+            container?.scrollIntoView({
+              behavior: "smooth",
+              block: "start",
+            });
+            targetCustomerRef.current.focusFirstButton();
+          }
           break;
         case "printingDesignation":
-          printingDesignationRef.current?.focus();
+          if (
+            sectionName === "printingDesignation" &&
+            printingDesignationRef.current
+          ) {
+            const container = printingDesignationRef.current.getContainerNode();
+            container?.scrollIntoView({
+              behavior: "smooth",
+              block: "start",
+            });
+            printingDesignationRef.current.focusFirstButton();
+          }
           break;
         case "titleFormSetting":
-          TitleFormSettingRef.current?.focus();
+          if (
+            sectionName === "titleFormSetting" &&
+            TitleFormSettingRef.current
+          ) {
+            const container = TitleFormSettingRef.current.getContainerNode();
+            container?.scrollIntoView({
+              behavior: "smooth",
+              block: "start",
+            });
+            TitleFormSettingRef.current.focusFirstButton();
+          }
           break;
       }
     }, 0);
   };
 
+  const containerRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    setIsPaperSelectionModalOpen(true);
+    const container = containerRef.current;
+    if (!container) return;
+
+    const handleContainerKeyDown = (e: KeyboardEvent) => {
+      const focusableElements = Array.from(
+        container.querySelectorAll(
+          "input:not([disabled]), button:not([disabled]), select:not([disabled]), textarea:not([disabled]) "
+        )
+      ) as HTMLElement[];
+
+      const activeElement = document.activeElement as HTMLElement;
+      const currentIndex = focusableElements.indexOf(activeElement);
+
+      if (currentIndex !== -1) {
+        handleNavigationKey(e, currentIndex, focusableElements);
+      }
+    };
+
+    container.addEventListener("keydown", handleContainerKeyDown as any);
+    return () => {
+      container.removeEventListener("keydown", handleContainerKeyDown as any);
+    };
   }, []);
   const activeButton = `bg-yellow-300 border-yellow-400`;
   const button = `flex text-center justify-center items-center ${labelColor} border border-black xl:text-base text-xs font-bold shadow-md shadow-zinc-600 hover:bg-white`;
   const span = `w-[10%] flex justify-center text-center items-center font-bold ${labelColor}`;
   return (
-    <div className="h-screen w-full flex flex-col p-4 min-w-[1080px]">
+    <div
+      ref={containerRef}
+      className="h-screen w-full flex flex-col p-4 min-w-[1080px]"
+    >
       <span
         className={`w-full h-10 font-bold xl:text-2xl text-xl flex text-center justify-center items-center ${labelColor}`}
       >
@@ -74,6 +152,7 @@ const MainBusinessScreen = () => {
         <span className={`${span}`}>用紙設定</span>
         <p className="ml-3">伝票請｜請求書（15日）〇〇商社様用</p>
         <Button
+          ref={focusFirstButtonRef}
           onClick={() => setIsPaperSelectionModalOpen(true)}
           className="p-2 rounded-md border border-black h-6 w-14 text-xs flex text-center justify-center items-center shadow-md shadow-zinc-600"
         >

@@ -8,15 +8,20 @@ interface TargetCustomerProps {
 
 export interface TargetCustomerRef {
   focusFirstButton: () => void;
+  getContainerNode: () => HTMLDivElement | null;
 }
 
 const TargetCustomer = forwardRef<TargetCustomerRef, TargetCustomerProps>(
   ({ onLabelClick }, ref) => {
     const firstButtonRef = useRef<HTMLButtonElement | null>(null);
+    const containerRef = useRef<HTMLDivElement | null>(null);
 
     useImperativeHandle(ref, () => ({
       focusFirstButton: () => {
         firstButtonRef.current?.focus();
+      },
+      getContainerNode: () => {
+        return containerRef.current;
       },
     }));
 
@@ -42,7 +47,10 @@ const TargetCustomer = forwardRef<TargetCustomerRef, TargetCustomerProps>(
 
     return (
       <>
-        <div className="border border-black min-h-[120px] p-2 xl:text-base text-sm">
+        <div
+          ref={containerRef}
+          className="border border-black min-h-[120px] p-2 xl:text-base text-sm"
+        >
           <div className={`${labelColor} font-bold text-center py-2`}>
             対象顧客
           </div>
