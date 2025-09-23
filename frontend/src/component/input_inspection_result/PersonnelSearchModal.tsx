@@ -1,20 +1,26 @@
-import { useState } from "react";
+import { useEffect, useRef, useState, KeyboardEvent } from "react";
 import { kanaButtons } from "../sale_slip_entry/LeftPanel";
 import {
   convertToFullWidth,
   handleFormatting,
 } from "../../utils/InputHandlers";
 type PersonnelSearchModalProps = {
-  onClose: () => void;
+  onSelectAndClose: (personnel: PersonnelData) => void;
+};
+
+type PersonnelData = {
+  name: string;
+  kanaName: string;
 };
 
 const PersonnelSearchModal: React.FC<PersonnelSearchModalProps> = ({
-  onClose,
+  onSelectAndClose,
 }) => {
   const [showTable, setShowTable] = useState(false);
   const [selected, setSelected] = useState("1");
-  const [selectedRow, setSelectedRow] = useState(false);
+  const [code, setCode] = useState("");
   const rowCount = 30;
+  const [focusedRowIndex, setFocusedRowIndex] = useState<number | null>(null);
   const tableHeaders = [
     "コード",
     "氏名",
@@ -30,9 +36,68 @@ const PersonnelSearchModal: React.FC<PersonnelSearchModalProps> = ({
     "0001-001-000",
   ];
   const colWidths = ["15%", "20%", "20%", "25%", "20%"];
+
+  const firstInputRef = useRef<HTMLInputElement>(null);
+  const tableContainerRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (firstInputRef.current) {
+      firstInputRef.current.focus();
+    }
+  }, []);
+
+  const handleOpenTable = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && code) {
+      e.preventDefault();
+      setShowTable(true);
+      setFocusedRowIndex(0);
+    }
+  };
+  useEffect(() => {
+    if (showTable && tableContainerRef.current) {
+      tableContainerRef.current.focus();
+    }
+  }, [showTable]);
+
+  const handleTableKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+    if (focusedRowIndex === null) {
+      if (e.key === "ArrowDown") {
+        e.preventDefault();
+        setFocusedRowIndex(0);
+      }
+      return;
+    }
+
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      setFocusedRowIndex((prev) => (prev! + 1) % rowCount);
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      setFocusedRowIndex((prev) => (prev! - 1 + rowCount) % rowCount);
+    } else if (e.key === "Enter") {
+      e.preventDefault();
+
+      const selectedData: PersonnelData = {
+        name: rowData[1],
+        kanaName: rowData[2],
+      };
+
+      onSelectAndClose(selectedData);
+    }
+  };
+
+  const rowRefs = useRef<(HTMLDivElement | null)[]>([]);
+  useEffect(() => {
+    if (focusedRowIndex !== null && rowRefs.current[focusedRowIndex]) {
+      rowRefs.current[focusedRowIndex]?.scrollIntoView({
+        block: "nearest",
+        inline: "nearest",
+      });
+    }
+  }, [focusedRowIndex]);
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-      <div className="bg-white p-4 rounded-lg shadow-xl border border-gray-400 w-1/2">
+      <div className="bg-white p-4 rounded-lg shadow-xl border border-gray-400 w-[800px]">
         <div>
           <div className="text-center h-8 text-sm bg-[#80bad7] border border-black py-1 font-semibold">
             担当者検索
@@ -58,12 +123,17 @@ const PersonnelSearchModal: React.FC<PersonnelSearchModalProps> = ({
                     </select>
                   </form>
                   <input
+                    ref={firstInputRef}
                     type="text"
                     className="w-64 p-1 border border-gray-500 bg-[#ebcec0]"
                     onKeyDown={(e) => {
                       handleFormatting(e, convertToFullWidth);
+                      handleOpenTable(e);
                     }}
-                    onChange={(e) => convertToFullWidth(e.target.value)}
+                    onChange={(e) => {
+                      convertToFullWidth(e.target.value);
+                      setCode(e.target.value);
+                    }}
                   />
                 </>
               </div>
@@ -142,8 +212,8 @@ const PersonnelSearchModal: React.FC<PersonnelSearchModalProps> = ({
         </div>
         <h1 className="mt-2">検索結果：{rowCount}件</h1>
         {showTable && (
-          <div className="h-48 overflow-y-auto mt-2">
-            <div className="flex w-full sticky top-0">
+          <div>
+            <div className="flex w-full sticky top-0 pr-3">
               {tableHeaders.map((header, colIndex) => (
                 <div
                   key={header}
@@ -154,18 +224,28 @@ const PersonnelSearchModal: React.FC<PersonnelSearchModalProps> = ({
                 </div>
               ))}
             </div>
-            <div>
+            <div
+              ref={tableContainerRef}
+              tabIndex={0}
+              onKeyDown={handleTableKeyDown}
+              className="h-48 overflow-y-auto outline-none"
+            >
               {Array.from({ length: rowCount }).map((_, rowIndex) => (
                 <div
                   key={rowIndex}
-                  className="flex"
-                  onClick={() => setSelectedRow(true)}
+                  ref={(el) => {
+                    rowRefs.current[rowIndex] = el;
+                  }}
+                  className={`flex cursor-pointer ${
+                    focusedRowIndex === rowIndex ? "bg-blue-200" : ""
+                  }`}
+                  onClick={() => setFocusedRowIndex(rowIndex)}
                 >
                   {rowData.map((data, cellIndex) => (
                     <div
                       key={cellIndex}
                       style={{ width: colWidths[cellIndex] }}
-                      className=" pl-1 flex items-center border border-[#DFDEDE] text-sm m-0.5 bg-[#ebcec0] h-8"
+                      className=" pl-1 flex items-center text-sm m-0.5 h-8"
                     >
                       {data}
                     </div>
@@ -177,7 +257,7 @@ const PersonnelSearchModal: React.FC<PersonnelSearchModalProps> = ({
         )}
         <div className="flex justify-center mt-4">
           <button
-            onClick={onClose}
+            onClick={() => onSelectAndClose({ name: "", kanaName: "" })}
             className="bg-[#D9D9D9] font-bold py-2 px-8 rounded border border-gray-500"
           >
             閉じる

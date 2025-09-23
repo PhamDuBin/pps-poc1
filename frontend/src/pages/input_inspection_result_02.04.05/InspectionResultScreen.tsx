@@ -2,25 +2,34 @@
 
 import RightPanel from "../../component/input_inspection_result/RightPanel";
 import TopBar from "../../component/input_inspection_result/TopBar";
-import { CustomerSearchModal } from "../../component/input_inspection_result/CustomerSearchModal";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import MainBusinessScreen from "../../component/input_inspection_result/MainBusinessScreen";
 import { handleNavigationKey } from "../../utils/InputHandlers";
 
 const InspectionResultScreen = () => {
-  const [isModalOpen, setIsModalOpen] = useState(true);
-
   const containerRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
 
     const handleContainerKeyDown = (e: KeyboardEvent) => {
-      const focusableElements = Array.from(
+      const topbarEls = Array.from(
         container.querySelectorAll(
-          'input, button, [role="registmodal"], select, textarea'
+          "#topbar input:not([disabled]), #topbar button:not([disabled]), #topbar select:not([disabled]), #topbar textarea:not([disabled])"
         )
       ) as HTMLElement[];
+      const rightEls = Array.from(
+        container.querySelectorAll(
+          "#rightpanel input:not([disabled]), #rightpanel button:not([disabled]), #rightpanel select:not([disabled]), #rightpanel textarea:not([disabled])"
+        )
+      ) as HTMLElement[];
+      const mainEls = Array.from(
+        container.querySelectorAll(
+          "#mainscreen input:not([disabled]), #mainscreen button:not([disabled]), #mainscreen select:not([disabled]), #mainscreen textarea:not([disabled])"
+        )
+      ) as HTMLElement[];
+
+      const focusableElements = [...topbarEls, ...rightEls, ...mainEls];
 
       const activeElement = document.activeElement as HTMLElement;
       const currentIndex = focusableElements.indexOf(activeElement);
@@ -41,16 +50,17 @@ const InspectionResultScreen = () => {
       ref={containerRef}
       className="w-full h-screen flex flex-col xl:text-base text-xs"
     >
-      <TopBar />
+      <div id="topbar">
+        <TopBar />
+      </div>
       <div className="flex-1 flex flex-row min-h-0">
-        <div className="w-full overflow-x-auto z-10">
+        <div id="mainscreen" className="w-full overflow-x-auto z-10">
           <MainBusinessScreen />
         </div>
-        <RightPanel />
+        <div id="rightpanel">
+          <RightPanel />
+        </div>
       </div>
-      {isModalOpen && (
-        <CustomerSearchModal onClose={() => setIsModalOpen(false)} />
-      )}
     </div>
   );
 };

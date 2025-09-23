@@ -14,7 +14,9 @@ import { labelColor } from "../../constants/colors";
 const MainBusinessScreen = () => {
   return (
     <div className="w-full p-1 flex flex-col bg-gray-100 min-w-[930px]">
-      <span className={`flex justify-center text-center items-center font-bold p-1 ${labelColor} text-[20px]`}>
+      <span
+        className={`flex justify-center text-center items-center font-bold p-1 ${labelColor} text-[20px]`}
+      >
         消費設備
       </span>
       <div className="mt-1 text-xs">
@@ -33,7 +35,9 @@ const MainBusinessScreen = () => {
         <Meter />
         <Vessel />
       </div>
-      <span className={`flex justify-center text-center items-center font-bold p-1 ${labelColor} text-[20px] mt-4 min-w-[919px]`}>
+      <span
+        className={`flex justify-center text-center items-center font-bold p-1 ${labelColor} text-[20px] mt-4 min-w-[919px]`}
+      >
         試験測定
       </span>
       <div className="mt-1 text-xs min-w-[919px]">

@@ -1,8 +1,27 @@
-import { DownArrowIcon } from "../transaction_information/LeftPanel";
 import AdvanceSearchModal from "../transaction_information/1.1.1_03/AdvanceSearchModal";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, KeyboardEvent } from "react";
 import { fieldDefinitions } from "../sale_slip_entry/LeftPanel";
 import React from "react";
+import { Button } from "antd";
+
+interface CustomerDetails {
+  name: string;
+  status: string;
+  supplyType: string;
+  address1: string;
+  address2: string;
+  phoneNumber: string;
+  district: string;
+  map: string;
+  distance: string;
+  guidance: string;
+  supplyStartDate: string;
+  consumptionSurveyDate: string;
+  buriedPipeDate: string;
+  supplyInspectionDate: string;
+  consumptionSurveyApplianceOnlyDate: string;
+  basementDate: string;
+}
 
 export const CustomerSearchModal = ({ onClose }: { onClose: () => void }) => {
   type FieldId = (typeof fieldDefinitions)[number]["id"];
@@ -13,15 +32,77 @@ export const CustomerSearchModal = ({ onClose }: { onClose: () => void }) => {
   );
   const currentField = fieldDefinitions.find((f) => f.id === selectedFieldId);
   const [formValues, setFormValues] = useState<FormValues>({});
-  const handleShowHardcodedCustomer = () => {};
+  const [officeCode, setOfficeCode] = useState(["", ""]);
+  const [officeName, setOfficeName] = useState("");
+  const [customerData, setCustomerData] = useState<CustomerDetails | null>(
+    null
+  );
+  const isCustomerCodeSelected = selectedFieldId === "customerCode";
+  const customerCodeValues = (formValues.customerCode as string[]) || [];
+  const areButtonsDisabled =
+    isCustomerCodeSelected &&
+    (!customerCodeValues[0] || !customerCodeValues[1]);
+  const areButtonsOfficeDisabled = !officeCode[0] || !officeCode[1];
 
   const firstInputRef = useRef<HTMLInputElement>(null);
+  const customerCode1Ref = useRef<HTMLInputElement>(null);
+  const resetCustomerBtnref = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     if (firstInputRef.current) {
       firstInputRef.current.focus();
     }
   }, []);
+
+  const handleOfficeSearch = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && officeCode[0] && officeCode[1]) {
+      e.preventDefault();
+      setOfficeName("関東地方営業事務所");
+    }
+  };
+
+  const showCustomerDetails = () => {
+    const mockData: CustomerDetails = {
+      name: "鈴木　カンクロウ",
+      status: "新規開栓",
+      supplyType: "個別",
+      address1: "埼玉県さいたま市なんちゃら０００１",
+      address2: "さいたま市宮団地００１−２０１号室",
+      phoneNumber: "03-1234-9999",
+      district: "空白〇〇〇〇",
+      map: "空白",
+      distance: "25km（53分）",
+      guidance: "空白〇〇〇〇",
+      supplyStartDate: "2025/05/01",
+      consumptionSurveyDate: "2025/05/01",
+      buriedPipeDate: "2025/05/01",
+      supplyInspectionDate: "2025/05/01",
+      consumptionSurveyApplianceOnlyDate: "2025/05/01",
+      basementDate: "2025/05/01",
+    };
+    setCustomerData(mockData);
+    setTimeout(() => {
+      if (resetCustomerBtnref.current) {
+        resetCustomerBtnref.current.focus();
+      }
+    }, 100);
+  };
+
+  const handleDynamicInputEnter = (
+    e: KeyboardEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      const currentValues = formValues[selectedFieldId];
+      if (
+        Array.isArray(currentValues)
+          ? currentValues.some((v) => v)
+          : currentValues
+      ) {
+        showCustomerDetails();
+      }
+    }
+  };
 
   if (showAdvanceSearch) {
     return (
@@ -30,7 +111,13 @@ export const CustomerSearchModal = ({ onClose }: { onClose: () => void }) => {
           <AdvanceSearchModal
             showAdvanceSearch={showAdvanceSearch}
             setShowAdvanceSearch={setShowAdvanceSearch}
-            onRowEnter={handleShowHardcodedCustomer}
+            onRowEnter={() => {
+              showCustomerDetails();
+              setFormValues((prev) => ({
+                ...prev,
+                customerCode: ["000000", "000000"],
+              }));
+            }}
           />
         </div>
       </div>
@@ -42,46 +129,59 @@ export const CustomerSearchModal = ({ onClose }: { onClose: () => void }) => {
     index: number | null = null
   ): void => {
     if (!currentField) return;
-    let newValues =
+    let newValues: string | string[] =
       formValues[selectedFieldId] ||
       (currentField.type === "multi" || currentField.type === "double"
         ? []
         : "");
-    if (
-      currentField.type === "multi" ||
-      currentField.type === "double" ||
-      currentField.type === "dropdown"
-    ) {
-      let tempArray: string[];
-      if (Array.isArray(newValues)) {
-        tempArray = [...newValues];
-      } else {
-        tempArray = currentField.type === "dropdown" ? ["0", ""] : [];
-      }
+
+    if (Array.isArray(newValues)) {
+      const tempArray = [...newValues];
       if (index !== null) {
         tempArray[index] = value;
       }
       newValues = tempArray;
+    } else {
+      if (
+        index !== null &&
+        (currentField.type === "multi" ||
+          currentField.type === "double" ||
+          currentField.type === "dropdown")
+      ) {
+        const tempArray = currentField.type === "dropdown" ? ["", ""] : [];
+        tempArray[index] = value;
+        newValues = tempArray;
+      } else {
+        newValues = value;
+      }
     }
+
     setFormValues((prev) => ({ ...prev, [selectedFieldId]: newValues }));
   };
 
   const renderDynamicInput = (): React.ReactNode => {
     if (!currentField) return null;
     const value = formValues[currentField.id];
+
+    const commonInputProps = {
+      onKeyDown: handleDynamicInputEnter,
+    };
+
     switch (currentField.type) {
       case "multi":
         return (
-          <div className="flex items-center space-x-1">
+          <div className="flex items-center space-x-1 mr-[1px]">
             {currentField.partSizes?.map((size, index) => (
               <React.Fragment key={index}>
                 <input
+                  ref={customerCode1Ref}
                   type="text"
                   placeholder="000"
                   className="w-20 h-6 border border-black p-1 text-center placeholder-gray-400 bg-[#ebcec0]"
                   style={{ width: `${size}px` }}
                   value={(Array.isArray(value) && value[index]) || ""}
                   onChange={(e) => handleValueChange(e.target.value, index)}
+                  {...commonInputProps}
                 />
                 {index < currentField.partSizes.length - 1 && <span>-</span>}
               </React.Fragment>
@@ -92,46 +192,45 @@ export const CustomerSearchModal = ({ onClose }: { onClose: () => void }) => {
         return (
           <div className="flex items-center space-x-1">
             <input
+              ref={customerCode1Ref}
               type="text"
               className="border border-black p-1 placeholder-gray-400 w-20 h-6 bg-[#ebcec0]"
               placeholder="000000"
-              onChange={(e) => {
-                handleValueChange(e.target.value, 0);
-              }}
+              value={(Array.isArray(value) && value[0]) || ""}
+              onChange={(e) => handleValueChange(e.target.value, 0)}
+              {...commonInputProps}
             />
             <span> - </span>
             <input
               type="text"
               className="border w-20 h-6 border-gray-400 p-1 bg-[#ebcec0]"
               value={(Array.isArray(value) && value[1]) || ""}
-              onChange={(e) => {
-                handleValueChange(e.target.value, 1);
-              }}
+              onChange={(e) => handleValueChange(e.target.value, 1)}
               placeholder="000000"
+              {...commonInputProps}
             />
           </div>
         );
       case "double":
         return (
-          <div className="flex gap-1">
+          <div className="flex gap-4">
             <input
+              ref={customerCode1Ref}
               type="text"
               className="border w-20 h-6 border-gray-400 p-1 placeholder-gray-400 bg-[#ebcec0]"
               value={(Array.isArray(value) && value[0]) || ""}
-              onChange={(e) => {
-                handleValueChange(e.target.value, 0);
-              }}
+              onChange={(e) => handleValueChange(e.target.value, 0)}
               placeholder="000000"
+              {...commonInputProps}
             />
             <div>-</div>
             <input
               type="text"
               className="border w-20 h-6 border-gray-400 p-1 placeholder-gray-400 bg-[#ebcec0]"
               value={(Array.isArray(value) && value[1]) || ""}
-              onChange={(e) => {
-                handleValueChange(e.target.value, 1);
-              }}
+              onChange={(e) => handleValueChange(e.target.value, 1)}
               placeholder="000000"
+              {...commonInputProps}
             />
           </div>
         );
@@ -139,29 +238,39 @@ export const CustomerSearchModal = ({ onClose }: { onClose: () => void }) => {
         return (
           <>
             <input
+              ref={customerCode1Ref}
               type="text"
-              className="border h-6 border-black p-1 w-44 mr-1 bg-[#ebcec0]"
+              className="border h-6 border-black p-1 w-[197px] mr-[-1px] bg-[#ebcec0]"
               value={(typeof value === "string" && value) || ""}
-              onChange={(e) => {
-                handleValueChange(e.target.value);
-              }}
+              onChange={(e) => handleValueChange(e.target.value)}
+              {...commonInputProps}
             />
           </>
         );
     }
   };
 
-  const isCustomerCodeSelected = selectedFieldId === "customerCode";
-  const customerCodeValues = (formValues.customerCode as string[]) || [];
-  const areButtonsDisabled =
-    isCustomerCodeSelected &&
-    (!customerCodeValues[0] || !customerCodeValues[1]);
-
   const handleResetCustomerCode = () => {
     setFormValues((prev) => ({
       ...prev,
       customerCode: ["", ""],
     }));
+    setCustomerData(null);
+    if (customerCode1Ref.current) {
+      customerCode1Ref.current.focus();
+    }
+  };
+
+  const handleResetOfficeCode = () => {
+    setFormValues((prev) => ({
+      ...prev,
+      officeCode: ["", ""],
+    }));
+    setOfficeCode(["", ""]);
+    setOfficeName("");
+    if (firstInputRef.current) {
+      firstInputRef.current.focus();
+    }
   };
 
   return (
@@ -179,17 +288,40 @@ export const CustomerSearchModal = ({ onClose }: { onClose: () => void }) => {
                 </span>
                 <input
                   ref={firstInputRef}
-                  className="w-16 h-6 border border-black"
+                  className="w-20 h-6 border border-black text-center"
+                  value={officeCode[0]}
+                  onChange={(e) =>
+                    setOfficeCode([e.target.value, officeCode[1]])
+                  }
+                  onKeyDown={handleOfficeSearch}
                 />
                 <p>-</p>
-                <input className="w-16 h-6 border border-black" />
-                <button
+                <input
+                  className="w-20 h-6 border border-black text-center"
+                  value={officeCode[1]}
+                  onChange={(e) =>
+                    setOfficeCode([officeCode[0], e.target.value])
+                  }
+                  onKeyDown={handleOfficeSearch}
+                />
+                <Button
                   onClick={() => setShowAdvanceSearch(true)}
-                  className="w-[22px] h-[22px] flex items-center justify-center border border-gray-500"
+                  className="w-[22px] h-[22px] flex items-center justify-center border border-gray-500 shadow-md shadow-zinc-600"
                 >
-                  <DownArrowIcon />
-                </button>
-                <p>関東地方営業事務所</p>
+                  ▼
+                </Button>
+                <p>{officeName}</p>
+                <Button
+                  onClick={handleResetOfficeCode}
+                  disabled={areButtonsOfficeDisabled}
+                  className={`w-14 h-6 flex justify-center items-center border border-b rounded-md ml-[2.8rem] ${
+                    areButtonsOfficeDisabled
+                      ? "bg-gray-300 text-gray-500 cursor-not-allowed "
+                      : "bg-white shadow-md shadow-zinc-600"
+                  }`}
+                >
+                  再入力
+                </Button>
               </div>
 
               <div className="flex flex-row items-center gap-4 mt-2">
@@ -197,9 +329,10 @@ export const CustomerSearchModal = ({ onClose }: { onClose: () => void }) => {
                   <select
                     className="bg-[#D9D9D9] w-28 h-6 text-center"
                     value={selectedFieldId}
-                    onChange={(e) =>
-                      setSelectedFieldId(e.target.value as FieldId)
-                    }
+                    onChange={(e) => {
+                      setSelectedFieldId(e.target.value as FieldId);
+                      setCustomerData(null);
+                    }}
                   >
                     {fieldDefinitions.map((field) => (
                       <option key={field.id} value={field.id}>
@@ -210,145 +343,130 @@ export const CustomerSearchModal = ({ onClose }: { onClose: () => void }) => {
 
                   <div className="flex">{renderDynamicInput()}</div>
                 </>
-                <button
+                <Button
                   onClick={() => setShowAdvanceSearch(true)}
-                  className="w-[22px] h-[22px] flex items-center justify-center border border-gray-500"
+                  className="w-[18px] h-[22px] flex items-center justify-center border border-gray-500 shadow-md shadow-zinc-600"
                 >
-                  <DownArrowIcon />
-                </button>
-                <button
+                  ▼
+                </Button>
+                <Button
                   onClick={onClose}
                   disabled={areButtonsDisabled}
                   className={`w-11 h-6 flex justify-center items-center border border-b rounded-md ${
                     areButtonsDisabled
                       ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                      : "bg-white"
+                      : "bg-white shadow-md shadow-zinc-600"
                   }`}
                 >
                   確定
-                </button>
-                <button
+                </Button>
+                <Button
+                  ref={resetCustomerBtnref}
                   onClick={handleResetCustomerCode}
                   disabled={areButtonsDisabled}
                   className={`w-14 h-6 flex justify-center items-center border border-b rounded-md ${
                     areButtonsDisabled
                       ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                      : "bg-white"
+                      : "bg-white shadow-md shadow-zinc-600"
                   }`}
                 >
                   再入力
-                </button>
+                </Button>
               </div>
             </div>
           </div>
 
-          {/* ==== Phần thông tin chi tiết ==== */}
           <div className="mt-4 px-2">
             <span className="font-bold">顧客情報詳細</span>
-            <div className="border border-black p-2 h-40 mt-1 text-sm">
-              {/* Hàng 1 */}
-              <div className="flex items-center mb-1">
+            <div className="border border-black p-4 mt-1 text-sm">
+              <div className="grid grid-cols-[auto_1fr_auto_1fr_auto_1fr] items-center gap-x-4 gap-y-2">
                 <span className="w-20 h-6 flex items-center justify-center bg-gray-300 border border-black font-bold">
                   氏名
                 </span>
-                <span className="ml-2">鈴木　カンクロウ</span>
-
-                <span className="ml-6 w-20 h-6 flex items-center justify-center bg-gray-300 border border-black font-bold">
+                <span>{customerData?.name}</span>
+                <span className="w-20 h-6 flex items-center justify-center bg-gray-300 border border-black font-bold">
                   開閉
                 </span>
-                <span className="ml-2">新規開栓</span>
-
-                <span className="ml-6 w-20 h-6 flex items-center justify-center bg-gray-300 border border-black font-bold">
+                <span>{customerData?.status}</span>
+                <span className="w-20 h-6 flex items-center justify-center bg-gray-300 border border-black font-bold">
                   供給
                 </span>
-                <span className="ml-2">個別</span>
-              </div>
-
-              {/* Hàng 2 */}
-              <div className="flex items-center mb-1">
-                <span className="w-20 h-6 flex items-center justify-center bg-gray-300 border border-black font-bold">
+                <span>{customerData?.supplyType}</span>
+                <span className="w-20 h-6 flex items-center justify-center bg-gray-300 border border-black font-bold row-span-2">
                   住所
                 </span>
-                <div className="ml-2">
-                  <p>埼玉県さいたま市なんちゃら０００１</p>
-                  <p>さいたま市宮団地００１−２０１号室</p>
+                <div className="col-span-3">
+                  <p>{customerData?.address1}</p>
+                  <p>{customerData?.address2}</p>
                 </div>
-
-                <span className="ml-6 w-20 h-6 flex items-center justify-center bg-gray-300 border border-black font-bold">
+                <span className="w-20 h-6 flex items-center justify-center bg-gray-300 border border-black font-bold">
                   電話番号
                 </span>
-                <span className="ml-2">03-1234-9999</span>
-              </div>
+                <span>{customerData?.phoneNumber}</span>
 
-              {/* Hàng 3 */}
-              <div className="flex items-center mb-1 mt-3">
+                <div className="col-span-3"></div>
+                <div></div>
+                <div></div>
                 <span className="w-20 h-6 flex items-center justify-center bg-gray-300 border border-black font-bold">
                   地区
                 </span>
-                <span className="ml-2">空白〇〇〇〇</span>
-
-                <span className="ml-6 w-20 h-6 flex items-center justify-center bg-gray-300 border border-black font-bold">
+                <span>{customerData?.district}</span>
+                <span className="w-20 h-6 flex items-center justify-center bg-gray-300 border border-black font-bold">
                   地図
                 </span>
-                <span className="ml-2">空白</span>
-
-                <span className="ml-6 w-20 h-6 flex items-center justify-center bg-gray-300 border border-black font-bold">
+                <span>{customerData?.map}</span>
+                <span className="w-20 h-6 flex items-center justify-center bg-gray-300 border border-black font-bold">
                   距離
                 </span>
-                <span className="ml-2">25km（53分）</span>
-              </div>
-
-              {/* Hàng 4 */}
-              <div className="flex items-center mt-3">
+                <span>{customerData?.distance}</span>
                 <span className="w-20 h-6 flex items-center justify-center bg-gray-300 border border-black font-bold">
                   案内
                 </span>
-                <span className="ml-2">空白〇〇〇〇</span>
+                <span className="col-span-5">{customerData?.guidance}</span>
               </div>
             </div>
           </div>
-          {/* ==== Phần thông tin chi tiết 2==== */}
-          <div className="mt-4 px-2 font-bold">
+          <div className="mt-4 px-2">
             <span className="font-bold">前回実施情報</span>
-            <div className="border border-black p-2 h-16 mt-1 text-sm">
-              <div className="flex justify-between">
-                <div className="flex flex-row">
-                  <span className="w-28 h-5 bg-[#D9D9D9] flex justify-center items-center">
+            <div className="border border-black p-4 mt-1 text-sm">
+              <div className="grid grid-cols-3 gap-x-4 gap-y-2">
+                <div className="flex items-center">
+                  <span className="w-32 h-6 bg-[#D9D9D9] flex justify-center items-center text-center">
                     供給開始
                   </span>
-                  <p className="ml-2">2025/05/01</p>
+                  <p className="ml-4">{customerData?.supplyStartDate}</p>
                 </div>
-                <div className="flex flex-row">
-                  <span className="w-28 h-5 bg-[#D9D9D9] flex justify-center items-center">
+                <div className="flex items-center">
+                  <span className="w-32 h-6 bg-[#D9D9D9] flex justify-center items-center text-center">
                     消費調査
                   </span>
-                  <p className="ml-2">2025/05/01</p>
+                  <p className="ml-4">{customerData?.consumptionSurveyDate}</p>
                 </div>
-                <div className="flex flex-row">
-                  <span className="w-28 h-5 bg-[#D9D9D9] flex justify-center items-center">
+                <div className="flex items-center">
+                  <span className="w-32 h-6 bg-[#D9D9D9] flex justify-center items-center text-center">
                     埋設管
                   </span>
-                  <p className="ml-2">2025/05/01</p>
+                  <p className="ml-4">{customerData?.buriedPipeDate}</p>
                 </div>
-              </div>
-              <div className="flex justify-between mt-2">
-                <div className="flex flex-row">
-                  <span className="w-28 h-5 bg-[#D9D9D9] flex justify-center items-center">
+                <div className="flex items-center">
+                  <span className="w-32 h-6 bg-[#D9D9D9] flex justify-center items-center text-center">
                     供給点検
                   </span>
-                  <p className="ml-2">2025/05/01</p>
+                  <p className="ml-4">{customerData?.supplyInspectionDate}</p>
                 </div>
-                <div className="flex flex-row">
-                  <span className="w-28 h-5 bg-[#D9D9D9] flex justify-center items-center text-[11px]">
+                <div className="flex items-center">
+                  <span className="w-32 h-6 bg-[#D9D9D9] flex justify-center items-center text-center text-[11px] leading-tight">
                     消費調査（器具のみ）
                   </span>
-                  <p className="ml-2">2025/05/01</p>
+                  <p className="ml-4">
+                    {customerData?.consumptionSurveyApplianceOnlyDate}
+                  </p>
                 </div>
-                <div className="flex flex-row">
-                  <span className="w-28 h-5 bg-[#D9D9D9] flex justify-center items-center">
+                <div className="flex items-center">
+                  <span className="w-32 h-6 bg-[#D9D9D9] flex justify-center items-center text-center">
                     地下室
                   </span>
-                  <p className="ml-2">2025/05/01</p>
+                  <p className="ml-4">{customerData?.basementDate}</p>
                 </div>
               </div>
             </div>
@@ -379,12 +497,12 @@ export const CustomerSearchModal = ({ onClose }: { onClose: () => void }) => {
             </div>
           </div>
           <div className="w-full flex justify-center items-center mt-5">
-            <button
+            <Button
               onClick={onClose}
-              className="w-36 h-10 bg-[#D9D9D9] font-bold"
+              className="w-36 h-10 bg-[#D9D9D9] font-bold shadow-md shadow-zinc-600"
             >
               閉じる
-            </button>
+            </Button>
           </div>
         </div>
       </div>

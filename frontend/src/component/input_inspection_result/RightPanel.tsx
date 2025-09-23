@@ -1,10 +1,10 @@
-import { DownArrowIcon } from "../transaction_information/LeftPanel";
 import "react-day-picker/dist/style.css";
 import React, { useState } from "react";
 import { DatePickerInput } from "../../context/DatePickerInput";
 import CustomModal from "../../context/CustomModal";
 import { CustomerSearchModal } from "./CustomerSearchModal";
 import { inputColor, labelColor } from "../../constants/colors";
+import { Button } from "antd";
 
 const SurveyRow = ({ onOpenModal }: { onOpenModal: () => void }) => (
   <div className="flex flex-row relative w-full">
@@ -18,12 +18,12 @@ const SurveyRow = ({ onOpenModal }: { onOpenModal: () => void }) => (
     <div className="w-[70%] ml-auto h-auto">
       <DatePickerInput />
     </div>
-    <button
+    <Button
       onClick={onOpenModal}
       className="w-[30%] border border-black bg-[#80bad7]"
     >
       備考
-    </button>
+    </Button>
   </div>
 );
 
@@ -279,7 +279,9 @@ const RightPanel = () => {
             />
           ))}
           <div className="flex flex-row mt-2">
-            <span className={`w-[15%] flex items-center justify-center border border-black ${labelColor}`}>
+            <span
+              className={`w-[15%] flex items-center justify-center border border-black ${labelColor}`}
+            >
               周知
             </span>
 
@@ -303,7 +305,7 @@ const RightPanel = () => {
                     : `${inputColor} opacity-50 cursor-not-allowed`
                 }`}
             >
-              <DownArrowIcon />
+              ▼
             </button>
 
             <span className="w-[15%] flex items-center justify-center border border-black bg-[#80bad7]">
@@ -327,14 +329,14 @@ const RightPanel = () => {
                     : `${inputColor} opacity-50 cursor-not-allowed`
                 }`}
             >
-              <DownArrowIcon />
+              ▼
             </button>
           </div>
         </div>
         <div className="mt-2">
           <span className={`${label} font-bold  w-full`}>交換部品</span>
           <div className="flex flex-row">
-            <button
+            <Button
               className={`${label} !w-1/3`}
               onClick={() => {
                 setModalF2Open(true);
@@ -342,7 +344,7 @@ const RightPanel = () => {
               }}
             >
               商品名
-            </button>
+            </Button>
             <span className={`${label} !w-1/3`}>数量</span>
             <span className={`${label} !w-1/3`}>商品名</span>
           </div>
@@ -524,23 +526,29 @@ const RightPanel = () => {
           </div>
         </div>
         <div className="flex flex-row justify-between mt-2">
-          <button className="w-1/4 border border-black rounded-lg bg-[#f0ff98] p-1">地図</button>
-          <button className="w-1/4 border border-black rounded-lg bg-[#f0ff98] p-1">図面</button>
-          <button className="w-1/4 border border-black rounded-lg bg-[#f0ff98] p-1">写真</button>
+          <Button className="w-1/4 border border-black rounded-lg bg-[#f0ff98] p-1">
+            地図
+          </Button>
+          <Button className="w-1/4 border border-black rounded-lg bg-[#f0ff98] p-1">
+            図面
+          </Button>
+          <Button className="w-1/4 border border-black rounded-lg bg-[#f0ff98] p-1">
+            写真
+          </Button>
         </div>
         <div className="flex flex-row justify-between mt-2">
-          <button
+          <Button
             onClick={() => setIsCustomerModalOpen(true)}
             className="w-2/5 border border-black bg-[#f0ff98] shadow-xl p-2"
           >
             保存（S)
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={() => setIsCustomerModalOpen(true)}
             className="w-2/5 border border-black bg-[#f0ff98] shadow-xl p-2"
           >
             閉じる（C)
-          </button>
+          </Button>
         </div>
       </div>
       <CustomModal
