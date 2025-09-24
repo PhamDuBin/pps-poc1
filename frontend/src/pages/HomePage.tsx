@@ -81,6 +81,12 @@ export default function HomePage() {
           → Configuration Information Screen (04.05.04_請求書発行_構成情報_0808)
         </Link>
       </div>
+      <div>
+        <Link to="/customer-ledger" className="text-blue-500 underline">
+          → Customer Ledger Screen
+          (01.04.03_顧客台帳_構成情報（変更画面追加）0906)
+        </Link>
+      </div>
       <button
         onClick={handleLogout}
         className="mt-6 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
