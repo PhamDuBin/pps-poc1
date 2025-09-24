@@ -1,9 +1,10 @@
 import { labelColor } from "../../constants/colors";
 import { Select, Button, Radio, Input } from "antd";
+import FamilyInfo from "./FamilyInfo";
 
 const MainBusinessScreen = () => {
   return (
-    <div className="h-screen w-full flex flex-col px-4 py-2 ">
+    <div className="h-screen w-full flex flex-col px-4 py-2">
       {/* label header */}
       <span
         className={`w-full h-10 rounded-md font-bold xl:text-2xl text-xl flex text-center justify-center items-center ${labelColor}`}
@@ -108,7 +109,9 @@ const MainBusinessScreen = () => {
       </div>
       {/* content area */}
       <div className="w-full h-[70%] flex justify-center items-center text-sm">
-        <div className="w-[90%] h-full border border-black p-4 overflow-auto"></div>
+        <div className="w-[90%] h-full border border-black p-4 overflow-auto">
+          <FamilyInfo />
+        </div>
       </div>
       {/* footer */}
       <div className="flex flex-col text-sm w-full justify-center items-center mt-2">
@@ -131,7 +134,7 @@ const MainBusinessScreen = () => {
           <div className="flex flex-row justify-between w-full">
             {/* マスター情報 */}
             <div className="flex flex-col w-[40%]">
-              <span className="h-8 border border-black font-bold flex text-center justify-center items-center w-full">
+              <span className="h-8 border border-gray-300 rounded-md font-bold flex text-center justify-center items-center w-full">
                 マスター情報
               </span>
               <div className="flex flex-row w-full">
@@ -161,7 +164,7 @@ const MainBusinessScreen = () => {
 
             {/* 伝票入力 */}
             <div className="flex flex-col w-[30%]">
-              <span className="h-8 border border-black font-bold flex text-center justify-center items-center w-full">
+              <span className="h-8 border border-gray-300 rounded-md font-bold flex text-center justify-center items-center w-full">
                 伝票入力
               </span>
               <div className="flex flex-row w-full">
