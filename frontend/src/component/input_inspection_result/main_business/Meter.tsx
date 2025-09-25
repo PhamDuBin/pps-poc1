@@ -1,6 +1,7 @@
 import { useState } from "react";
 import ModalF1 from "../../modal/Modal_F1";
 import { labelColor, inputColor } from "../../../constants/colors";
+import { handleNumericSelectKeyDown } from "../../../utils/InputHandlers";
 
 const Meter = () => {
   const [modalF1Open, setModalF1Open] = useState(false);
@@ -34,6 +35,7 @@ const Meter = () => {
   const [states, setStates] = useState<number[][]>(
     Array.from({ length: totalRows }, () => Array(1).fill(0))
   );
+  const [selectValue, setSelectValue] = useState(0);
 
   const rows = [
     {
@@ -68,12 +70,16 @@ const Meter = () => {
     });
   };
 
+  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectValue(parseInt(e.target.value, 10));
+  };
+
   return (
     <>
       <span
         className={`flex justify-start text-start font-bold p-1 my-1 ${labelColor} mt-4`}
       >
-        供給管
+        メーター
       </span>
       <div className="flex gap-x-4 mb-1 p-2 border border-black items-center text-xs">
         <div>認定対象区分</div>
@@ -84,7 +90,7 @@ const Meter = () => {
           {labels[statelabel]}
         </button>
       </div>
-      <div className="w-full min-w-[922px] text-xs">
+      <div className="w-full min-w-[922px] text-[10px]">
         <div className="overflow-auto border border-black">
           <table className="w-full  table-fixed border-collapse">
             <thead className={`h-[38px] ${labelColor}`}>
@@ -106,25 +112,17 @@ const Meter = () => {
               {rows.map((row, idx) => {
                 const rowHasCheck = states[idx].some((s) => s === 3);
                 return (
-                  <tr key={idx} className="h-10">
-                    <td
-                      className={`border border-black text-center ${inputColor}`}
-                    >
+                  <tr key={idx} className="h-6">
+                    <td className={`border border-black text-center`}>
                       {row.type}
                     </td>
-                    <td
-                      className={`border border-black text-center ${inputColor}`}
-                    >
+                    <td className={`border border-black text-center`}>
                       {row.manufacturer}
                     </td>
-                    <td
-                      className={`border border-black text-center ${inputColor}`}
-                    >
+                    <td className={`border border-black text-center`}>
                       {row.model}
                     </td>
-                    <td
-                      className={`border border-black text-center  ${inputColor}`}
-                    >
+                    <td className={`border border-black text-center `}>
                       {row.製造番号}
                     </td>
                     <td
@@ -137,7 +135,7 @@ const Meter = () => {
                     >
                       ▼
                     </td>
-                    <td className={`border border-black p-0 ${inputColor}`}>
+                    <td className={`border border-black p-0`}>
                       <input
                         type="number"
                         className={`w-full h-full border-none text-center bg-transparent outline-none`}
@@ -145,6 +143,16 @@ const Meter = () => {
                     </td>
                     <td className={`border border-black p-0 ${inputColor}`}>
                       <select
+                        value={selectValue}
+                        onChange={handleSelectChange}
+                        onKeyDown={(e) =>
+                          handleNumericSelectKeyDown(e, (val) => {
+                            const numVal = parseInt(val, 10);
+                            if (numVal < options.length) {
+                              setSelectValue(numVal);
+                            }
+                          })
+                        }
                         className={`w-full h-full font-medium bg-transparent outline-none text-center`}
                       >
                         {options.map((opt, i) => (
@@ -156,7 +164,7 @@ const Meter = () => {
                     </td>
                     <td
                       className={`border border-black text-center cursor-pointer ${inputColor}`}
-                      onClick={() => handleClick(idx, 0)} // Chỉ có 1 cột trong state
+                      onClick={() => handleClick(idx, 0)}
                     >
                       {symbols[states[idx][0]]}
                     </td>

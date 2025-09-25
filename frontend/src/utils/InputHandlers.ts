@@ -342,3 +342,13 @@ export function allowDecimalInput(e: React.FormEvent<HTMLInputElement>) {
     target.value = parts[0] + "." + parts.slice(1).join("");
   }
 }
+
+export const handleNumericSelectKeyDown = (
+  e: React.KeyboardEvent<HTMLSelectElement>,
+  setValue: (val: string) => void
+) => {
+  if (/^[0-9]$/.test(e.key)) {
+    e.preventDefault();
+    setValue(e.key);
+  }
+};

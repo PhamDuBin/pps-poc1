@@ -30,7 +30,7 @@ const Siren = () => {
       >
         警報器
       </span>
-      <div className="flex flex-row p-1 w-full text-xs">
+      <div className="flex flex-row p-1 w-full text-[10px]">
         <span
           className={`w-1/12 border border-black p-1 flex justify-center min-w-[83px] ${labelColor}`}
         >
@@ -60,7 +60,7 @@ const Siren = () => {
           className={`border border-black w-12 ml-3 ${inputColor}`}
         ></input>
       </div>
-      <div className="w-full min-w-[922px] text-xs mt-2">
+      <div className="w-full min-w-[922px] text-[10px] mt-2">
         <div className="overflow-auto h-40 border border-black">
           <table className="w-full  table-fixed border-collapse">
             <thead className={`h-[35px]`}>
@@ -111,16 +111,22 @@ const Siren = () => {
               {Array.from({ length: totalRows }).map((_, row) => {
                 const rowHasCheck = states[row].some((s) => s === 3);
                 return (
-                  <tr key={row} className={`${inputColor} h-10`}>
-                    <td className="border border-black text-center">
+                  <tr key={row} className={`${inputColor} h-6`}>
+                    <td className="border border-black text-center bg-white">
                       {row + 1}
                     </td>
-                    <td className="border border-black text-center">
+                    <td className="border border-black text-center bg-white">
                       メーカー名
                     </td>
-                    <td className="border border-black text-center">xxx003</td>
-                    <td className="border border-black text-center">00001</td>
-                    <td className="border border-black text-center">2012/01</td>
+                    <td className="border border-black text-center bg-white">
+                      xxx003
+                    </td>
+                    <td className="border border-black text-center bg-white">
+                      00001
+                    </td>
+                    <td className="border border-black text-center bg-white">
+                      2012/01
+                    </td>
                     <td
                       className={`border border-black text-center ${
                         rowHasCheck ? "bg-red-500" : ""

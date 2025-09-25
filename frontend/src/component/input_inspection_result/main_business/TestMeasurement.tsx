@@ -2,10 +2,8 @@ import { useState } from "react";
 import { labelColor, inputColor } from "../../../constants/colors";
 
 const TestMeasurement = () => {
-  const label =
-    `w-1/6 flex text-center justify-center ${labelColor} border border-black h-6`;
-  const input =
-    `w-1/12 flex text-center justify-center ${inputColor} border border-black h-6 border-gray-600`;
+  const label = `w-1/6 flex text-center justify-center ${labelColor} border border-black h-6`;
+  const input = `w-1/12 flex text-center justify-center ${inputColor} border border-black h-6 border-gray-600`;
   const button = `w-[30px] border border-black h-6 border-gray-600 ${inputColor}`;
 
   // State quản lý checkbox
@@ -47,7 +45,7 @@ const TestMeasurement = () => {
   return (
     <>
       {/* Header */}
-      <div className={`p-1 flex flex-row text-sm w-full `}>
+      <div className={`p-1 flex flex-row text-[10px] w-full `}>
         <select className={`border border-black w-1/12 ${inputColor}`}>
           <option>供給点検</option>
           <option>消費調査</option>
@@ -103,7 +101,7 @@ const TestMeasurement = () => {
       </div>
 
       {/* row 1: 圧力検査 */}
-      <div className="flex flex-row">
+      <div className="flex flex-row text-[10px]">
         <span className={`${label} font-bold`}>圧力検査</span>
         <span className={label}>調整圧力</span>
 
@@ -166,7 +164,7 @@ const TestMeasurement = () => {
       </div>
 
       {/* row 2: 気密試験 */}
-      <div className="flex flex-row">
+      <div className="flex flex-row text-[10px]">
         <span className={`${label} font-bold`}>気密試験</span>
         <span className={label}>初期圧力</span>
 
@@ -199,7 +197,9 @@ const TestMeasurement = () => {
 
         <span className={label}>点検方法</span>
         {airtightChecked ? (
-          <select className={`${inputColor} w-1/6 flex text-center justify-center border border-black h-6`}>
+          <select
+            className={`${inputColor} w-1/6 flex text-center justify-center border border-black h-6`}
+          >
             <option>空白</option>
             <option>掘出調査</option>
             <option>気密試験</option>
@@ -227,7 +227,7 @@ const TestMeasurement = () => {
         </button>
       </div>
       {/* row 3: 漏洩試験 */}
-      <div className="flex flex-row">
+      <div className="flex flex-row text-[10px]">
         <span className={`${label} font-bold`}>気密試験</span>
         <span className={label}>初期圧力</span>
 
@@ -260,7 +260,9 @@ const TestMeasurement = () => {
 
         <span className={label}>点検方法</span>
         {leakageChecked ? (
-          <select className={`${inputColor} w-1/6 flex text-center justify-center border border-black h-6`}>
+          <select
+            className={`${inputColor} w-1/6 flex text-center justify-center border border-black h-6`}
+          >
             <option>空白</option>
             <option>掘出調査</option>
             <option>気密試験</option>

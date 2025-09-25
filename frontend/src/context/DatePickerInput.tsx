@@ -5,7 +5,13 @@ import type { Dayjs } from "dayjs";
 import dayjs from "dayjs";
 import { DownArrowIcon } from "../component/transaction_information/LeftPanel";
 
-export const DatePickerInput = () => {
+type DatePickerInputProps = {
+  disabled?: boolean;
+};
+
+export const DatePickerInput: React.FC<DatePickerInputProps> = ({
+  disabled,
+}) => {
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(
     dayjs(new Date())
   );
@@ -17,6 +23,7 @@ export const DatePickerInput = () => {
   return (
     <div className="relative flex-grow">
       <DatePicker
+        disabled={disabled}
         value={selectedDate}
         defaultValue={dayjs()}
         onChange={handleChange}

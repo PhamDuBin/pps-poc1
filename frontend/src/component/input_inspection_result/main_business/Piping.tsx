@@ -1,7 +1,7 @@
 import { useState } from "react";
 import ModalF1 from "../../modal/Modal_F1";
 import { labelColor, inputColor } from "../../../constants/colors";
-
+import { handleNumericSelectKeyDown } from "../../../utils/InputHandlers";
 const Piping = () => {
   const [modalF1Open, setModalF1Open] = useState(false);
 
@@ -10,14 +10,14 @@ const Piping = () => {
   const [state, setState] = useState(0);
 
   const inspectionMethods = [
-    { value: 0, label: "未選択" },
-    { value: 1, label: "掘出調査" },
-    { value: 2, label: "気密試験" },
-    { value: 3, label: "漏洩試験" },
-    { value: 4, label: "目視" },
-    { value: 5, label: "ボーリング調査" },
-    { value: 6, label: "検知装置" },
-    { value: 9, label: "その他" },
+    { value: 0, label: "0:未選択" },
+    { value: 1, label: "1:掘出調査" },
+    { value: 2, label: "2:気密試験" },
+    { value: 3, label: "3:漏洩試験" },
+    { value: 4, label: "4:目視" },
+    { value: 5, label: "5:ボーリング調査" },
+    { value: 6, label: "6:検知装置" },
+    { value: 9, label: "7:その他" },
   ];
 
   const totalRows = 20;
@@ -71,7 +71,7 @@ const Piping = () => {
           {labels[state]}
         </button>
       </div>
-      <div className="w-full min-w-[922px] text-xs mt-2">
+      <div className="w-full min-w-[922px] text-[10px] mt-2">
         <div className="overflow-auto h-40 border border-black">
           <table className="w-full table-fixed border-collapse">
             <thead className="h-[35px]">
@@ -129,12 +129,14 @@ const Piping = () => {
               {Array.from({ length: totalRows }).map((_, row) => {
                 const rowHasCheck = states[row].some((s) => s === 3);
                 return (
-                  <tr key={row} className={`${inputColor} h-10`}>
-                    <td className="border border-black text-center">
+                  <tr key={row} className={`${inputColor} h-6`}>
+                    <td className="border border-black text-center bg-white">
                       {row + 1}
                     </td>
-                    <td className="border border-black text-center">材料名</td>
-                    <td className="border border-black text-center"></td>
+                    <td className="border border-black text-center bg-white">
+                      材料名
+                    </td>
+                    <td className="border border-black text-center bg-white"></td>
                     <td
                       className={`border border-black text-center ${
                         rowHasCheck ? "bg-red-500" : ""
@@ -158,6 +160,15 @@ const Piping = () => {
                               className={`w-full h-full outline-none cursor-pointer text-center ${inputColor}`}
                               value={values[row]}
                               onChange={(e) => handleSelectChange(e, row)}
+                              onKeyDown={(e) =>
+                                handleNumericSelectKeyDown(e, (val) => {
+                                  setValues((prev) => {
+                                    const newVals = [...prev];
+                                    newVals[row] = parseInt(val, 10);
+                                    return newVals;
+                                  });
+                                })
+                              }
                             >
                               {inspectionMethods.map((option) => (
                                 <option key={option.value} value={option.value}>

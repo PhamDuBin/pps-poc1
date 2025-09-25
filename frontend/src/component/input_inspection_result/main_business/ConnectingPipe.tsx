@@ -1,6 +1,7 @@
 import { useState } from "react";
 import ModalF1 from "../../modal/Modal_F1";
 import { labelColor, inputColor } from "../../../constants/colors";
+import { handleNumericSelectKeyDown } from "../../../utils/InputHandlers";
 
 const ConnectingPipe = () => {
   const [modalF1Open, setModalF1Open] = useState(false);
@@ -21,6 +22,10 @@ const ConnectingPipe = () => {
 
   const [states, setStates] = useState<number[][]>(
     Array.from({ length: totalRows }, () => Array(10).fill(0))
+  );
+
+  const [selectValues, setSelectValues] = useState<number[]>(
+    Array(totalRows).fill(0)
   );
 
   const rows = [
@@ -47,6 +52,17 @@ const ConnectingPipe = () => {
     });
   };
 
+  const handleSelectChange = (
+    e: React.ChangeEvent<HTMLSelectElement>,
+    rowIndex: number
+  ) => {
+    setSelectValues((prev) => {
+      const newValues = [...prev];
+      newValues[rowIndex] = parseInt(e.target.value, 10);
+      return newValues;
+    });
+  };
+
   return (
     <>
       <div
@@ -59,7 +75,7 @@ const ConnectingPipe = () => {
       >
         接続管
       </span>
-      <div className="w-full min-w-[922px] text-xs mt-2">
+      <div className="w-full min-w-[922px] text-[10px] mt-2">
         <div className="overflow-auto border border-black">
           <table className="w-full  table-fixed border-collapse">
             <thead className="h-[38px]">
@@ -119,7 +135,7 @@ const ConnectingPipe = () => {
                   idx === 0 || row.group !== rows[idx - 1].group;
 
                 return (
-                  <tr key={idx} className="h-10">
+                  <tr key={idx} className="h-6">
                     {showGroup && (
                       <th
                         rowSpan={2}
@@ -128,14 +144,10 @@ const ConnectingPipe = () => {
                         {row.group}
                       </th>
                     )}
-                    <td
-                      className={`border border-black text-center ${inputColor}`}
-                    >
+                    <td className={`border border-black text-center  `}>
                       {row.no}
                     </td>
-                    <td
-                      className={`border border-black text-center ${inputColor}`}
-                    >
+                    <td className={`border border-black text-center`}>
                       材料名
                     </td>
                     <td
@@ -156,6 +168,20 @@ const ConnectingPipe = () => {
                             className={`border border-black p-0 ${inputColor}`}
                           >
                             <select
+                              value={selectValues[idx]}
+                              onChange={(e) => handleSelectChange(e, idx)}
+                              onKeyDown={(e) =>
+                                handleNumericSelectKeyDown(e, (val) => {
+                                  setSelectValues((prev) => {
+                                    const newVals = [...prev];
+                                    const numVal = parseInt(val, 10);
+                                    if (numVal < options.length) {
+                                      newVals[idx] = numVal;
+                                    }
+                                    return newVals;
+                                  });
+                                })
+                              }
                               className={`w-full h-full font-medium bg-transparent outline-none text-center ${inputColor}`}
                             >
                               {options.map((opt, i) => (

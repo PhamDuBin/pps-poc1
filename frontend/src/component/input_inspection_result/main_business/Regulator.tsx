@@ -57,7 +57,7 @@ const Regulator = () => {
       >
         調整器
       </span>
-      <div className="w-full min-w-[922px] text-xs">
+      <div className="w-full min-w-[922px] text-[10px]">
         <div className="overflow-auto border border-black">
           <table className="w-full  table-fixed border-collapse">
             <thead className={`h-[40px] ${labelColor}`}>
@@ -81,40 +81,26 @@ const Regulator = () => {
               {rows.map((row, idx) => {
                 const rowHasCheck = states[idx].some((s) => s === 3);
                 return (
-                  <tr key={idx} className="h-10">
-                    <td
-                      className={`border border-black text-center ${inputColor}`}
-                    >
+                  <tr key={idx} className="h-6">
+                    <td className={`border border-black text-center `}>
                       {row.no}
                     </td>
-                    <td
-                      className={`border border-black text-center ${inputColor}`}
-                    >
+                    <td className={`border border-black text-center`}>
                       {row.type}
                     </td>
-                    <td
-                      className={`border border-black text-center ${inputColor}`}
-                    >
+                    <td className={`border border-black text-center `}>
                       {row.maker}
                     </td>
-                    <td
-                      className={`border border-black text-center ${inputColor}`}
-                    >
+                    <td className={`border border-black text-center `}>
                       {row.model}
                     </td>
-                    <td
-                      className={`border border-black text-center ${inputColor}`}
-                    >
+                    <td className={`border border-black text-center `}>
                       {row.capacity}
                     </td>
-                    <td
-                      className={`border border-black text-center ${inputColor}`}
-                    >
+                    <td className={`border border-black text-center`}>
                       {row.manufacture}
                     </td>
-                    <td
-                      className={`border border-black text-center ${inputColor}`}
-                    >
+                    <td className={`border border-black text-center `}>
                       {row.valid}
                     </td>
                     <td

@@ -34,12 +34,14 @@ const Vessel = () => {
 
   return (
     <>
-      <span className={`flex justify-start font-bold p-1 my-1 ${labelColor} min-w-[919px] mt-4`}>
+      <span
+        className={`flex justify-start font-bold p-1 my-1 ${labelColor} min-w-[919px] mt-4`}
+      >
         容器
       </span>
 
       {/* Ô nhập số liệu */}
-      <div className="flex gap-x-4 mb-1 px-1 border border-black min-w-[919px]">
+      <div className="flex gap-x-4 mb-1 px-1 border border-black min-w-[919px] text-[10px]">
         <div className="flex my-2 gap-x-2 items-center">
           <input
             type="text"
@@ -72,7 +74,9 @@ const Vessel = () => {
           />
           <div>本</div>
         </div>
-        <div className={`flex justify-center items-center border border-black my-2 ${labelColor} w-20 h-8`}>
+        <div
+          className={`flex justify-center items-center border border-black my-2 ${labelColor} w-20 h-8`}
+        >
           貯蔵
         </div>
         <div className="flex my-2 gap-x-2 items-center">
@@ -86,16 +90,20 @@ const Vessel = () => {
       </div>
 
       {/* Bảng chính */}
-      <div className="flex gap-x-2 min-w-[919px]">
+      <div className="flex gap-x-2 min-w-[919px] text-[10px]">
         {/* Bảng trái */}
         <div className="flex">
-          <div className={`flex text-[12px] justify-center items-center font-bold border border-black w-36 ${labelColor}`}>
+          <div
+            className={`flex  justify-center items-center font-bold border border-black w-36 ${labelColor}`}
+          >
             基本項目
           </div>
           <div className="grid grid-cols-3">
             {leftLabels.map((label, idx) => (
               <div key={idx} className="flex items-center">
-                <div className={`border border-black h-8 flex items-center pl-2 text-xs w-36 ${labelColor}`}>
+                <div
+                  className={`border border-black h-8 flex items-center pl-2  w-36 ${labelColor}`}
+                >
                   {label}
                 </div>
                 <button
@@ -111,13 +119,17 @@ const Vessel = () => {
 
         {/* Bảng phải */}
         <div className="flex">
-          <div className={`flex text-[12px] justify-center items-center font-bold border border-black w-36 ${labelColor}`}>
+          <div
+            className={`flex  justify-center items-center font-bold border border-black w-36 ${labelColor}`}
+          >
             1t以上の貯蔵設備を対象
           </div>
           <div className="grid grid-cols-3">
             {rightLabels.map((label, idx) => (
               <div key={idx} className="flex items-center">
-                <div className={`border border-black h-8 flex items-center pl-2 text-xs w-36 ${labelColor}`}>
+                <div
+                  className={`border border-black h-8 flex items-center pl-2  w-36 ${labelColor}`}
+                >
                   {label}
                 </div>
                 <button

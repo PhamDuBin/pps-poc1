@@ -1,31 +1,105 @@
 import "react-day-picker/dist/style.css";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { DatePickerInput } from "../../context/DatePickerInput";
 import CustomModal from "../../context/CustomModal";
 import { CustomerSearchModal } from "./CustomerSearchModal";
 import { inputColor, labelColor } from "../../constants/colors";
 import { Button } from "antd";
+import { handleNumericSelectKeyDown } from "../../utils/InputHandlers";
 
-const SurveyRow = ({ onOpenModal }: { onOpenModal: () => void }) => (
-  <div className="flex flex-row relative w-full">
-    <select className="border border-black rounded-lg bg-[#ebcec0] w-[25%]">
-      <option value="0">空白</option>
-      <option value="1">拒否</option>
-      <option value="2">不在</option>
-      <option value="3">その他</option>
-    </select>
-
-    <div className="w-[70%] ml-auto h-auto">
-      <DatePickerInput />
-    </div>
-    <Button
-      onClick={onOpenModal}
-      className="w-[30%] border border-black bg-[#80bad7]"
-    >
-      備考
-    </Button>
-  </div>
+const DownArrowIcon = () => (
+  <svg width="12" height="12" viewBox="0 0 1024 1024" fill="currentColor">
+    <path d="M512 801.92L40.96 323.84 117.76 247.04 512 641.28 906.24 247.04 983.04 323.84z" />
+  </svg>
 );
+
+type CustomSelectProps = {
+  value?: string;
+  onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+  disabled?: boolean;
+  className?: string;
+  children: React.ReactNode;
+};
+
+const CustomSelectWithCenteredArrow: React.FC<CustomSelectProps> = ({
+  value,
+  onChange,
+  disabled,
+  className,
+  children,
+}) => {
+  return (
+    <div className="relative w-full h-1/2">
+      <select
+        value={""}
+        onChange={onChange}
+        disabled={disabled}
+        className={`appearance-none w-full h-full ${className}`}
+      >
+        {children}
+      </select>
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <DownArrowIcon />
+      </div>
+    </div>
+  );
+};
+
+type SurveyRowProps = {
+  onOpenModal: () => void;
+  index: number;
+  value: string;
+  onValueChange: (newValue: string) => void;
+  onSelectKeyDown: (e: React.KeyboardEvent<HTMLSelectElement>) => void;
+  isPrecedingDisabled: boolean;
+};
+
+const SurveyRow: React.FC<SurveyRowProps> = ({
+  onOpenModal,
+  index,
+  value,
+  onValueChange,
+  onSelectKeyDown,
+  isPrecedingDisabled,
+}) => {
+  const isDisabled = value === "" || value === "0" || isPrecedingDisabled;
+
+  return (
+    <div className="flex flex-row relative w-full mt-1">
+      <select
+        id={`survey-select-${index}`}
+        value={value}
+        disabled={isPrecedingDisabled}
+        onChange={(e) => onValueChange(e.target.value)}
+        onKeyDown={(e) => {
+          handleNumericSelectKeyDown(e, (val) => onValueChange(val as string));
+          onSelectKeyDown(e);
+        }}
+        className="border border-black rounded-lg bg-[#ebcec0] w-[25%]"
+      >
+        <option value="" disabled hidden></option>
+        <option value="0">0:空白</option>
+        <option value="1">1:拒否</option>
+        <option value="2">2:不在</option>
+        <option value="3">3:その他</option>
+      </select>
+
+      <div className="relative w-[70%] ml-auto h-auto">
+        <DatePickerInput disabled={isDisabled} />
+      </div>
+
+      <Button
+        onClick={onOpenModal}
+        disabled={isDisabled}
+        className={`w-[30%] border border-black ${
+          isDisabled ? "bg-gray-300 cursor-not-allowed" : "bg-[#80bad7]"
+        }`}
+      >
+        備考
+      </Button>
+    </div>
+  );
+};
 
 const RightPanel = () => {
   const [circleStates, setCircleStates] = useState<boolean[]>(
@@ -74,12 +148,50 @@ const RightPanel = () => {
   };
 
   const rows = Array.from({ length: 10 }, (_, i) => i + 1);
+  const [surveyValues, setSurveyValues] = useState<string[]>(Array(5).fill(""));
 
-  const [notificationValue, setNotificationValue] = useState("0");
+  const handleSurveyChange = (index: number, newValue: string) => {
+    setSurveyValues((prev) => {
+      const newValues = [...prev];
+      newValues[index] = newValue;
+      return newValues;
+    });
+  };
+
+  const handleSurveySelectKeyDown = (
+    e: React.KeyboardEvent<HTMLSelectElement>,
+    index: number
+  ) => {
+    if (
+      e.key === "Tab" &&
+      !e.shiftKey &&
+      (surveyValues[index] === "" || surveyValues[index] === "0")
+    ) {
+      e.preventDefault();
+
+      let nextFocusableElement: HTMLElement | null = null;
+      for (let i = index + 1; i < surveyValues.length; i++) {
+        if (surveyValues[i] !== "" && surveyValues[i] !== "0") {
+          nextFocusableElement = document.getElementById(`survey-select-${i}`);
+          break;
+        }
+      }
+      if (!nextFocusableElement) {
+        nextFocusableElement = document.getElementById("shuchi-button-1");
+      }
+
+      nextFocusableElement?.focus();
+    }
+  };
+
   const [notificationLabel, setNotificationLabel] = useState("0");
+  const [tsuchihoCode, setTsuchihoCode] = useState("");
+  const [kaizenCode, setKaizenCode] = useState("");
+  const [kyokyuTsuchihoCode, setKyokyuTsuchihoCode] = useState("");
+  const [kyokyuKaizenCode, setKyokyuKaizenCode] = useState("");
 
   const notificationOptions = [
-    { value: "0", label: "▼" },
+    { value: "0", label: "" },
     { value: "1", label: "コンロ　ゴム管不良" },
     { value: "2", label: "コンロ　末端閉止弁不良" },
     { value: "3", label: "コンロ　安全装置不良" },
@@ -95,31 +207,12 @@ const RightPanel = () => {
     { value: "10", label: "風呂釜　ガス漏れ" },
   ];
 
-  const handleNotificationChange = (
-    e: React.ChangeEvent<HTMLSelectElement>
-  ) => {
-    const selectedValue = e.target.value;
-    setNotificationValue(selectedValue);
-    const selectedOption = notificationOptions.find(
-      (option) => option.value === selectedValue
-    );
-
-    if (selectedOption) {
-      setNotificationLabel(selectedValue === "0" ? "0" : selectedOption.label);
-    }
-  };
-
-  const [notificationValue1, setNotificationValue1] = useState("0");
   const [notificationLabel1, setNotificationLabel1] = useState("0");
-
-  const [notificationValue2, setNotificationValue2] = useState("0");
   const [notificationLabel2, setNotificationLabel2] = useState("0");
-
-  const [notificationValue3, setNotificationValue3] = useState("0");
   const [notificationLabel3, setNotificationLabel3] = useState("0");
 
   const notificationOptions1 = [
-    { value: "0", label: "▼" },
+    { value: "0", label: "" },
     { value: "1", label: "メーター期限（否)" },
     { value: "2", label: "ガス栓ビューズ無し" },
     { value: "3", label: "器具燃焼状況" },
@@ -137,7 +230,7 @@ const RightPanel = () => {
   ];
 
   const notificationOptions2 = [
-    { value: "0", label: "▼" },
+    { value: "0", label: "" },
     { value: "1", label: "調整噐交換" },
     { value: "2", label: "メータ交換" },
     { value: "3", label: "接続管交換" },
@@ -145,7 +238,7 @@ const RightPanel = () => {
   ];
 
   const notificationOptions3 = [
-    { value: "0", label: "▼" },
+    { value: "0", label: "" },
     { value: "1", label: "容器" },
     { value: "2", label: "容器設置場所" },
     { value: "3", label: "容器チェーン" },
@@ -161,17 +254,31 @@ const RightPanel = () => {
     { value: "10", label: "ガスメータ検満" },
   ];
 
+  const handleNotificationChange = (
+    e: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    const selectedValue = e.target.value;
+    const selectedOption = notificationOptions.find(
+      (option) => option.value === selectedValue
+    );
+
+    if (selectedOption) {
+      setNotificationLabel(selectedOption.value);
+      setTsuchihoCode(selectedOption.label);
+    }
+  };
+
   const handleNotificationChange1 = (
     e: React.ChangeEvent<HTMLSelectElement>
   ) => {
     const selectedValue = e.target.value;
-    setNotificationValue1(selectedValue);
     const selectedOption = notificationOptions1.find(
       (option) => option.value === selectedValue
     );
 
     if (selectedOption) {
-      setNotificationLabel1(selectedValue === "0" ? "0" : selectedOption.label);
+      setNotificationLabel1(selectedOption.value);
+      setKaizenCode(selectedOption.label);
     }
   };
 
@@ -179,39 +286,82 @@ const RightPanel = () => {
     e: React.ChangeEvent<HTMLSelectElement>
   ) => {
     const selectedValue = e.target.value;
-    setNotificationValue2(selectedValue);
     const selectedOption = notificationOptions2.find(
       (option) => option.value === selectedValue
     );
 
     if (selectedOption) {
-      setNotificationLabel2(selectedValue === "0" ? "0" : selectedOption.label);
+      setNotificationLabel2(selectedOption.value);
+      setKyokyuTsuchihoCode(selectedOption.label);
     }
   };
   const handleNotificationChange3 = (
     e: React.ChangeEvent<HTMLSelectElement>
   ) => {
     const selectedValue = e.target.value;
-    setNotificationValue3(selectedValue);
     const selectedOption = notificationOptions3.find(
       (option) => option.value === selectedValue
     );
 
     if (selectedOption) {
-      setNotificationLabel3(selectedValue === "0" ? "0" : selectedOption.label);
+      setNotificationLabel3(selectedOption.value);
+      setKyokyuKaizenCode(selectedOption.label);
     }
   };
 
+  const handleCodeEnter = (
+    e: React.KeyboardEvent<HTMLInputElement>,
+    options: { value: string; label: string }[],
+    valueSetter: React.Dispatch<React.SetStateAction<string>>,
+    labelSetter: React.Dispatch<React.SetStateAction<string>>
+  ) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      const enteredValue = e.currentTarget.value;
+      const foundOption = options.find(
+        (option) => option.value === enteredValue
+      );
+
+      if (foundOption) {
+        // If found, set both inputs like the select menu does
+        valueSetter(foundOption.value);
+        labelSetter(foundOption.label);
+      } else {
+        // If not found, clear both inputs
+        valueSetter("");
+        labelSetter("");
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (options1[index3] !== "否") {
+      setNotificationLabel("0");
+      setTsuchihoCode("");
+      setNotificationLabel1("0");
+      setKaizenCode("");
+    }
+  }, [index3]);
+
+  useEffect(() => {
+    if (options2[index4] !== "否") {
+      setNotificationLabel2("0");
+      setKyokyuTsuchihoCode("");
+      setNotificationLabel3("0");
+      setKyokyuKaizenCode("");
+    }
+  }, [index4]);
+
   const label =
     "bg-[#80bad7] h-[24px] flex justify-center items-center border border-black";
+
   return (
     <div className="w-[350px] border border-black p-2 h-full overflow-y-auto text-xs">
       <div className="flex flex-col">
         <div>
-          <span className={`${label} font-bold  w-full`}>今回調査日</span>
+          <span className={`${label} font-bold w-full`}>今回調査日</span>
           <div className="flex flex-row relative">
             <span className={`${label} !h-[32px] w-[30%]`}>調査日</span>
-
             <div className="w-[70%] ml-auto">
               <DatePickerInput />
             </div>
@@ -237,7 +387,7 @@ const RightPanel = () => {
               >
                 <div
                   className={`w-[15px] h-[15px] border border-black rounded-full 
-                  ${active ? "bg-black" : "bg-white"}`}
+                    ${active ? "bg-black" : "bg-white"}`}
                 ></div>
               </button>
             ))}
@@ -258,7 +408,7 @@ const RightPanel = () => {
               >
                 <div
                   className={`w-[15px] h-[15px] border border-black rounded-full 
-                  ${active ? "bg-black" : "bg-white"}`}
+                    ${active ? "bg-black" : "bg-white"}`}
                 ></div>
               </button>
             ))}
@@ -268,24 +418,34 @@ const RightPanel = () => {
           訪問履歴
         </span>
         <div className="mt-2">
-          <span className={`${label} font-bold  w-full`}>未調査区分</span>
-          {Array.from({ length: 5 }).map((_, i) => (
-            <SurveyRow
-              key={i}
-              onOpenModal={() => {
-                setModalF2Open(true);
-                setTitleModal("備考");
-              }}
-            />
-          ))}
+          <span className={`${label} font-bold w-full`}>未調査区分</span>
+          {Array.from({ length: 5 }).map((_, i) => {
+            const isPrecedingDisabled = surveyValues
+              .slice(0, i)
+              .some((val) => val === "" || val === "0");
+            return (
+              <SurveyRow
+                key={i}
+                index={i}
+                value={surveyValues[i]}
+                onValueChange={(newValue) => handleSurveyChange(i, newValue)}
+                onSelectKeyDown={(e) => handleSurveySelectKeyDown(e, i)}
+                isPrecedingDisabled={isPrecedingDisabled}
+                onOpenModal={() => {
+                  setModalF2Open(true);
+                  setTitleModal("備考");
+                }}
+              />
+            );
+          })}
           <div className="flex flex-row mt-2">
             <span
               className={`w-[15%] flex items-center justify-center border border-black ${labelColor}`}
             >
               周知
             </span>
-
             <button
+              id="shuchi-button-1"
               onClick={handleClick2}
               className={`w-[28%] border border-black ${inputColor}`}
             >
@@ -299,11 +459,11 @@ const RightPanel = () => {
               }}
               disabled={options[index2] !== "済"}
               className={`w-[22px] h-[22px] flex items-center justify-center border border-gray-500 
-                ${
-                  options[index2] === "済"
-                    ? `${inputColor} cursor-pointer`
-                    : `${inputColor} opacity-50 cursor-not-allowed`
-                }`}
+                  ${
+                    options[index2] === "済"
+                      ? `${inputColor} cursor-pointer`
+                      : `${inputColor} opacity-50 cursor-not-allowed`
+                  }`}
             >
               ▼
             </button>
@@ -323,38 +483,38 @@ const RightPanel = () => {
               onClick={() => ""}
               disabled={options[index] !== "済"}
               className={`w-[22px] h-[22px] flex items-center justify-center border border-gray-500
-                ${
-                  options[index] === "済"
-                    ? `${inputColor} cursor-pointer`
-                    : `${inputColor} opacity-50 cursor-not-allowed`
-                }`}
+                  ${
+                    options[index] === "済"
+                      ? `${inputColor} cursor-pointer`
+                      : `${inputColor} opacity-50 cursor-not-allowed`
+                  }`}
             >
               ▼
             </button>
           </div>
         </div>
         <div className="mt-2">
-          <span className={`${label} font-bold  w-full`}>交換部品</span>
-          <div className="flex flex-row">
-            <Button
-              className={`${label} !w-1/3`}
-              onClick={() => {
-                setModalF2Open(true);
-                setTitleModal("部品マスター検索");
-              }}
-            >
-              商品名
-            </Button>
-            <span className={`${label} !w-1/3`}>数量</span>
-            <span className={`${label} !w-1/3`}>商品名</span>
-          </div>
+          <span className={`${label} font-bold w-full`}>交換部品</span>
           <div className="w-full border border-black">
             <div className="max-h-[70px] overflow-y-scroll">
               <table className="w-full border-collapse">
+                <thead>
+                  <tr className="bg-[#80bad7]">
+                    <th className={`border border-black`}>金額</th>
+                    <th className={`border border-black`}>数量</th>
+                    <th className={`border border-black`}>商品名</th>
+                  </tr>
+                </thead>
                 <tbody>
                   {rows.map((row) => (
                     <tr key={row} className="border border-black bg-[#ebcec0]">
-                      <td className="border border-black text-center w-1/3"></td>
+                      <td
+                        onClick={() => {
+                          setModalF2Open(true);
+                          setTitleModal("部品マスター検索");
+                        }}
+                        className="border border-black text-center w-1/3 cursor-pointer"
+                      ></td>
                       <td className="border border-black text-center w-1/3">
                         0.00
                       </td>
@@ -378,71 +538,100 @@ const RightPanel = () => {
               {options1[index3]}
             </button>
           </div>
-          <div className=" w-full flex flex-row">
+          <div className="w-full flex flex-row">
             <span
               className={`w-[10%] h-[80px] bg-[#80bad7] flex justify-center items-center text-center border border-black`}
             >
               通知事項
             </span>
-            <div className="flex flex-col w-[90%]">
+            <div className="flex flex-row w-[90%]">
+              <div className="w-1/12 h-[80px] flex flex-col">
+                <input
+                  value={notificationLabel}
+                  onChange={(e) => setNotificationLabel(e.target.value)}
+                  onKeyDown={(e) =>
+                    handleCodeEnter(
+                      e,
+                      notificationOptions,
+                      setNotificationLabel,
+                      setTsuchihoCode
+                    )
+                  }
+                  className={`w-full h-1/2 border-b-0 border border-black text-center bg-[#ebcec0]`}
+                />
+                <CustomSelectWithCenteredArrow
+                  onChange={handleNotificationChange}
+                  disabled={options1[index3] !== "否"}
+                  className={`w-full h-1/2 border border-black text-center ${
+                    options1[index3] === "否"
+                      ? `${inputColor} cursor-pointer`
+                      : `${inputColor} opacity-50 cursor-not-allowed`
+                  }`}
+                >
+                  {notificationOptions.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </CustomSelectWithCenteredArrow>
+              </div>
               <input
-                value={notificationLabel}
-                className={`h-[40px] border border-black text-center transition-all duration-300 bg-[#ebcec0] ${
-                  notificationValue === "0" ? "w-[20%]" : "w-full"
-                }`}
-              />
-
-              <select
-                onChange={handleNotificationChange}
                 disabled={options1[index3] !== "否"}
-                className={`h-[40px] border  w-[20%] border-black text-center  ${
-                  options1[index3] === "否"
-                    ? `${inputColor} cursor-pointer`
-                    : `${inputColor} opacity-50 cursor-not-allowed`
-                }`}
-              >
-                {notificationOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
+                type="text"
+                value={tsuchihoCode}
+                onChange={(e) => setTsuchihoCode(e.target.value)}
+                className="w-11/12 h-[80px] border border-black bg-[#ebcec0] text-center"
+              />
             </div>
           </div>
-          <div className=" w-full flex flex-row">
+          <div className="w-full flex flex-row">
             <span
               className={`w-[10%] h-[80px] bg-[#80bad7] flex justify-center items-center text-center border border-black`}
             >
               要改善
             </span>
-            <div className="flex flex-col w-[90%]">
+            <div className="flex flex-row w-[90%]">
+              <div className="w-1/12 h-[80px] flex flex-col">
+                <input
+                  value={notificationLabel1}
+                  onChange={(e) => setNotificationLabel1(e.target.value)}
+                  onKeyDown={(e) =>
+                    handleCodeEnter(
+                      e,
+                      notificationOptions1,
+                      setNotificationLabel1,
+                      setKaizenCode
+                    )
+                  }
+                  className={`w-full h-1/2 border-b-0 border border-black text-center bg-[#ebcec0]`}
+                />
+                <CustomSelectWithCenteredArrow
+                  onChange={handleNotificationChange1}
+                  disabled={options1[index3] !== "否"}
+                  className={`w-full h-1/2 border border-black text-center ${
+                    options1[index3] === "否"
+                      ? `${inputColor} cursor-pointer`
+                      : `${inputColor} opacity-50 cursor-not-allowed`
+                  }`}
+                >
+                  {notificationOptions1.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </CustomSelectWithCenteredArrow>
+              </div>
               <input
-                value={notificationLabel1}
-                className={`h-[40px] border border-black text-center transition-all duration-300 bg-[#ebcec0] ${
-                  notificationValue1 === "0" ? "w-[20%]" : "w-full"
-                }`}
-              />
-
-              <select
-                onChange={handleNotificationChange1}
                 disabled={options1[index3] !== "否"}
-                className={`h-[40px] border  w-[20%] border-black text-center  ${
-                  options1[index3] === "否"
-                    ? `${inputColor} cursor-pointer`
-                    : `${inputColor} opacity-50 cursor-not-allowed`
-                }`}
-              >
-                {notificationOptions1.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
+                type="text"
+                value={kaizenCode}
+                onChange={(e) => setKaizenCode(e.target.value)}
+                className="w-11/12 h-[80px] border border-black bg-[#ebcec0] text-center"
+              />
             </div>
           </div>
           <div className="flex flex-row relative">
             <span className={`${label} !h-[32px] w-[40%]`}>再調査予定日</span>
-
             <div className="w-[70%] ml-auto">
               <DatePickerInput />
             </div>
@@ -458,66 +647,96 @@ const RightPanel = () => {
               {options2[index4]}
             </button>
           </div>
-          <div className=" w-full flex flex-row">
+          <div className="w-full flex flex-row">
             <span
               className={`w-[10%] h-[80px] bg-[#80bad7] flex justify-center items-center text-center border border-black`}
             >
               通知事項
             </span>
-            <div className="flex flex-col w-[90%]">
+            <div className="flex flex-row w-[90%]">
+              <div className="w-1/12 h-[80px] flex flex-col">
+                <input
+                  value={notificationLabel2}
+                  onChange={(e) => setNotificationLabel2(e.target.value)}
+                  onKeyDown={(e) =>
+                    handleCodeEnter(
+                      e,
+                      notificationOptions2,
+                      setNotificationLabel2,
+                      setKyokyuTsuchihoCode
+                    )
+                  }
+                  className={`w-full h-1/2 border-b-0 border border-black text-center bg-[#ebcec0]`}
+                />
+                <CustomSelectWithCenteredArrow
+                  onChange={handleNotificationChange2}
+                  disabled={options2[index4] !== "否"}
+                  className={`w-full h-1/2 border border-black text-center ${
+                    options2[index4] === "否"
+                      ? `${inputColor} cursor-pointer`
+                      : `${inputColor} opacity-50 cursor-not-allowed`
+                  }`}
+                >
+                  {notificationOptions2.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </CustomSelectWithCenteredArrow>
+              </div>
               <input
-                value={notificationLabel2}
-                className={`h-[40px] border border-black text-center transition-all duration-300 bg-[#ebcec0] ${
-                  notificationValue2 === "0" ? "w-[20%]" : "w-full"
-                }`}
-              />
-
-              <select
-                onChange={handleNotificationChange2}
                 disabled={options2[index4] !== "否"}
-                className={`h-[40px] border  w-[20%] border-black text-center  ${
-                  options2[index4] === "否"
-                    ? `${inputColor} cursor-pointer`
-                    : `${inputColor} opacity-50 cursor-not-allowed`
-                }`}
-              >
-                {notificationOptions2.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
+                type="text"
+                value={kyokyuTsuchihoCode}
+                onChange={(e) => setKyokyuTsuchihoCode(e.target.value)}
+                className="w-11/12 h-[80px] border border-black bg-[#ebcec0] text-center"
+              />
             </div>
           </div>
-          <div className=" w-full flex flex-row">
+          <div className="w-full flex flex-row">
             <span
               className={`w-[10%] h-[80px] bg-[#80bad7] flex justify-center items-center text-center border border-black`}
             >
               要改善
             </span>
-            <div className="flex flex-col w-[90%]">
+            <div className="flex flex-row w-[90%]">
+              <div className="w-1/12 h-[80px] flex flex-col">
+                <input
+                  value={notificationLabel3}
+                  onChange={(e) => setNotificationLabel3(e.target.value)}
+                  onKeyDown={(e) =>
+                    handleCodeEnter(
+                      e,
+                      notificationOptions3,
+                      setNotificationLabel3,
+                      setKyokyuKaizenCode
+                    )
+                  }
+                  className={`w-full h-1/2 border-b-0 border border-black text-center bg-[#ebcec0]`}
+                />
+                <CustomSelectWithCenteredArrow
+                  onChange={handleNotificationChange3}
+                  disabled={options2[index4] !== "否"}
+                  className={`w-full h-1/2 border border-black text-center bg-[#ebcec0] ${
+                    options2[index4] === "否"
+                      ? `${inputColor} cursor-pointer`
+                      : `${inputColor} opacity-50 cursor-not-allowed`
+                  }`}
+                >
+                  {notificationOptions3.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </CustomSelectWithCenteredArrow>
+              </div>
               <input
-                value={notificationLabel3}
-                className={`h-[40px] border border-black text-center transition-all duration-300 bg-[#ebcec0] ${
-                  notificationValue3 === "0" ? "w-[20%]" : "w-full"
-                }`}
-              />
-
-              <select
-                onChange={handleNotificationChange3}
                 disabled={options2[index4] !== "否"}
-                className={`h-[40px] border  w-[20%] border-black text-center bg-[#ebcec0] ${
-                  options2[index4] === "否"
-                    ? `${inputColor} cursor-pointer`
-                    : `${inputColor} opacity-50 cursor-not-allowed`
-                }`}
-              >
-                {notificationOptions3.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
+                type="text"
+                value={kyokyuKaizenCode}
+                onChange={(e) => setKyokyuKaizenCode(e.target.value)}
+                className="w-11/12 h-[80px] border border-black bg-[#ebcec0] text-center"
+              />
             </div>
           </div>
           <div className="flex flex-row relative">

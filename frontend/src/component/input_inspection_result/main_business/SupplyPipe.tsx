@@ -1,6 +1,7 @@
 import { useState } from "react";
 import ModalF1 from "../../modal/Modal_F1";
 import { labelColor, inputColor } from "../../../constants/colors";
+import { handleNumericSelectKeyDown } from "../../../utils/InputHandlers";
 
 const SupplyPipe = () => {
   const [modalF1Open, setModalF1Open] = useState(false);
@@ -21,6 +22,10 @@ const SupplyPipe = () => {
 
   const [states, setStates] = useState<number[][]>(
     Array.from({ length: totalRows }, () => Array(7).fill(0))
+  );
+
+  const [selectValues, setSelectValues] = useState<number[]>(
+    Array(totalRows).fill(0)
   );
 
   const rows = [
@@ -54,6 +59,17 @@ const SupplyPipe = () => {
     });
   };
 
+  const handleSelectChange = (
+    e: React.ChangeEvent<HTMLSelectElement>,
+    rowIndex: number
+  ) => {
+    setSelectValues((prev) => {
+      const newValues = [...prev];
+      newValues[rowIndex] = parseInt(e.target.value, 10);
+      return newValues;
+    });
+  };
+
   return (
     <>
       <span
@@ -61,7 +77,7 @@ const SupplyPipe = () => {
       >
         供給管
       </span>
-      <div className="flex gap-x-4 mb-1 p-2 border border-black items-center text-xs">
+      <div className="flex gap-x-4 mb-1 p-2 border border-black items-center text-[10px]">
         <div>埋設管</div>
         <button
           onClick={handleClickSButton}
@@ -78,7 +94,7 @@ const SupplyPipe = () => {
         </button>
       </div>
 
-      <div className="w-full min-w-[922px] text-xs">
+      <div className="w-full min-w-[922px] text-[10px]">
         <div className="overflow-auto border border-black">
           <table className="w-full  table-fixed border-collapse">
             <thead className={`h-[38px] ${labelColor}`}>
@@ -116,7 +132,7 @@ const SupplyPipe = () => {
                   idx === 0 || row.group !== rows[idx - 1].group;
 
                 return (
-                  <tr key={idx} className="h-10">
+                  <tr key={idx} className="h-6">
                     {showGroup && (
                       <th
                         rowSpan={2}
@@ -125,21 +141,13 @@ const SupplyPipe = () => {
                         {row.group}
                       </th>
                     )}
-                    <td
-                      className={`border border-black text-center ${inputColor}`}
-                    >
+                    <td className={`border border-black text-center `}>
                       {row.no}
                     </td>
-                    <td
-                      className={`border border-black text-center ${inputColor}`}
-                    >
+                    <td className={`border border-black text-center `}>
                       材料名
                     </td>
-                    <td
-                      className={`border border-black text-center ${inputColor}`}
-                    >
-                      -
-                    </td>
+                    <td className={`border border-black text-center `}>-</td>
                     <td
                       tabIndex={0}
                       onClick={() => setModalF1Open(true)}
@@ -157,6 +165,20 @@ const SupplyPipe = () => {
                           className={`border border-black p-0 ${inputColor}`}
                         >
                           <select
+                            value={selectValues[idx]}
+                            onChange={(e) => handleSelectChange(e, idx)}
+                            onKeyDown={(e) =>
+                              handleNumericSelectKeyDown(e, (val) => {
+                                setSelectValues((prev) => {
+                                  const newVals = [...prev];
+                                  const numVal = parseInt(val, 10);
+                                  if (numVal < options.length) {
+                                    newVals[idx] = numVal;
+                                  }
+                                  return newVals;
+                                });
+                              })
+                            }
                             className={`w-full h-full font-medium bg-transparent outline-none text-center ${inputColor}`}
                           >
                             {options.map((opt, i) => (

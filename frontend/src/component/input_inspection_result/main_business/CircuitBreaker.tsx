@@ -42,7 +42,7 @@ const CircuitBreaker = () => {
       >
         遮断器
       </span>
-      <div className="w-full min-w-[922px] text-xs">
+      <div className="w-full min-w-[922px] text-[10px]">
         <div className="overflow-auto border border-black">
           <table className="w-full  table-fixed border-collapse">
             <thead className={`h-[40px] ${labelColor}`}>
@@ -62,7 +62,7 @@ const CircuitBreaker = () => {
                 const isSpecial = !row.model && !row.count;
 
                 return (
-                  <tr key={idx} className="h-10">
+                  <tr key={idx} className="h-6">
                     {showGroup && (
                       <th
                         rowSpan={
@@ -81,14 +81,10 @@ const CircuitBreaker = () => {
                         >
                           {row.label}
                         </th>
-                        <td
-                          className={`border border-black text-center ${inputColor}`}
-                        >
+                        <td className={`border border-black text-center`}>
                           {row.model}
                         </td>
-                        <td
-                          className={`border border-black text-center ${inputColor}`}
-                        >
+                        <td className={`border border-black text-center `}>
                           {row.count}
                         </td>
                         <td
@@ -126,7 +122,6 @@ const CircuitBreaker = () => {
                         {symbols[states[idx]]}
                       </td>
                     )}
-                    {/* Bỏ qua idx === 4 vì đã được rowSpan từ idx === 3 */}
                   </tr>
                 );
               })}

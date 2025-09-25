@@ -3,6 +3,7 @@ import { useState, KeyboardEvent, useRef, useEffect } from "react";
 import PersonnelSearchModal from "./PersonnelSearchModal";
 import { inputColor, labelColor } from "../../constants/colors";
 import { CustomerSearchModal } from "./CustomerSearchModal";
+import { handleNumericSelectKeyDown } from "../../utils/InputHandlers";
 
 type PersonnelData = {
   name: string;
@@ -10,30 +11,17 @@ type PersonnelData = {
 };
 
 const TopBar = () => {
-  const [roleValue, setRoleValue] = useState("0");
-  const [witnessName, setWitnessName] = useState("");
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showMamager, setShowManager] = useState(false);
   const [selectedPersonnel, setSelectedPersonnel] =
     useState<PersonnelData | null>(null);
   const [managerCode, setManagerCode] = useState([""]);
+  const [value, setValue] = useState("0");
 
   const firstInputRef = useRef<HTMLInputElement>(null);
   const btnRef = useRef<HTMLButtonElement>(null);
 
-  const handleRoleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedValue = e.target.value;
-    const selectedText = e.target.options[e.target.selectedIndex].text;
-
-    setRoleValue(selectedValue);
-
-    if (selectedValue !== "0") {
-      setWitnessName(selectedText);
-    } else {
-      setWitnessName("");
-    }
-  };
   const label = `${labelColor} w-[6%] flex justify-center items-center mr-2`;
   const input = `${inputColor} flex justify-center items-center mx-4`;
 
@@ -107,26 +95,23 @@ const TopBar = () => {
           >
             <DownArrowIcon />
           </button>
+          <span className={label}>立会人</span>
           <select
-            className={`${inputColor} border border-black rounded-lg mr-4 shadow-medium`}
-            value={roleValue}
-            onChange={handleRoleChange}
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+            onKeyDown={(e) => handleNumericSelectKeyDown(e, setValue)}
+            className="border border-black rounded-lg mr-4 shadow-medium w-36"
           >
-            <option value="0">立会人</option>
-            <option value="1">世帯主</option>
-            <option value="2">息子</option>
-            <option value="3">娘</option>
-            <option value="4">お婆さん</option>
-            <option value="5">お爺さん</option>
-            <option value="6">大家</option>
-            <option value="7">管理人</option>
-            <option value="8">大家</option>
+            <option value="0">0:未選択</option>
+            <option value="1">1:世帯主</option>
+            <option value="2">2:息子</option>
+            <option value="3">3:娘</option>
+            <option value="4">4:お婆さん</option>
+            <option value="5">5:お爺さん</option>
+            <option value="6">6:大家</option>
+            <option value="7">7:管理人</option>
+            <option value="8">8:大家</option>
           </select>
-          <input
-            value={witnessName}
-            onChange={(e) => setWitnessName(e.target.value)}
-            className={`${inputColor} border border-black w-[10%]`}
-          ></input>
         </div>
       </div>
 

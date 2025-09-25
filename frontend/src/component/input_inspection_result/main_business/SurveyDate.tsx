@@ -45,6 +45,14 @@ const SurveyDate = () => {
       });
     }
   };
+
+  const handleValueChange = (rowIndex: number, amount: number) => {
+    setValues((currentValues) => {
+      const newValues = [...currentValues];
+      newValues[rowIndex] += amount;
+      return newValues;
+    });
+  };
   return (
     <>
       <span
@@ -52,18 +60,28 @@ const SurveyDate = () => {
       >
         今回調査日
       </span>
-      <div className="flex justify-between text-xs space-x-2 mt-1">
+      <div className="flex justify-between text-[10px] space-x-2 mt-1">
         <div className="w-full min-w-[922px]">
           <div className="overflow-auto h-40 border border-black">
             <table className="w-full table-fixed border-collapse">
-              <thead className={`h-[35px] ${labelColor}`}>
+              <thead className={` ${labelColor}`}>
                 <tr className={`sticky top-0 ${labelColor} z-10`}>
-                  <th className="border border-black text-center">No.</th>
-                  <th className="border border-black text-center">種別</th>
-                  <th className="border border-black text-center">メーカー</th>
-                  <th className="border border-black text-center">型式</th>
-                  <th className="border border-black text-center w-10">詳細</th>
-                  <th className="border border-black text-center w-10">
+                  <th className="border border-black text-center h-6 p-0">
+                    No.
+                  </th>
+                  <th className="border border-black text-center h-6 p-0">
+                    種別
+                  </th>
+                  <th className="border border-black text-center h-6 p-0">
+                    メーカー
+                  </th>
+                  <th className="border border-black text-center h-6 p-0">
+                    型式
+                  </th>
+                  <th className="border border-black text-center w-10 h-6 p-0">
+                    詳細
+                  </th>
+                  <th className="border border-black text-center w-10 h-6 p-0">
                     ガス栓 No.
                   </th>
                   <th className="border border-black text-center w-10">
@@ -97,17 +115,17 @@ const SurveyDate = () => {
                 {Array.from({ length: totalRows }).map((_, row) => {
                   const rowHasCheck = states[row].some((s) => s === 3);
                   return (
-                    <tr key={row} className={`${inputColor} h-10`}>
-                      <td className="border border-black text-center">
+                    <tr key={row} className={`${inputColor}`}>
+                      <td className="border border-black text-center bg-[#F5F5F5]">
                         {row + 1}
                       </td>
-                      <td className="border border-black text-center">
+                      <td className="border border-black text-center bg-[#F5F5F5]">
                         ◯◯◯コンロ
                       </td>
-                      <td className="border border-black text-center">
+                      <td className="border border-black text-center bg-[#F5F5F5]">
                         メーカー01
                       </td>
-                      <td className="border border-black text-center">
+                      <td className="border border-black text-center bg-[#F5F5F5]">
                         BGC001
                       </td>
                       <td
@@ -129,7 +147,11 @@ const SurveyDate = () => {
                               key={col}
                               className="border border-black text-center"
                             >
-                              0
+                              <input
+                                type="text"
+                                defaultValue="0"
+                                className="w-full text-center bg-[#ebcec0] outline-none"
+                              />
                             </td>
                           );
                         }
@@ -137,11 +159,35 @@ const SurveyDate = () => {
                           return (
                             <td
                               key={col}
-                              className="border border-black text-center outline-none cursor-pointer focus:bg-blue-100"
+                              className="border border-black text-center outline-none p-0"
                               tabIndex={0}
-                              onKeyDown={(e) => handleKeyDown(e, row)}
                             >
-                              {values[row].toFixed(4)}
+                              <div className="flex items-center justify-between w-full">
+                                <span className="px-2">
+                                  {values[row].toFixed(4)}
+                                </span>
+
+                                <div className="flex flex-col">
+                                  <button
+                                    onClick={() =>
+                                      handleValueChange(row, 0.0001)
+                                    }
+                                    className="h-4 w-5 border-b border-l border-gray-400 flex items-center justify-center text-xs hover:bg-gray-200 active:bg-gray-300"
+                                    tabIndex={-1}
+                                  >
+                                    ▲
+                                  </button>
+                                  <button
+                                    onClick={() =>
+                                      handleValueChange(row, -0.0001)
+                                    }
+                                    className="h-4 w-5 border-l border-gray-400 flex items-center justify-center text-xs hover:bg-gray-200 active:bg-gray-300"
+                                    tabIndex={-1}
+                                  >
+                                    ▼
+                                  </button>
+                                </div>
+                              </div>
                             </td>
                           );
                         }
