@@ -1,5 +1,6 @@
 import { labelColor } from "../../constants/colors";
 import { Select, Button, Radio, Input } from "antd";
+import BasicInformation from "./MainBusinessAreas/BasicInformation";
 
 const MainBusinessScreen = () => {
   return (
@@ -108,7 +109,9 @@ const MainBusinessScreen = () => {
       </div>
       {/* content area */}
       <div className="w-full h-[70%] flex justify-center items-center text-sm">
-        <div className="w-[90%] h-full border border-black p-4 overflow-auto"></div>
+        <div className="w-[90%] h-full border border-black p-4 overflow-auto">
+          <BasicInformation />
+        </div>
       </div>
       {/* footer */}
       <div className="flex flex-col text-sm w-full justify-center items-center mt-2">
