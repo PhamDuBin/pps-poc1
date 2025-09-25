@@ -1,7 +1,21 @@
 import { Button, Select, Input } from "antd";
 import { labelColor,inputColor} from "../../../constants/colors";
+import { forwardRef, useImperativeHandle, useRef } from "react";
 
-const OtherInfo = () => {
+const OtherInfo = forwardRef<any>((props, ref) => {
+
+    const firstButtonRef = useRef<any>(null);
+    const containerRef = useRef<HTMLDivElement>(null);
+    
+    useImperativeHandle(ref, () => ({
+        focusFirstButton : () => {
+          firstButtonRef.current.focus();
+        },
+        getContainerNode: () => {
+          return containerRef.current
+        }
+    
+    }));
   const inputColorClass = `!${inputColor} border border-black`;
   const label =
     `w-32 mr-2 h-6 border-gray-300 rounded-md font-bold flex text-center justify-center items-center ${labelColor}`;
@@ -16,7 +30,7 @@ const OtherInfo = () => {
       <div className="grid grid-cols-2 gap-x-6 gap-y-2 p-3">
         {/* Cột trái */}
         <div className="flex items-center">
-          <Button className={`${label} shadow-md shadow-zinc-500`}>
+          <Button ref={firstButtonRef} className={`${label} shadow-md shadow-zinc-500 focus:border-3 focus:border-yellow-600`}>
             顧客工務店
           </Button>
           <Input className={` h-6 w-32 ${inputColorClass}`} defaultValue={"0000"}></Input>
@@ -94,6 +108,6 @@ const OtherInfo = () => {
       </div>
     </div>
   );
-};
+});
 
 export default OtherInfo;

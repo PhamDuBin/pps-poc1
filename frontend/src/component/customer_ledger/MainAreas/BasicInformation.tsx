@@ -1,4 +1,4 @@
-import React from "react";
+import React, { forwardRef, useImperativeHandle, useRef } from "react";
 import { Input, Select, Button, Radio } from "antd";
 import { labelColor, inputColor } from "../../../constants/colors";
 
@@ -54,7 +54,22 @@ const transactionTypeOption = ["ガス顧客", "ガス外顧客"];
 
 const inputBaseClass = `${inputColor} border border-black h-6`;
 
-const BasicInformation = () => {
+const BasicInformation = forwardRef<any>((props, ref) => {
+
+  const firstInputRef = useRef<any>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useImperativeHandle(ref, () => ({
+    focusFirstInput : () => {
+      firstInputRef.current.focus();
+    },
+    getContainerNode: () => {
+      return containerRef.current
+    }
+
+  }));
+  
+
   const labelClass =
     `w-32 mr-2 h-6 border-gray-300 rounded-md font-bold flex text-center justify-center items-center  ${labelColor}`;
 
@@ -195,7 +210,7 @@ const BasicInformation = () => {
         return <Input className={`${inputBaseClass} flex-1 max-w-[650px]`} />;
 
       default:
-        return <Input className={`${inputBaseClass} flex-1`} />;
+        return <Input ref={label === "氏名" ? firstInputRef : null} className={`${inputBaseClass} flex-1`} />;
     }
   };
 
@@ -220,6 +235,6 @@ const BasicInformation = () => {
       </div>
     </div>
   );
-};
+});
 
 export default BasicInformation;

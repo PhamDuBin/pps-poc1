@@ -1,14 +1,26 @@
 import { Input, Button } from "antd";
-import React from "react";
+import React, { forwardRef, useImperativeHandle, useRef } from "react";
 import { inputColor, labelColor } from "../../../constants/colors";
 
-const AreaInfo = () => {
+const AreaInfo = forwardRef<any>((props, ref) => {
   const headerCellClass =
     `h-6 px-2 ${labelColor} font-bold text-center flex items-center justify-center text-sm rounded-md`;
   const rowLabelClass =
     `h-6 w-32 px-2 ${labelColor} font-bold flex items-center justify-center text-sm rounded-md`;
 
   const rows = ["営業", "検針", "集金", "配送", "点検", "保安"];
+
+  const firstInputRef = useRef<any>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useImperativeHandle(ref, () => ({
+    focusFirstInput: () => {
+      firstInputRef.current.focus();
+    },
+    getContainerNode: () => {
+      return containerRef.current;
+    }
+  }))
 
   const handleNumericInput = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -36,6 +48,7 @@ const AreaInfo = () => {
 
             <div className="flex items-center">
               <Input
+                ref={label === "営業" ? firstInputRef : null}
                 className={`h-6 w-32 text-center ${inputColor}`}
                 defaultValue={"000000"}
                 maxLength={6}
@@ -87,6 +100,6 @@ const AreaInfo = () => {
       </div>
     </div>
   );
-};
+});
 
 export default AreaInfo;

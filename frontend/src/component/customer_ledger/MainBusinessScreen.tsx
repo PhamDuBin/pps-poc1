@@ -6,13 +6,124 @@ import OtherInfo from "./MainAreas/OtherInfo";
 import AcquisitionInformation from "./MainAreas/AcquisitionInformation";
 import AreaInfo from "./MainAreas/AreaInfo";
 import EmergencyContact from "./MainAreas/EmergencyContact";
+import { useEffect, useRef, useState } from "react";
+
+export const handleNavigationKey = (
+  e: KeyboardEvent,
+  currentIndex: number,
+  focusableElements: HTMLElement[]
+) => {
+  if (["ArrowLeft", "ArrowRight"].includes(e.key)) {
+    e.preventDefault();
+    let nextIndex = currentIndex;
+    const total = focusableElements.length;
+
+    if (e.key === "ArrowRight") {
+      nextIndex = (currentIndex + 1) % total;
+    } else if (e.key === "ArrowLeft") {
+      nextIndex = (currentIndex - 1 + total) % total;
+    }
+
+    focusableElements[nextIndex]?.focus();
+  }
+};
 
 const MainBusinessScreen = () => {
+
+  const [activeSection, setActiveSection] = useState<string | null>(null);
+  const basicInformationRef = useRef<any>(null);
+  const acquisitionInformationRef = useRef<any>(null);
+  const familyInfoRef = useRef<any>(null);
+  const otherInfoRef = useRef<any>(null);
+  const areaInfoRef = useRef<any>(null);
+  const emergencyContactRef = useRef<any>(null);
+
+  const handleFocusSection = (sectionName: string) => {
+    setActiveSection(sectionName);
+    setTimeout(() => {
+      switch (sectionName) {
+        case "basicInformation":
+          if (basicInformationRef.current) {
+            const container = basicInformationRef.current.getContainerNode?.();
+            container?.scrollIntoView({ behavior: "smooth", block: "start" });
+            basicInformationRef.current.focusFirstInput?.();
+          }
+          break;
+        case "acquisitionInformation":
+          if (acquisitionInformationRef.current) {
+            const container = acquisitionInformationRef.current.getContainerNode?.();
+            container?.scrollIntoView({ behavior: "smooth", block: "start" });
+            acquisitionInformationRef.current.focusFirstSelect?.();
+          }
+          break;
+        case "areaInfo":
+          if (areaInfoRef.current) {
+            const container = areaInfoRef.current.getContainerNode?.();
+            container?.scrollIntoView({ behavior: "smooth", block: "start" });
+            areaInfoRef.current.focusFirstInput?.();
+          }
+          break;
+        case "emergencyContact":
+          if (emergencyContactRef.current) {
+            const container = emergencyContactRef.current.getContainerNode?.();
+            container?.scrollIntoView({ behavior: "smooth", block: "start" });
+            emergencyContactRef.current.focusFirstSelect?.();
+          }
+          break;
+        case "otherInfo":
+          if (otherInfoRef.current) {
+            const container = otherInfoRef.current.getContainerNode?.();
+            container?.scrollIntoView({ behavior: "smooth", block: "start" });
+            otherInfoRef.current.focusFirstButton?.();
+          }
+          break;
+        case "familyInfo":
+          if (familyInfoRef.current) {
+            const container = familyInfoRef.current.getContainerNode?.();
+            container?.scrollIntoView({ behavior: "smooth", block: "start" });
+            familyInfoRef.current.focusFirstInput?.();
+          }
+          break;    
+        default:
+          break;
+      }
+    }, 0);
+  };
+
+  
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+      const container = containerRef.current;
+      if (!container) return;
+  
+      const handleContainerKeyDown = (e: KeyboardEvent) => {
+        const focusableElements = Array.from(
+          container.querySelectorAll(
+            "input:not([disabled]), button:not([disabled]), select:not([disabled]), textarea:not([disabled]) "
+          )
+        ) as HTMLElement[];
+  
+        const activeElement = document.activeElement as HTMLElement;
+        const currentIndex = focusableElements.indexOf(activeElement);
+  
+        if (currentIndex !== -1) {
+          handleNavigationKey(e, currentIndex, focusableElements);
+        }
+      };
+  
+      container.addEventListener("keydown", handleContainerKeyDown as any);
+      return () => {
+        container.removeEventListener("keydown", handleContainerKeyDown as any);
+      };
+    }, []);
+
   const label =
     `h-8 border border-gray-300 font-bold rounded-md flex text-center justify-center items-center px-2 ml-7 mr-2 ${labelColor}`;
   const button = `flex text-center justify-center items-center ${labelColor} border border-black xl:text-base text-xs font-bold shadow-md shadow-zinc-600 hover:bg-white`;
+  const activeButton = `bg-yellow-300 border-yellow-400`;
   return (
-    <div className="h-screen w-full flex flex-col px-4 py-2">
+    <div ref={containerRef} className="h-screen w-full flex flex-col px-4 py-2 ">
       {/* label header */}
       <label
         className={`w-full h-10 rounded-md font-bold xl:text-2xl text-xl flex text-center justify-center items-center ${labelColor}`}
@@ -100,22 +211,22 @@ const MainBusinessScreen = () => {
       </div>
       {/* button group */}
       <div className="flex flex-row my-2 justify-between items-center text-sm mx-48">
-        <Button className={`!bg-[#80bad7] !text-black hover:!bg-white hover:!text-blue-600 w-28 shadow-md shadow-zinc-500`}>基本情報</Button>
-        <Button className={`!bg-[#80bad7] !text-black hover:!bg-white hover:!text-blue-600 w-28 shadow-md shadow-zinc-500`}>獲得情報</Button>
-        <Button className={`!bg-[#80bad7] !text-black hover:!bg-white hover:!text-blue-600 w-28 shadow-md shadow-zinc-500`}>担当・地区</Button>
-        <Button className={`!bg-[#80bad7] !text-black hover:!bg-white hover:!text-blue-600 sw-28 shadow-md shadow-zinc-50`}>緊急連絡先</Button>
-        <Button className={`!bg-[#80bad7] !text-black hover:!bg-white hover:!text-blue-600 w-28 shadow-md shadow-zinc-50`}>その他情報</Button>
-        <Button className={`!bg-[#80bad7] !text-black hover:!bg-white hover:!text-blue-600 w-28 shadow-md shadow-zinc-500`}>家族情報</Button>
+        <Button onClick={() => handleFocusSection("basicInformation")} className={`${button} w-28 ${activeSection === "basicInformation" ? activeButton : ""}`}>基本情報</Button>
+        <Button onClick={()=> handleFocusSection("acquisitionInformation")} className={`${button} w-28 ${activeSection === "acquisitionInformation" ? activeButton : ""}`}>獲得情報</Button>
+        <Button onClick={()=> handleFocusSection("areaInfo")} className={`${button} w-28 ${activeSection === "areaInfo" ? activeButton : ""}`}>担当・地区</Button>
+        <Button onClick={()=> handleFocusSection("emergencyContact")} className={`${button} w-28 ${activeSection === "emergencyContact" ? activeButton : ""}`}>緊急連絡先</Button>
+        <Button onClick={()=> handleFocusSection("otherInfo")} className={`${button} w-28 ${activeSection === "ortherInfo" ? activeButton : ""}`}>その他情報</Button>
+        <Button onClick={()=> handleFocusSection("familyInfo")} className={`${button} w-28 ${activeSection === "familyInfo" ? activeButton : ""}`}>家族情報</Button>
       </div>
       {/* content area */}
       <div className="w-full h-[70%] flex justify-center items-center text-sm">
-        <div className="w-[90%] h-full border border-black p-4 overflow-auto">
-          <BasicInformation />
-          <AcquisitionInformation/>
-          <AreaInfo />
-          <EmergencyContact />
-          <OtherInfo />
-          <FamilyInfo />
+        <div className="w-[90%] h-full border border-black p-4 overflow-auto z-50">
+          <BasicInformation ref={basicInformationRef}/>
+          <AcquisitionInformation ref={acquisitionInformationRef}/>
+          <AreaInfo ref={areaInfoRef} />
+          <EmergencyContact ref={emergencyContactRef} />
+          <OtherInfo ref={otherInfoRef} />
+          <FamilyInfo ref={familyInfoRef} />
         </div>
       </div>
       {/* footer */}

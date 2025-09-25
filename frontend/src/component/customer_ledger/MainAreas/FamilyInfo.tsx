@@ -1,11 +1,24 @@
 import { Button, DatePicker, Select } from "antd";
 import dayjs from "dayjs";
-import { useState } from "react";
+import { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import FamilyInfoModal from "../FamilyInfoModal";
 import { inputColor, labelColor } from "../../../constants/colors";
-const FamilyInfo = () => {
+const FamilyInfo = forwardRef<any>((props,ref) => {
   const [month, setMonth] = useState(dayjs());
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const firstInputRef= useRef<any>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+      
+  useImperativeHandle(ref, () => ({
+          focusFirstInput : () => {
+            firstInputRef.current.focus();
+          },
+          getContainerNode: () => {
+            return containerRef.current
+          }
+      
+  }));
 
   const handleOpenModal = () => {
     setIsModalOpen((prev) => !prev);
@@ -58,6 +71,7 @@ const FamilyInfo = () => {
         <div className="flex items-center">
           <label className={label}>居住年月</label>
           <DatePicker
+            ref = {firstInputRef}
             picker="month"
             value={month}
             onChange={(date) => setMonth(date)}
@@ -215,6 +229,6 @@ const FamilyInfo = () => {
       {isModalOpen && <FamilyInfoModal onClose={handleOpenModal} />}
     </div>
   );
-};
+});
 
 export default FamilyInfo;

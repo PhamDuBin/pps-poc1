@@ -1,7 +1,20 @@
 import { Button, Input, Select } from "antd";
 import { inputColor, labelColor } from "../../../constants/colors";
+import { forwardRef, useImperativeHandle, useRef } from "react";
 
-const EmergencyContact = () => {
+const EmergencyContact = forwardRef<any>((props, ref) => {
+    const firstSelectRef = useRef<any>(null);
+    const containerRef = useRef<HTMLDivElement>(null);
+  
+    useImperativeHandle(ref, () => ({
+      focusFirstSelect : () => {
+        firstSelectRef.current.focus();
+      },
+      getContainerNode: () => {
+        return containerRef.current
+      }
+  
+    }));
   const label =
     `w-32 mr-2 h-6 border-gray-300 rounded-md ${labelColor} font-bold flex text-center justify-center items-center`;
   return (
@@ -21,7 +34,7 @@ const EmergencyContact = () => {
 
         <div className="flex items-center">
           <label className={label}>時間帯</label>
-          <Select className={`h-6 w-32 [&>.ant-select-selector]:!${inputColor}`} defaultValue="0:空欄">
+          <Select ref={firstSelectRef} className={`h-6 w-32 [&>.ant-select-selector]:!${inputColor}`} defaultValue="0:空欄">
             <Select.Option value="0:空欄">0:空欄</Select.Option>
             <Select.Option value="1:随時">1:随時</Select.Option>
             <Select.Option value="2:昼間">2:昼間</Select.Option>
@@ -74,5 +87,5 @@ const EmergencyContact = () => {
       </div>
     </div>
   );
-};
+});
 export default EmergencyContact;

@@ -1,7 +1,7 @@
 import { Button, Checkbox, DatePicker, Input, Select } from "antd";
 import dayjs, { Dayjs } from "dayjs";
 import { DatePickerInput } from "../../../context/DatePickerInput";
-import { useState } from "react";
+import { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import { inputColor, labelColor } from "../../../constants/colors";
 
 
@@ -98,8 +98,18 @@ const labelClass =
     `w-32 mr-2 h-6 border-gray-300 rounded-md ${labelColor} font-bold flex text-center justify-center items-center`;
 
 
-const AcquisitionInformation    = () => {
+const AcquisitionInformation = forwardRef<any>((props, ref) =>{
     const [month, setMonth] = useState(dayjs());
+    const firstSelectRef = useRef<any>(null);
+    const containerRef = useRef<HTMLDivElement>(null);
+    useImperativeHandle(ref, () => ({
+        focusFirstSelect: () => {
+            firstSelectRef.current.focus();
+        },
+        getContainer: () => {
+            return containerRef.current
+        }
+    }));
     return (
         <div className="w-full text-xs py-4">
             <div className={`h-8 border text-sm border-gray-300 rounded-md font-bold flex items-center px-3 ${labelColor}`}>獲得情報</div> 
@@ -110,6 +120,7 @@ const AcquisitionInformation    = () => {
                     defaultValue="0"
                     className="[&>.ant-select-selector]:!bg-[#ebcec0] w-[220px] h-6"
                     size="small"
+                    ref={firstSelectRef}
                     >
                     {openCloseOptions.map((opt) => (
                         <Option key={opt.value} value={opt.value}>
@@ -125,7 +136,7 @@ const AcquisitionInformation    = () => {
                             picker="month"
                             value={month}
                             onChange={(date) => setMonth(date)}
-                            className={` h-6 w-1/4 ${inputColor}`}
+                            className={` h-6 w-1/4 z-10 ${inputColor}`}
                             format="YYYY/MM"
                         />
                         
@@ -348,6 +359,6 @@ const AcquisitionInformation    = () => {
         </div>
         
     )
-};
+})
 
 export default AcquisitionInformation;  
