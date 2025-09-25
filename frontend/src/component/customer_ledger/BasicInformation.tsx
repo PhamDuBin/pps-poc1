@@ -1,6 +1,6 @@
 import React from "react";
 import { Input, Select, Button, Radio } from "antd";
-import { labelColor, inputColor } from "../../../constants/colors";
+import { labelColor, inputColor } from "../../constants/colors";
 
 const { Option } = Select;
 

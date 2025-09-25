@@ -1,6 +1,6 @@
 import { labelColor } from "../../constants/colors";
 import { Select, Button, Radio, Input } from "antd";
-import BasicInformation from "./MainBusinessAreas/BasicInformation";
+import BasicInformation from "./BasicInformation";
 
 const MainBusinessScreen = () => {
   return (
