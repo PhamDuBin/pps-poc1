@@ -3,6 +3,7 @@ import { Select, Button, Radio, Input } from "antd";
 import BasicInformation from "./BasicInformation";
 import FamilyInfo from "./FamilyInfo";
 import OtherInfo from "./OtherInfo";
+import AcquisitionInformation from "./AcquisitionInformation";
 
 const MainBusinessScreen = () => {
   return (
@@ -113,6 +114,7 @@ const MainBusinessScreen = () => {
       <div className="w-full h-[70%] flex justify-center items-center text-sm">
         <div className="w-[90%] h-full border border-black p-4 overflow-auto">
           <BasicInformation />
+          <AcquisitionInformation/>
           <OtherInfo />
           <FamilyInfo />
         </div>

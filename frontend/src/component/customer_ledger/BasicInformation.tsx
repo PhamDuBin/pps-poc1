@@ -52,41 +52,45 @@ const monitoringOptions = [
 const customerTypeOption = ["法人以外", "法人"];
 const transactionTypeOption = ["ガス顧客", "ガス外顧客"];
 
-const borderClass = "border border-black";
-const inputBaseClass = `${inputColor} ${borderClass} h-[30px]`;
+const inputBaseClass = `${inputColor} border border-black h-6`;
 
 const BasicInformation = () => {
+  const labelClass =
+    "w-32 mr-2 h-6 border-gray-300 rounded-md bg-[#D9D9D9] font-bold flex text-center justify-center items-center";
+
   const renderField = (label: string) => {
     switch (label) {
       case "顧客種別":
         return (
-          <Radio.Group >
+          <Radio.Group size="small">
             {customerTypeOption.map((opt, i) => (
-              <Radio key={i} value={opt}>{opt}</Radio>
+              <Radio key={i} value={opt}>
+                {opt}
+              </Radio>
             ))}
           </Radio.Group>
         );
 
       case "取引種類":
         return (
-          <Radio.Group >
+          <Radio.Group size="small">
             {transactionTypeOption.map((opt, i) => (
-              <Radio key={i} value={opt}>{opt}</Radio>
+              <Radio key={i} value={opt}>
+                {opt}
+              </Radio>
             ))}
           </Radio.Group>
         );
 
       case "郵便番号":
         return (
-          <div className="flex items-center gap-3 flex-1">
+          <div className="flex items-center gap-2 flex-1">
             <Input defaultValue="111" className={`${inputBaseClass} w-[80px]`} />
             <span>-</span>
             <Input defaultValue="9999" className={`${inputBaseClass} w-[100px]`} />
             <Button
               type="default"
-              className="[&.ant-btn]:!bg-blue-600 [&.ant-btn]:!text-white 
-                        hover:[&.ant-btn]:!bg-blue-700 
-                        focus:[&.ant-btn]:!bg-white focus:[&.ant-btn]:!text-black px-2"
+              className="!bg-blue-600 !text-white hover:!bg-white hover:!text-black px-2 h-6 w-32"
             >
               住所を検索する
             </Button>
@@ -96,7 +100,7 @@ const BasicInformation = () => {
       case "時間帯1":
       case "時間帯2":
         return (
-          <div className="flex gap-3 w-4/5">
+          <div className="flex gap-2 w-4/5">
             <Input placeholder="0" className={`${inputBaseClass} w-[40px] text-center`} />
             <select defaultValue="空白" className={`${inputBaseClass} px-2 rounded`}>
               <option value="空白">空白</option>
@@ -109,11 +113,17 @@ const BasicInformation = () => {
 
       case "管理部門":
         return (
-          <div className="flex gap-3 w-4/5">
+          <div className="flex gap-2 w-4/5">
             <Input className={`${inputBaseClass} w-[40px] text-center`} placeholder="0" />
-            <Select defaultValue={0} className={`[&>.ant-select-selector]:!bg-[#ebcec0] w-1/4`}>
+            <Select
+              defaultValue={0}
+              className="[&>.ant-select-selector]:!bg-[#ebcec0] w-1/4 h-6"
+              size="small"
+            >
               {departmentOptions.map(opt => (
-                <Option key={opt.value} value={opt.value}>{opt.label}</Option>
+                <Option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </Option>
               ))}
             </Select>
           </div>
@@ -121,23 +131,35 @@ const BasicInformation = () => {
 
       case "配送センターコード":
         return (
-          <div className="flex gap-3 w-4/5">
-            <Select defaultValue="0000" className={`[&>.ant-select-selector]:!bg-[#ebcec0] w-[200px]`}>
+          <div className="flex gap-2 w-4/5 items-center">
+            <Select
+              defaultValue="0000"
+              className="[&>.ant-select-selector]:!bg-[#ebcec0] w-[200px] h-6"
+              size="small"
+            >
               {deliveryCenterOptions.map(opt => (
-                <Option key={opt.value} value={opt.value}>{opt.label}</Option>
+                <Option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </Option>
               ))}
             </Select>
             <div>配送センター01番</div>
-            <Input className={`${inputBaseClass} w-3/5 max-w-[220px] ml-[50px]`} />
+            <Input className={`${inputBaseClass} w-3/5 max-w-[220px] ml-[56px]`} />
           </div>
         );
 
       case "保安機関コード":
         return (
-          <div className="flex gap-3 w-4/5 pl-7">
-            <Select defaultValue="0000" className={`[&>.ant-select-selector]:!bg-[#ebcec0] w-[200px]`}>
+          <div className="flex gap-2 w-4/5 items-center">
+            <Select
+              defaultValue="0000"
+              className="[&>.ant-select-selector]:!bg-[#ebcec0] w-[200px] h-6"
+              size="small"
+            >
               {securityAgencyOptions.map(opt => (
-                <Option key={opt.value} value={opt.value}>{opt.label}</Option>
+                <Option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </Option>
               ))}
             </Select>
             <div>保安機関01番</div>
@@ -147,10 +169,16 @@ const BasicInformation = () => {
 
       case "集中監視コード":
         return (
-          <div className="flex gap-3 w-4/5 pl-7">
-            <Select defaultValue="000" className={`[&>.ant-select-selector]:!bg-[#ebcec0] w-[200px]`}>
+          <div className="flex gap-2 w-4/5 items-center">
+            <Select
+              defaultValue="000"
+              className="[&>.ant-select-selector]:!bg-[#ebcec0] w-[200px] h-6 "
+              size="small"
+            >
               {monitoringOptions.map(opt => (
-                <Option key={opt.value} value={opt.value}>{opt.label}</Option>
+                <Option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </Option>
               ))}
             </Select>
             <div>集中監視01番</div>
@@ -172,27 +200,23 @@ const BasicInformation = () => {
   };
 
   return (
-    <div>
-      <div className="font-bold bg-[#80bad7] w-full p-1 border border-black mb-2">
+    <div className="w-full text-xs py-4">
+      {/* Header */}
+      <div className="h-8 border text-sm border-gray-300 rounded-md bg-[#D9D9D9] font-bold flex items-center px-3">
         基本情報
       </div>
 
-      <div className="grid grid-cols-2 grid-flow-row">
-        {labels.map((label, i) => {
-          const labelClass = `${labelColor} border border-black px-2 flex items-center justify-center font-bold h-[30px] ${
-            label === "配送センターコード" ? "w-[150px]" : "w-[120px]"
-          }`;
-
-          return (
-            <div
-              key={i}
-              className={`flex p-1 gap-3 ${labelGroups.includes(label) ? "col-span-2" : ""}`}
-            >
-              <label className={labelClass}>{label}</label>
-              {renderField(label)}
-            </div>
-          );
-        })}
+      {/* Form */}
+      <div className="grid grid-cols-2 gap-x-6 gap-y-2 p-3">
+        {labels.map((label, i) => (
+          <div
+            key={i}
+            className={`flex items-center ${labelGroups.includes(label) ? "col-span-2" : ""}`}
+          >
+            <label className={labelClass}>{label}</label>
+            {renderField(label)}
+          </div>
+        ))}
       </div>
     </div>
   );
