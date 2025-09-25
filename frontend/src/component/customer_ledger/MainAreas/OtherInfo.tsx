@@ -1,47 +1,6 @@
-import { Button, DatePicker, Select, Input } from "antd";
-import dayjs from "dayjs";
-import { useState } from "react";
-import FamilyInfoModal from "./FamilyInfoModal";
+import { Button, Select, Input } from "antd";
+
 const OtherInfo = () => {
-  const [month, setMonth] = useState(dayjs());
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const handleOpenModal = () => {
-    setIsModalOpen((prev) => !prev);
-  };
-  const familyData = [
-    {
-      id: 1,
-      relation: "父",
-      name: "テスト氏名1",
-      gender: "男性",
-      dob: "1980/01/01",
-      job: "会社員",
-      health: "その他",
-      hobby: "マリンスポーツ",
-    },
-    {
-      id: 2,
-      relation: "母",
-      name: "テスト氏名2",
-      gender: "女性",
-      dob: "1982/05/10",
-      job: "主婦",
-      health: "良好",
-      hobby: "読書",
-    },
-    {
-      id: 3,
-      relation: "長男",
-      name: "テスト氏名3",
-      gender: "男性",
-      dob: "2010/11/20",
-      job: "学生",
-      health: "良好",
-      hobby: "ゲーム",
-    },
-  ];
-
   const label =
     "w-32 mr-2 h-6 border-gray-300 rounded-md bg-[#D9D9D9] font-bold flex text-center justify-center items-center";
   return (
@@ -119,11 +78,11 @@ const OtherInfo = () => {
         </div>
         <div className="flex items-center">
           <label className={label}>周知対象区分</label>
-          <Select className="h-6 w-32" defaultValue="">
-            <Select.Option value="">&nbsp;</Select.Option>
-            <Select.Option value="1: 1 year">1: 1 year</Select.Option>
-            <Select.Option value="2: 2 years">2: 2 years</Select.Option>
-            <Select.Option value="3: 3 years">3: 3 years</Select.Option>
+          <Select className="h-6 w-32" defaultValue="0:空欄">
+            <Select.Option value="0:空欄">0:空欄</Select.Option>
+            <Select.Option value="1:1年">1:1年</Select.Option>
+            <Select.Option value="2:2年">2:2年</Select.Option>
+            <Select.Option value="3:3年">3:3年</Select.Option>
           </Select>
         </div>
         <div className="flex items-center">

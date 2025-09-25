@@ -1,7 +1,7 @@
 import { Button, DatePicker, Select } from "antd";
 import dayjs from "dayjs";
 import { useState } from "react";
-import FamilyInfoModal from "./FamilyInfoModal";
+import FamilyInfoModal from "../FamilyInfoModal";
 const FamilyInfo = () => {
   const [month, setMonth] = useState(dayjs());
   const [isModalOpen, setIsModalOpen] = useState(false);

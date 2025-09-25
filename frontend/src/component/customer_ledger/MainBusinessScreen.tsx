@@ -1,19 +1,23 @@
 import { labelColor } from "../../constants/colors";
 import { Select, Button, Radio, Input } from "antd";
-import BasicInformation from "./BasicInformation";
-import FamilyInfo from "./FamilyInfo";
-import OtherInfo from "./OtherInfo";
-import AcquisitionInformation from "./AcquisitionInformation";
+import BasicInformation from "./MainAreas/BasicInformation";
+import FamilyInfo from "./MainAreas/FamilyInfo";
+import OtherInfo from "./MainAreas/OtherInfo";
+import AcquisitionInformation from "./MainAreas/AcquisitionInformation";
+import AreaInfo from "./MainAreas/AreaInfo";
+import EmergencyContact from "./MainAreas/EmergencyContact";
 
 const MainBusinessScreen = () => {
+  const label =
+    "h-8 border border-gray-300 bg-gray-300 font-bold rounded-md flex text-center justify-center items-center px-2 ml-7 mr-2";
   return (
     <div className="h-screen w-full flex flex-col px-4 py-2">
       {/* label header */}
-      <span
+      <label
         className={`w-full h-10 rounded-md font-bold xl:text-2xl text-xl flex text-center justify-center items-center ${labelColor}`}
       >
         顧客台帳
-      </span>
+      </label>
       {/* customer search */}
       <div className="w-full flex justify-center items-center text-sm">
         <div className="w-[90%] h-24 border border-black rounded-md p-2 flex flex-col mt-2 ">
@@ -66,9 +70,7 @@ const MainBusinessScreen = () => {
             <Button className="h-8 w-14 shadow-md shadow-zinc-500">
               再入力
             </Button>
-            <span className="h-8 border border-black font-bold flex text-center justify-center items-center px-2 ml-7 mr-2">
-              管理区分
-            </span>
+            <label className={label}>管理区分</label>
             <Button className="h-8 w-12 mx-2 shadow-md shadow-zinc-500">
               直売
             </Button>
@@ -83,20 +85,14 @@ const MainBusinessScreen = () => {
             </Button>
           </div>
           <div className="flex flex-row items-center justify-center mt-2">
-            <span className="h-8 border border-black font-bold flex text-center justify-center items-center px-2 ml-7 mr-2">
-              氏名
-            </span>
+            <label className={label}>氏名</label>
             <Input className="w-[20%] !px-0 text-center"></Input>
-            <span className="h-8 border border-black font-bold flex text-center justify-center items-center px-2 ml-7 mr-2">
-              顧客種別
-            </span>
+            <label className={label}>顧客種別</label>
             <Radio.Group defaultValue={"法人以外"}>
               <Radio value="法人以外">法人以外</Radio>
               <Radio value="法人 ">法人 </Radio>
             </Radio.Group>
-            <span className="h-8 border border-black font-bold flex text-center justify-center items-center px-2 ml-7 mr-2">
-              代表者名
-            </span>
+            <label className={label}>代表者名</label>
             <Input className="w-[20%] !px-0 text-center"></Input>
           </div>
         </div>
@@ -115,6 +111,8 @@ const MainBusinessScreen = () => {
         <div className="w-[90%] h-full border border-black p-4 overflow-auto">
           <BasicInformation />
           <AcquisitionInformation/>
+          <AreaInfo />
+          <EmergencyContact />
           <OtherInfo />
           <FamilyInfo />
         </div>

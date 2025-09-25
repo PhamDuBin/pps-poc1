@@ -1,6 +1,6 @@
 import React from "react";
 import { Input, Select, Button, Radio } from "antd";
-import { labelColor, inputColor } from "../../constants/colors";
+import { labelColor, inputColor } from "../../../constants/colors";
 
 const { Option } = Select;
 
@@ -56,7 +56,7 @@ const inputBaseClass = `${inputColor} border border-black h-6`;
 
 const BasicInformation = () => {
   const labelClass =
-    "w-32 mr-2 h-6 border-gray-300 rounded-md bg-[#D9D9D9] font-bold flex text-center justify-center items-center";
+    `w-32 mr-2 h-6 border-gray-300 rounded-md bg-[#D9D9D9] font-bold flex text-center justify-center items-center  ${labelColor}`;
 
   const renderField = (label: string) => {
     switch (label) {
