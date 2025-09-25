@@ -100,7 +100,7 @@ const SalesSlipEntry = forwardRef(
         } else {
           data.headerRow.no = (prev.length + 1).toString().padStart(2, "0");
           const newSlip = { ...data, id: prev.length };
-          return [newSlip, ...prev];
+          return [...prev, newSlip];
         }
       });
 
