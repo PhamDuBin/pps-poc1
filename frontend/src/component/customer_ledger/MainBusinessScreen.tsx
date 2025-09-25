@@ -2,6 +2,8 @@ import { labelColor } from "../../constants/colors";
 import { Select, Button, Radio, Input } from "antd";
 import FamilyInfo from "./FamilyInfo";
 import OtherInfo from "./OtherInfo";
+import EmergencyContact from "./EmergencyContact";
+import AreaInfo from "./AreaInfo";
 
 const MainBusinessScreen = () => {
   return (
@@ -111,6 +113,8 @@ const MainBusinessScreen = () => {
       {/* content area */}
       <div className="w-full h-[70%] flex justify-center items-center text-sm">
         <div className="w-[90%] h-full border border-black p-4 overflow-auto">
+          <AreaInfo />
+          <EmergencyContact />
           <OtherInfo />
           <FamilyInfo />
         </div>
