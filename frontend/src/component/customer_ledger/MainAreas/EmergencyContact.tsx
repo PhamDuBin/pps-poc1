@@ -1,12 +1,13 @@
 import { Button, Input, Select } from "antd";
+import { inputColor, labelColor } from "../../../constants/colors";
 
 const EmergencyContact = () => {
   const label =
-    "w-32 mr-2 h-6 border-gray-300 rounded-md bg-[#D9D9D9] font-bold flex text-center justify-center items-center";
+    `w-32 mr-2 h-6 border-gray-300 rounded-md ${labelColor} font-bold flex text-center justify-center items-center`;
   return (
     <div className="w-full text-xs py-4">
       {/* Header */}
-      <div className="h-8 border text-sm border-gray-300 rounded-md bg-[#D9D9D9] font-bold flex items-center px-3">
+      <div className={`h-8 border text-sm border-gray-300 rounded-md font-bold flex items-center px-3 ${labelColor}`}>
         緊急連絡先
       </div>
 
@@ -20,7 +21,7 @@ const EmergencyContact = () => {
 
         <div className="flex items-center">
           <label className={label}>時間帯</label>
-          <Select className="h-6 w-32" defaultValue="0:空欄">
+          <Select className={`h-6 w-32 [&>.ant-select-selector]:!${inputColor}`} defaultValue="0:空欄">
             <Select.Option value="0:空欄">0:空欄</Select.Option>
             <Select.Option value="1:随時">1:随時</Select.Option>
             <Select.Option value="2:昼間">2:昼間</Select.Option>
@@ -30,7 +31,7 @@ const EmergencyContact = () => {
 
         <div className="flex items-center">
           <label className={label}>時間帯</label>
-          <Select className="h-6 w-32" defaultValue="0:空欄">
+          <Select className={`h-6 w-32 [&>.ant-select-selector]:!${inputColor}`} defaultValue="0:空欄">
             <Select.Option value="0:空欄">0:空欄</Select.Option>
             <Select.Option value="1:随時">1:随時</Select.Option>
             <Select.Option value="2:昼間">2:昼間</Select.Option>
@@ -40,35 +41,35 @@ const EmergencyContact = () => {
 
         <div className="flex items-center">
           <label className={label}>名称</label>
-          <Input className=" h-6 w-32" defaultValue={"緊急連絡先01"}></Input>
+          <Input className={`h-6 w-32 ${inputColor}`}  defaultValue={"緊急連絡先01"}></Input>
         </div>
 
         <div className="flex items-center">
           <label className={label}>名称</label>
-          <Input className=" h-6 w-32" defaultValue={""}></Input>
+          <Input className={`h-6 w-32 ${inputColor}`}  defaultValue={""}></Input>
         </div>
 
         <div className="flex items-center">
           <label className={label}>住所</label>
           <Input
-            className=" h-6 w-32"
+            className={`h-6 w-32 ${inputColor}`} 
             defaultValue={"緊急連絡先住所01"}
           ></Input>
         </div>
 
         <div className="flex items-center">
           <label className={label}>住所</label>
-          <Input className=" h-6 w-32" defaultValue={""}></Input>
+          <Input className={`h-6 w-32 ${inputColor}`}  defaultValue={""}></Input>
         </div>
 
         <div className="flex items-center">
           <label className={label}>電話番号</label>
-          <Input className=" h-6 w-32" defaultValue={"8098876767"}></Input>
+          <Input className={`h-6 w-32 ${inputColor}`}  defaultValue={"8098876767"}></Input>
         </div>
 
         <div className="flex items-center">
           <label className={label}>電話番号</label>
-          <Input className=" h-6 w-32" defaultValue={""}></Input>
+          <Input className={`h-6 w-32 ${inputColor}`}  defaultValue={""}></Input>
         </div>
       </div>
     </div>

@@ -2,7 +2,7 @@ import { Button, Checkbox, DatePicker, Input, Select } from "antd";
 import dayjs, { Dayjs } from "dayjs";
 import { DatePickerInput } from "../../../context/DatePickerInput";
 import { useState } from "react";
-import { inputColor } from "../../../constants/colors";
+import { inputColor, labelColor } from "../../../constants/colors";
 
 
 const { Option } = Select;
@@ -95,14 +95,14 @@ const availabilityOptions = [
 
 
 const labelClass =
-    "w-32 mr-2 h-6 border-gray-300 rounded-md bg-[#D9D9D9] font-bold flex text-center justify-center items-center";
+    `w-32 mr-2 h-6 border-gray-300 rounded-md ${labelColor} font-bold flex text-center justify-center items-center`;
 
 
 const AcquisitionInformation    = () => {
     const [month, setMonth] = useState(dayjs());
     return (
         <div className="w-full text-xs py-4">
-            <div className="h-8 border text-sm border-gray-300 rounded-md bg-[#D9D9D9] font-bold flex items-center px-3">獲得情報</div> 
+            <div className={`h-8 border text-sm border-gray-300 rounded-md font-bold flex items-center px-3 ${labelColor}`}>獲得情報</div> 
             <div className="flex flex-col p-3">
                 <div className="w-full flex py-1">
                     <div className={`font-semibold ${labelClass}`}>開閉栓区分</div>
@@ -316,19 +316,19 @@ const AcquisitionInformation    = () => {
                 <div className="flex flex-col items-center gap-2 p-1 w-4/5">
                     <div className="w-full flex gap-2">
                         <div className="flex items-center gap-1 mr-5">
-                            <Input size="small" className="w-[50px]" />
+                            <Input size="small" className={`w-[50px] ${inputColor}`} />
                             <div>日頃</div>
                         </div>
                         <div className="flex items-center gap-1">
-                            <Input size="small" className="w-[50px]" />
+                            <Input size="small" className={`w-[50px] ${inputColor}`}  />
                             <div>時 ～</div>
                         </div>
                         <div className="flex items-center gap-1 mr-5">
-                            <Input size="small" className="w-[50px]" />
+                            <Input size="small" className={`w-[50px] ${inputColor}`} />
                             <div>時</div>
                         </div>
                         <div className="flex items-center gap-1">
-                            <Input size="small" className="w-[50px]" />
+                            <Input size="small" className={`w-[50px] ${inputColor}`} />
                             <Button className="w-6 h-6">▼</Button>
                             <div>曜日</div>
                         </div>

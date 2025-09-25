@@ -2,6 +2,7 @@ import { Button, DatePicker, Select } from "antd";
 import dayjs from "dayjs";
 import { useState } from "react";
 import FamilyInfoModal from "../FamilyInfoModal";
+import { inputColor, labelColor } from "../../../constants/colors";
 const FamilyInfo = () => {
   const [month, setMonth] = useState(dayjs());
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -43,11 +44,11 @@ const FamilyInfo = () => {
   ];
 
   const label =
-    "w-32 mr-2 h-6 border-gray-300 rounded-md bg-[#D9D9D9] font-bold flex text-center justify-center items-center";
+    `w-32 mr-2 h-6 border-gray-300 rounded-md font-bold flex text-center justify-center items-center ${labelColor}`;
   return (
     <div className="w-full text-xs">
       {/* Header */}
-      <div className="h-8 border text-sm border-gray-300 rounded-md bg-[#D9D9D9] font-bold flex items-center px-3">
+      <div className={`h-8 border text-sm border-gray-300 rounded-md font-bold flex items-center px-3 ${labelColor}`}>
         家族情報
       </div>
 
@@ -60,13 +61,13 @@ const FamilyInfo = () => {
             picker="month"
             value={month}
             onChange={(date) => setMonth(date)}
-            className={` h-6 w-32`}
+            className={` h-6 w-32 !bg-[#ebcec0]`}
             format="YYYY/MM"
           />
         </div>
         <div className="flex items-center">
           <label className={label}>共働き区分</label>
-          <Select defaultValue={"0 空欄"} className=" h-6 w-32">
+          <Select defaultValue={"0 空欄"} className=" h-6 w-32 [&>.ant-select-selector]:!bg-[#ebcec0]">
             <Select.Option value={"0 空欄"}>0 空欄</Select.Option>
             <Select.Option value={"1 共働き"}>1 共働き</Select.Option>
           </Select>
@@ -74,7 +75,7 @@ const FamilyInfo = () => {
 
         <div className="flex items-center">
           <label className={label}>住居タイプ</label>
-          <Select defaultValue={"00:空白"} className=" h-6 w-32">
+          <Select defaultValue={"00:空白"} className=" h-6 w-32 [&>.ant-select-selector]:!bg-[#ebcec0]">
             <Select.Option value={"00:空白"}>00:空白</Select.Option>
             <Select.Option value={"01:戸建て"}>01:戸建て</Select.Option>
             <Select.Option value={"02:3LDK"}>02:3LDK</Select.Option>
@@ -87,7 +88,7 @@ const FamilyInfo = () => {
         </div>
         <div className="flex items-center">
           <label className={label}>取引関係</label>
-          <Select defaultValue={"0:空欄"} className=" h-6 w-32">
+          <Select defaultValue={"0:空欄"} className=" h-6 w-32 [&>.ant-select-selector]:!bg-[#ebcec0]">
             <Select.Option value={"0:空欄"}>0:空欄</Select.Option>
             <Select.Option value={"1:A"}>1:A</Select.Option>
             <Select.Option value={"2:B"}>2:B</Select.Option>
@@ -98,7 +99,7 @@ const FamilyInfo = () => {
 
         <div className="flex items-center">
           <label className={label}>信用状況</label>
-          <Select defaultValue={"0:空欄"} className=" h-6 w-32">
+          <Select defaultValue={"0:空欄"} className=" h-6 w-32 [&>.ant-select-selector]:!bg-[#ebcec0]">
             <Select.Option value={"0:空欄"}>0:空欄</Select.Option>
             <Select.Option value={"1:A"}>1:A</Select.Option>
             <Select.Option value={"2:B"}>2:B</Select.Option>
@@ -108,7 +109,7 @@ const FamilyInfo = () => {
         </div>
         <div className="flex items-center">
           <label className={label}>購買力</label>
-          <Select defaultValue={"0:空欄"} className=" h-6 w-32">
+          <Select defaultValue={"0:空欄"} className=" h-6 w-32 [&>.ant-select-selector]:!bg-[#ebcec0]">
             <Select.Option value={"0:空欄"}>0:空欄</Select.Option>
             <Select.Option value={"1:A"}>1:A</Select.Option>
             <Select.Option value={"2:B"}>2:B</Select.Option>
@@ -119,7 +120,7 @@ const FamilyInfo = () => {
 
         <div className="flex items-center">
           <label className={label}>生活行動</label>
-          <Select defaultValue={"0:空欄"} className=" h-6 w-32">
+          <Select defaultValue={"0:空欄"} className=" h-6 w-32 [&>.ant-select-selector]:!bg-[#ebcec0]">
             <Select.Option value={"0:空欄"}>0:空欄</Select.Option>
             <Select.Option value={"1:A"}>1:A</Select.Option>
             <Select.Option value={"2:B"}>2:B</Select.Option>
@@ -129,7 +130,7 @@ const FamilyInfo = () => {
         </div>
         <div className="flex items-center">
           <label className={label}>総合ランク</label>
-          <Select defaultValue={"0:空欄"} className=" h-6 w-32">
+          <Select defaultValue={"0:空欄"} className=" h-6 w-32 [&>.ant-select-selector]:!bg-[#ebcec0]">
             <Select.Option value={"0:空欄"}>0:空欄</Select.Option>
             <Select.Option value={"1:A"}>1:A</Select.Option>
             <Select.Option value={"2:B"}>2:B</Select.Option>
@@ -140,7 +141,7 @@ const FamilyInfo = () => {
 
         <div className="flex items-center col-span-2">
           <label className={label}>自由記述要素</label>
-          <Select defaultValue={"0:空欄"} className=" h-6 w-32">
+          <Select defaultValue={"0:空欄"} className=" h-6 w-32 [&>.ant-select-selector]:!bg-[#ebcec0]">
             <Select.Option value={"0:空欄"}>0:空欄</Select.Option>
             <Select.Option value={"1:null"}>1:null</Select.Option>
             <Select.Option value={"2:null"}>2:null</Select.Option>
@@ -159,7 +160,7 @@ const FamilyInfo = () => {
       <div className="px-3 pb-2">
         <Button
           onClick={handleOpenModal}
-          className="text-xs shadow-md shadow-zinc-600 px-3 py-1"
+          className={`text-xs shadow-md shadow-zinc-600 px-3 py-1 ${labelColor}`}
         >
           家族情報追加
         </Button>
@@ -179,7 +180,7 @@ const FamilyInfo = () => {
                 "健康関連",
                 "趣味",
               ].map((h) => (
-                <th key={h} className="border border-gray-400 px-2 py-1">
+                <th key={h} className={`border border-gray-400 ${labelColor} px-2 py-1`}>
                   {h}
                 </th>
               ))}
@@ -190,7 +191,7 @@ const FamilyInfo = () => {
               <tr
                 key={row.id}
                 tabIndex={0}
-                className="cursor-pointer hover:bg-gray-100 focus:bg-blue-200 focus:outline-none"
+                className={`cursor-pointer ${inputColor} hover:bg-gray-100 focus:bg-blue-200 focus:outline-none`}
                 onDoubleClick={handleOpenModal}
                 onKeyDown={(e) => {
                   if (e.key === "Enter") {

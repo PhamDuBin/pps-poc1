@@ -56,7 +56,7 @@ const inputBaseClass = `${inputColor} border border-black h-6`;
 
 const BasicInformation = () => {
   const labelClass =
-    `w-32 mr-2 h-6 border-gray-300 rounded-md bg-[#D9D9D9] font-bold flex text-center justify-center items-center  ${labelColor}`;
+    `w-32 mr-2 h-6 border-gray-300 rounded-md font-bold flex text-center justify-center items-center  ${labelColor}`;
 
   const renderField = (label: string) => {
     switch (label) {
@@ -90,7 +90,7 @@ const BasicInformation = () => {
             <Input defaultValue="9999" className={`${inputBaseClass} w-[100px]`} />
             <Button
               type="default"
-              className="!bg-blue-600 !text-white hover:!bg-white hover:!text-black px-2 h-6 w-32"
+              className="!bg-blue-600 !text-white hover:!bg-white hover:!text-blue-600 px-2 h-6 w-32"
             >
               住所を検索する
             </Button>
@@ -202,7 +202,7 @@ const BasicInformation = () => {
   return (
     <div className="w-full text-xs py-4">
       {/* Header */}
-      <div className="h-8 border text-sm border-gray-300 rounded-md bg-[#D9D9D9] font-bold flex items-center px-3">
+      <div className={`h-8 border text-sm border-gray-300 rounded-md font-bold flex items-center px-3 ${labelColor}`}>
         基本情報
       </div>
 

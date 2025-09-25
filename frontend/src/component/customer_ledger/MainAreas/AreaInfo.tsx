@@ -1,11 +1,12 @@
 import { Input, Button } from "antd";
 import React from "react";
+import { inputColor, labelColor } from "../../../constants/colors";
 
 const AreaInfo = () => {
   const headerCellClass =
-    "h-6 px-2 bg-[#D9D9D9] font-bold text-center flex items-center justify-center text-sm rounded-md";
+    `h-6 px-2 ${labelColor} font-bold text-center flex items-center justify-center text-sm rounded-md`;
   const rowLabelClass =
-    "h-6 w-32 px-2 bg-[#D9D9D9] font-bold flex items-center justify-center text-sm rounded-md";
+    `h-6 w-32 px-2 ${labelColor} font-bold flex items-center justify-center text-sm rounded-md`;
 
   const rows = ["営業", "検針", "集金", "配送", "点検", "保安"];
 
@@ -19,7 +20,7 @@ const AreaInfo = () => {
 
   return (
     <div className="w-full text-xs">
-      <div className="h-8 rounded-md bg-[#D9D9D9] font-bold flex items-center px-3 text-sm">
+      <div className={`h-8 border text-sm border-gray-300 rounded-md font-bold flex items-center px-3 ${labelColor}`}>
         担当・地区情報
       </div>
 
@@ -35,7 +36,7 @@ const AreaInfo = () => {
 
             <div className="flex items-center">
               <Input
-                className="h-6 w-32 text-center "
+                className={`h-6 w-32 text-center ${inputColor}`}
                 defaultValue={"000000"}
                 maxLength={6}
                 onChange={(e) => handleNumericInput(e, 6)}
@@ -54,7 +55,7 @@ const AreaInfo = () => {
               <>
                 <div className="flex items-center">
                   <Input
-                    className="h-6 w-32 text-center "
+                    className={`h-6 w-32 text-center ${inputColor}`}
                     defaultValue={"000"}
                     maxLength={3}
                     onChange={(e) => handleNumericInput(e, 3)}
@@ -66,14 +67,14 @@ const AreaInfo = () => {
 
                 <div className="flex items-center">
                   <Input
-                    className="h-6 w-32 text-center "
+                    className={`h-6 w-32 text-center ${inputColor}`}
                     defaultValue={"0000"}
                     maxLength={4}
                     onChange={(e) => handleNumericInput(e, 4)}
                   />
                   <span className="mx-1">-</span>
                   <Input
-                    className="h-6 w-32 text-center "
+                    className={`h-6 w-32 text-center ${inputColor}`}
                     defaultValue={"000"}
                     maxLength={3}
                     onChange={(e) => handleNumericInput(e, 3)}

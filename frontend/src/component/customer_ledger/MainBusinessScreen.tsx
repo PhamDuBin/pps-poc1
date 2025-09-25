@@ -1,4 +1,4 @@
-import { labelColor } from "../../constants/colors";
+import { labelColor , inputColor} from "../../constants/colors";
 import { Select, Button, Radio, Input } from "antd";
 import BasicInformation from "./MainAreas/BasicInformation";
 import FamilyInfo from "./MainAreas/FamilyInfo";
@@ -9,7 +9,8 @@ import EmergencyContact from "./MainAreas/EmergencyContact";
 
 const MainBusinessScreen = () => {
   const label =
-    "h-8 border border-gray-300 bg-gray-300 font-bold rounded-md flex text-center justify-center items-center px-2 ml-7 mr-2";
+    `h-8 border border-gray-300 font-bold rounded-md flex text-center justify-center items-center px-2 ml-7 mr-2 ${labelColor}`;
+  const button = `flex text-center justify-center items-center ${labelColor} border border-black xl:text-base text-xs font-bold shadow-md shadow-zinc-600 hover:bg-white`;
   return (
     <div className="h-screen w-full flex flex-col px-4 py-2">
       {/* label header */}
@@ -22,7 +23,7 @@ const MainBusinessScreen = () => {
       <div className="w-full flex justify-center items-center text-sm">
         <div className="w-[90%] h-24 border border-black rounded-md p-2 flex flex-col mt-2 ">
           <div className="w-full flex flex-row items-center justify-center">
-            <Select className="w-40 mr-2 " defaultValue="顧客コード">
+            <Select className="w-40 mr-2 [&>.ant-select-selector]:!bg-[#ebcec0]" defaultValue="顧客コード">
               <Select.Option value="顧客コード">顧客コード</Select.Option>
               <Select.Option value="取引先">取引先</Select.Option>
               <Select.Option value="検索キー2">検索キー2</Select.Option>
@@ -46,65 +47,65 @@ const MainBusinessScreen = () => {
               </Select.Option>
             </Select>
             <Input
-              className="w-10 !px-0 text-center"
+              className={`w-10 !px-0 text-center !${inputColor}`}
               defaultValue={"0000"}
             ></Input>
             <span>-</span>
             <Input
-              className="w-10 !px-0 text-center"
+              className={`w-10 !px-0 text-center !${inputColor}`}
               defaultValue={"000"}
             ></Input>
             <span>-</span>
             <Input
-              className="w-14 !px-0 text-center"
+              className={`w-14 !px-0 text-center !${inputColor}`}
               defaultValue={"000000"}
             ></Input>
             <span>-</span>
             <Input
-              className="w-10 !px-0 text-center"
+              className={`w-10 !px-0 text-center !${inputColor}`}
               defaultValue={"000"}
             ></Input>
-            <Button className="h-8 w-8 mx-2 shadow-md shadow-zinc-500">
+            <Button className={`${button} mx-2`}>
               ▼
             </Button>
-            <Button className="h-8 w-14 shadow-md shadow-zinc-500">
+            <Button className={`${button} mx-2`}>
               再入力
             </Button>
             <label className={label}>管理区分</label>
-            <Button className="h-8 w-12 mx-2 shadow-md shadow-zinc-500">
+            <Button className={`${button} mx-2`}>
               直売
             </Button>
-            <Button className="h-8 w-12 mx-2 shadow-md shadow-zinc-500">
+            <Button className={`${button} mx-2`}>
               卸
             </Button>
-            <Button className="h-8 w-12 mx-2 shadow-md shadow-zinc-500">
+            <Button className={`${button} mx-2`}>
               配送
             </Button>
-            <Button className="h-8 w-12 mx-2 shadow-md shadow-zinc-500">
+            <Button className={`${button} mx-2`}>
               保安
             </Button>
           </div>
           <div className="flex flex-row items-center justify-center mt-2">
             <label className={label}>氏名</label>
-            <Input className="w-[20%] !px-0 text-center"></Input>
+            <Input className={`w-[20%] !px-0 text-center ${inputColor}`}></Input>
             <label className={label}>顧客種別</label>
             <Radio.Group defaultValue={"法人以外"}>
               <Radio value="法人以外">法人以外</Radio>
               <Radio value="法人 ">法人 </Radio>
             </Radio.Group>
             <label className={label}>代表者名</label>
-            <Input className="w-[20%] !px-0 text-center"></Input>
+            <Input className={`w-[20%] !px-0 text-center ${inputColor}`}></Input>
           </div>
         </div>
       </div>
       {/* button group */}
       <div className="flex flex-row my-2 justify-between items-center text-sm mx-48">
-        <Button className="w-28 shadow-md shadow-zinc-500">基本情報</Button>
-        <Button className="w-28 shadow-md shadow-zinc-500">獲得情報</Button>
-        <Button className="w-28 shadow-md shadow-zinc-500">担当・地区</Button>
-        <Button className="w-28 shadow-md shadow-zinc-500">緊急連絡先</Button>
-        <Button className="w-28 shadow-md shadow-zinc-500">その他情報</Button>
-        <Button className="w-28 shadow-md shadow-zinc-500">家族情報</Button>
+        <Button className={`!bg-[#80bad7] !text-black hover:!bg-white hover:!text-blue-600 w-28 shadow-md shadow-zinc-500`}>基本情報</Button>
+        <Button className={`!bg-[#80bad7] !text-black hover:!bg-white hover:!text-blue-600 w-28 shadow-md shadow-zinc-500`}>獲得情報</Button>
+        <Button className={`!bg-[#80bad7] !text-black hover:!bg-white hover:!text-blue-600 w-28 shadow-md shadow-zinc-500`}>担当・地区</Button>
+        <Button className={`!bg-[#80bad7] !text-black hover:!bg-white hover:!text-blue-600 sw-28 shadow-md shadow-zinc-50`}>緊急連絡先</Button>
+        <Button className={`!bg-[#80bad7] !text-black hover:!bg-white hover:!text-blue-600 w-28 shadow-md shadow-zinc-50`}>その他情報</Button>
+        <Button className={`!bg-[#80bad7] !text-black hover:!bg-white hover:!text-blue-600 w-28 shadow-md shadow-zinc-500`}>家族情報</Button>
       </div>
       {/* content area */}
       <div className="w-full h-[70%] flex justify-center items-center text-sm">
@@ -120,47 +121,47 @@ const MainBusinessScreen = () => {
       {/* footer */}
       <div className="flex flex-col text-sm w-full justify-center items-center mt-2">
         <div className="flex flex-row justify-between items-center w-[90%]">
-          <Button className="w-28 shadow-md shadow-zinc-500">F1ヘルプ</Button>
-          <Button className="w-28 shadow-md shadow-zinc-500">F2入力切替</Button>
-          <Button className="w-28 shadow-md shadow-zinc-500">
+          <Button className={`!bg-[#80bad7] !text-black hover:!bg-white hover:!text-blue-600 w-28 shadow-md shadow-zinc-500`}>F1ヘルプ</Button>
+          <Button className={`!bg-[#80bad7] !text-black hover:!bg-white hover:!text-blue-600 w-28 shadow-md shadow-zinc-500`}>F2入力切替</Button>
+          <Button className={`!bg-[#80bad7] !text-black hover:!bg-white hover:!text-blue-600 w-28 shadow-md shadow-zinc-500`}>
             F3事業所変更
           </Button>
-          <Button className="w-28 shadow-md shadow-zinc-500">F4検索</Button>
-          <Button className="w-28 shadow-md shadow-zinc-500">F5前の顧客</Button>
-          <Button className="w-28 shadow-md shadow-zinc-500">F6次の顧客</Button>
-          <Button className="w-28 shadow-md shadow-zinc-500">
+          <Button className={`!bg-[#80bad7] !text-black hover:!bg-white hover:!text-blue-600 w-28 shadow-md shadow-zinc-500`}>F4検索</Button>
+          <Button className={`!bg-[#80bad7] !text-black hover:!bg-white hover:!text-blue-600 w-28 shadow-md shadow-zinc-500`}>F5前の顧客</Button>
+          <Button className={`!bg-[#80bad7] !text-black hover:!bg-white hover:!text-blue-600 w-28 shadow-md shadow-zinc-500`}>F6次の顧客</Button>
+          <Button className={`!bg-[#80bad7] !text-black hover:!bg-white hover:!text-blue-600 w-28 shadow-md shadow-zinc-500`}>
             F7顧客コード変更
           </Button>
-          <Button className="w-28 shadow-md shadow-zinc-500">F8再入力</Button>
+          <Button className={`!bg-[#80bad7] !text-black hover:!bg-white hover:!text-blue-600 w-28 shadow-md shadow-zinc-500`}>F8再入力</Button>
         </div>
         <div className="flex flex-col w-[90%] mt-2">
           {/* Hàng thứ hai: chia 3 block */}
           <div className="flex flex-row justify-between w-full">
             {/* マスター情報 */}
             <div className="flex flex-col w-[40%]">
-              <span className="h-8 border border-gray-300 rounded-md font-bold flex text-center justify-center items-center w-full">
+              <span className={`h-8 border border-gray-300 rounded-md font-bold flex text-center justify-center items-center w-full ${labelColor}`}>
                 マスター情報
               </span>
               <div className="flex flex-row w-full">
-                <Button className="flex-1 h-20 m-0.5 shadow-md shadow-zinc-500 leading-tight whitespace-pre-line">
+                <Button className={`flex-1 h-20 m-0.5 shadow-md shadow-zinc-500 leading-tight whitespace-pre-line ${labelColor}`}>
                   顧客{"\n"}情報
                 </Button>
-                <Button className="flex-1 h-20 m-0.5 shadow-md shadow-zinc-500 leading-tight whitespace-pre-line">
+                <Button className={`flex-1 h-20 m-0.5 shadow-md shadow-zinc-500 leading-tight whitespace-pre-line ${labelColor}`}>
                   請求{"\n"}情報
                 </Button>
-                <Button className="flex-1 h-20 m-0.5 shadow-md shadow-zinc-500 leading-tight whitespace-pre-line">
+                <Button className={`flex-1 h-20 m-0.5 shadow-md shadow-zinc-500 leading-tight whitespace-pre-line ${labelColor}`}>
                   検配{"\n"}情報
                 </Button>
-                <Button className="flex-1 h-20 m-0.5 shadow-md shadow-zinc-500 leading-tight whitespace-pre-line">
+                <Button className={`flex-1 h-20 m-0.5 shadow-md shadow-zinc-500 leading-tight whitespace-pre-line ${labelColor}`}>
                   灯油{"\n"}情報
                 </Button>
-                <Button className="flex-1 h-20 m-0.5 shadow-md shadow-zinc-500 leading-tight whitespace-pre-line">
+                <Button className={`flex-1 h-20 m-0.5 shadow-md shadow-zinc-500 leading-tight whitespace-pre-line ${labelColor}`}>
                   集中{"\n"}監視
                 </Button>
-                <Button className="flex-1 h-20 m-0.5 shadow-md shadow-zinc-500 leading-tight whitespace-pre-line">
+                <Button className={`flex-1 h-20 m-0.5 shadow-md shadow-zinc-500 leading-tight whitespace-pre-line ${labelColor}`}>
                   保証金
                 </Button>
-                <Button className="flex-1 h-20 m-0.5 shadow-md shadow-zinc-500 leading-tight whitespace-pre-line">
+                <Button className={`flex-1 h-20 m-0.5 shadow-md shadow-zinc-500 leading-tight whitespace-pre-line ${labelColor}`}>
                   保安{"\n"}情報
                 </Button>
               </div>
@@ -168,20 +169,20 @@ const MainBusinessScreen = () => {
 
             {/* 伝票入力 */}
             <div className="flex flex-col w-[30%]">
-              <span className="h-8 border border-gray-300 rounded-md font-bold flex text-center justify-center items-center w-full">
+              <span className={`h-8 border border-gray-300 rounded-md font-bold flex text-center justify-center items-center w-full ${labelColor}`}>
                 伝票入力
               </span>
               <div className="flex flex-row w-full">
-                <Button className="flex-1 h-20 m-0.5 shadow-md shadow-zinc-500 leading-tight whitespace-pre-line">
+                <Button className={`flex-1 h-20 m-0.5 shadow-md shadow-zinc-500 leading-tight whitespace-pre-line ${labelColor}`}>
                   開始{"\n"}点検
                 </Button>
-                <Button className="flex-1 h-20 m-0.5 shadow-md shadow-zinc-500 leading-tight whitespace-pre-line">
+                <Button className={`flex-1 h-20 m-0.5 shadow-md shadow-zinc-500 leading-tight whitespace-pre-line ${labelColor}`}>
                   開閉{"\n"}伝票
                 </Button>
-                <Button className="flex-1 h-20 m-0.5 shadow-md shadow-zinc-500 leading-tight whitespace-pre-line">
+                <Button className={`flex-1 h-20 m-0.5 shadow-md shadow-zinc-500 leading-tight whitespace-pre-line ${labelColor}`}>
                   検針{"\n"}伝票
                 </Button>
-                <Button className="flex-1 h-20 m-0.5 shadow-md shadow-zinc-500 leading-tight whitespace-pre-line">
+                <Button className={`flex-1 h-20 m-0.5 shadow-md shadow-zinc-500 leading-tight whitespace-pre-line ${labelColor}`}>
                   配送{"\n"}伝票
                 </Button>
               </div>
@@ -189,13 +190,13 @@ const MainBusinessScreen = () => {
 
             {/* 保存削除閉じる */}
             <div className="flex flex-row justify-end w-[30%]">
-              <Button className="flex-1 h-full shadow-md shadow-zinc-500">
+              <Button className={`flex-1 h-full shadow-md shadow-zinc-500 ${labelColor}`}>
                 保存(S)
               </Button>
-              <Button className="flex-1 h-full shadow-md shadow-zinc-500">
+              <Button className={`flex-1 h-full shadow-md shadow-zinc-500 ${labelColor}`}>
                 削除(D)
               </Button>
-              <Button className="flex-1 h-full shadow-md shadow-zinc-500">
+              <Button className={`flex-1 h-full shadow-md shadow-zinc-500 ${labelColor}`}>
                 閉じる(C)
               </Button>
             </div>
