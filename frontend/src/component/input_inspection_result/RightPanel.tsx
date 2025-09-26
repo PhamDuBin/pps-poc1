@@ -65,7 +65,7 @@ const SurveyRow: React.FC<SurveyRowProps> = ({
   const isDisabled = value === "" || value === "0" || isPrecedingDisabled;
 
   return (
-    <div className="flex flex-row relative w-full mt-1">
+    <div className="flex flex-row relative w-full mt-1 text-[10px]">
       <select
         id={`survey-select-${index}`}
         value={value}
@@ -75,7 +75,7 @@ const SurveyRow: React.FC<SurveyRowProps> = ({
           handleNumericSelectKeyDown(e, (val) => onValueChange(val as string));
           onSelectKeyDown(e);
         }}
-        className="border border-black rounded-lg bg-[#ebcec0] w-[25%]"
+        className="border border-black rounded-lg bg-[#ebcec0] w-[25%] text-[10px]"
       >
         <option value="" disabled hidden></option>
         <option value="0">0:空白</option>
@@ -91,7 +91,7 @@ const SurveyRow: React.FC<SurveyRowProps> = ({
       <Button
         onClick={onOpenModal}
         disabled={isDisabled}
-        className={`w-[30%] border border-black ${
+        className={`w-[30%] border border-black text-[10px] ${
           isDisabled ? "bg-gray-300 cursor-not-allowed" : "bg-[#80bad7]"
         }`}
       >
@@ -361,17 +361,19 @@ const RightPanel = () => {
         <div>
           <span className={`${label} font-bold w-full`}>今回調査日</span>
           <div className="flex flex-row relative">
-            <span className={`${label} !h-[32px] w-[30%]`}>調査日</span>
+            <span className={`${label} !h-[32px] w-[30%] text-[10px]`}>
+              調査日
+            </span>
             <div className="w-[70%] ml-auto">
               <DatePickerInput />
             </div>
           </div>
         </div>
-        <div className="flex flex-row w-full">
+        <div className="flex flex-row w-full text-[10px]">
           <span className="w-[10%] h-[120px] bg-[#80bad7] flex justify-center items-center text-center border border-black">
             調査区分
           </span>
-          <div className="flex flex-col w-[35%]">
+          <div className="flex flex-col w-[35%] ">
             <span className={`${label} `}>供給開始</span>
             <span className={`${label} `}>供給点検</span>
             <span className={`${label} `}>消費調査</span>
@@ -438,7 +440,7 @@ const RightPanel = () => {
               />
             );
           })}
-          <div className="flex flex-row mt-2">
+          <div className="flex flex-row mt-2 text-[10px]">
             <span
               className={`w-[15%] flex items-center justify-center border border-black ${labelColor}`}
             >
@@ -495,7 +497,7 @@ const RightPanel = () => {
         </div>
         <div className="mt-2">
           <span className={`${label} font-bold w-full`}>交換部品</span>
-          <div className="w-full border border-black">
+          <div className="w-full border border-black text-[10px]">
             <div className="max-h-[70px] overflow-y-scroll">
               <table className="w-full border-collapse">
                 <thead>
@@ -528,7 +530,7 @@ const RightPanel = () => {
             </div>
           </div>
         </div>
-        <div className="mt-2">
+        <div className="mt-2 text-[10px]">
           <div className="flex flex-row">
             <span className={`${label} !w-3/5`}>消費設備調査</span>
             <button
@@ -575,12 +577,11 @@ const RightPanel = () => {
                   ))}
                 </CustomSelectWithCenteredArrow>
               </div>
-              <input
+              <textarea
                 disabled={options1[index3] !== "否"}
-                type="text"
                 value={tsuchihoCode}
                 onChange={(e) => setTsuchihoCode(e.target.value)}
-                className="w-11/12 h-[80px] border border-black bg-[#ebcec0] text-center"
+                className="w-11/12 h-[80px] border border-black bg-[#ebcec0] text-left align-top p-1 resize-none"
               />
             </div>
           </div>
@@ -621,12 +622,11 @@ const RightPanel = () => {
                   ))}
                 </CustomSelectWithCenteredArrow>
               </div>
-              <input
+              <textarea
                 disabled={options1[index3] !== "否"}
-                type="text"
                 value={kaizenCode}
                 onChange={(e) => setKaizenCode(e.target.value)}
-                className="w-11/12 h-[80px] border border-black bg-[#ebcec0] text-center"
+                className="w-11/12 h-[80px] border border-black bg-[#ebcec0] text-left align-top p-1 resize-none"
               />
             </div>
           </div>
@@ -637,7 +637,7 @@ const RightPanel = () => {
             </div>
           </div>
         </div>
-        <div className="mt-2">
+        <div className="mt-2 text-[10px]">
           <div className="flex flex-row">
             <span className={`${label} !w-3/5`}>供給設備点検</span>
             <button
@@ -684,12 +684,11 @@ const RightPanel = () => {
                   ))}
                 </CustomSelectWithCenteredArrow>
               </div>
-              <input
+              <textarea
                 disabled={options2[index4] !== "否"}
-                type="text"
                 value={kyokyuTsuchihoCode}
                 onChange={(e) => setKyokyuTsuchihoCode(e.target.value)}
-                className="w-11/12 h-[80px] border border-black bg-[#ebcec0] text-center"
+                className="w-11/12 h-[80px] border border-black bg-[#ebcec0] text-left align-top p-1 resize-none"
               />
             </div>
           </div>
@@ -730,12 +729,11 @@ const RightPanel = () => {
                   ))}
                 </CustomSelectWithCenteredArrow>
               </div>
-              <input
+              <textarea
                 disabled={options2[index4] !== "否"}
-                type="text"
                 value={kyokyuKaizenCode}
                 onChange={(e) => setKyokyuKaizenCode(e.target.value)}
-                className="w-11/12 h-[80px] border border-black bg-[#ebcec0] text-center"
+                className="w-11/12 h-[80px] border border-black bg-[#ebcec0] text-left align-top p-1 resize-none"
               />
             </div>
           </div>
@@ -744,27 +742,27 @@ const RightPanel = () => {
             <input className="w-[60%] border border-black bg-[#ebcec0]"></input>
           </div>
         </div>
-        <div className="flex flex-row justify-between mt-2">
-          <Button className="w-1/4 border border-black rounded-lg bg-[#f0ff98] p-1">
+        <div className="flex flex-row justify-between mt-2 ">
+          <Button className="w-1/4 text-[10px] border border-black rounded-lg bg-[#f0ff98] p-1">
             地図
           </Button>
-          <Button className="w-1/4 border border-black rounded-lg bg-[#f0ff98] p-1">
+          <Button className="w-1/4 text-[10px] border border-black rounded-lg bg-[#f0ff98] p-1">
             図面
           </Button>
-          <Button className="w-1/4 border border-black rounded-lg bg-[#f0ff98] p-1">
+          <Button className="w-1/4 text-[10px] border border-black rounded-lg bg-[#f0ff98] p-1">
             写真
           </Button>
         </div>
         <div className="flex flex-row justify-between mt-2">
           <Button
             onClick={() => setIsCustomerModalOpen(true)}
-            className="w-2/5 border border-black bg-[#f0ff98] shadow-xl p-2"
+            className="w-2/5 border text-[10px] border-black bg-[#f0ff98] shadow-xl p-2"
           >
             保存（S)
           </Button>
           <Button
             onClick={() => setIsCustomerModalOpen(true)}
-            className="w-2/5 border border-black bg-[#f0ff98] shadow-xl p-2"
+            className="w-2/5 border text-[10px] border-black bg-[#f0ff98] shadow-xl p-2"
           >
             閉じる（C)
           </Button>

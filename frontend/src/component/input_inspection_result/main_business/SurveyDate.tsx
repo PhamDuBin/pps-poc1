@@ -115,7 +115,7 @@ const SurveyDate = () => {
                 {Array.from({ length: totalRows }).map((_, row) => {
                   const rowHasCheck = states[row].some((s) => s === 3);
                   return (
-                    <tr key={row} className={`${inputColor}`}>
+                    <tr key={row} className={`${inputColor} h-6`}>
                       <td className="border border-black text-center bg-[#F5F5F5]">
                         {row + 1}
                       </td>
@@ -172,7 +172,7 @@ const SurveyDate = () => {
                                     onClick={() =>
                                       handleValueChange(row, 0.0001)
                                     }
-                                    className="h-4 w-5 border-b border-l border-gray-400 flex items-center justify-center text-xs hover:bg-gray-200 active:bg-gray-300"
+                                    className="h-2 w-5 border-b border-l border-gray-400 flex items-center justify-center text-[8px] hover:bg-gray-200 active:bg-gray-300"
                                     tabIndex={-1}
                                   >
                                     ▲
@@ -181,7 +181,7 @@ const SurveyDate = () => {
                                     onClick={() =>
                                       handleValueChange(row, -0.0001)
                                     }
-                                    className="h-4 w-5 border-l border-gray-400 flex items-center justify-center text-xs hover:bg-gray-200 active:bg-gray-300"
+                                    className="h-2 w-5 border-l border-gray-400 flex items-center justify-center text-[8px] hover:bg-gray-200 active:bg-gray-300"
                                     tabIndex={-1}
                                   >
                                     ▼

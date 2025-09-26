@@ -28,6 +28,7 @@ export const DatePickerInput: React.FC<DatePickerInputProps> = ({
         defaultValue={dayjs()}
         onChange={handleChange}
         format="YYYY/MM/DD"
+        style={{ fontSize: "10px" }}
         placeholder="yyyy/mm/dd"
         className="w-full bg-[#ebcec0] px-2 py-1 border border-black"
         suffixIcon={<DownArrowIcon />}
