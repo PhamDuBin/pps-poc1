@@ -2,11 +2,10 @@ import { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import { inputColor, labelColor } from "../../../constants/colors";
 import { Select, Checkbox, Radio, Input } from "antd";
 import {
-  extractHalfWidthDigits,
   convertToFullWidth,
   handleFormatting,
-  allowDecimalInput,
 } from "../../../utils/InputHandlers";
+import { blockTab } from "../../../utils/InputHandlers";
 
 const printingButtons: { [key: string]: string[] } = {
   group1: ["事業者", "事業所", "部門"],
@@ -137,6 +136,8 @@ const PrintingDesignation = forwardRef<any>((props, ref) => {
 
   return (
     <div
+      tabIndex={0}
+      onKeyDown={blockTab}
       ref={containerRef}
       className="p-2 border border-black mt-2 xl:text-base text-sm"
     >

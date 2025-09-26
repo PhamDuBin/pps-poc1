@@ -9,6 +9,7 @@ import {
   Row,
   Col,
   ConfigProvider,
+  RadioChangeEvent,
 } from "antd";
 import dayjs from "dayjs";
 import jaJP from "antd/es/locale/ja_JP";
@@ -63,21 +64,38 @@ const PaperSelectionModal = ({
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const newRadioRef = useRef<any>(null);
   const referenceRadioRef = useRef<any>(null);
+  const wasChangedByKeyboard = useRef(false);
 
-  // Select change handler
   const onSelectChange = (value: string) => {
     setSelectValue(value);
+    setSelectedRowIndex(null);
     if (value === "new") {
       setData(newData);
     } else {
       setData(existIndividualData);
       setRadioValue("individual");
     }
+
+    if (wasChangedByKeyboard.current) {
+      setTimeout(() => {
+        if (value === "new") {
+          const tableBody = wrapperRef.current?.querySelector(
+            ".ant-table-body"
+          ) as HTMLElement | null;
+          tableBody?.focus();
+        } else {
+          newRadioRef.current?.focus();
+        }
+      }, 0);
+
+      wasChangedByKeyboard.current = false;
+    }
   };
 
   // Radio change handler
-  const onRadioChange = (e: any) => {
+  const onRadioChange = (e: RadioChangeEvent) => {
     setRadioValue(e.target.value);
+    setSelectedRowIndex(null);
     if (e.target.value === "individual") {
       setData(existIndividualData);
     } else {
@@ -119,6 +137,7 @@ const PaperSelectionModal = ({
         (key === "Tab" && e.shiftKey)
       ) {
         e.preventDefault();
+        e.stopPropagation();
       } else {
         return;
       }
@@ -129,17 +148,14 @@ const PaperSelectionModal = ({
           return prev === null ? 0 : Math.min(prev + 1, len - 1);
         if (key === "ArrowUp") return prev === null ? 0 : Math.max(prev - 1, 0);
         if (key === "Enter") {
-          const idx = prev ?? 0;
-          console.log("Selected (Enter):", data[idx]);
+          onClose();
           return prev;
         }
         if (key === "Tab" && e.shiftKey) {
           if (selectValue !== "new") {
-            // Radio group is visible: focus selected radio
             if (radioValue === "individual") newRadioRef.current?.focus();
             else referenceRadioRef.current?.focus();
           } else {
-            // Radio group hidden: focus select input
             firstInputRef.current?.focus();
           }
           return null;
@@ -156,7 +172,7 @@ const PaperSelectionModal = ({
       body.removeEventListener("focus", onFocus);
       body.removeEventListener("keydown", onKeyDown);
     };
-  }, [open, data, radioValue, selectValue]);
+  }, [open, data, radioValue, selectValue, onClose]);
 
   // Scroll table to selected row
   useEffect(() => {
@@ -171,6 +187,25 @@ const PaperSelectionModal = ({
     const rowEl = rows[selectedRowIndex] as HTMLElement | undefined;
     rowEl?.scrollIntoView({ block: "center", behavior: "smooth" });
   }, [selectedRowIndex]);
+
+  const handleSelectKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      e.stopPropagation();
+      wasChangedByKeyboard.current = true;
+    }
+  };
+
+  const handleRadioKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      e.stopPropagation();
+      const tableBody = wrapperRef.current?.querySelector(
+        ".ant-table-body"
+      ) as HTMLElement | null;
+      tableBody?.focus();
+    }
+  };
 
   return (
     <div>
@@ -211,6 +246,7 @@ const PaperSelectionModal = ({
                 className="w-32 text-sm font-normal text-black"
                 onChange={onSelectChange}
                 value={selectValue}
+                onKeyDown={handleSelectKeyDown}
               >
                 <Option value="new">新規</Option>
                 <Option value="existing">既存 </Option>
@@ -218,22 +254,24 @@ const PaperSelectionModal = ({
             </Col>
             {selectValue !== "new" && (
               <Col>
-                <Radio.Group onChange={onRadioChange} value={radioValue}>
-                  <Radio
-                    value="individual"
-                    ref={newRadioRef}
-                    className="font-medium text-lg text-black"
-                  >
-                    個別
-                  </Radio>
-                  <Radio
-                    value="common"
-                    ref={referenceRadioRef}
-                    className="font-medium text-lg text-black"
-                  >
-                    共通
-                  </Radio>
-                </Radio.Group>
+                <div onKeyDown={handleRadioKeyDown}>
+                  <Radio.Group onChange={onRadioChange} value={radioValue}>
+                    <Radio
+                      value="individual"
+                      ref={newRadioRef}
+                      className="font-medium text-lg text-black"
+                    >
+                      個別
+                    </Radio>
+                    <Radio
+                      value="common"
+                      ref={referenceRadioRef}
+                      className="font-medium text-lg text-black"
+                    >
+                      共通
+                    </Radio>
+                  </Radio.Group>
+                </div>
               </Col>
             )}
           </Row>

@@ -2,6 +2,7 @@ import { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import ModalF1 from "../../modal/Modal_F1";
 import { inputColor, labelColor } from "../../../constants/colors";
 import { Button } from "antd";
+import { blockTab } from "../../../utils/InputHandlers";
 interface TargetCustomerProps {
   onLabelClick?: (title: string) => void;
 }
@@ -44,10 +45,15 @@ const TargetCustomer = forwardRef<TargetCustomerRef, TargetCustomerProps>(
       "検針予定日",
       "請求発行区分",
     ];
-
+    const gridItems = Array.from(
+      { length: 18 },
+      (_, index) => buttonTitle[index] || null
+    );
     return (
       <>
         <div
+          tabIndex={0}
+          onKeyDown={blockTab}
           ref={containerRef}
           className="border border-black min-h-[120px] p-2 xl:text-base text-sm"
         >
@@ -76,18 +82,16 @@ const TargetCustomer = forwardRef<TargetCustomerRef, TargetCustomerProps>(
               顧客抽出
             </Button>
             <div
-              className={`overflow-x-auto h-[60px] border border-black mr-10  ${inputColor}`}
+              className={`grid grid-cols-6 border-l w-max border-t border-black overflow-y-auto h-14 ${inputColor}`}
             >
-              <div className="grid grid-cols-6">
-                {buttonTitle.map((title) => (
-                  <div
-                    key={title}
-                    className="border border-black px-4 text-center h-[30px] w-[150px]"
-                  >
-                    {title}
-                  </div>
-                ))}
-              </div>
+              {gridItems.map((title, index) => (
+                <div
+                  key={index}
+                  className="border-r border-b border-black px-4 h-[30px] w-[150px] flex items-center justify-center"
+                >
+                  {title}
+                </div>
+              ))}
             </div>
           </div>
         </div>

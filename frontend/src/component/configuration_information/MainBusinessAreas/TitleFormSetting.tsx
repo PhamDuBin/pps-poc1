@@ -2,8 +2,14 @@ import { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import { labelColor, inputColor } from "../../../constants/colors";
 import { Input, Select } from "antd";
 import { convertToFullWidth } from "../../../utils/InputHandlers";
+import { blockTab } from "../../../utils/InputHandlers";
 
 const labels = ["ご請求", "ご案内1", "ご案内2", "ご案内3", "ご案内4（仮）"];
+const createOptions1 = (labels: string[]) =>
+  labels.map((label, index) => ({
+    label,
+    value: String(index + 1),
+  }));
 
 const labelClass = `${labelColor} border border-black px-2 flex items-center justify-center h-[32px] w-[180px]`;
 
@@ -45,8 +51,21 @@ const TitleFormSetting = forwardRef<any>((props, ref) => {
   const createOptions = (optionsArray: string[]) =>
     optionsArray.map((opt, idx) => ({ value: String(idx), label: opt }));
 
+  const [value, setValue] = useState("");
+  const handleInputChange1 = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const num = e.target.value;
+    if (num === "" || (Number(num) >= 1 && Number(num) <= labels.length)) {
+      setValue(num);
+    }
+  };
+
+  const handleSelectChange = (val: string) => {
+    setValue(val);
+  };
   return (
     <div
+      tabIndex={0}
+      onKeyDown={blockTab}
       ref={containerRef}
       className="p-2 border border-black mt-2 xl:text-base text-xs"
     >
@@ -81,14 +100,19 @@ const TitleFormSetting = forwardRef<any>((props, ref) => {
             請求書タイトル
           </div>
           <Input
-            className={`w-6 h-6 !px-0 text-center ${inputColor}`}
+            className="w-16 h-8 text-center"
             type="number"
+            min={1}
+            max={labels.length}
+            value={value}
+            onChange={handleInputChange1}
             placeholder="0"
           />
           <Select
-            defaultValue={"0"}
-            className={`w-2/5 [&>.ant-select-selector]:!bg-[#ebcec0]`}
-            options={createOptions(labels)}
+            className="w-48 [&>.ant-select-selector]:!bg-[#ebcec0]"
+            options={createOptions1(labels)}
+            value={value === "" ? undefined : value}
+            onChange={handleSelectChange}
           />
         </div>
       </div>

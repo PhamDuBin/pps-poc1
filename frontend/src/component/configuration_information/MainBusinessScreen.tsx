@@ -10,27 +10,9 @@ import { labelColor } from "../../constants/colors";
 import { Select, Button, Radio } from "antd";
 import CustomModal from "../../context/CustomModal";
 import React from "react";
-// import { handleNavigationKey } from "../../utils/InputHandlers";
-
-export const handleNavigationKey = (
-  e: KeyboardEvent,
-  currentIndex: number,
-  focusableElements: HTMLElement[]
-) => {
-  if (["ArrowLeft", "ArrowRight"].includes(e.key)) {
-    e.preventDefault();
-    let nextIndex = currentIndex;
-    const total = focusableElements.length;
-
-    if (e.key === "ArrowRight") {
-      nextIndex = (currentIndex + 1) % total;
-    } else if (e.key === "ArrowLeft") {
-      nextIndex = (currentIndex - 1 + total) % total;
-    }
-
-    focusableElements[nextIndex]?.focus();
-  }
-};
+import { scroller } from "react-scroll";
+import { Transition } from "@headlessui/react";
+import { handleNavigationKey040504 } from "../../utils/InputHandlers";
 
 const MainBusinessScreen = () => {
   const [isOperationSeachModalOpen, setIsOperationSeachModalOpen] =
@@ -47,8 +29,78 @@ const MainBusinessScreen = () => {
   const [activeSection, setActiveSection] = useState<string | null>(null);
   const [modalF2Open, setModalF2Open] = useState<boolean>(false);
   const [titleModal, setTitleModal] = useState("");
-
+  const sections = [
+    "extraForm",
+    "targetCustomer",
+    "printingDesignation",
+    "titleFormSetting",
+  ];
+  const containerRef = useRef<HTMLDivElement>(null);
+  const activeButton = `bg-yellow-300 border-yellow-400`;
+  const button = `flex text-center justify-center items-center ${labelColor} border border-black xl:text-base text-xs font-bold shadow-md shadow-zinc-600 hover:bg-white`;
+  const span = `w-[10%] flex justify-center text-center items-center font-bold ${labelColor}`;
   const focusFirstButtonRef = useRef<HTMLButtonElement>(null);
+  const shortcuts = {
+    "1": () => handleScrollAndFocus("extraForm"),
+    "2": () => handleScrollAndFocus("targetCustomer"),
+    "3": () => handleScrollAndFocus("printingDesignation"),
+    "4": () => handleScrollAndFocus("titleFormSetting"),
+    F3: () => {
+      setModalF2Open(true);
+      setTitleModal("条件保存（F3）");
+    },
+    F7: () => {
+      setModalF2Open(true);
+      setTitleModal("伝票メモ設定(F7)");
+    },
+    F8: () => {
+      setModalF2Open(true);
+      setTitleModal("再入力（F8）");
+    },
+    V: () => {
+      setModalF2Open(true);
+      setTitleModal("プレビュー（V）");
+    },
+    P: () => {
+      setModalF2Open(true);
+      setTitleModal("印刷（P）");
+    },
+    H: () => {
+      setModalF2Open(true);
+      setTitleModal("データ（H）");
+    },
+    C: () => {
+      window.location.href = "/";
+    },
+  };
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const handleShortcutKeyDown = (e: KeyboardEvent) => {
+      const isModifierPressed = (e.ctrlKey || e.metaKey) && e.altKey;
+
+      if (!isModifierPressed) {
+        return;
+      }
+      const key = e.key.toUpperCase();
+
+      const action = shortcuts[key as keyof typeof shortcuts];
+
+      if (action) {
+        e.preventDefault();
+
+        action();
+      }
+    };
+
+    container.addEventListener("keydown", handleShortcutKeyDown);
+
+    return () => {
+      container.removeEventListener("keydown", handleShortcutKeyDown);
+    };
+  }, []);
 
   const handleCloseOperationSerachModal = () => {
     setIsOperationSeachModalOpen(false);
@@ -61,9 +113,34 @@ const MainBusinessScreen = () => {
       focusFirstButtonRef.current.focus();
     }
   };
+  const isInitialMount = useRef(true);
+  useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
+    if (!isPaperSelectionModalOpen) {
+      handleScrollAndFocus("extraForm");
+    }
+  }, [condition]);
+  const handleRadioKeyDown = (
+    e: React.KeyboardEvent<HTMLElement>,
+    value: string
+  ) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
 
-  const handleFocusSection = (sectionName: string) => {
+      setCondition(value);
+    }
+  };
+  const handleScrollAndFocus = (sectionName: string) => {
     setActiveSection(sectionName);
+    scroller.scrollTo(`${sectionName}Section`, {
+      duration: 500,
+      smooth: true,
+      containerId: "scroll-container",
+    });
+
     setTimeout(() => {
       switch (sectionName) {
         case "extraForm":
@@ -71,48 +148,37 @@ const MainBusinessScreen = () => {
           else monthPickerRef.current?.focus();
           break;
         case "targetCustomer":
-          if (sectionName === "targetCustomer" && targetCustomerRef.current) {
-            const container = targetCustomerRef.current.getContainerNode();
-            container?.scrollIntoView({
-              block: "start",
-            });
-            targetCustomerRef.current.focusFirstButton();
-          }
+          targetCustomerRef.current?.focusFirstButton();
           break;
         case "printingDesignation":
-          if (
-            sectionName === "printingDesignation" &&
-            printingDesignationRef.current
-          ) {
-            const container = printingDesignationRef.current.getContainerNode();
-            container?.scrollIntoView({
-              block: "start",
-            });
-            printingDesignationRef.current.focusFirstButton();
-          }
+          printingDesignationRef.current?.focusFirstButton();
           break;
         case "titleFormSetting":
-          if (
-            sectionName === "titleFormSetting" &&
-            TitleFormSettingRef.current
-          ) {
-            const container = TitleFormSettingRef.current.getContainerNode();
-            container?.scrollIntoView({
-              block: "start",
-            });
-            TitleFormSettingRef.current.focusFirstButton();
-          }
+          TitleFormSettingRef.current?.focusFirstButton();
           break;
       }
-    }, 0);
+    }, 100);
   };
 
-  const containerRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
 
     const handleContainerKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Tab") {
+        e.preventDefault();
+        const currentSectionIndex = sections.indexOf(activeSection ?? "");
+        if (currentSectionIndex === -1) return;
+        if (e.shiftKey) {
+          const prevIndex =
+            (currentSectionIndex - 1 + sections.length) % sections.length;
+          handleScrollAndFocus(sections[prevIndex]);
+        } else {
+          const nextIndex = (currentSectionIndex + 1) % sections.length;
+          handleScrollAndFocus(sections[nextIndex]);
+        }
+        return;
+      }
       const focusableElements = Array.from(
         container.querySelectorAll(
           "input:not([disabled]), button:not([disabled]), select:not([disabled]), textarea:not([disabled]) "
@@ -123,7 +189,7 @@ const MainBusinessScreen = () => {
       const currentIndex = focusableElements.indexOf(activeElement);
 
       if (currentIndex !== -1) {
-        handleNavigationKey(e, currentIndex, focusableElements);
+        handleNavigationKey040504(e, currentIndex, focusableElements);
       }
     };
 
@@ -131,10 +197,8 @@ const MainBusinessScreen = () => {
     return () => {
       container.removeEventListener("keydown", handleContainerKeyDown as any);
     };
-  }, []);
-  const activeButton = `bg-yellow-300 border-yellow-400`;
-  const button = `flex text-center justify-center items-center ${labelColor} border border-black xl:text-base text-xs font-bold shadow-md shadow-zinc-600 hover:bg-white`;
-  const span = `w-[10%] flex justify-center text-center items-center font-bold ${labelColor}`;
+  }, [activeSection, sections]);
+
   return (
     <div
       ref={containerRef}
@@ -181,17 +245,27 @@ const MainBusinessScreen = () => {
         <span className={`${span}`}>発行方法</span>
 
         <Radio.Group
-          defaultValue="連続発行"
+          value={condition}
           className="ml-2 flex gap-4"
           onChange={(e) => setCondition(e.target.value)}
         >
-          <Radio value="連続発行">連続発行</Radio>
-          <Radio value="個別発行">個別発行</Radio>
+          <Radio
+            value="連続発行"
+            onKeyDown={(e) => handleRadioKeyDown(e, "連続発行")}
+          >
+            連続発行
+          </Radio>
+          <Radio
+            value="個別発行"
+            onKeyDown={(e) => handleRadioKeyDown(e, "個別発行")}
+          >
+            個別発行
+          </Radio>
         </Radio.Group>
       </div>
       <div className="mt-3 flex flex-row px-40 font-bold xl:text-base text-xs justify-between h-10">
         <Button
-          onClick={() => handleFocusSection("extraForm")}
+          onClick={() => handleScrollAndFocus("extraForm")}
           className={`${button} w-1/6 ${
             activeSection === "extraForm" ? activeButton : ""
           }`}
@@ -199,7 +273,7 @@ const MainBusinessScreen = () => {
           抽出条件 （1）
         </Button>
         <Button
-          onClick={() => handleFocusSection("targetCustomer")}
+          onClick={() => handleScrollAndFocus("targetCustomer")}
           className={`${button} w-1/6 ${
             activeSection === "targetCustomer" ? activeButton : ""
           }`}
@@ -207,7 +281,7 @@ const MainBusinessScreen = () => {
           対象顧客（2）
         </Button>
         <Button
-          onClick={() => handleFocusSection("printingDesignation")}
+          onClick={() => handleScrollAndFocus("printingDesignation")}
           className={`${button} w-1/6 ${
             activeSection === "printingDesignation" ? activeButton : ""
           }`}
@@ -215,7 +289,7 @@ const MainBusinessScreen = () => {
           印刷指定（3）
         </Button>
         <Button
-          onClick={() => handleFocusSection("titleFormSetting")}
+          onClick={() => handleScrollAndFocus("titleFormSetting")}
           className={`${button} w-1/6 ${
             activeSection === "titleFormSetting" ? activeButton : ""
           }`}
@@ -223,8 +297,14 @@ const MainBusinessScreen = () => {
           タイトル ・鑑設定(4)
         </Button>
       </div>
-      <div className="mt-3 h-[80%] border border-black p-4 overflow-auto">
-        <div onFocus={() => setActiveSection("extraForm")}>
+      <div
+        id="scroll-container"
+        className="mt-3 h-[80%] border border-black p-4 overflow-auto"
+      >
+        <div
+          onFocus={() => setActiveSection("extraForm")}
+          id="extraFormSection"
+        >
           {condition === "連続発行" ? (
             <ContinuousIssue ref={datePickerRef} />
           ) : (
@@ -232,8 +312,9 @@ const MainBusinessScreen = () => {
           )}
         </div>
         <div
-          className="mt-2"
           onFocus={() => setActiveSection("targetCustomer")}
+          className="mt-2"
+          id="targetCustomerSection"
         >
           <TargetCustomer
             ref={targetCustomerRef}
@@ -243,10 +324,16 @@ const MainBusinessScreen = () => {
             }}
           />
         </div>
-        <div onFocus={() => setActiveSection("printingDesignation")}>
+        <div
+          onFocus={() => setActiveSection("printingDesignation")}
+          id="printingDesignationSection"
+        >
           <PrintingDesignation ref={printingDesignationRef} />
         </div>
-        <div onFocus={() => setActiveSection("titleFormSetting")}>
+        <div
+          onFocus={() => setActiveSection("titleFormSetting")}
+          id="titleFormSettingSection"
+        >
           <TitleFormSetting ref={TitleFormSettingRef} />
         </div>
       </div>
@@ -309,16 +396,25 @@ const MainBusinessScreen = () => {
           閉じる（C）
         </Button>
       </div>
-      {isOperationSeachModalOpen && (
+
+      <Transition show={isOperationSeachModalOpen} as={React.Fragment}>
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          <OperatorSelectionModal
-            title={selectedLabel ?? ""}
-            isOpen={isOperationSeachModalOpen}
-            onClose={handleCloseOperationSerachModal}
-          />
+          <Transition.Child
+            as="div"
+            className="transition-all duration-300 ease-out"
+            enterFrom="opacity-0 scale-95"
+            enterTo="opacity-100 scale-100"
+            leaveFrom="opacity-100 scale-100"
+            leaveTo="opacity-0 scale-95"
+          >
+            <OperatorSelectionModal
+              title={selectedLabel ?? ""}
+              isOpen={isOperationSeachModalOpen}
+              onClose={handleCloseOperationSerachModal}
+            />
+          </Transition.Child>
         </div>
-      )}
-      {isPaperSelectionModalOpen}
+      </Transition>
       <div>
         <PaperSelectionModal
           open={isPaperSelectionModalOpen}

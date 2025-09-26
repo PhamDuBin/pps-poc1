@@ -7,6 +7,7 @@ import { useRef, useState, KeyboardEvent } from "react";
 import { forwardRef } from "react";
 import { labelColor, inputColor } from "../../../constants/colors";
 import { allowDecimalInput } from "../../../utils/InputHandlers";
+import { blockTab } from "../../../utils/InputHandlers";
 
 const { MonthPicker } = DatePicker;
 const { Option } = Select;
@@ -69,7 +70,11 @@ const IndividualIssue = forwardRef<any>((props, ref) => {
   ];
 
   return (
-    <div className="relative border border-black p-2 xl:text-base text-sm">
+    <div
+      tabIndex={0}
+      onKeyDown={blockTab}
+      className="relative border border-black p-2 xl:text-base text-sm"
+    >
       {showAdvanceSearch && (
         <>
           <div

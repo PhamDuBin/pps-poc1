@@ -66,6 +66,34 @@ export const handleNavigationKey = (
   }
 };
 
+export const handleNavigationKey040504 = (
+  e: KeyboardEvent,
+  currentIndex: number,
+  focusableElements: HTMLElement[]
+) => {
+  const keysToHandle = ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"];
+  if (!keysToHandle.includes(e.key)) {
+    return;
+  }
+  const activeElement = e.target as HTMLElement;
+  if (activeElement?.closest(".ant-select-open")) {
+    return;
+  }
+  e.preventDefault();
+  e.stopPropagation();
+
+  let nextIndex = currentIndex;
+  const total = focusableElements.length;
+
+  if (e.key === "ArrowRight" || e.key === "ArrowDown") {
+    nextIndex = (currentIndex + 1) % total;
+  } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+    nextIndex = (currentIndex - 1 + total) % total;
+  }
+
+  focusableElements[nextIndex]?.focus();
+};
+
 export function handleRadioNavigation(
   e: KeyboardEvent,
   index: number,
@@ -350,5 +378,11 @@ export const handleNumericSelectKeyDown = (
   if (/^[0-9]$/.test(e.key)) {
     e.preventDefault();
     setValue(e.key);
+  }
+};
+export const blockTab = (e: React.KeyboardEvent) => {
+  if (e.key === "Tab") {
+    e.preventDefault();
+    console.log("Tab is blocked!");
   }
 };

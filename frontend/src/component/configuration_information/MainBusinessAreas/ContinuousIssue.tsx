@@ -4,6 +4,7 @@ import { forwardRef, useState } from "react";
 import { DatePicker, Select, Checkbox } from "antd";
 import dayjs from "dayjs";
 import { inputColor } from "../../../constants/colors";
+import { blockTab } from "../../../utils/InputHandlers";
 
 const ContinuousIssue = forwardRef<any>((props, ref) => {
   const [month, setMonth] = useState(dayjs());
@@ -14,7 +15,11 @@ const ContinuousIssue = forwardRef<any>((props, ref) => {
     "bg-[#80bad7] border border-gray-400 text-sm font-bold flex items-center justify-center min-h-[32px] w-[120px] px-2";
 
   return (
-    <div className="border border-black w-full p-2">
+    <div
+      tabIndex={0}
+      onKeyDown={blockTab}
+      className="border border-black w-full p-2"
+    >
       {/* Title */}
       <div className="bg-[#80bad7] font-bold text-center py-2">
         抽出条件｜連続発行
@@ -66,11 +71,11 @@ const ContinuousIssue = forwardRef<any>((props, ref) => {
 
         {/* 今回検計日 */}
         <div className="flex items-center md:col-span-1">
-          <div className={labelClass}>今回検計日</div>
+          <div className={`${labelClass} !min-w-[120px]`}>今回検計日</div>
           <div
             className="flex items-center ml-2 gap-2"
             style={{
-              minWidth: "160px",
+              minWidth: "1px",
               maxWidth: "100%",
               width: "100%",
               flexBasis: "320px",
