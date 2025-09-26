@@ -171,7 +171,7 @@ const Meter = () => {
                     <td className={`border border-black p-0 ${inputColor}`}>
                       <button
                         onClick={handleClickSButton2}
-                        className="text-center w-full h-full"
+                        className={`w-10 h-6 flex items-center justify-center ${inputColor}`}
                       >
                         {labels[statelabel2]}
                       </button>
