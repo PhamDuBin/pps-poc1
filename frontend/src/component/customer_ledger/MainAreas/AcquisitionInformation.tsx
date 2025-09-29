@@ -141,12 +141,12 @@ const AcquisitionInformation = forwardRef<any>((props, ref) => {
                 newWindow.focus();
               }
             }}
-            ref={firstSelectRef}
             className={`font-semibold shadow-md shadow-zinc-500 ${labelClass}`}
           >
             開閉栓区分
           </Button>
           <Input
+            ref={firstSelectRef}
             className={inputCodeClass}
             value={formValues.openCloseType}
             onChange={(e) => handleValueChange("openCloseType", e.target.value)}
