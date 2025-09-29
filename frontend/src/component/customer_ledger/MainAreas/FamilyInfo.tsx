@@ -1,176 +1,389 @@
-import { Button, DatePicker, Select } from "antd";
+import React, {
+  forwardRef,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from "react";
+import { Button, DatePicker, Select, Input } from "antd";
 import dayjs from "dayjs";
-import { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import FamilyInfoModal from "../FamilyInfoModal";
 import { inputColor, labelColor } from "../../../constants/colors";
-const FamilyInfo = forwardRef<any>((props,ref) => {
-  const [month, setMonth] = useState(dayjs());
-  const [isModalOpen, setIsModalOpen] = useState(false);
+import { blockTab } from "../../../utils/InputHandlers";
 
-  const firstInputRef= useRef<any>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
-      
+const { Option } = Select;
+
+const workingCoupleOptions = [
+  { value: "0", label: "0 空欄" },
+  { value: "1", label: "1 共働き" },
+];
+
+const housingTypeOptions = [
+  { value: "0", label: "00:空白" },
+  { value: "1", label: "01:戸建て" },
+  { value: "2", label: "02:3LDK" },
+  { value: "3", label: "03:3DK" },
+  { value: "4", label: "04:2LDK" },
+  { value: "5", label: "05:2DK" },
+  { value: "6", label: "06:1ルーム" },
+  { value: "20", label: "20:その他" },
+];
+
+const relationshipOptions = [
+  { value: "0", label: "0:空欄" },
+  { value: "1", label: "1:A" },
+  { value: "2", label: "2:B" },
+  { value: "3", label: "3:C" },
+  { value: "4", label: "4:D" },
+];
+
+const freeDescriptionOptions = [
+  { value: "0", label: "0:空欄" },
+  { value: "1", label: "1:null" },
+  { value: "2", label: "2:null" },
+  { value: "3", label: "3:null" },
+  { value: "4", label: "4:null" },
+  { value: "5", label: "5:null" },
+  { value: "6", label: "6:null" },
+  { value: "7", label: "7:null" },
+  { value: "8", label: "8:null" },
+  { value: "9", label: "9:null" },
+];
+
+const familyData = [
+  {
+    id: 1,
+    relation: "父",
+    name: "テスト氏名1",
+    gender: "男性",
+    dob: "1980/01/01",
+    job: "会社員",
+    health: "その他",
+    hobby: "マリンスポーツ",
+  },
+  {
+    id: 2,
+    relation: "母",
+    name: "テスト氏名2",
+    gender: "女性",
+    dob: "1982/05/10",
+    job: "主婦",
+    health: "良好",
+    hobby: "読書",
+  },
+  {
+    id: 3,
+    relation: "長男",
+    name: "テスト氏名3",
+    gender: "男性",
+    dob: "2010/11/20",
+    job: "学生",
+    health: "良好",
+    hobby: "ゲーム",
+  },
+];
+
+const FamilyInfo = forwardRef<any>((props, ref) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const firstInputRef = useRef<any>(null);
+
+  // --- State Management ---
+  const [formValues, setFormValues] = useState({
+    residenceDate: dayjs(),
+    workingCoupleType: "0",
+    housingType: "00",
+    businessRelationship: "0",
+    creditStatus: "0",
+    purchasingPower: "0",
+    lifestyle: "0",
+    overallRank: "0",
+    freeDescription: "0",
+  });
+
+  const [openSelect, setOpenSelect] = useState<string | null>(null);
+
+  const handleValueChange = (fieldName: string, value: any) => {
+    setFormValues((prev) => ({ ...prev, [fieldName]: value }));
+  };
+
   useImperativeHandle(ref, () => ({
-          focusFirstInput : () => {
-            firstInputRef.current.focus();
-          },
-          getContainerNode: () => {
-            return containerRef.current
-          }
-      
+    focusFirstButton: () => {
+      firstInputRef.current?.focus();
+    },
   }));
 
-  const handleOpenModal = () => {
-    setIsModalOpen((prev) => !prev);
-  };
-  const familyData = [
-    {
-      id: 1,
-      relation: "父",
-      name: "テスト氏名1",
-      gender: "男性",
-      dob: "1980/01/01",
-      job: "会社員",
-      health: "その他",
-      hobby: "マリンスポーツ",
-    },
-    {
-      id: 2,
-      relation: "母",
-      name: "テスト氏名2",
-      gender: "女性",
-      dob: "1982/05/10",
-      job: "主婦",
-      health: "良好",
-      hobby: "読書",
-    },
-    {
-      id: 3,
-      relation: "長男",
-      name: "テスト氏名3",
-      gender: "男性",
-      dob: "2010/11/20",
-      job: "学生",
-      health: "良好",
-      hobby: "ゲーム",
-    },
-  ];
+  const handleOpenModal = () => setIsModalOpen((prev) => !prev);
 
-  const label =
-    `w-32 mr-2 h-6 border-gray-300 rounded-md font-bold flex text-center justify-center items-center ${labelColor}`;
+  const labelClass = `w-32 mr-2 h-6 border-gray-300 rounded-md font-bold flex text-center justify-center items-center ${labelColor}`;
+  const inputCodeClass = `${inputColor} border border-black h-6 w-14 text-center`;
+
+  // --- JSX ---
   return (
-    <div className="w-full text-xs">
-      {/* Header */}
-      <div className={`h-8 border text-sm border-gray-300 rounded-md font-bold flex items-center px-3 ${labelColor}`}>
+    <div onKeyDown={blockTab} className="w-full text-xs">
+      <div
+        className={`h-8 border text-sm border-gray-300 rounded-md font-bold flex items-center px-3 ${labelColor}`}
+      >
         家族情報
       </div>
 
-      {/* Form phía trên */}
       <div className="grid grid-cols-2 gap-x-6 gap-y-2 p-3">
-        {/* Cột trái */}
         <div className="flex items-center">
-          <label className={label}>居住年月</label>
+          <label className={labelClass}>居住年月</label>
           <DatePicker
-            ref = {firstInputRef}
+            ref={firstInputRef}
             picker="month"
-            value={month}
-            onChange={(date) => setMonth(date)}
-            className={` h-6 w-32 !bg-[#ebcec0]`}
+            value={formValues.residenceDate}
+            onChange={(date) => handleValueChange("residenceDate", date)}
+            className={`h-6 w-32 !bg-[#ebcec0]`}
             format="YYYY/MM"
           />
         </div>
         <div className="flex items-center">
-          <label className={label}>共働き区分</label>
-          <Select defaultValue={"0 空欄"} className=" h-6 w-32 [&>.ant-select-selector]:!bg-[#ebcec0]">
-            <Select.Option value={"0 空欄"}>0 空欄</Select.Option>
-            <Select.Option value={"1 共働き"}>1 共働き</Select.Option>
+          <label className={labelClass}>共働き区分</label>
+          <Input
+            className={inputCodeClass}
+            value={formValues.workingCoupleType}
+            onChange={(e) =>
+              handleValueChange("workingCoupleType", e.target.value)
+            }
+            onKeyDown={(e) => {
+              if (e.key === "F4") {
+                e.preventDefault();
+                setOpenSelect("workingCoupleType");
+              }
+            }}
+          />
+          <Select
+            value={formValues.workingCoupleType}
+            onChange={(value) => handleValueChange("workingCoupleType", value)}
+            className="h-6 w-32 [&>.ant-select-selector]:!bg-[#ebcec0] ml-2"
+            open={openSelect === "workingCoupleType"}
+            onDropdownVisibleChange={(isOpen) =>
+              setOpenSelect(isOpen ? "workingCoupleType" : null)
+            }
+          >
+            {workingCoupleOptions.map((opt) => (
+              <Option key={opt.value} value={opt.value}>
+                {opt.label}
+              </Option>
+            ))}
           </Select>
         </div>
 
         <div className="flex items-center">
-          <label className={label}>住居タイプ</label>
-          <Select defaultValue={"00:空白"} className=" h-6 w-32 [&>.ant-select-selector]:!bg-[#ebcec0]">
-            <Select.Option value={"00:空白"}>00:空白</Select.Option>
-            <Select.Option value={"01:戸建て"}>01:戸建て</Select.Option>
-            <Select.Option value={"02:3LDK"}>02:3LDK</Select.Option>
-            <Select.Option value={"03:3DK"}>03:3DK</Select.Option>
-            <Select.Option value={"04:2LDK"}>04:2LDK</Select.Option>
-            <Select.Option value={"05:2DK"}>05:2DK</Select.Option>
-            <Select.Option value={"06:1ルーム"}>06:1ルーム</Select.Option>
-            <Select.Option value={"20:その他"}>20:その他</Select.Option>
+          <label className={labelClass}>住居タイプ</label>
+          <Input
+            className={inputCodeClass}
+            value={formValues.housingType}
+            onChange={(e) => handleValueChange("housingType", e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "F4") {
+                e.preventDefault();
+                setOpenSelect("housingType");
+              }
+            }}
+          />
+          <Select
+            value={formValues.housingType}
+            onChange={(value) => handleValueChange("housingType", value)}
+            className="h-6 w-32 [&>.ant-select-selector]:!bg-[#ebcec0] ml-2"
+            open={openSelect === "housingType"}
+            onDropdownVisibleChange={(isOpen) =>
+              setOpenSelect(isOpen ? "housingType" : null)
+            }
+          >
+            {housingTypeOptions.map((opt) => (
+              <Option key={opt.value} value={opt.value}>
+                {opt.label}
+              </Option>
+            ))}
           </Select>
         </div>
         <div className="flex items-center">
-          <label className={label}>取引関係</label>
-          <Select defaultValue={"0:空欄"} className=" h-6 w-32 [&>.ant-select-selector]:!bg-[#ebcec0]">
-            <Select.Option value={"0:空欄"}>0:空欄</Select.Option>
-            <Select.Option value={"1:A"}>1:A</Select.Option>
-            <Select.Option value={"2:B"}>2:B</Select.Option>
-            <Select.Option value={"3:C"}>3:C</Select.Option>
-            <Select.Option value={"4:D"}>4:D</Select.Option>
+          <label className={labelClass}>取引関係</label>
+          <Input
+            className={inputCodeClass}
+            value={formValues.businessRelationship}
+            onChange={(e) =>
+              handleValueChange("businessRelationship", e.target.value)
+            }
+            onKeyDown={(e) => {
+              if (e.key === "F4") {
+                e.preventDefault();
+                setOpenSelect("businessRelationship");
+              }
+            }}
+          />
+          <Select
+            value={formValues.businessRelationship}
+            onChange={(value) =>
+              handleValueChange("businessRelationship", value)
+            }
+            className="h-6 w-32 [&>.ant-select-selector]:!bg-[#ebcec0] ml-2"
+            open={openSelect === "businessRelationship"}
+            onDropdownVisibleChange={(isOpen) =>
+              setOpenSelect(isOpen ? "businessRelationship" : null)
+            }
+          >
+            {relationshipOptions.map((opt) => (
+              <Option key={opt.value} value={opt.value}>
+                {opt.label}
+              </Option>
+            ))}
+          </Select>
+        </div>
+        <div className="flex items-center">
+          <label className={labelClass}>信用状況</label>
+          <Input
+            className={inputCodeClass}
+            value={formValues.creditStatus}
+            onChange={(e) => handleValueChange("creditStatus", e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "F4") {
+                e.preventDefault();
+                setOpenSelect("creditStatus");
+              }
+            }}
+          />
+          <Select
+            value={formValues.creditStatus}
+            onChange={(value) => handleValueChange("creditStatus", value)}
+            className="h-6 w-32 [&>.ant-select-selector]:!bg-[#ebcec0] ml-2"
+            open={openSelect === "creditStatus"}
+            onDropdownVisibleChange={(isOpen) =>
+              setOpenSelect(isOpen ? "creditStatus" : null)
+            }
+          >
+            {relationshipOptions.map((opt) => (
+              <Option key={opt.value} value={opt.value}>
+                {opt.label}
+              </Option>
+            ))}
+          </Select>
+        </div>
+        <div className="flex items-center">
+          <label className={labelClass}>購買力</label>
+          <Input
+            className={inputCodeClass}
+            value={formValues.purchasingPower}
+            onChange={(e) =>
+              handleValueChange("purchasingPower", e.target.value)
+            }
+            onKeyDown={(e) => {
+              if (e.key === "F4") {
+                e.preventDefault();
+                setOpenSelect("purchasingPower");
+              }
+            }}
+          />
+          <Select
+            value={formValues.purchasingPower}
+            onChange={(value) => handleValueChange("purchasingPower", value)}
+            className="h-6 w-32 [&>.ant-select-selector]:!bg-[#ebcec0] ml-2"
+            open={openSelect === "purchasingPower"}
+            onDropdownVisibleChange={(isOpen) =>
+              setOpenSelect(isOpen ? "purchasingPower" : null)
+            }
+          >
+            {relationshipOptions.map((opt) => (
+              <Option key={opt.value} value={opt.value}>
+                {opt.label}
+              </Option>
+            ))}
           </Select>
         </div>
 
         <div className="flex items-center">
-          <label className={label}>信用状況</label>
-          <Select defaultValue={"0:空欄"} className=" h-6 w-32 [&>.ant-select-selector]:!bg-[#ebcec0]">
-            <Select.Option value={"0:空欄"}>0:空欄</Select.Option>
-            <Select.Option value={"1:A"}>1:A</Select.Option>
-            <Select.Option value={"2:B"}>2:B</Select.Option>
-            <Select.Option value={"3:C"}>3:C</Select.Option>
-            <Select.Option value={"4:D"}>4:D</Select.Option>
+          <label className={labelClass}>生活行動</label>
+          <Input
+            className={inputCodeClass}
+            value={formValues.lifestyle}
+            onChange={(e) => handleValueChange("lifestyle", e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "F4") {
+                e.preventDefault();
+                setOpenSelect("lifestyle");
+              }
+            }}
+          />
+          <Select
+            value={formValues.lifestyle}
+            onChange={(value) => handleValueChange("lifestyle", value)}
+            className="h-6 w-32 [&>.ant-select-selector]:!bg-[#ebcec0] ml-2"
+            open={openSelect === "lifestyle"}
+            onDropdownVisibleChange={(isOpen) =>
+              setOpenSelect(isOpen ? "lifestyle" : null)
+            }
+          >
+            {relationshipOptions.map((opt) => (
+              <Option key={opt.value} value={opt.value}>
+                {opt.label}
+              </Option>
+            ))}
           </Select>
         </div>
         <div className="flex items-center">
-          <label className={label}>購買力</label>
-          <Select defaultValue={"0:空欄"} className=" h-6 w-32 [&>.ant-select-selector]:!bg-[#ebcec0]">
-            <Select.Option value={"0:空欄"}>0:空欄</Select.Option>
-            <Select.Option value={"1:A"}>1:A</Select.Option>
-            <Select.Option value={"2:B"}>2:B</Select.Option>
-            <Select.Option value={"3:C"}>3:C</Select.Option>
-            <Select.Option value={"4:D"}>4:D</Select.Option>
-          </Select>
-        </div>
-
-        <div className="flex items-center">
-          <label className={label}>生活行動</label>
-          <Select defaultValue={"0:空欄"} className=" h-6 w-32 [&>.ant-select-selector]:!bg-[#ebcec0]">
-            <Select.Option value={"0:空欄"}>0:空欄</Select.Option>
-            <Select.Option value={"1:A"}>1:A</Select.Option>
-            <Select.Option value={"2:B"}>2:B</Select.Option>
-            <Select.Option value={"3:C"}>3:C</Select.Option>
-            <Select.Option value={"4:D"}>4:D</Select.Option>
-          </Select>
-        </div>
-        <div className="flex items-center">
-          <label className={label}>総合ランク</label>
-          <Select defaultValue={"0:空欄"} className=" h-6 w-32 [&>.ant-select-selector]:!bg-[#ebcec0]">
-            <Select.Option value={"0:空欄"}>0:空欄</Select.Option>
-            <Select.Option value={"1:A"}>1:A</Select.Option>
-            <Select.Option value={"2:B"}>2:B</Select.Option>
-            <Select.Option value={"3:C"}>3:C</Select.Option>
-            <Select.Option value={"4:D"}>4:D</Select.Option>
+          <label className={labelClass}>総合ランク</label>
+          <Input
+            className={inputCodeClass}
+            value={formValues.overallRank}
+            onChange={(e) => handleValueChange("overallRank", e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "F4") {
+                e.preventDefault();
+                setOpenSelect("overallRank");
+              }
+            }}
+          />
+          <Select
+            value={formValues.overallRank}
+            onChange={(value) => handleValueChange("overallRank", value)}
+            className="h-6 w-32 [&>.ant-select-selector]:!bg-[#ebcec0] ml-2"
+            open={openSelect === "overallRank"}
+            onDropdownVisibleChange={(isOpen) =>
+              setOpenSelect(isOpen ? "overallRank" : null)
+            }
+          >
+            {relationshipOptions.map((opt) => (
+              <Option key={opt.value} value={opt.value}>
+                {opt.label}
+              </Option>
+            ))}
           </Select>
         </div>
 
         <div className="flex items-center col-span-2">
-          <label className={label}>自由記述要素</label>
-          <Select defaultValue={"0:空欄"} className=" h-6 w-32 [&>.ant-select-selector]:!bg-[#ebcec0]">
-            <Select.Option value={"0:空欄"}>0:空欄</Select.Option>
-            <Select.Option value={"1:null"}>1:null</Select.Option>
-            <Select.Option value={"2:null"}>2:null</Select.Option>
-            <Select.Option value={"3:null"}>3:null</Select.Option>
-            <Select.Option value={"4:null"}>4:null</Select.Option>
-            <Select.Option value={"5:null"}>5:null</Select.Option>
-            <Select.Option value={"6:null"}>6:null</Select.Option>
-            <Select.Option value={"7:null"}>7:null</Select.Option>
-            <Select.Option value={"8:null"}>8:null</Select.Option>
-            <Select.Option value={"9:null"}>9:null</Select.Option>
+          <label className={labelClass}>自由記述要素</label>
+          <Input
+            className={inputCodeClass}
+            value={formValues.freeDescription}
+            onChange={(e) =>
+              handleValueChange("freeDescription", e.target.value)
+            }
+            onKeyDown={(e) => {
+              if (e.key === "F4") {
+                e.preventDefault();
+                setOpenSelect("freeDescription");
+              }
+            }}
+          />
+          <Select
+            value={formValues.freeDescription}
+            onChange={(value) => handleValueChange("freeDescription", value)}
+            className="h-6 w-32 [&>.ant-select-selector]:!bg-[#ebcec0] ml-2"
+            open={openSelect === "freeDescription"}
+            onDropdownVisibleChange={(isOpen) =>
+              setOpenSelect(isOpen ? "freeDescription" : null)
+            }
+          >
+            {freeDescriptionOptions.map((opt) => (
+              <Option key={opt.value} value={opt.value}>
+                {opt.label}
+              </Option>
+            ))}
           </Select>
         </div>
       </div>
 
-      {/* Button thêm */}
       <div className="px-3 pb-2">
         <Button
           onClick={handleOpenModal}
@@ -180,7 +393,6 @@ const FamilyInfo = forwardRef<any>((props,ref) => {
         </Button>
       </div>
 
-      {/* Table */}
       <div className="overflow-x-auto px-3 pb-3">
         <table className="w-full border border-gray-400">
           <thead className="bg-gray-200">
@@ -194,7 +406,10 @@ const FamilyInfo = forwardRef<any>((props,ref) => {
                 "健康関連",
                 "趣味",
               ].map((h) => (
-                <th key={h} className={`border border-gray-400 ${labelColor} px-2 py-1`}>
+                <th
+                  key={h}
+                  className={`border border-gray-400 ${labelColor} px-2 py-1`}
+                >
                   {h}
                 </th>
               ))}

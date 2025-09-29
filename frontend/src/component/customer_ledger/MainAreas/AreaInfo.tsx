@@ -1,26 +1,28 @@
 import { Input, Button } from "antd";
-import React, { forwardRef, useImperativeHandle, useRef } from "react";
+import React, {
+  forwardRef,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from "react";
 import { inputColor, labelColor } from "../../../constants/colors";
+import { blockTab } from "../../../utils/InputHandlers";
+import PersonnelSearchModal from "../../input_inspection_result/PersonnelSearchModal";
 
 const AreaInfo = forwardRef<any>((props, ref) => {
-  const headerCellClass =
-    `h-6 px-2 ${labelColor} font-bold text-center flex items-center justify-center text-sm rounded-md`;
-  const rowLabelClass =
-    `h-6 w-32 px-2 ${labelColor} font-bold flex items-center justify-center text-sm rounded-md`;
+  const headerCellClass = `h-6 px-2 ${labelColor} font-bold text-center flex items-center justify-center text-sm rounded-md`;
+  const rowLabelClass = `h-6 w-32 px-2 ${labelColor} font-bold flex items-center justify-center text-sm rounded-md`;
 
   const rows = ["営業", "検針", "集金", "配送", "点検", "保安"];
 
   const firstInputRef = useRef<any>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useImperativeHandle(ref, () => ({
-    focusFirstInput: () => {
-      firstInputRef.current.focus();
+    focusFirstButton: () => {
+      firstInputRef.current?.focus();
     },
-    getContainerNode: () => {
-      return containerRef.current;
-    }
-  }))
+  }));
 
   const handleNumericInput = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -31,8 +33,10 @@ const AreaInfo = forwardRef<any>((props, ref) => {
   };
 
   return (
-    <div className="w-full text-xs">
-      <div className={`h-8 border text-sm border-gray-300 rounded-md font-bold flex items-center px-3 ${labelColor}`}>
+    <div onKeyDown={blockTab} className="w-full text-xs">
+      <div
+        className={`h-8 border text-sm border-gray-300 rounded-md font-bold flex items-center px-3 ${labelColor}`}
+      >
         担当・地区情報
       </div>
 
@@ -54,7 +58,10 @@ const AreaInfo = forwardRef<any>((props, ref) => {
                 maxLength={6}
                 onChange={(e) => handleNumericInput(e, 6)}
               />
-              <Button className="h-6 w-6 p-0 rounded-md shadow-md shadow-zinc-500 ml-2">
+              <Button
+                onClick={() => setIsModalOpen(true)}
+                className="h-6 w-6 p-0 rounded-md shadow-md shadow-zinc-500 ml-2"
+              >
                 ▼
               </Button>
             </div>
@@ -73,7 +80,19 @@ const AreaInfo = forwardRef<any>((props, ref) => {
                     maxLength={3}
                     onChange={(e) => handleNumericInput(e, 3)}
                   />
-                  <Button className="h-6 w-6 p-0 rounded-md shadow-md shadow-zinc-500 ml-2">
+                  <Button
+                    onClick={() => {
+                      const newWindow = window.open(
+                        "/link-destination",
+                        "_blank",
+                        "width=500,height=300,noopener,noreferrer"
+                      );
+                      if (newWindow) {
+                        newWindow.focus();
+                      }
+                    }}
+                    className="h-6 w-6 p-0 rounded-md shadow-md shadow-zinc-500 ml-2"
+                  >
                     ▼
                   </Button>
                 </div>
@@ -98,6 +117,9 @@ const AreaInfo = forwardRef<any>((props, ref) => {
           </React.Fragment>
         ))}
       </div>
+      {isModalOpen && (
+        <PersonnelSearchModal onSelectAndClose={() => setIsModalOpen(false)} />
+      )}
     </div>
   );
 });

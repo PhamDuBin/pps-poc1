@@ -1,26 +1,70 @@
-import { Button, Input, Select } from "antd";
-import { inputColor, labelColor } from "../../../constants/colors";
-import { forwardRef, useImperativeHandle, useRef } from "react";
+import React, {
+  forwardRef,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from "react";
+import { Input, Select } from "antd";
+import { labelColor, inputColor } from "../../../constants/colors";
+import { blockTab } from "../../../utils/InputHandlers";
+
+const { Option } = Select;
+const timeSlotOptions = [
+  { value: "0", label: "0:空欄" },
+  { value: "1", label: "1:随時" },
+  { value: "2", label: "2:昼間" },
+  { value: "3", label: "3:夜間" },
+];
 
 const EmergencyContact = forwardRef<any>((props, ref) => {
-    const firstSelectRef = useRef<any>(null);
-    const containerRef = useRef<HTMLDivElement>(null);
-  
-    useImperativeHandle(ref, () => ({
-      focusFirstSelect : () => {
-        firstSelectRef.current.focus();
+  const firstInputRef = useRef<any>(null);
+
+  const [formValues, setFormValues] = useState({
+    contact1: {
+      timeSlot: "0",
+      name: "緊急連絡先01",
+      address: "緊急連絡先住所01",
+      phone: "8098876767",
+    },
+    contact2: {
+      timeSlot: "0",
+      name: "",
+      address: "",
+      phone: "",
+    },
+  });
+
+  const [openSelect, setOpenSelect] = useState<string | null>(null);
+
+  const handleValueChange = (
+    contact: "contact1" | "contact2",
+    field: string,
+    value: string
+  ) => {
+    setFormValues((prev) => ({
+      ...prev,
+      [contact]: {
+        ...prev[contact],
+        [field]: value,
       },
-      getContainerNode: () => {
-        return containerRef.current
-      }
-  
     }));
-  const label =
-    `w-32 mr-2 h-6 border-gray-300 rounded-md ${labelColor} font-bold flex text-center justify-center items-center`;
+  };
+
+  useImperativeHandle(ref, () => ({
+    focusFirstButton: () => {
+      firstInputRef.current?.focus();
+    },
+  }));
+
+  const labelClass = `w-32 mr-2 h-6 border-gray-300 rounded-md ${labelColor} font-bold flex text-center justify-center items-center`;
+  const inputCodeClass = `${inputColor} border border-black h-6 w-14 text-center`;
+  const inputClass = `${inputColor} border border-black h-6 w-32`;
+
   return (
-    <div className="w-full text-xs py-4">
-      {/* Header */}
-      <div className={`h-8 border text-sm border-gray-300 rounded-md font-bold flex items-center px-3 ${labelColor}`}>
+    <div onKeyDown={blockTab} className="w-full text-xs py-4">
+      <div
+        className={`h-8 border text-sm border-gray-300 rounded-md font-bold flex items-center px-3 ${labelColor}`}
+      >
         緊急連絡先
       </div>
 
@@ -31,61 +75,139 @@ const EmergencyContact = forwardRef<any>((props, ref) => {
         <div className="flex items-center">
           <label className="font-bold">緊急連絡先2</label>
         </div>
-
         <div className="flex items-center">
-          <label className={label}>時間帯</label>
-          <Select ref={firstSelectRef} className={`h-6 w-32 [&>.ant-select-selector]:!${inputColor}`} defaultValue="0:空欄">
-            <Select.Option value="0:空欄">0:空欄</Select.Option>
-            <Select.Option value="1:随時">1:随時</Select.Option>
-            <Select.Option value="2:昼間">2:昼間</Select.Option>
-            <Select.Option value="3:夜間">3:夜間</Select.Option>
-          </Select>
-        </div>
-
-        <div className="flex items-center">
-          <label className={label}>時間帯</label>
-          <Select className={`h-6 w-32 [&>.ant-select-selector]:!${inputColor}`} defaultValue="0:空欄">
-            <Select.Option value="0:空欄">0:空欄</Select.Option>
-            <Select.Option value="1:随時">1:随時</Select.Option>
-            <Select.Option value="2:昼間">2:昼間</Select.Option>
-            <Select.Option value="3:夜間">3:夜間</Select.Option>
-          </Select>
-        </div>
-
-        <div className="flex items-center">
-          <label className={label}>名称</label>
-          <Input className={`h-6 w-32 ${inputColor}`}  defaultValue={"緊急連絡先01"}></Input>
-        </div>
-
-        <div className="flex items-center">
-          <label className={label}>名称</label>
-          <Input className={`h-6 w-32 ${inputColor}`}  defaultValue={""}></Input>
-        </div>
-
-        <div className="flex items-center">
-          <label className={label}>住所</label>
+          <label className={labelClass}>時間帯</label>
           <Input
-            className={`h-6 w-32 ${inputColor}`} 
-            defaultValue={"緊急連絡先住所01"}
-          ></Input>
+            ref={firstInputRef}
+            className={inputCodeClass}
+            value={formValues.contact1.timeSlot}
+            onChange={(e) =>
+              handleValueChange("contact1", "timeSlot", e.target.value)
+            }
+            onKeyDown={(e) => {
+              if (e.key === "F4") {
+                e.preventDefault();
+                setOpenSelect("timeSlot1");
+              }
+            }}
+          />
+          <Select
+            className={`h-6 w-32 [&>.ant-select-selector]:!bg-[#ebcec0] ml-2`}
+            value={formValues.contact1.timeSlot}
+            onChange={(value) =>
+              handleValueChange("contact1", "timeSlot", value)
+            }
+            open={openSelect === "timeSlot1"}
+            onDropdownVisibleChange={(isOpen) =>
+              setOpenSelect(isOpen ? "timeSlot1" : null)
+            }
+          >
+            {timeSlotOptions.map((opt) => (
+              <Option key={opt.value} value={opt.value}>
+                {opt.label}
+              </Option>
+            ))}
+          </Select>
+        </div>
+        <div className="flex items-center">
+          <label className={labelClass}>時間帯</label>
+          <Input
+            className={inputCodeClass}
+            value={formValues.contact2.timeSlot}
+            onChange={(e) =>
+              handleValueChange("contact2", "timeSlot", e.target.value)
+            }
+            onKeyDown={(e) => {
+              if (e.key === "F4") {
+                e.preventDefault();
+                setOpenSelect("timeSlot2");
+              }
+            }}
+          />
+          <Select
+            className={`h-6 w-32 [&>.ant-select-selector]:!bg-[#ebcec0] ml-2`}
+            value={formValues.contact2.timeSlot}
+            onChange={(value) =>
+              handleValueChange("contact2", "timeSlot", value)
+            }
+            open={openSelect === "timeSlot2"}
+            onDropdownVisibleChange={(isOpen) =>
+              setOpenSelect(isOpen ? "timeSlot2" : null)
+            }
+          >
+            {timeSlotOptions.map((opt) => (
+              <Option key={opt.value} value={opt.value}>
+                {opt.label}
+              </Option>
+            ))}
+          </Select>
         </div>
 
         <div className="flex items-center">
-          <label className={label}>住所</label>
-          <Input className={`h-6 w-32 ${inputColor}`}  defaultValue={""}></Input>
+          <label className={labelClass}>名称</label>
+          <Input
+            className={inputClass}
+            value={formValues.contact1.name}
+            onChange={(e) =>
+              handleValueChange("contact1", "name", e.target.value)
+            }
+          />
+        </div>
+        <div className="flex items-center">
+          <label className={labelClass}>名称</label>
+          <Input
+            className={inputClass}
+            value={formValues.contact2.name}
+            onChange={(e) =>
+              handleValueChange("contact2", "name", e.target.value)
+            }
+          />
         </div>
 
         <div className="flex items-center">
-          <label className={label}>電話番号</label>
-          <Input className={`h-6 w-32 ${inputColor}`}  defaultValue={"8098876767"}></Input>
+          <label className={labelClass}>住所</label>
+          <Input
+            className={inputClass}
+            value={formValues.contact1.address}
+            onChange={(e) =>
+              handleValueChange("contact1", "address", e.target.value)
+            }
+          />
+        </div>
+        <div className="flex items-center">
+          <label className={labelClass}>住所</label>
+          <Input
+            className={inputClass}
+            value={formValues.contact2.address}
+            onChange={(e) =>
+              handleValueChange("contact2", "address", e.target.value)
+            }
+          />
         </div>
 
         <div className="flex items-center">
-          <label className={label}>電話番号</label>
-          <Input className={`h-6 w-32 ${inputColor}`}  defaultValue={""}></Input>
+          <label className={labelClass}>電話番号</label>
+          <Input
+            className={inputClass}
+            value={formValues.contact1.phone}
+            onChange={(e) =>
+              handleValueChange("contact1", "phone", e.target.value)
+            }
+          />
+        </div>
+        <div className="flex items-center">
+          <label className={labelClass}>電話番号</label>
+          <Input
+            className={inputClass}
+            value={formValues.contact2.phone}
+            onChange={(e) =>
+              handleValueChange("contact2", "phone", e.target.value)
+            }
+          />
         </div>
       </div>
     </div>
   );
 });
+
 export default EmergencyContact;
