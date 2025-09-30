@@ -37,7 +37,22 @@ const MainBusinessScreen = () => {
     part3: "000000",
     part4: "000",
   });
-  const [showMessegeModal, setShowMessageModal] = useState(false);
+  const [modalConfig, setModalConfig] = useState({
+    isOpen: false,
+    message: "",
+  });
+  const openConfirmationModal = (message: string) => {
+    setModalConfig({
+      isOpen: true,
+      message: message,
+    });
+  };
+
+  const handleCloseModal = () => {
+    setModalConfig({ isOpen: false, message: "" });
+  };
+  const containerRef = useRef<HTMLDivElement>(null);
+  const firstInputRef = useRef<HTMLButtonElement>(null);
 
   const handleScrollAndFocus = (sectionName: string) => {
     setActiveSection(sectionName);
@@ -110,8 +125,52 @@ const MainBusinessScreen = () => {
     };
   }, [activeSection, sections]);
 
-  const containerRef = useRef<HTMLDivElement>(null);
-  const firstInputRef = useRef<HTMLButtonElement>(null);
+  const shortcuts = {
+    "1": () => handleScrollAndFocus("basicInformation"),
+    "2": () => handleScrollAndFocus("acquisitionInformation"),
+    "3": () => handleScrollAndFocus("areaInfo"),
+    "4": () => handleScrollAndFocus("emergencyContact"),
+    "5": () => handleScrollAndFocus("otherInfo"),
+    "6": () => handleScrollAndFocus("familyInfo"),
+    F8: () => {
+      setCustomerCode({
+        part1: "0000",
+        part2: "000",
+        part3: "000000",
+        part4: "000",
+      });
+      firstInputRef.current?.focus(); // Focus lại sau khi reset
+    },
+    S: () => openConfirmationModal("更新しますが、よろしいですか？"),
+    D: () => openConfirmationModal("削除しますが、よろしいですか？"),
+    C: () => {
+      const closeButton = document.querySelector('a[href="/"]') as HTMLElement;
+      if (closeButton) closeButton.click();
+    },
+  };
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const handleShortcutKeyDown = (e: KeyboardEvent) => {
+      const isModifierPressed = (e.ctrlKey || e.metaKey) && e.altKey;
+      if (!isModifierPressed) return;
+
+      const key = e.key.toUpperCase();
+      const action = shortcuts[key as keyof typeof shortcuts];
+
+      if (action) {
+        e.preventDefault();
+        action();
+      }
+    };
+
+    container.addEventListener("keydown", handleShortcutKeyDown);
+    return () => {
+      container.removeEventListener("keydown", handleShortcutKeyDown);
+    };
+  }, []);
 
   const label = `h-8 border border-gray-300 font-bold rounded-md flex text-center justify-center items-center px-2 ml-7 mr-2 ${labelColor}`;
   const button = `flex text-center justify-center items-center ${labelColor} border border-black xl:text-base text-xs font-bold shadow-md shadow-zinc-600 hover:bg-white`;
@@ -202,7 +261,11 @@ const MainBusinessScreen = () => {
             </Button>
             <label className={label}>管理区分</label>
             <Button
-              onClick={() => setShowMessageModal(true)}
+              onClick={() =>
+                openConfirmationModal(
+                  "関連項目以外が初期化されますが、よろしいですか？"
+                )
+              }
               className={`${button} mx-2`}
             >
               直売
@@ -214,7 +277,11 @@ const MainBusinessScreen = () => {
               配送
             </Button>
             <Button
-              onClick={() => setShowMessageModal(true)}
+              onClick={() =>
+                openConfirmationModal(
+                  "関連項目以外が初期化されますが、よろしいですか？"
+                )
+              }
               className={`${button} mx-2`}
             >
               保安
@@ -245,7 +312,7 @@ const MainBusinessScreen = () => {
             activeSection === "basicInformation" ? activeButton : ""
           }`}
         >
-          基本情報
+          基本情報 (1)
         </Button>
         <Button
           onClick={() => handleScrollAndFocus("acquisitionInformation")}
@@ -253,7 +320,7 @@ const MainBusinessScreen = () => {
             activeSection === "acquisitionInformation" ? activeButton : ""
           }`}
         >
-          獲得情報
+          獲得情報 (2)
         </Button>
         <Button
           onClick={() => handleScrollAndFocus("areaInfo")}
@@ -261,7 +328,7 @@ const MainBusinessScreen = () => {
             activeSection === "areaInfo" ? activeButton : ""
           }`}
         >
-          担当・地区
+          担当・地区 (3)
         </Button>
         <Button
           onClick={() => handleScrollAndFocus("emergencyContact")}
@@ -269,7 +336,7 @@ const MainBusinessScreen = () => {
             activeSection === "emergencyContact" ? activeButton : ""
           }`}
         >
-          緊急連絡先
+          緊急連絡先 (4)
         </Button>
         <Button
           onClick={() => handleScrollAndFocus("otherInfo")}
@@ -277,7 +344,7 @@ const MainBusinessScreen = () => {
             activeSection === "otherInfo" ? activeButton : ""
           }`}
         >
-          その他情報
+          その他情報 (5)
         </Button>
         <Button
           onClick={() => handleScrollAndFocus("familyInfo")}
@@ -285,7 +352,7 @@ const MainBusinessScreen = () => {
             activeSection === "familyInfo" ? activeButton : ""
           }`}
         >
-          家族情報
+          家族情報 (6)
         </Button>
       </div>
       {/* content area */}
@@ -339,16 +406,19 @@ const MainBusinessScreen = () => {
       <div className="flex flex-col text-sm w-full justify-center items-center mt-2">
         <div className="flex flex-row justify-between items-center w-[90%]">
           <Button
+            disabled
             className={`!bg-[#80bad7] !text-black hover:!bg-white hover:!text-blue-600 w-28 shadow-md shadow-zinc-500`}
           >
             F1ヘルプ
           </Button>
           <Button
+            disabled
             className={`!bg-[#80bad7] !text-black hover:!bg-white hover:!text-blue-600 w-28 shadow-md shadow-zinc-500`}
           >
             F2入力切替
           </Button>
           <Button
+            disabled
             className={`!bg-[#80bad7] !text-black hover:!bg-white hover:!text-blue-600 w-28 shadow-md shadow-zinc-500`}
           >
             F3事業所変更
@@ -359,21 +429,33 @@ const MainBusinessScreen = () => {
             F4検索
           </Button>
           <Button
+            disabled
             className={`!bg-[#80bad7] !text-black hover:!bg-white hover:!text-blue-600 w-28 shadow-md shadow-zinc-500`}
           >
             F5前の顧客
           </Button>
           <Button
+            disabled
             className={`!bg-[#80bad7] !text-black hover:!bg-white hover:!text-blue-600 w-28 shadow-md shadow-zinc-500`}
           >
             F6次の顧客
           </Button>
           <Button
+            disabled
             className={`!bg-[#80bad7] !text-black hover:!bg-white hover:!text-blue-600 w-28 shadow-md shadow-zinc-500`}
           >
             F7顧客コード変更
           </Button>
           <Button
+            onClick={() => {
+              setCustomerCode({
+                part1: "0000",
+                part2: "000",
+                part3: "000000",
+                part4: "000",
+              });
+              setShowAdvanceSearch(true);
+            }}
             className={`!bg-[#80bad7] !text-black hover:!bg-white hover:!text-blue-600 w-28 shadow-md shadow-zinc-500`}
           >
             F8再入力
@@ -391,36 +473,106 @@ const MainBusinessScreen = () => {
               </span>
               <div className="flex flex-row w-full">
                 <Button
+                  onClick={() => {
+                    const newWindow = window.open(
+                      "/link-destination",
+                      "_blank",
+                      "width=500,height=300,noopener,noreferrer"
+                    );
+                    if (newWindow) {
+                      newWindow.focus();
+                    }
+                  }}
                   className={`flex-1 h-20 m-0.5 shadow-md shadow-zinc-500 leading-tight whitespace-pre-line ${labelColor}`}
                 >
                   顧客{"\n"}情報
                 </Button>
                 <Button
+                  onClick={() => {
+                    const newWindow = window.open(
+                      "/link-destination",
+                      "_blank",
+                      "width=500,height=300,noopener,noreferrer"
+                    );
+                    if (newWindow) {
+                      newWindow.focus();
+                    }
+                  }}
                   className={`flex-1 h-20 m-0.5 shadow-md shadow-zinc-500 leading-tight whitespace-pre-line ${labelColor}`}
                 >
                   請求{"\n"}情報
                 </Button>
                 <Button
+                  onClick={() => {
+                    const newWindow = window.open(
+                      "/link-destination",
+                      "_blank",
+                      "width=500,height=300,noopener,noreferrer"
+                    );
+                    if (newWindow) {
+                      newWindow.focus();
+                    }
+                  }}
                   className={`flex-1 h-20 m-0.5 shadow-md shadow-zinc-500 leading-tight whitespace-pre-line ${labelColor}`}
                 >
                   検配{"\n"}情報
                 </Button>
                 <Button
+                  onClick={() => {
+                    const newWindow = window.open(
+                      "/link-destination",
+                      "_blank",
+                      "width=500,height=300,noopener,noreferrer"
+                    );
+                    if (newWindow) {
+                      newWindow.focus();
+                    }
+                  }}
                   className={`flex-1 h-20 m-0.5 shadow-md shadow-zinc-500 leading-tight whitespace-pre-line ${labelColor}`}
                 >
                   灯油{"\n"}情報
                 </Button>
                 <Button
+                  onClick={() => {
+                    const newWindow = window.open(
+                      "/link-destination",
+                      "_blank",
+                      "width=500,height=300,noopener,noreferrer"
+                    );
+                    if (newWindow) {
+                      newWindow.focus();
+                    }
+                  }}
                   className={`flex-1 h-20 m-0.5 shadow-md shadow-zinc-500 leading-tight whitespace-pre-line ${labelColor}`}
                 >
                   集中{"\n"}監視
                 </Button>
                 <Button
+                  onClick={() => {
+                    const newWindow = window.open(
+                      "/link-destination",
+                      "_blank",
+                      "width=500,height=300,noopener,noreferrer"
+                    );
+                    if (newWindow) {
+                      newWindow.focus();
+                    }
+                  }}
                   className={`flex-1 h-20 m-0.5 shadow-md shadow-zinc-500 leading-tight whitespace-pre-line ${labelColor}`}
                 >
                   保証金
                 </Button>
                 <Button
+                  onClick={() => {
+                    const newWindow = window.open(
+                      "/link-destination",
+                      "_blank",
+                      "width=500,height=300,noopener,noreferrer"
+                    );
+                    if (newWindow) {
+                      newWindow.focus();
+                    }
+                  }}
                   className={`flex-1 h-20 m-0.5 shadow-md shadow-zinc-500 leading-tight whitespace-pre-line ${labelColor}`}
                 >
                   保安{"\n"}情報
@@ -437,21 +589,61 @@ const MainBusinessScreen = () => {
               </span>
               <div className="flex flex-row w-full">
                 <Button
+                  onClick={() => {
+                    const newWindow = window.open(
+                      "/link-destination",
+                      "_blank",
+                      "width=500,height=300,noopener,noreferrer"
+                    );
+                    if (newWindow) {
+                      newWindow.focus();
+                    }
+                  }}
                   className={`flex-1 h-20 m-0.5 shadow-md shadow-zinc-500 leading-tight whitespace-pre-line ${labelColor}`}
                 >
                   開始{"\n"}点検
                 </Button>
                 <Button
+                  onClick={() => {
+                    const newWindow = window.open(
+                      "/link-destination",
+                      "_blank",
+                      "width=500,height=300,noopener,noreferrer"
+                    );
+                    if (newWindow) {
+                      newWindow.focus();
+                    }
+                  }}
                   className={`flex-1 h-20 m-0.5 shadow-md shadow-zinc-500 leading-tight whitespace-pre-line ${labelColor}`}
                 >
                   開閉{"\n"}伝票
                 </Button>
                 <Button
+                  onClick={() => {
+                    const newWindow = window.open(
+                      "/link-destination",
+                      "_blank",
+                      "width=500,height=300,noopener,noreferrer"
+                    );
+                    if (newWindow) {
+                      newWindow.focus();
+                    }
+                  }}
                   className={`flex-1 h-20 m-0.5 shadow-md shadow-zinc-500 leading-tight whitespace-pre-line ${labelColor}`}
                 >
                   検針{"\n"}伝票
                 </Button>
                 <Button
+                  onClick={() => {
+                    const newWindow = window.open(
+                      "/link-destination",
+                      "_blank",
+                      "width=500,height=300,noopener,noreferrer"
+                    );
+                    if (newWindow) {
+                      newWindow.focus();
+                    }
+                  }}
                   className={`flex-1 h-20 m-0.5 shadow-md shadow-zinc-500 leading-tight whitespace-pre-line ${labelColor}`}
                 >
                   配送{"\n"}伝票
@@ -463,15 +655,22 @@ const MainBusinessScreen = () => {
             <div className="flex flex-row justify-end w-[30%]">
               <Button
                 className={`flex-1 h-full shadow-md shadow-zinc-500 ${labelColor}`}
+                onClick={() =>
+                  openConfirmationModal("更新しますが、よろしいですか？")
+                }
               >
                 保存(S)
               </Button>
               <Button
                 className={`flex-1 h-full shadow-md shadow-zinc-500 ${labelColor}`}
+                onClick={() =>
+                  openConfirmationModal("削除しますが、よろしいですか？")
+                }
               >
                 削除(D)
               </Button>
               <Button
+                href="/"
                 className={`flex-1 h-full shadow-md shadow-zinc-500 ${labelColor}`}
               >
                 閉じる(C)
@@ -507,12 +706,15 @@ const MainBusinessScreen = () => {
         </div>
       </Transition>
       <MessageModal
-        isOpen={showMessegeModal}
+        isOpen={modalConfig.isOpen}
         title=""
-        onClose={() => setShowMessageModal(false)}
-        onConfirm={() => setShowMessageModal(false)}
+        onClose={handleCloseModal}
+        onConfirm={() => {
+          handleCloseModal();
+        }}
+        getContainer={() => containerRef.current!}
       >
-        関連項目以外が初期化されますが、よろしいですか？
+        {modalConfig.message}
       </MessageModal>
     </div>
   );

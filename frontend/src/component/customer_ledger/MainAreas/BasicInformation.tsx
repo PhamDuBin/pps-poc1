@@ -95,7 +95,6 @@ const defaultInputValues: { [key: string]: string } = {
   氏名: "テストさん太郎",
   カナ: "ﾃｽﾄｻﾝﾀﾛｳ",
   代表者名: "代表者テスト",
-  住所: "仮住所挿入データ◯◯◯◯県◯◯◯市◯◯",
   番地: "1-2-3",
   住所名称: "◯◯ハイツ文京区",
   部屋番号: "203",
@@ -122,9 +121,20 @@ const BasicInformation = forwardRef<any>((props, ref) => {
     deliveryCenterCode: "0",
     securityAgencyCode: "0",
     monitoringCode: "0",
+    postalCode1: "",
+    postalCode2: "",
+    address: "",
   });
   const handleValueChange = (fieldName: string, value: string) => {
     setFormValues((prev) => ({ ...prev, [fieldName]: value }));
+  };
+
+  const handleSearchAddress = () => {
+    const { postalCode1, postalCode2 } = formValues;
+    if (postalCode1 === "001" && postalCode2 === "1234") {
+      const fakeAddress = `仮住所挿入データ◯◯◯◯県◯◯◯市◯◯`;
+      handleValueChange("address", fakeAddress);
+    }
   };
   const [openSelect, setOpenSelect] = useState<string | null>(null);
   const labelClass = `w-32 mr-2 h-6 border-gray-300 rounded-md font-bold flex text-center justify-center items-center  ${labelColor}`;
@@ -142,6 +152,15 @@ const BasicInformation = forwardRef<any>((props, ref) => {
           </Radio.Group>
         );
 
+      case "住所":
+        return (
+          <Input
+            className={`${inputBaseClass} flex-1`}
+            value={formValues.address}
+            onChange={(e) => handleValueChange("address", e.target.value)}
+          />
+        );
+
       case "取引種類":
         return (
           <Radio.Group defaultValue={"ガス顧客"} size="small">
@@ -157,17 +176,20 @@ const BasicInformation = forwardRef<any>((props, ref) => {
         return (
           <div className="flex items-center gap-2 flex-1">
             <Input
-              defaultValue="111"
+              value={formValues.postalCode1}
+              onChange={(e) => handleValueChange("postalCode1", e.target.value)}
               className={`${inputBaseClass} w-[80px]`}
             />
             <span>-</span>
             <Input
-              defaultValue="9999"
+              value={formValues.postalCode2}
+              onChange={(e) => handleValueChange("postalCode2", e.target.value)}
               className={`${inputBaseClass} w-[100px]`}
             />
             <Button
               type="default"
               className="!bg-blue-600 !text-white hover:!bg-white hover:!text-blue-600 px-2 h-6 w-32"
+              onClick={handleSearchAddress}
             >
               住所を検索する
             </Button>

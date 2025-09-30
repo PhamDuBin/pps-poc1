@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { Modal, Button } from "antd";
 
 interface ModalProps {
@@ -7,6 +7,7 @@ interface ModalProps {
   onClose: () => void;
   onConfirm: () => void;
   children?: React.ReactNode;
+  getContainer?: () => HTMLElement;
 }
 
 const MessageModal: React.FC<ModalProps> = ({
@@ -15,17 +16,29 @@ const MessageModal: React.FC<ModalProps> = ({
   onClose,
   onConfirm,
   children,
+  getContainer,
 }) => {
+  const firstButtonRef = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    if (isOpen) {
+      setTimeout(() => {
+        firstButtonRef.current?.focus();
+      }, 100);
+    }
+  }, [isOpen]);
+
   return (
     <Modal
       open={isOpen}
       title={title}
       onCancel={onClose}
+      getContainer={getContainer}
       footer={[
         <Button
           key="no"
           onClick={onClose}
           className="rounded-md bg-gray-200 font-medium text-gray-800 hover:bg-gray-300"
+          ref={firstButtonRef}
         >
           No
         </Button>,

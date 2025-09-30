@@ -1,5 +1,6 @@
 import React, {
   forwardRef,
+  useEffect,
   useImperativeHandle,
   useRef,
   useState,
@@ -81,6 +82,38 @@ const familyData = [
     hobby: "ゲーム",
   },
 ];
+const initialFamilyData = [
+  {
+    id: 1,
+    relation: "父",
+    name: "テスト氏名1",
+    gender: "男性",
+    dob: "1980/01/01",
+    job: "会社員",
+    health: "その他",
+    hobby: "マリンスポーツ",
+  },
+  {
+    id: 2,
+    relation: "母",
+    name: "テスト氏名2",
+    gender: "女性",
+    dob: "1982/05/10",
+    job: "主婦",
+    health: "良好",
+    hobby: "読書",
+  },
+  {
+    id: 3,
+    relation: "長男",
+    name: "テスト氏名3",
+    gender: "男性",
+    dob: "2010/11/20",
+    job: "学生",
+    health: "良好",
+    hobby: "ゲーム",
+  },
+];
 
 const FamilyInfo = forwardRef<any>((props, ref) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -90,7 +123,7 @@ const FamilyInfo = forwardRef<any>((props, ref) => {
   const [formValues, setFormValues] = useState({
     residenceDate: dayjs(),
     workingCoupleType: "0",
-    housingType: "00",
+    housingType: "0",
     businessRelationship: "0",
     creditStatus: "0",
     purchasingPower: "0",
@@ -98,7 +131,10 @@ const FamilyInfo = forwardRef<any>((props, ref) => {
     overallRank: "0",
     freeDescription: "0",
   });
-
+  const [familyData, setFamilyData] = useState(initialFamilyData);
+  const [editingRow, setEditingRow] = useState<any | null>(null);
+  const [selectedRowIndex, setSelectedRowIndex] = useState<number | null>(null);
+  const rowRefs = useRef<(HTMLTableRowElement | null)[]>([]);
   const [openSelect, setOpenSelect] = useState<string | null>(null);
 
   const handleValueChange = (fieldName: string, value: any) => {
@@ -111,8 +147,54 @@ const FamilyInfo = forwardRef<any>((props, ref) => {
     },
   }));
 
-  const handleOpenModal = () => setIsModalOpen((prev) => !prev);
+  const handleOpenAddModal = () => {
+    setEditingRow(null);
+    setIsModalOpen(true);
+  };
+  const handleOpenEditModal = (row: any, index: number) => {
+    setEditingRow(row);
+    setSelectedRowIndex(index);
+    setIsModalOpen(true);
+  };
 
+  const handleSave = (newData: any) => {
+    if (newData.id) {
+      setFamilyData((prev) =>
+        prev.map((row) => (row.id === newData.id ? newData : row))
+      );
+    } else {
+      const newEntry = { ...newData, id: Date.now() };
+      setFamilyData((prev) => [newEntry, ...prev]);
+      setSelectedRowIndex(0);
+    }
+    setIsModalOpen(false);
+  };
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (selectedRowIndex === null) return;
+
+      let newIndex = selectedRowIndex;
+      if (e.key === "ArrowDown") {
+        e.preventDefault();
+        newIndex = Math.min(selectedRowIndex + 1, familyData.length - 1);
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault();
+        newIndex = Math.max(selectedRowIndex - 1, 0);
+      }
+      setSelectedRowIndex(newIndex);
+    };
+    const tableBody = rowRefs.current[0]?.parentElement;
+    tableBody?.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      tableBody?.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [selectedRowIndex, familyData.length]);
+  useEffect(() => {
+    if (selectedRowIndex !== null) {
+      rowRefs.current[selectedRowIndex]?.focus();
+    }
+  }, [selectedRowIndex]);
   const labelClass = `w-32 mr-2 h-6 border-gray-300 rounded-md font-bold flex text-center justify-center items-center ${labelColor}`;
   const inputCodeClass = `${inputColor} border border-black h-6 w-14 text-center`;
 
@@ -124,7 +206,6 @@ const FamilyInfo = forwardRef<any>((props, ref) => {
       >
         家族情報
       </div>
-
       <div className="grid grid-cols-2 gap-x-6 gap-y-2 p-3">
         <div className="flex items-center">
           <label className={labelClass}>居住年月</label>
@@ -383,16 +464,14 @@ const FamilyInfo = forwardRef<any>((props, ref) => {
           </Select>
         </div>
       </div>
-
       <div className="px-3 pb-2">
         <Button
-          onClick={handleOpenModal}
+          onClick={handleOpenAddModal}
           className={`text-xs shadow-md shadow-zinc-600 px-3 py-1 ${labelColor}`}
         >
           家族情報追加
         </Button>
       </div>
-
       <div className="overflow-x-auto px-3 pb-3">
         <table className="w-full border border-gray-400">
           <thead className="bg-gray-200">
@@ -416,16 +495,22 @@ const FamilyInfo = forwardRef<any>((props, ref) => {
             </tr>
           </thead>
           <tbody>
-            {familyData.map((row) => (
+            {familyData.map((row, index) => (
               <tr
                 key={row.id}
+                ref={(el) => {
+                  rowRefs.current[index] = el;
+                }}
                 tabIndex={0}
-                className={`cursor-pointer ${inputColor} hover:bg-gray-100 focus:bg-blue-200 focus:outline-none`}
-                onDoubleClick={handleOpenModal}
+                className={`cursor-pointer ${inputColor} hover:bg-gray-100 focus:bg-blue-200 focus:outline-none ${
+                  selectedRowIndex === index ? "bg-blue-200" : ""
+                }`}
+                onDoubleClick={() => handleOpenEditModal(row, index)}
+                onFocus={() => setSelectedRowIndex(index)}
                 onKeyDown={(e) => {
                   if (e.key === "Enter") {
                     e.preventDefault();
-                    handleOpenModal();
+                    handleOpenEditModal(row, index);
                   }
                 }}
               >
@@ -441,7 +526,12 @@ const FamilyInfo = forwardRef<any>((props, ref) => {
           </tbody>
         </table>
       </div>
-      {isModalOpen && <FamilyInfoModal onClose={handleOpenModal} />}
+      <FamilyInfoModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSave={handleSave}
+        initialData={editingRow}
+      />{" "}
     </div>
   );
 });
