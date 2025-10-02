@@ -103,26 +103,32 @@ const EmergencyContact = forwardRef<any, { showData: boolean }>(
           </div>
           <div className="flex items-center">
             <label className={labelClass}>時間帯</label>
-            <CodeInputSelect
-              ref={firstInputRef}
-              options={timeSlotOptions}
-              value={formValues.contact1.timeSlot}
-              onChange={(newValue) =>
-                handleValueChange("contact1", "timeSlot", newValue)
-              }
-              disabled={isFormDisabled}
-            />
+            <div className="w-4/5">
+              <CodeInputSelect
+                ref={firstInputRef}
+                options={timeSlotOptions}
+                value={formValues.contact1.timeSlot}
+                onChange={(newValue) =>
+                  handleValueChange("contact1", "timeSlot", newValue)
+                }
+                disabled={isFormDisabled}
+              />
+            </div>
+            
           </div>
           <div className="flex items-center">
             <label className={labelClass}>時間帯</label>
-            <CodeInputSelect
-              options={timeSlotOptions}
-              value={formValues.contact2.timeSlot}
-              onChange={(newValue) =>
-                handleValueChange("contact2", "timeSlot", newValue)
-              }
-              disabled={isFormDisabled}
-            />
+            <div className="w-4/5">
+              <CodeInputSelect
+                options={timeSlotOptions}
+                value={formValues.contact2.timeSlot}
+                onChange={(newValue) =>
+                  handleValueChange("contact2", "timeSlot", newValue)
+                }
+                disabled={isFormDisabled}
+              />
+            </div>
+            
           </div>
 
           <div className="flex items-center">

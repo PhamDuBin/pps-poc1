@@ -231,12 +231,15 @@ const FamilyInfo = forwardRef<any, { showData: boolean }>((props, ref) => {
 
         <div className="flex items-center">
           <label className={labelClass}>住居タイプ</label>
-          <CodeInputSelect
-            options={housingTypeOptions}
-            value={formValues.housingType}
-            onChange={(value) => handleValueChange("housingType", value)}
-            disabled={isFormDisabled}
-          />
+          <div className="w-4/5">
+            <CodeInputSelect
+              options={housingTypeOptions}
+              value={formValues.housingType}
+              onChange={(value) => handleValueChange("housingType", value)}
+              disabled={isFormDisabled}
+            />
+          </div>
+          
         </div>
         <div className="flex items-center">
           <label className={labelClass}>取引関係</label>
@@ -251,12 +254,15 @@ const FamilyInfo = forwardRef<any, { showData: boolean }>((props, ref) => {
         </div>
         <div className="flex items-center">
           <label className={labelClass}>信用状況</label>
-          <CodeInputSelect
-            options={relationshipOptions}
-            value={formValues.creditStatus}
-            onChange={(value) => handleValueChange("creditStatus", value)}
-            disabled={isFormDisabled}
-          />
+          <div className="w-4/5">
+            <CodeInputSelect
+              options={relationshipOptions}
+              value={formValues.creditStatus}
+              onChange={(value) => handleValueChange("creditStatus", value)}
+              disabled={isFormDisabled}
+            />
+          </div>
+          
         </div>
         <div className="flex items-center">
           <label className={labelClass}>購買力</label>
@@ -271,13 +277,15 @@ const FamilyInfo = forwardRef<any, { showData: boolean }>((props, ref) => {
 
         <div className="flex items-center">
           <label className={labelClass}>生活行動</label>
-
-          <CodeInputSelect
-            options={relationshipOptions}
-            value={formValues.lifestyle}
-            onChange={(value) => handleValueChange("lifestyle", value)}
-            disabled={isFormDisabled}
-          />
+          <div className="w-4/5">
+            <CodeInputSelect
+              options={relationshipOptions}
+              value={formValues.lifestyle}
+              onChange={(value) => handleValueChange("lifestyle", value)}
+              disabled={isFormDisabled}
+            />
+          </div>
+          
         </div>
         <div className="flex items-center">
           <label className={labelClass}>総合ランク</label>
@@ -289,14 +297,17 @@ const FamilyInfo = forwardRef<any, { showData: boolean }>((props, ref) => {
           />
         </div>
 
-        <div className="flex items-center col-span-2">
+        <div className="flex items-center ">
           <label className={labelClass}>自由記述要素</label>
-          <CodeInputSelect
-            options={freeDescriptionOptions}
-            value={formValues.freeDescription}
-            onChange={(value) => handleValueChange("freeDescription", value)}
-            disabled={isFormDisabled}
-          />
+          <div className="w-4/5">
+            <CodeInputSelect
+              options={freeDescriptionOptions}
+              value={formValues.freeDescription}
+              onChange={(value) => handleValueChange("freeDescription", value)}
+              disabled={isFormDisabled}
+            />
+          </div>
+          
         </div>
       </div>
       <div className="px-3 pb-2">

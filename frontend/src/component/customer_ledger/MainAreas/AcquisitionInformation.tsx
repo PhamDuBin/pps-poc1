@@ -440,7 +440,7 @@ const AcquisitionInformation = forwardRef<any, { showData: boolean }>(
           </div>
           <div className="flex w-full gap-4">
             <div className="w-3/5 flex py-1">
-              <div className={`h-[60px] w-[120px] mr-2 border-gray-300 rounded-md bg-[#80bad7] font-bold flex text-center justify-center items-center`}>
+              <div className={`h-[60px] w-[125px] mr-2 border-gray-300 rounded-md bg-[#80bad7] font-bold flex text-center justify-center items-center`}>
                 在宅日時
               </div>
               <div className="flex flex-col items-center gap-2 p-1 w-4/5">

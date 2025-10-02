@@ -194,14 +194,17 @@ const OtherInfo = forwardRef<any, { showData: boolean }>((props, ref) => {
         </div>
         <div className="flex items-center">
           <label className={label}>持家区分</label>
-          <CodeInputSelect
-            options={homeOwnershipOptions}
-            value={formValues.homeOwnershipType}
-            onChange={(newValue) =>
-              handleValueChange("homeOwnershipType", newValue)
-            }
-            disabled={isFormDisabled}
-          />
+          <div className="w-4/5">
+            <CodeInputSelect
+              options={homeOwnershipOptions}
+              value={formValues.homeOwnershipType}
+              onChange={(newValue) =>
+                handleValueChange("homeOwnershipType", newValue)
+              }
+              disabled={isFormDisabled}
+            />
+          </div>
+          
         </div>
         <div className="flex items-center">
           <label className={label}>部屋数</label>
@@ -239,14 +242,17 @@ const OtherInfo = forwardRef<any, { showData: boolean }>((props, ref) => {
         </div>
         <div className="flex items-center">
           <label className={label}>周知対象区分</label>
-          <CodeInputSelect
-            options={notificationTypeOptions}
-            value={formValues.notificationType}
-            onChange={(newValue) =>
-              handleValueChange("notificationType", newValue)
-            }
-            disabled={isFormDisabled}
-          />
+          <div className="w-4/5">
+            <CodeInputSelect
+              options={notificationTypeOptions}
+              value={formValues.notificationType}
+              onChange={(newValue) =>
+                handleValueChange("notificationType", newValue)
+              }
+              disabled={isFormDisabled}
+            />
+          </div>
+          
         </div>
         <div className="flex items-center">
           <label className={label}>財務補助コード</label>
