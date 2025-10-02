@@ -7,9 +7,15 @@ import {
   useRef,
   useState,
 } from "react";
-import { inputColor, labelColor, hoverInputColor, focusInputColor } from "../../../constants/colors";
+import {
+  inputColor,
+  labelColor,
+  hoverInputColor,
+  focusInputColor,
+} from "../../../constants/colors";
 import { blockTab } from "../../../utils/InputHandlers";
 import CodeInputSelect from "../../CodeInputSelect";
+import HalfWidthNumberInput from "../../HalfWidthNumberInput";
 
 const openCloseOptions = [
   { code: "0", label: "0 新規開栓" },
@@ -115,6 +121,16 @@ const AcquisitionInformation = forwardRef<any, { showData: boolean }>(
       privateUse: "0",
       startDate: dayjs("", "YYYY/MM/DD"),
       endDate: null as Dayjs | null,
+      groupCount: "",
+      groupParent1: "",
+      groupParent2: "",
+      groupParent3: "",
+      groupParent4: "",
+      zaitakuDay: "",
+      zaitakuStartHour: "",
+      zaitakuEndHour: "",
+      zaitakuWeek: "",
+      numberRoom: "",
     });
 
     const handleValueChange = (
@@ -143,6 +159,16 @@ const AcquisitionInformation = forwardRef<any, { showData: boolean }>(
           privateUse: "0",
           startDate: dayjs("2024/01/25", "YYYY/MM/DD"),
           endDate: null,
+          groupCount: "",
+          groupParent1: "0000",
+          groupParent2: "000",
+          groupParent3: "000000",
+          groupParent4: "000",
+          zaitakuDay: "15",
+          zaitakuStartHour: "13",
+          zaitakuEndHour: "17",
+          zaitakuWeek: "",
+          numberRoom: "",
         });
       }
     }, [showData]);
@@ -178,15 +204,16 @@ const AcquisitionInformation = forwardRef<any, { showData: boolean }>(
                 <CodeInputSelect
                   options={openCloseOptions}
                   value={formValues.openCloseType}
-                  onChange={(value) => handleValueChange("openCloseType", value)}
+                  onChange={(value) =>
+                    handleValueChange("openCloseType", value)
+                  }
                   disabled={isFormDisabled}
                 />
               </div>
-              
             </div>
             <div className="w-1/2"></div>
           </div>
-          
+
           <div className="w-full gap-4 flex justify-between py-1">
             <div className="w-1/2 flex">
               <div className={`font-semibold ${labelClass}`}>取引開始日</div>
@@ -199,7 +226,6 @@ const AcquisitionInformation = forwardRef<any, { showData: boolean }>(
                   disabled={isFormDisabled}
                 />
               </div>
-              
             </div>
             <div className="w-1/2 flex">
               <div className={`font-semibold ${labelClass}`}>取引中止日</div>
@@ -223,39 +249,41 @@ const AcquisitionInformation = forwardRef<any, { showData: boolean }>(
                   disabled={isFormDisabled}
                 />
               </div>
-              
             </div>
             <div className="w-1/2"></div>
           </div>
-          
+
           <div className="flex justify-between gap-4 py-1">
             <div className="flex w-1/2">
-                <div className={`font-semibold ${labelClass}`}>新規登録理由</div>
+              <div className={`font-semibold ${labelClass}`}>新規登録理由</div>
+              <div className="w-4/5">
+                <CodeInputSelect
+                  options={acquisitionRouteOptions}
+                  value={formValues.acquisitionRoute}
+                  onChange={(value) =>
+                    handleValueChange("acquisitionRoute", value)
+                  }
+                  disabled={isFormDisabled}
+                />
+              </div>
+            </div>
+            <div className="w-1/2">
+              <div className="flex ">
+                <div className={`font-semibold ${labelClass}`}>
+                  新規登録理由
+                </div>
                 <div className="w-4/5">
                   <CodeInputSelect
-                    options={acquisitionRouteOptions}
-                    value={formValues.acquisitionRoute}
+                    options={customerStatusOptions}
+                    value={formValues.customerStatus}
                     onChange={(value) =>
-                      handleValueChange("acquisitionRoute", value)
+                      handleValueChange("customerStatus", value)
                     }
                     disabled={isFormDisabled}
                   />
                 </div>
-            </div>
-            <div className="w-1/2">
-              <div className="flex ">
-                <div className={`font-semibold ${labelClass}`}>新規登録理由</div>
-                <div className="w-4/5">
-                    <CodeInputSelect
-                      options={customerStatusOptions}
-                      value={formValues.customerStatus}
-                      onChange={(value) => handleValueChange("customerStatus", value)}
-                      disabled={isFormDisabled}
-                    />
-                </div>
               </div>
             </div>
-            
           </div>
           <div className="flex w-full gap-4 py-1">
             <div className="w-1/2 flex">
@@ -307,8 +335,7 @@ const AcquisitionInformation = forwardRef<any, { showData: boolean }>(
                 </div>
               </div>
             </div>
-            <div className="w-1/2">
-            </div>
+            <div className="w-1/2"></div>
           </div>
           <div className="w-full flex gap-4 justify-between py-1">
             <div className="w-1/2 flex">
@@ -325,54 +352,63 @@ const AcquisitionInformation = forwardRef<any, { showData: boolean }>(
             <div className="w-1/2 flex pr-2">
               <div className={`font-semibold ${labelClass}`}>集合戸数</div>
               <div className="w-4/5">
-                <Input
+                <HalfWidthNumberInput
                   className={`${hoverInputColor} ${focusInputColor} w-[70px] rounded-md`}
                   placeholder="0"
                   size="small"
                   disabled={isFormDisabled}
+                  value={formValues.numberRoom ?? ""}
+                  onChange={(value) => handleValueChange("numberRoom", value)}
                 />
               </div>
-              
             </div>
           </div>
           <div className="w-full flex gap-4 py-1">
             <div className="flex w-1/2 py-1 items-center">
               <div className={`font-semibold ${labelClass}`}>集合親コード</div>
               <div className="flex gap-2 items-center w-4/5">
-                <Input
+                <HalfWidthNumberInput
+                  value={formValues.groupParent1 ?? ""}
+                  onChange={(value) => handleValueChange("groupParent1", value)}
                   className={`${hoverInputColor} ${focusInputColor} w-[20%] h-6 placeholder:text-black`}
                   placeholder="0000"
                   disabled={isFormDisabled}
                 />
                 <div> - </div>
-                <Input
+                <HalfWidthNumberInput
+                  value={formValues.groupParent2 ?? ""}
+                  onChange={(value) => handleValueChange("groupParent2", value)}
                   className={`${hoverInputColor} ${focusInputColor} w-[20%] h-6 placeholder:text-black`}
                   placeholder="000"
                   disabled={isFormDisabled}
                 />
                 <div> - </div>
-                <Input
+                <HalfWidthNumberInput
+                  value={formValues.groupParent3 ?? ""}
+                  onChange={(value) => handleValueChange("groupParent3", value)}
                   className={`${hoverInputColor} ${focusInputColor} w-[25%] h-6 placeholder:text-black`}
                   placeholder="000000"
                   disabled={isFormDisabled}
                 />
                 <div> - </div>
-                <Input
+                <HalfWidthNumberInput
+                  value={formValues.groupParent4 ?? ""}
+                  onChange={(value) => handleValueChange("groupParent4", value)}
                   className={`${hoverInputColor} ${focusInputColor} w-[20%] h-6 placeholder:text-black`}
                   placeholder="000"
                   disabled={isFormDisabled}
                 />
-               
               </div>
             </div>
-            <div className="w-1/2 flex items-center"> 
-                <Button className="w-6 h-6" disabled={isFormDisabled}>
-                  ▼
-                </Button>
+            <div className="w-1/2 flex items-center">
+              <Button className="w-6 h-6" disabled={isFormDisabled}>
+                ▼
+              </Button>
 
-                {showData && <div className="w-[200px]">テストさん太郎</div>}</div>
+              {showData && <div className="w-[200px]">テストさん太郎</div>}
+            </div>
           </div>
-          
+
           <div className="w-full flex gap-4 justify-between py-1">
             <div className="w-1/2 flex">
               <div className={`font-semibold ${labelClass}`}>ガス販売形態</div>
@@ -380,11 +416,12 @@ const AcquisitionInformation = forwardRef<any, { showData: boolean }>(
                 <CodeInputSelect
                   options={inspectionTypeOptions}
                   value={formValues.inspectionType}
-                  onChange={(value) => handleValueChange("inspectionType", value)}
+                  onChange={(value) =>
+                    handleValueChange("inspectionType", value)
+                  }
                   disabled={isFormDisabled}
                 />
               </div>
-              
             </div>
             <div className="w-1/2 flex">
               <div className={`font-semibold ${labelClass}`}>販売用途区分</div>
@@ -405,13 +442,14 @@ const AcquisitionInformation = forwardRef<any, { showData: boolean }>(
                 <CodeInputSelect
                   options={decisionStatusOptions}
                   value={formValues.decisionStatus}
-                  onChange={(value) => handleValueChange("decisionStatus", value)}
+                  onChange={(value) =>
+                    handleValueChange("decisionStatus", value)
+                  }
                   disabled={isFormDisabled}
                 />
               </div>
             </div>
             <div className="w-1/2"></div>
-            
           </div>
           <div className="flex w-full gap-4 justify-between py-1">
             <div className="w-1/2 flex">
@@ -423,7 +461,7 @@ const AcquisitionInformation = forwardRef<any, { showData: boolean }>(
                   onChange={(value) => handleValueChange("autoGas", value)}
                   disabled={isFormDisabled}
                 />
-              </div> 
+              </div>
             </div>
             <div className="w-1/2 flex">
               <div className={`font-semibold ${labelClass}`}>自家使用</div>
@@ -435,19 +473,23 @@ const AcquisitionInformation = forwardRef<any, { showData: boolean }>(
                   disabled={isFormDisabled}
                 />
               </div>
-              
             </div>
           </div>
           <div className="flex w-full gap-4">
             <div className="w-3/5 flex py-1">
-              <div className={`h-[60px] w-[125px] mr-2 border-gray-300 rounded-md bg-[#80bad7] font-bold flex text-center justify-center items-center`}>
+              <div
+                className={`h-[60px] w-[125px] mr-2 border-gray-300 rounded-md bg-[#80bad7] font-bold flex text-center justify-center items-center`}
+              >
                 在宅日時
               </div>
               <div className="flex flex-col items-center gap-2 p-1 w-4/5">
                 <div className="w-full flex gap-1">
                   <div className="flex items-center gap-1 mr-5">
-                    <Input
-                      defaultValue={"15"}
+                    <HalfWidthNumberInput
+                      value={formValues.zaitakuDay ?? ""}
+                      onChange={(value) =>
+                        handleValueChange("zaitakuDay", value)
+                      }
                       size="small"
                       className={`w-[50px] ${hoverInputColor} ${focusInputColor}`}
                       disabled={isFormDisabled}
@@ -455,8 +497,11 @@ const AcquisitionInformation = forwardRef<any, { showData: boolean }>(
                     <div>日頃</div>
                   </div>
                   <div className="flex items-center gap-1">
-                    <Input
-                      defaultValue={"13"}
+                    <HalfWidthNumberInput
+                      value={formValues.zaitakuStartHour ?? ""}
+                      onChange={(value) =>
+                        handleValueChange("zaitakuStartHour", value)
+                      }
                       size="small"
                       className={`w-[50px] ${hoverInputColor} ${focusInputColor}`}
                       disabled={isFormDisabled}
@@ -464,8 +509,11 @@ const AcquisitionInformation = forwardRef<any, { showData: boolean }>(
                     <div>時 ～</div>
                   </div>
                   <div className="flex items-center gap-1 mr-5">
-                    <Input
-                      defaultValue={"17"}
+                    <HalfWidthNumberInput
+                      value={formValues.zaitakuEndHour ?? ""}
+                      onChange={(value) =>
+                        handleValueChange("zaitakuEndHour", value)
+                      }
                       size="small"
                       className={`w-[50px] ${hoverInputColor} ${focusInputColor}`}
                       disabled={isFormDisabled}
@@ -473,10 +521,14 @@ const AcquisitionInformation = forwardRef<any, { showData: boolean }>(
                     <div>時</div>
                   </div>
                   <div className="flex items-center gap-1">
-                    <Input
-                      disabled={isFormDisabled}
+                    <HalfWidthNumberInput
+                      value={formValues.zaitakuWeek ?? ""}
+                      onChange={(value) =>
+                        handleValueChange("zaitakuWeek", value)
+                      }
                       size="small"
                       className={`w-[50px] ${hoverInputColor} ${focusInputColor}`}
+                      disabled={isFormDisabled}
                     />
                     <Button disabled={isFormDisabled} className="ml-1 w-6 h-6">
                       ▼
@@ -495,11 +547,8 @@ const AcquisitionInformation = forwardRef<any, { showData: boolean }>(
                 </div>
               </div>
             </div>
-            <div className="w-2/5">
-
-            </div>
+            <div className="w-2/5"></div>
           </div>
-          
         </div>
       </div>
     );
