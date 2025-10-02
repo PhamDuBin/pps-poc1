@@ -210,8 +210,8 @@ const OtherInfo = forwardRef<any, { showData: boolean }>((props, ref) => {
         </div>
 
         <div className="flex items-center">
-          <label className={label}>持家区分</label>
-          <div className="w-4/5">
+          <label className={`${label}`}>持家区分</label>
+          <div className="w-2/5">
             <CodeInputSelect
               options={homeOwnershipOptions}
               value={formValues.homeOwnershipType}
@@ -268,7 +268,7 @@ const OtherInfo = forwardRef<any, { showData: boolean }>((props, ref) => {
 
         <div className="flex items-center">
           <label className={label}>周知対象区分</label>
-          <div className="w-4/5">
+          <div className="w-2/5">
             <CodeInputSelect
               options={notificationTypeOptions}
               value={formValues.notificationType}
