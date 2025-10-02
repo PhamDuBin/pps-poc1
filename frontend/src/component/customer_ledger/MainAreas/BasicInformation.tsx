@@ -1,14 +1,16 @@
 import React, {
   forwardRef,
+  useEffect,
   useImperativeHandle,
   useRef,
   useState,
 } from "react";
-import { Input, Select, Button, Radio } from "antd";
-import { labelColor, inputColor } from "../../../constants/colors";
+import { Input, Button, Radio } from "antd";
+import { labelColor } from "../../../constants/colors";
 import { blockTab } from "../../../utils/InputHandlers";
-
-const { Option } = Select;
+import CodeInputSelect from "../../CodeInputSelect";
+import KanaInput from "../../KanaInput";
+import { convertToFullWidth } from "../../../utils/InputHandlers";
 
 const labels = [
   "氏名",
@@ -55,40 +57,40 @@ const labelGroups = [
 ];
 
 const timeSlotOptions = [
-  { value: "0", label: "0:空白" },
-  { value: "1", label: "1:随時" },
-  { value: "2", label: "2:昼間" },
-  { value: "3", label: "3:夜間" },
+  { code: "0", label: "0:空白" },
+  { code: "1", label: "1:随時" },
+  { code: "2", label: "2:昼間" },
+  { code: "3", label: "3:夜間" },
 ];
 
 const departmentOptions = [
-  { value: 0, label: "0:空白" },
-  { value: 1, label: "1:部門1" },
-  { value: 2, label: "2:部門2" },
-  { value: 3, label: "3:部門3" },
+  { code: "0", label: "0:空白" },
+  { code: "1", label: "1:部門1" },
+  { code: "2", label: "2:部門2" },
+  { code: "3", label: "3:部門3" },
 ];
 
 const deliveryCenterOptions = [
-  { value: "0", label: "空白" },
-  { value: "1", label: "拠点名0001" },
-  { value: "2", label: "拠点名0002" },
-  { value: "3", label: "拠点名0003" },
-  { value: "4", label: "拠点名0004" },
+  { code: "0", label: "空白" },
+  { code: "1", label: "拠点名0001" },
+  { code: "2", label: "拠点名0002" },
+  { code: "3", label: "拠点名0003" },
+  { code: "4", label: "拠点名0004" },
 ];
 
 const securityAgencyOptions = [
-  { value: "0", label: "空白" },
-  { value: "1", label: "保安機関0001" },
-  { value: "2", label: "保安機関0002" },
-  { value: "3", label: "保安機関0003" },
-  { value: "4", label: "保安機関0005" },
+  { code: "0", label: "空白" },
+  { code: "1", label: "保安機関0001" },
+  { code: "2", label: "保安機関0002" },
+  { code: "3", label: "保安機関0003" },
+  { code: "4", label: "保安機関0005" },
 ];
 
 const monitoringOptions = [
-  { value: "0", label: "空白" },
-  { value: "1", label: "集中監視0001" },
-  { value: "2", label: "集中監視002" },
-  { value: "3", label: "集中監視003" },
+  { code: "0", label: "空白" },
+  { code: "1", label: "集中監視0001" },
+  { code: "2", label: "集中監視002" },
+  { code: "3", label: "集中監視003" },
 ];
 
 const defaultInputValues: { [key: string]: string } = {
@@ -105,346 +107,368 @@ const defaultInputValues: { [key: string]: string } = {
   検索キー2: "Testkey001",
   案内: "電話番号2を通常で使う",
   備考1: "電話番号2を通常で使う",
+  備考2: "電話番号2を通常で使う",
+  備考3: "電話番号2を通常で使う",
+};
+
+const initialEmptyValues = {
+  time1: "0",
+  time2: "0",
+  departmentCode: "0",
+  deliveryCenterCode: "0",
+  securityAgencyCode: "0",
+  monitoringCode: "0",
+  postalCode1: "",
+  postalCode2: "",
+  address: "",
+  氏名: "",
+  カナ: "",
+  代表者名: "",
+  番地: "",
+  住所名称: "",
+  電話番号1: "",
+  電話番号2: "",
+  電話番号3: "",
+  FAX: "",
+  地図番号: "",
+  メールアドレス: "",
+  検索キー1: "",
+  検索キー2: "",
+  案内: "",
+  備考1: "",
+  備考2: "",
+  備考3: "",
+  customerType: "法人以外",
+  transactionType: "ガス顧客",
+  deliveryCenterName: "9352716",
+  securityAgencyName: "TA90",
+  monitoringName: "00503",
 };
 
 const customerTypeOption = ["法人以外", "法人"];
 const transactionTypeOption = ["ガス顧客", "ガス外顧客"];
 
-const inputBaseClass = `${inputColor} border border-black h-6`;
+const inputBaseClass = `hover:bg-[#ebcec0] border border-black h-6`;
 
-const BasicInformation = forwardRef<any>((props, ref) => {
-  const firstInputRef = useRef<any>(null);
-  const [formValues, setFormValues] = useState({
-    time1: "0",
-    time2: "0",
-    departmentCode: "0",
-    deliveryCenterCode: "0",
-    securityAgencyCode: "0",
-    monitoringCode: "0",
-    postalCode1: "",
-    postalCode2: "",
-    address: "",
-  });
-  const handleValueChange = (fieldName: string, value: string) => {
-    setFormValues((prev) => ({ ...prev, [fieldName]: value }));
-  };
+const BasicInformation = forwardRef<any, { showData: boolean }>(
+  (props, ref) => {
+    const firstInputRef = useRef<any>(null);
+    const [formValues, setFormValues] = useState(initialEmptyValues);
+    const handleValueChange = (fieldName: string, value: string) => {
+      setFormValues((prev) => ({ ...prev, [fieldName]: value }));
+    };
+    const { showData } = props;
+    const isFormDisabled = !showData;
 
-  const handleSearchAddress = () => {
-    const { postalCode1, postalCode2 } = formValues;
-    if (postalCode1 === "001" && postalCode2 === "1234") {
-      const fakeAddress = `仮住所挿入データ◯◯◯◯県◯◯◯市◯◯`;
-      handleValueChange("address", fakeAddress);
-    }
-  };
-  const [openSelect, setOpenSelect] = useState<string | null>(null);
-  const labelClass = `w-32 mr-2 h-6 border-gray-300 rounded-md font-bold flex text-center justify-center items-center  ${labelColor}`;
+    useEffect(() => {
+      if (showData) {
+        const convertedDefaults: { [key: string]: string } = {};
 
-  const renderField = (label: string) => {
-    switch (label) {
-      case "顧客種別":
-        return (
-          <Radio.Group defaultValue={"法人以外"} size="small">
-            {customerTypeOption.map((opt, i) => (
-              <Radio key={i} value={opt}>
-                {opt}
-              </Radio>
-            ))}
-          </Radio.Group>
-        );
-
-      case "住所":
-        return (
-          <Input
-            className={`${inputBaseClass} flex-1`}
-            value={formValues.address}
-            onChange={(e) => handleValueChange("address", e.target.value)}
-          />
-        );
-
-      case "取引種類":
-        return (
-          <Radio.Group defaultValue={"ガス顧客"} size="small">
-            {transactionTypeOption.map((opt, i) => (
-              <Radio key={i} value={opt}>
-                {opt}
-              </Radio>
-            ))}
-          </Radio.Group>
-        );
-
-      case "郵便番号":
-        return (
-          <div className="flex items-center gap-2 flex-1">
-            <Input
-              value={formValues.postalCode1}
-              onChange={(e) => handleValueChange("postalCode1", e.target.value)}
-              className={`${inputBaseClass} w-[80px]`}
-            />
-            <span>-</span>
-            <Input
-              value={formValues.postalCode2}
-              onChange={(e) => handleValueChange("postalCode2", e.target.value)}
-              className={`${inputBaseClass} w-[100px]`}
-            />
-            <Button
-              type="default"
-              className="!bg-blue-600 !text-white hover:!bg-white hover:!text-blue-600 px-2 h-6 w-32"
-              onClick={handleSearchAddress}
-            >
-              住所を検索する
-            </Button>
-          </div>
-        );
-
-      case "時間帯1":
-      case "時間帯2": {
-        const fieldName = label === "時間帯1" ? "time1" : "time2";
-        const selectId = label === "時間帯1" ? "time1Select" : "time2Select";
-
-        return (
-          <div className="flex gap-2 w-4/5">
-            <Input
-              className={`${inputBaseClass} w-[40px] text-center`}
-              value={formValues[fieldName as keyof typeof formValues]}
-              onChange={(e) => handleValueChange(fieldName, e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "F4") {
-                  e.preventDefault();
-                  setOpenSelect(selectId);
-                }
-              }}
-            />
-            <Select
-              value={formValues[fieldName as keyof typeof formValues]}
-              onChange={(value) => handleValueChange(fieldName, value)}
-              className="[&>.ant-select-selector]:!bg-[#ebcec0] w-[200px] h-6"
-              size="small"
-              open={openSelect === selectId}
-              onDropdownVisibleChange={(isOpen) =>
-                setOpenSelect(isOpen ? selectId : null)
-              }
-            >
-              {/* Lặp qua mảng options */}
-              {timeSlotOptions.map((opt) => (
-                <Option key={opt.value} value={opt.value}>
-                  {opt.label}
-                </Option>
-              ))}
-            </Select>
-          </div>
-        );
+        for (const key in defaultInputValues) {
+          if (Object.prototype.hasOwnProperty.call(defaultInputValues, key)) {
+            convertedDefaults[key] = convertToFullWidth(
+              defaultInputValues[key]
+            );
+          }
+        }
+        setFormValues((prev) => ({
+          ...prev,
+          ...convertedDefaults,
+          postalCode1: "111",
+          postalCode2: "9999",
+        }));
+      } else {
+        setFormValues(initialEmptyValues);
       }
+    }, [showData]);
 
-      case "管理部門":
-        return (
-          <div className="flex gap-2 w-4/5">
-            <Input
-              className={`${inputBaseClass} w-[40px] text-center`}
-              placeholder="0"
-              value={formValues.departmentCode}
+    const handleSearchAddress = () => {
+      const { postalCode1, postalCode2 } = formValues;
+      if (postalCode1 && postalCode2) {
+        const fakeAddress = `仮住所挿入データ◯◯◯◯県◯◯◯市◯◯`;
+        handleValueChange("address", fakeAddress);
+      }
+    };
+    const labelClass = `w-32 mr-2 h-6 border-gray-300 rounded-md font-bold flex text-center justify-center items-center  ${labelColor}`;
+
+    const renderField = (label: string) => {
+      switch (label) {
+        case "顧客種別":
+          return (
+            <Radio.Group
+              value={formValues.customerType}
               onChange={(e) =>
-                handleValueChange("departmentCode", e.target.value)
+                handleValueChange("customerType", e.target.value)
               }
-              onKeyDown={(e) => {
-                if (e.key === "F4") {
-                  e.preventDefault();
-                  setOpenSelect("departmentCode");
-                }
-              }}
-            />
-            <Select
-              value={formValues.departmentCode.toString()}
-              onChange={(value) =>
-                handleValueChange("departmentCode", value.toString())
-              }
-              className="[&>.ant-select-selector]:!bg-[#ebcec0] w-1/4 h-6"
               size="small"
-              open={openSelect === "departmentCode"}
-              onDropdownVisibleChange={(isOpen) =>
-                setOpenSelect(isOpen ? "departmentCode" : null)
-              }
+              disabled={isFormDisabled}
             >
-              {departmentOptions.map((opt) => (
-                <Option key={opt.value} value={String(opt.value)}>
-                  {opt.label}
-                </Option>
+              {customerTypeOption.map((opt, i) => (
+                <Radio key={i} value={opt}>
+                  {opt}
+                </Radio>
               ))}
-            </Select>
-          </div>
-        );
-      case "配送センターコード":
-        return (
-          <div className="flex gap-2 w-4/5 items-center">
-            <Input
-              className={`${inputBaseClass} w-[40px] text-center`}
-              value={formValues.deliveryCenterCode}
+            </Radio.Group>
+          );
+
+        case "住所":
+          return (
+            <KanaInput
+              className={`${inputBaseClass} flex-1`}
+              value={formValues.address}
+              onChange={(newValue) => handleValueChange("address", newValue)}
+              disabled={isFormDisabled}
+            />
+          );
+
+        case "取引種類":
+          return (
+            <Radio.Group
+              value={formValues.transactionType}
               onChange={(e) =>
-                handleValueChange("deliveryCenterCode", e.target.value)
+                handleValueChange("transactionType", e.target.value)
               }
-              onKeyDown={(e) => {
-                if (e.key === "F4") {
-                  e.preventDefault();
-                  setOpenSelect("deliveryCenterCode");
-                }
-              }}
-            />
-            <Select
-              value={formValues.deliveryCenterCode}
-              onChange={(value) =>
-                handleValueChange("deliveryCenterCode", value)
-              }
-              className="[&>.ant-select-selector]:!bg-[#ebcec0] w-[200px] h-6"
               size="small"
-              open={openSelect === "deliveryCenterCode"}
-              onDropdownVisibleChange={(isOpen) =>
-                setOpenSelect(isOpen ? "deliveryCenterCode" : null)
-              }
+              disabled={isFormDisabled}
             >
-              {deliveryCenterOptions.map((opt) => (
-                <Option key={opt.value} value={opt.value}>
-                  {opt.label}
-                </Option>
+              {transactionTypeOption.map((opt, i) => (
+                <Radio key={i} value={opt}>
+                  {opt}
+                </Radio>
               ))}
-            </Select>
-            <div>配送センター01番</div>
-            <Input
-              defaultValue={"9352716"}
-              className={`${inputBaseClass} w-3/5 max-w-[220px] ml-[56px]`}
-            />
-          </div>
-        );
+            </Radio.Group>
+          );
 
-      case "保安機関コード":
-        return (
-          <div className="flex gap-2 w-4/5 items-center">
-            <Input
-              className={`${inputBaseClass} w-[40px] text-center`}
-              value={formValues.securityAgencyCode}
-              onChange={(e) =>
-                handleValueChange("securityAgencyCode", e.target.value)
-              }
-              onKeyDown={(e) => {
-                if (e.key === "F4") {
-                  e.preventDefault();
-                  setOpenSelect("securityAgencyCode");
+        case "郵便番号":
+          return (
+            <div className="flex items-center gap-2 flex-1">
+              <Input
+                value={formValues.postalCode1}
+                onChange={(e) =>
+                  handleValueChange("postalCode1", e.target.value)
                 }
-              }}
-            />
-            <Select
-              value={formValues.securityAgencyCode}
-              onChange={(value) =>
-                handleValueChange("securityAgencyCode", value)
-              }
-              className="[&>.ant-select-selector]:!bg-[#ebcec0] w-[200px] h-6"
-              size="small"
-              open={openSelect === "securityAgencyCode"}
-              onDropdownVisibleChange={(isOpen) =>
-                setOpenSelect(isOpen ? "securityAgencyCode" : null)
-              }
-            >
-              {securityAgencyOptions.map((opt) => (
-                <Option key={opt.value} value={opt.value}>
-                  {opt.label}
-                </Option>
-              ))}
-            </Select>
-            <div>保安機関01番</div>
-            <Input
-              defaultValue={"TA90"}
-              className={`${inputBaseClass} w-3/5 max-w-[220px] ml-[80px]`}
-            />
-          </div>
-        );
-
-      case "集中監視コード":
-        return (
-          <div className="flex gap-2 w-4/5 items-center">
-            <Input
-              className={`${inputBaseClass} w-[40px] text-center`}
-              value={formValues.monitoringCode}
-              onChange={(e) =>
-                handleValueChange("monitoringCode", e.target.value)
-              }
-              onKeyDown={(e) => {
-                if (e.key === "F4") {
-                  e.preventDefault();
-                  setOpenSelect("monitoringCode");
+                disabled={isFormDisabled}
+                className={`${inputBaseClass} w-[80px]`}
+              />
+              <span>-</span>
+              <Input
+                value={formValues.postalCode2}
+                onChange={(e) =>
+                  handleValueChange("postalCode2", e.target.value)
                 }
-              }}
-            />
-            <Select
-              value={formValues.monitoringCode}
-              onChange={(value) => handleValueChange("monitoringCode", value)}
-              className="[&>.ant-select-selector]:!bg-[#ebcec0] w-[200px] h-6 "
-              size="small"
-              open={openSelect === "monitoringCode"}
-              onDropdownVisibleChange={(isOpen) =>
-                setOpenSelect(isOpen ? "monitoringCode" : null)
-              }
-            >
-              {monitoringOptions.map((opt) => (
-                <Option key={opt.value} value={opt.value}>
-                  {opt.label}
-                </Option>
-              ))}
-            </Select>
-            <div>集中監視01番</div>
+                disabled={isFormDisabled}
+                className={`${inputBaseClass} w-[100px]`}
+              />
+              <Button
+                type="default"
+                className="!bg-blue-600 !text-white hover:!bg-white hover:!text-blue-600 px-2 h-6 w-32"
+                onClick={handleSearchAddress}
+                disabled={isFormDisabled}
+              >
+                住所を検索する
+              </Button>
+            </div>
+          );
+
+        case "時間帯1":
+        case "時間帯2":
+          const fieldName = label === "時間帯1" ? "time1" : "time2";
+
+          return (
+            <div className="flex gap-2 w-4/5">
+              <CodeInputSelect
+                options={timeSlotOptions}
+                value={formValues[fieldName as keyof typeof formValues]}
+                onChange={(value) => handleValueChange(fieldName, value)}
+                disabled={isFormDisabled}
+              />
+            </div>
+          );
+
+        case "管理部門":
+          return (
+            <div className="flex gap-2 w-4/5">
+              <CodeInputSelect
+                options={departmentOptions}
+                value={formValues.departmentCode}
+                onChange={(value) => handleValueChange("departmentCode", value)}
+                disabled={isFormDisabled}
+              />
+            </div>
+          );
+        case "配送センターコード":
+          return (
+            <div className="flex gap-2 w-4/5 items-center">
+              <CodeInputSelect
+                options={deliveryCenterOptions}
+                value={formValues.deliveryCenterCode}
+                onChange={(value) =>
+                  handleValueChange("deliveryCenterCode", value)
+                }
+                disabled={isFormDisabled}
+              />
+              {showData && <div>センター01番</div>}
+
+              <KanaInput
+                className={`${inputBaseClass} flex-1`}
+                value={"9352716"}
+                onChange={(newValue) =>
+                  handleValueChange("deliveryCenterCode", newValue)
+                }
+                disabled={isFormDisabled}
+              />
+            </div>
+          );
+
+        case "保安機関コード":
+          return (
+            <div className="flex gap-2 w-4/5 items-center">
+              <CodeInputSelect
+                options={securityAgencyOptions}
+                value={formValues.securityAgencyCode}
+                onChange={(value) =>
+                  handleValueChange("securityAgencyCode", value)
+                }
+                disabled={isFormDisabled}
+              />
+              {showData && <div>保安機関01番</div>}
+
+              <KanaInput
+                className={`${inputBaseClass} flex-1`}
+                value={"TA90"}
+                onChange={(newValue) =>
+                  handleValueChange("securityAgencyCode", newValue)
+                }
+                disabled={isFormDisabled}
+              />
+            </div>
+          );
+
+        case "集中監視コード":
+          return (
+            <div className="flex gap-2 w-4/5 items-center">
+              <CodeInputSelect
+                options={monitoringOptions}
+                value={formValues.monitoringCode}
+                onChange={(value) => handleValueChange("monitoringCode", value)}
+                disabled={isFormDisabled}
+              />
+              {showData && <div>集中監視01番</div>}
+
+              <KanaInput
+                className={`${inputBaseClass} flex-1`}
+                value={"00503"}
+                onChange={(newValue) =>
+                  handleValueChange("monitoringName", newValue)
+                }
+                disabled={isFormDisabled}
+              />
+            </div>
+          );
+
+        case "案内":
+          return (
             <Input
-              defaultValue={"00503"}
-              className={`${inputBaseClass} w-3/5 max-w-[220px] ml-[80px]`}
+              className={`${inputBaseClass} w-1/5`}
+              disabled={isFormDisabled}
             />
-          </div>
-        );
+          );
 
-      case "案内":
-        return <Input className={`${inputBaseClass} w-1/5`} />;
+        case "備考1":
+          return (
+            <KanaInput
+              className={`${inputBaseClass} flex-1`}
+              value={formValues.備考1}
+              onChange={(newValue) => handleValueChange("備考1", newValue)}
+              disabled={isFormDisabled}
+            />
+          );
+        case "備考2":
+          return (
+            <KanaInput
+              className={`${inputBaseClass} flex-1`}
+              value={formValues.備考2}
+              onChange={(newValue) => handleValueChange("備考2", newValue)}
+              disabled={isFormDisabled}
+            />
+          );
+        case "備考3":
+          return (
+            <KanaInput
+              className={`${inputBaseClass} flex-1`}
+              value={formValues.備考3}
+              onChange={(newValue) => handleValueChange("備考3", newValue)}
+              disabled={isFormDisabled}
+            />
+          );
+        case "カナ":
+          return (
+            <KanaInput
+              className={`${inputBaseClass} flex-1`}
+              value={formValues.カナ}
+              onChange={(newValue) => handleValueChange("カナ", newValue)}
+              disabled={isFormDisabled}
+            />
+          );
 
-      case "備考1":
-      case "備考2":
-      case "備考3":
-        return <Input className={`${inputBaseClass} flex-1 max-w-[650px]`} />;
+        case "住所名称":
+          return (
+            <KanaInput
+              className={`${inputBaseClass} flex-1`}
+              value={formValues.住所名称}
+              onChange={(newValue) => handleValueChange("住所名称", newValue)}
+              disabled={isFormDisabled}
+            />
+          );
 
-      default:
-        return (
-          <Input
-            ref={label === "氏名" ? firstInputRef : null}
-            className={`${inputBaseClass} flex-1`}
-            defaultValue={defaultInputValues[label] || ""}
-          />
-        );
-    }
-  };
-  useImperativeHandle(ref, () => ({
-    focusFirstButton: () => {
-      firstInputRef.current?.focus();
-    },
-  }));
+        default: {
+          const fieldName = label as keyof typeof formValues;
+          if (fieldName in formValues) {
+            return (
+              <KanaInput
+                ref={label === "氏名" ? firstInputRef : null}
+                className={`${inputBaseClass} flex-1`}
+                value={formValues[fieldName]}
+                onChange={(value) => handleValueChange(fieldName, value)}
+                disabled={isFormDisabled}
+              />
+            );
+          }
+        }
+      }
+    };
+    useImperativeHandle(ref, () => ({
+      focusFirstButton: () => {
+        firstInputRef.current?.focus();
+      },
+    }));
 
-  return (
-    <div onKeyDown={blockTab} className="w-full text-xs py-4">
-      {/* Header */}
-      <div
-        className={`h-8 border text-sm border-gray-300 rounded-md font-bold flex items-center px-3 ${labelColor}`}
-      >
-        基本情報
+    return (
+      <div onKeyDown={blockTab} className="w-full text-xs py-4">
+        {/* Header */}
+        <div
+          className={`h-8 border text-sm border-gray-300 rounded-md font-bold flex items-center px-3 ${labelColor}`}
+        >
+          基本情報
+        </div>
+
+        {/* Form */}
+        <div className="grid grid-cols-2 gap-x-6 gap-y-2 p-3">
+          {labels.map((label, i) => (
+            <div
+              key={i}
+              className={`flex items-center ${
+                labelGroups.includes(label) ? "col-span-2" : ""
+              }`}
+            >
+              <label className={labelClass}>{label}</label>
+              {renderField(label)}
+            </div>
+          ))}
+        </div>
       </div>
-
-      {/* Form */}
-      <div className="grid grid-cols-2 gap-x-6 gap-y-2 p-3">
-        {labels.map((label, i) => (
-          <div
-            key={i}
-            className={`flex items-center ${
-              labelGroups.includes(label) ? "col-span-2" : ""
-            }`}
-          >
-            <label className={labelClass}>{label}</label>
-            {renderField(label)}
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-});
+    );
+  }
+);
 
 export default BasicInformation;

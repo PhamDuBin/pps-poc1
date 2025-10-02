@@ -45,6 +45,14 @@ const PersonnelSearchModal: React.FC<PersonnelSearchModalProps> = ({
     }
   }, []);
 
+  const handleSelectRow = (rowIndex: number) => {
+    const selectedData: PersonnelData = {
+      name: rowData[1],
+      kanaName: rowData[2],
+    };
+    onSelectAndClose(selectedData);
+  };
+
   const handleOpenTable = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && code) {
       e.preventDefault();
@@ -75,13 +83,9 @@ const PersonnelSearchModal: React.FC<PersonnelSearchModalProps> = ({
       setFocusedRowIndex((prev) => (prev! - 1 + rowCount) % rowCount);
     } else if (e.key === "Enter") {
       e.preventDefault();
-
-      const selectedData: PersonnelData = {
-        name: rowData[1],
-        kanaName: rowData[2],
-      };
-
-      onSelectAndClose(selectedData);
+      if (focusedRowIndex !== null) {
+        handleSelectRow(focusedRowIndex);
+      }
     }
   };
 
@@ -239,7 +243,7 @@ const PersonnelSearchModal: React.FC<PersonnelSearchModalProps> = ({
                   className={`flex cursor-pointer ${
                     focusedRowIndex === rowIndex ? "bg-blue-200" : ""
                   }`}
-                  onClick={() => setFocusedRowIndex(rowIndex)}
+                  onClick={() => handleSelectRow(rowIndex)}
                 >
                   {rowData.map((data, cellIndex) => (
                     <div

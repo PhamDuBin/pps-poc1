@@ -1,29 +1,31 @@
-import { Button, Select, Input } from "antd";
+import { Button, Input } from "antd";
 import { labelColor, inputColor } from "../../../constants/colors";
 import { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import { blockTab } from "../../../utils/InputHandlers";
+import CodeInputSelect from "../../CodeInputSelect";
 
-const { Option } = Select;
-const OtherInfo = forwardRef<any>((props, ref) => {
+const OtherInfo = forwardRef<any, { showData: boolean }>((props, ref) => {
   const firstButtonRef = useRef<any>(null);
+  const { showData } = props;
+  const isFormDisabled = !showData;
   const homeOwnershipOptions = [
-    { value: "0", label: "0:空白" },
-    { value: "1", label: "1:持家" },
-    { value: "2", label: "2:借家" },
-    { value: "3", label: "3:マンション" },
-    { value: "4", label: "4:アパート" },
-    { value: "5", label: "5:公営住宅" },
-    { value: "6", label: "6:社宅・寮" },
-    { value: "7", label: "7:店舗事務所" },
-    { value: "8", label: "8:別荘" },
-    { value: "9", label: "9:その他" },
+    { code: "0", label: "0:空白" },
+    { code: "1", label: "1:持家" },
+    { code: "2", label: "2:借家" },
+    { code: "3", label: "3:マンション" },
+    { code: "4", label: "4:アパート" },
+    { code: "5", label: "5:公営住宅" },
+    { code: "6", label: "6:社宅・寮" },
+    { code: "7", label: "7:店舗事務所" },
+    { code: "8", label: "8:別荘" },
+    { code: "9", label: "9:その他" },
   ];
 
   const notificationTypeOptions = [
-    { value: "0", label: "0:空欄" },
-    { value: "1", label: "1:1年" },
-    { value: "2", label: "2:2年" },
-    { value: "3", label: "3:3年" },
+    { code: "0", label: "0:空欄" },
+    { code: "1", label: "1:1年" },
+    { code: "2", label: "2:2年" },
+    { code: "3", label: "3:3年" },
   ];
   useImperativeHandle(ref, () => ({
     focusFirstButton: () => {
@@ -45,10 +47,20 @@ const OtherInfo = forwardRef<any>((props, ref) => {
     notificationType: "0",
     financeAuxCode: "",
   });
-  const [openSelect, setOpenSelect] = useState<string | null>(null);
 
   const handleValueChange = (fieldName: string, value: string) => {
     setFormValues((prev) => ({ ...prev, [fieldName]: value }));
+  };
+
+  const openPopup = (url = "/link-destination") => {
+    const newWindow = window.open(
+      url,
+      "_blank",
+      "width=500,height=300,noopener,noreferrer"
+    );
+    if (newWindow) {
+      newWindow.focus();
+    }
   };
 
   const inputColorClass = `!${inputColor} border border-black`;
@@ -67,16 +79,8 @@ const OtherInfo = forwardRef<any>((props, ref) => {
         {/* Cột trái */}
         <div className="flex items-center">
           <Button
-            onClick={() => {
-              const newWindow = window.open(
-                "/link-destination",
-                "_blank",
-                "width=500,height=300,noopener,noreferrer"
-              );
-              if (newWindow) {
-                newWindow.focus();
-              }
-            }}
+            onClick={() => openPopup()}
+            disabled={isFormDisabled}
             ref={firstButtonRef}
             className={`${label} shadow-md shadow-zinc-500 focus:border-3 focus:border-yellow-600`}
           >
@@ -85,18 +89,11 @@ const OtherInfo = forwardRef<any>((props, ref) => {
           <Input
             className={` h-6 w-32 ${inputColorClass}`}
             defaultValue={"0000"}
+            disabled={isFormDisabled}
           ></Input>
           <Button
-            onClick={() => {
-              const newWindow = window.open(
-                "/link-destination",
-                "_blank",
-                "width=500,height=300,noopener,noreferrer"
-              );
-              if (newWindow) {
-                newWindow.focus();
-              }
-            }}
+            onClick={() => openPopup()}
+            disabled={isFormDisabled}
             className="ml-2 h-6 w-6"
           >
             ▼
@@ -107,76 +104,47 @@ const OtherInfo = forwardRef<any>((props, ref) => {
           <Input
             className={` h-6 w-32 ${inputColorClass}`}
             defaultValue={""}
+            disabled={isFormDisabled}
           ></Input>
         </div>
 
         <div className="flex items-center">
           <Button
-            onClick={() => {
-              const newWindow = window.open(
-                "/link-destination",
-                "_blank",
-                "width=500,height=300,noopener,noreferrer"
-              );
-              if (newWindow) {
-                newWindow.focus();
-              }
-            }}
+            onClick={() => openPopup()}
             className={`${label} shadow-md shadow-zinc-500`}
+            disabled={isFormDisabled}
           >
             紹介元工務店
           </Button>
           <Input
             className={` h-6 w-32 ${inputColorClass}`}
             defaultValue={"0000"}
+            disabled={isFormDisabled}
           ></Input>
           <Button
-            onClick={() => {
-              const newWindow = window.open(
-                "/link-destination",
-                "_blank",
-                "width=500,height=300,noopener,noreferrer"
-              );
-              if (newWindow) {
-                newWindow.focus();
-              }
-            }}
+            onClick={() => openPopup()}
             className="ml-2 h-6 w-6"
+            disabled={isFormDisabled}
           >
             ▼
           </Button>
         </div>
         <div className="flex items-center">
           <Button
-            onClick={() => {
-              const newWindow = window.open(
-                "/link-destination",
-                "_blank",
-                "width=500,height=300,noopener,noreferrer"
-              );
-              if (newWindow) {
-                newWindow.focus();
-              }
-            }}
+            onClick={() => openPopup()}
             className={`${label} shadow-md shadow-zinc-500`}
+            disabled={isFormDisabled}
           >
             前納入先
           </Button>
           <Input
             className={` h-6 w-32 ${inputColorClass}`}
             defaultValue={"0000"}
+            disabled={isFormDisabled}
           ></Input>
           <Button
-            onClick={() => {
-              const newWindow = window.open(
-                "/link-destination",
-                "_blank",
-                "width=500,height=300,noopener,noreferrer"
-              );
-              if (newWindow) {
-                newWindow.focus();
-              }
-            }}
+            onClick={() => openPopup()}
+            disabled={isFormDisabled}
             className="ml-2 h-6 w-6"
           >
             ▼
@@ -184,112 +152,63 @@ const OtherInfo = forwardRef<any>((props, ref) => {
         </div>
         <div className="flex items-center">
           <Button
-            onClick={() => {
-              const newWindow = window.open(
-                "/link-destination",
-                "_blank",
-                "width=500,height=300,noopener,noreferrer"
-              );
-              if (newWindow) {
-                newWindow.focus();
-              }
-            }}
+            onClick={() => openPopup()}
             className={`${label} shadow-md shadow-zinc-500`}
+            disabled={isFormDisabled}
           >
             オーナー
           </Button>
           <Input
             className={` h-6 w-32 ${inputColorClass}`}
             defaultValue={"0000"}
+            disabled={isFormDisabled}
           ></Input>
           <Button
-            onClick={() => {
-              const newWindow = window.open(
-                "/link-destination",
-                "_blank",
-                "width=500,height=300,noopener,noreferrer"
-              );
-              if (newWindow) {
-                newWindow.focus();
-              }
-            }}
+            onClick={() => openPopup()}
             className="ml-2 h-6 w-6"
+            disabled={isFormDisabled}
           >
             ▼
           </Button>
         </div>
         <div className="flex items-center">
           <Button
-            onClick={() => {
-              const newWindow = window.open(
-                "/link-destination",
-                "_blank",
-                "width=500,height=300,noopener,noreferrer"
-              );
-              if (newWindow) {
-                newWindow.focus();
-              }
-            }}
+            onClick={() => openPopup()}
             className={`${label} shadow-md shadow-zinc-500`}
+            disabled={isFormDisabled}
           >
             管理会社
           </Button>
           <Input
             className={` h-6 w-32 ${inputColorClass}`}
             defaultValue={"0000"}
+            disabled={isFormDisabled}
           ></Input>
           <Button
-            onClick={() => {
-              const newWindow = window.open(
-                "/link-destination",
-                "_blank",
-                "width=500,height=300,noopener,noreferrer"
-              );
-              if (newWindow) {
-                newWindow.focus();
-              }
-            }}
+            onClick={() => openPopup()}
             className="ml-2 h-6 w-6"
+            disabled={isFormDisabled}
           >
             ▼
           </Button>
         </div>
         <div className="flex items-center">
           <label className={label}>持家区分</label>
-          <Input
-            className={` h-6 w-10 ${inputColorClass}`}
+          <CodeInputSelect
+            options={homeOwnershipOptions}
             value={formValues.homeOwnershipType}
-            onChange={(e) =>
-              handleValueChange("homeOwnershipType", e.target.value)
+            onChange={(newValue) =>
+              handleValueChange("homeOwnershipType", newValue)
             }
-            onKeyDown={(e) => {
-              if (e.key === "F4") {
-                e.preventDefault();
-                setOpenSelect("homeOwnershipType");
-              }
-            }}
+            disabled={isFormDisabled}
           />
-          <Select
-            className={`h-6 w-32 [&>.ant-select-selector]:!bg-[#ebcec0] ml-2`}
-            value={formValues.homeOwnershipType}
-            onChange={(value) => handleValueChange("homeOwnershipType", value)}
-            open={openSelect === "homeOwnershipType"}
-            onDropdownVisibleChange={(isOpen) =>
-              setOpenSelect(isOpen ? "homeOwnershipType" : null)
-            }
-          >
-            {homeOwnershipOptions.map((opt) => (
-              <Option key={opt.value} value={opt.value}>
-                {opt.label}
-              </Option>
-            ))}
-          </Select>
         </div>
         <div className="flex items-center">
           <label className={label}>部屋数</label>
           <Input
             className={` h-6 w-32 ${inputColorClass}`}
             defaultValue={""}
+            disabled={isFormDisabled}
           ></Input>
         </div>
         <div className="flex items-center">
@@ -297,6 +216,7 @@ const OtherInfo = forwardRef<any>((props, ref) => {
           <Input
             className={` h-6 w-32 ${inputColorClass}`}
             defaultValue={""}
+            disabled={isFormDisabled}
           ></Input>
         </div>
         <div className="flex items-center">
@@ -304,6 +224,7 @@ const OtherInfo = forwardRef<any>((props, ref) => {
           <Input
             className={` h-6 w-32 ${inputColorClass}`}
             defaultValue={""}
+            disabled={isFormDisabled}
           ></Input>
           <p>Km</p>
         </div>
@@ -312,45 +233,27 @@ const OtherInfo = forwardRef<any>((props, ref) => {
           <Input
             className={` h-6 w-32 ${inputColorClass}`}
             defaultValue={""}
+            disabled={isFormDisabled}
           ></Input>
           <p>分</p>
         </div>
         <div className="flex items-center">
           <label className={label}>周知対象区分</label>
-          <Input
-            className={` h-6 w-10 ${inputColorClass}`}
+          <CodeInputSelect
+            options={notificationTypeOptions}
             value={formValues.notificationType}
-            onChange={(e) =>
-              handleValueChange("notificationType", e.target.value)
+            onChange={(newValue) =>
+              handleValueChange("notificationType", newValue)
             }
-            onKeyDown={(e) => {
-              if (e.key === "F4") {
-                e.preventDefault();
-                setOpenSelect("notificationType");
-              }
-            }}
+            disabled={isFormDisabled}
           />
-          <Select
-            className={`h-6 w-32 [&>.ant-select-selector]:!bg-[#ebcec0] ml-2`}
-            value={formValues.notificationType}
-            onChange={(value) => handleValueChange("notificationType", value)}
-            open={openSelect === "notificationType"}
-            onDropdownVisibleChange={(isOpen) =>
-              setOpenSelect(isOpen ? "notificationType" : null)
-            }
-          >
-            {notificationTypeOptions.map((opt) => (
-              <Option key={opt.value} value={opt.value}>
-                {opt.label}
-              </Option>
-            ))}
-          </Select>
         </div>
         <div className="flex items-center">
           <label className={label}>財務補助コード</label>
           <Input
             className={` h-6 w-32 ${inputColorClass}`}
             defaultValue={""}
+            disabled={isFormDisabled}
           ></Input>
         </div>
       </div>

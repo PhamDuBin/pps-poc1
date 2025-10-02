@@ -9,14 +9,14 @@ import { inputColor, labelColor } from "../../../constants/colors";
 import { blockTab } from "../../../utils/InputHandlers";
 import PersonnelSearchModal from "../../input_inspection_result/PersonnelSearchModal";
 
-const AreaInfo = forwardRef<any>((props, ref) => {
+const AreaInfo = forwardRef<any, { showData: boolean }>((props, ref) => {
   const headerCellClass = `h-6 px-2 ${labelColor} font-bold text-center flex items-center justify-center text-sm rounded-md`;
   const rowLabelClass = `h-6 w-32 px-2 ${labelColor} font-bold flex items-center justify-center text-sm rounded-md`;
-
   const rows = ["営業", "検針", "集金", "配送", "点検", "保安"];
-
   const firstInputRef = useRef<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { showData } = props;
+  const isFormDisabled = !showData;
 
   useImperativeHandle(ref, () => ({
     focusFirstButton: () => {
@@ -57,10 +57,12 @@ const AreaInfo = forwardRef<any>((props, ref) => {
                 defaultValue={"000000"}
                 maxLength={6}
                 onChange={(e) => handleNumericInput(e, 6)}
+                disabled={isFormDisabled}
               />
               <Button
                 onClick={() => setIsModalOpen(true)}
                 className="h-6 w-6 p-0 rounded-md shadow-md shadow-zinc-500 ml-2"
+                disabled={isFormDisabled}
               >
                 ▼
               </Button>
@@ -79,6 +81,7 @@ const AreaInfo = forwardRef<any>((props, ref) => {
                     defaultValue={"000"}
                     maxLength={3}
                     onChange={(e) => handleNumericInput(e, 3)}
+                    disabled={isFormDisabled}
                   />
                   <Button
                     onClick={() => {
@@ -92,6 +95,7 @@ const AreaInfo = forwardRef<any>((props, ref) => {
                       }
                     }}
                     className="h-6 w-6 p-0 rounded-md shadow-md shadow-zinc-500 ml-2"
+                    disabled={isFormDisabled}
                   >
                     ▼
                   </Button>
@@ -103,6 +107,7 @@ const AreaInfo = forwardRef<any>((props, ref) => {
                     defaultValue={"0000"}
                     maxLength={4}
                     onChange={(e) => handleNumericInput(e, 4)}
+                    disabled={isFormDisabled}
                   />
                   <span className="mx-1">-</span>
                   <Input
@@ -110,6 +115,7 @@ const AreaInfo = forwardRef<any>((props, ref) => {
                     defaultValue={"000"}
                     maxLength={3}
                     onChange={(e) => handleNumericInput(e, 3)}
+                    disabled={isFormDisabled}
                   />
                 </div>
               </>

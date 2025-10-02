@@ -72,13 +72,12 @@ export const handleNavigationKey040504 = (
   focusableElements: HTMLElement[]
 ) => {
   const keysToHandle = ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"];
-  if (!keysToHandle.includes(e.key)) {
-    return;
-  }
+  if (!keysToHandle.includes(e.key)) return;
+
   const activeElement = e.target as HTMLElement;
-  if (activeElement?.closest(".ant-select-open")) {
-    return;
-  }
+
+  if (activeElement?.closest(".ant-select-open")) return;
+
   e.preventDefault();
   e.stopPropagation();
 

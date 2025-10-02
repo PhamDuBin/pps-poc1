@@ -22,6 +22,7 @@ const MainBusinessScreen = () => {
   const otherInfoRef = useRef<any>(null);
   const areaInfoRef = useRef<any>(null);
   const emergencyContactRef = useRef<any>(null);
+  const [shouldShowData, setShouldShowData] = useState(false);
   const sections = [
     "basicInformation",
     "acquisitionInformation",
@@ -37,6 +38,8 @@ const MainBusinessScreen = () => {
     part3: "000000",
     part4: "000",
   });
+  const [fullName, setFullName] = useState("");
+  const [representativeName, setRepresentativeName] = useState("");
   const [modalConfig, setModalConfig] = useState({
     isOpen: false,
     message: "",
@@ -247,14 +250,17 @@ const MainBusinessScreen = () => {
             </Button>
             <Button
               ref={firstInputRef}
-              onClick={() =>
+              onClick={() => {
                 setCustomerCode({
                   part1: "0000",
                   part2: "000",
                   part3: "000000",
                   part4: "000",
-                })
-              }
+                });
+                setFullName("");
+                setRepresentativeName("");
+                setShouldShowData(false);
+              }}
               className={`${button} mx-2`}
             >
               再入力
@@ -290,7 +296,8 @@ const MainBusinessScreen = () => {
           <div className="flex flex-row items-center justify-center mt-2">
             <label className={label}>氏名</label>
             <Input
-              className={`w-[20%] !px-0 text-center ${inputColor}`}
+              value={fullName}
+              className={`w-[20%] !px-0 text-left ${inputColor}`}
             ></Input>
             <label className={label}>顧客種別</label>
             <Radio.Group defaultValue={"法人以外"}>
@@ -299,7 +306,8 @@ const MainBusinessScreen = () => {
             </Radio.Group>
             <label className={label}>代表者名</label>
             <Input
-              className={`w-[20%] !px-0 text-center ${inputColor}`}
+              value={representativeName}
+              className={`w-[20%] !px-0 text-left ${inputColor}`}
             ></Input>
           </div>
         </div>
@@ -365,40 +373,48 @@ const MainBusinessScreen = () => {
             onFocus={() => setActiveSection("basicInformation")}
             id="basicInformationSection"
           >
-            <BasicInformation ref={basicInformationRef} />
+            <BasicInformation
+              ref={basicInformationRef}
+              showData={shouldShowData}
+            />
           </div>
           <div
             onFocus={() => setActiveSection("acquisitionInformation")}
             id="acquisitionInformationSection"
           >
-            <AcquisitionInformation ref={acquisitionInformationRef} />
+            <AcquisitionInformation
+              ref={acquisitionInformationRef}
+              showData={shouldShowData}
+            />
           </div>
           <div
             onFocus={() => setActiveSection("areaInfo")}
             id="areaInfoSection"
           >
-            {" "}
-            <AreaInfo ref={areaInfoRef} />
+            <AreaInfo ref={areaInfoRef} showData={shouldShowData} />
           </div>
 
           <div
             onFocus={() => setActiveSection("emergencyContact")}
             id="emergencyContactSection"
           >
-            <EmergencyContact ref={emergencyContactRef} />
+            <EmergencyContact
+              ref={emergencyContactRef}
+              showData={shouldShowData}
+            />
           </div>
           <div
             onFocus={() => setActiveSection("otherInfo")}
             id="otherInfoSection"
           >
-            <OtherInfo ref={otherInfoRef} />
+            <OtherInfo ref={otherInfoRef} showData={shouldShowData} />
           </div>
 
           <div
             onFocus={() => setActiveSection("familyInfo")}
             id="familyInfoSection"
           >
-            <FamilyInfo ref={familyInfoRef} />
+            <FamilyInfo ref={familyInfoRef} showData={shouldShowData} />
           </div>
         </div>
       </div>
@@ -699,6 +715,9 @@ const MainBusinessScreen = () => {
                   part3: "000001",
                   part4: "020",
                 });
+                setFullName("テストさん太郎");
+                setRepresentativeName("代表者テスト");
+                setShouldShowData(true);
                 firstInputRef.current?.focus();
               }}
             />

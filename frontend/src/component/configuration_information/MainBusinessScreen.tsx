@@ -35,6 +35,7 @@ const MainBusinessScreen = () => {
     "printingDesignation",
     "titleFormSetting",
   ];
+  const isInitialMount = useRef(true);
   const containerRef = useRef<HTMLDivElement>(null);
   const activeButton = `bg-yellow-300 border-yellow-400`;
   const button = `flex text-center justify-center items-center ${labelColor} border border-black xl:text-base text-xs font-bold shadow-md shadow-zinc-600 hover:bg-white`;
@@ -79,18 +80,23 @@ const MainBusinessScreen = () => {
     if (!container) return;
 
     const handleShortcutKeyDown = (e: KeyboardEvent) => {
-      const isModifierPressed = (e.ctrlKey || e.metaKey) && e.altKey;
+      const isMac = navigator.platform.toUpperCase().includes("MAC");
 
-      if (!isModifierPressed) {
-        return;
+      let isModifierPressed = false;
+
+      if (isMac) {
+        isModifierPressed = e.metaKey && e.altKey;
+      } else {
+        isModifierPressed = e.ctrlKey && e.altKey;
       }
-      const key = e.key.toUpperCase();
 
+      if (!isModifierPressed) return;
+
+      const key = e.key.toUpperCase();
       const action = shortcuts[key as keyof typeof shortcuts];
 
       if (action) {
         e.preventDefault();
-
         action();
       }
     };
@@ -113,7 +119,7 @@ const MainBusinessScreen = () => {
       focusFirstButtonRef.current.focus();
     }
   };
-  const isInitialMount = useRef(true);
+
   useEffect(() => {
     if (isInitialMount.current) {
       isInitialMount.current = false;
@@ -298,6 +304,11 @@ const MainBusinessScreen = () => {
         </Button>
       </div>
       <div
+        onKeyDown={(e) => {
+          if (e.code === "Space") {
+            e.preventDefault();
+          }
+        }}
         id="scroll-container"
         className="mt-3 h-[80%] border border-black p-4 overflow-auto"
       >

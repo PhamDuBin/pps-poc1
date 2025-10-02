@@ -1,9 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { Select, DatePicker, Input, Button } from "antd";
+import React, { useState, useEffect, useRef } from "react";
+import { DatePicker, Input, Button } from "antd";
 import dayjs from "dayjs";
-
-const { Option } = Select;
-
+import CodeInputSelect from "../CodeInputSelect";
 interface FamilyMember {
   id: number | null;
   relation: string;
@@ -42,9 +40,14 @@ const relationOptions = [
   "義姉",
   "義妹",
   "その他",
-];
-const genderOptions = ["男性", "女性"];
-const jobOptions = ["会社員", "公務員", "自営業", "学生", "主婦", "無職"];
+].map((item, index) => ({ code: String(index + 1), label: item }));
+const genderOptions = ["男性", "女性"].map((item, index) => ({
+  code: String(index + 1),
+  label: item,
+}));
+const jobOptions = ["会社員", "公務員", "自営業", "学生", "主婦", "無職"].map(
+  (item, index) => ({ code: String(index + 1), label: item })
+);
 const healthOptions = [
   "肥満対応",
   "健康食品",
@@ -52,7 +55,7 @@ const healthOptions = [
   "美容飲料",
   "良好",
   "その他",
-];
+].map((item, index) => ({ code: String(index + 1), label: item }));
 const hobbyOptions = [
   "映画鑑賞",
   "音楽鑑賞",
@@ -74,7 +77,7 @@ const hobbyOptions = [
   "ブリーディング",
   "アウトドア",
   "その他",
-];
+].map((item, index) => ({ code: String(index + 1), label: item }));
 
 const FamilyInfoModal: React.FC<ModalProps> = ({
   isOpen,
@@ -84,23 +87,23 @@ const FamilyInfoModal: React.FC<ModalProps> = ({
 }) => {
   const defaultFormData: FamilyMember = {
     id: null,
-    relation: "",
+    relation: "1",
     name: "",
-    gender: "男性",
+    gender: "1",
     dob: dayjs().format("YYYY/MM/DD"),
-    job: "会社員",
-    health: "良好",
-    hobby: "",
+    job: "1",
+    health: "5",
+    hobby: "1",
   };
-  const firstRef = React.useRef<any>(null);
 
+  const firstInputRef = useRef<any>(null);
   const [formData, setFormData] = useState<FamilyMember>(defaultFormData);
 
   useEffect(() => {
     if (isOpen) {
       setFormData(initialData || defaultFormData);
       setTimeout(() => {
-        firstRef.current?.focus();
+        firstInputRef.current?.focus();
       }, 100);
     }
   }, [isOpen, initialData]);
@@ -117,29 +120,25 @@ const FamilyInfoModal: React.FC<ModalProps> = ({
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-white p-4 w-[700px] rounded-md shadow-lg">
+      <div className="bg-white p-4 w-[800px] rounded-md shadow-lg">
         <div className="bg-gray-300 font-bold text-center py-2 rounded-md">
           家族情報
         </div>
 
-        <div className="grid grid-cols-2 gap-x-6 gap-y-3 p-4 text-sm">
+        <div className="grid grid-cols-2 gap-x-8 gap-y-3 p-4 text-sm">
           <div className="flex items-center">
             <label className="rounded-md w-24 h-6 flex items-center justify-center bg-gray-300">
               間柄
             </label>
-            <Select
-              ref={firstRef}
+            <CodeInputSelect
+              ref={firstInputRef}
+              options={relationOptions}
               value={formData.relation}
               onChange={(value) => handleChange("relation", value)}
-              className="h-6 ml-2 w-36"
-            >
-              {relationOptions.map((opt) => (
-                <Option key={opt} value={opt}>
-                  {opt}
-                </Option>
-              ))}
-            </Select>
+              inputClassName="ml-2"
+            />
           </div>
+
           <div className="flex items-center">
             <label className="rounded-md w-24 h-6 flex items-center justify-center bg-gray-300">
               家族氏名
@@ -148,33 +147,31 @@ const FamilyInfoModal: React.FC<ModalProps> = ({
               value={formData.name}
               onChange={(e) => handleChange("name", e.target.value)}
               type="text"
-              className="h-6 ml-2 px-1"
+              className="h-6 ml-2 px-1 flex-1"
             />
           </div>
           <div className="flex items-center">
             <label className="rounded-md w-24 h-6 flex items-center justify-center bg-gray-300">
               性別
             </label>
-            <Select
+            <CodeInputSelect
+              options={genderOptions}
               value={formData.gender}
               onChange={(value) => handleChange("gender", value)}
-              className="h-6 ml-2 w-36"
-            >
-              {genderOptions.map((opt) => (
-                <Option key={opt} value={opt}>
-                  {opt}
-                </Option>
-              ))}
-            </Select>
+              inputClassName="ml-2"
+            />
           </div>
+
           <div className="flex items-center">
             <label className="rounded-md w-24 h-6 flex items-center justify-center bg-gray-300">
               生年月日
             </label>
             <DatePicker
               value={dayjs(formData.dob, "YYYY/MM/DD")}
-              onChange={(date, dateString) => handleChange("dob", dateString)}
-              className={`h-6 w-full ml-2`}
+              onChange={(date, dateString) =>
+                handleChange("dob", dateString as string)
+              }
+              className={`h-6 flex-1 ml-2`}
               format="YYYY/MM/DD"
             />
           </div>
@@ -182,49 +179,34 @@ const FamilyInfoModal: React.FC<ModalProps> = ({
             <label className="rounded-md w-24 h-6 flex items-center justify-center bg-gray-300">
               職業
             </label>
-            <Select
+            <CodeInputSelect
+              options={jobOptions}
               value={formData.job}
               onChange={(value) => handleChange("job", value)}
-              className="h-6 ml-2 w-36"
-            >
-              {jobOptions.map((opt) => (
-                <Option key={opt} value={opt}>
-                  {opt}
-                </Option>
-              ))}
-            </Select>
+              inputClassName="ml-2"
+            />
           </div>
           <div className="flex items-center">
             <label className="rounded-md w-24 h-6 flex items-center justify-center bg-gray-300">
               健康関連
             </label>
-            <Select
+            <CodeInputSelect
+              options={healthOptions}
               value={formData.health}
               onChange={(value) => handleChange("health", value)}
-              className="h-6 ml-2 w-full"
-            >
-              {healthOptions.map((opt) => (
-                <Option key={opt} value={opt}>
-                  {opt}
-                </Option>
-              ))}
-            </Select>
+              inputClassName="ml-2"
+            />
           </div>
           <div className="flex items-center col-span-2">
-            <label className="rounded-md w-24 h-6 flex items-center justify-center bg-gray-300">
+            <label className="rounded-md w-[5.5rem] h-6 flex items-center justify-center bg-gray-300">
               趣味
             </label>
-            <Select
+            <CodeInputSelect
+              options={hobbyOptions}
               value={formData.hobby}
               onChange={(value) => handleChange("hobby", value)}
-              className="h-6 ml-2 w-36"
-            >
-              {hobbyOptions.map((opt) => (
-                <Option key={opt} value={opt}>
-                  {opt}
-                </Option>
-              ))}
-            </Select>
+              inputClassName="ml-2"
+            />
           </div>
         </div>
         <div className="flex justify-center gap-4">
