@@ -63,7 +63,7 @@ const OtherInfo = forwardRef<any, { showData: boolean }>((props, ref) => {
     }
   };
 
-  const inputColorClass = `!${inputColor} border border-black`;
+  const inputColorClass = `hover:${inputColor} focus:!${inputColor} border border-black`;
   const label = `w-32 mr-2 h-6 border-gray-300 rounded-md font-bold flex text-center justify-center items-center ${labelColor}`;
   return (
     <div onKeyDown={blockTab} className="w-full text-xs py-4">

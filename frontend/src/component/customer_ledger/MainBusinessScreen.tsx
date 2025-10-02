@@ -220,25 +220,25 @@ const MainBusinessScreen = () => {
               </Select.Option>
             </Select>
             <Input
-              className={`w-10 !px-0 text-center !${inputColor}`}
+              className={`w-10 !px-0 text-center hover:${inputColor}`}
               defaultValue={"0000"}
               value={customerCode.part1}
             ></Input>
             <span>-</span>
             <Input
-              className={`w-10 !px-0 text-center !${inputColor}`}
+              className={`w-10 !px-0 text-center hover:${inputColor}`}
               defaultValue={"000"}
               value={customerCode.part2}
             ></Input>
             <span>-</span>
             <Input
-              className={`w-14 !px-0 text-center !${inputColor}`}
+              className={`w-14 !px-0 text-center hover:${inputColor}`}
               defaultValue={"000000"}
               value={customerCode.part3}
             ></Input>
             <span>-</span>
             <Input
-              className={`w-10 !px-0 text-center !${inputColor}`}
+              className={`w-10 !px-0 text-center hover:${inputColor}`}
               defaultValue={"000"}
               value={customerCode.part4}
             ></Input>
@@ -297,7 +297,7 @@ const MainBusinessScreen = () => {
             <label className={label}>氏名</label>
             <Input
               value={fullName}
-              className={`w-[20%] !px-0 text-left ${inputColor}`}
+              className={`w-[20%] !px-0 text-left hover:${inputColor}`}
             ></Input>
             <label className={label}>顧客種別</label>
             <Radio.Group defaultValue={"法人以外"}>
@@ -307,7 +307,7 @@ const MainBusinessScreen = () => {
             <label className={label}>代表者名</label>
             <Input
               value={representativeName}
-              className={`w-[20%] !px-0 text-left ${inputColor}`}
+              className={`w-[20%] !px-0 text-left hover:${inputColor}`}
             ></Input>
           </div>
         </div>

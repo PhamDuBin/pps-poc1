@@ -5,7 +5,7 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { inputColor, labelColor } from "../../../constants/colors";
+import { focusInputColor, hoverInputColor, inputColor, labelColor } from "../../../constants/colors";
 import { blockTab } from "../../../utils/InputHandlers";
 import PersonnelSearchModal from "../../input_inspection_result/PersonnelSearchModal";
 
@@ -53,7 +53,7 @@ const AreaInfo = forwardRef<any, { showData: boolean }>((props, ref) => {
             <div className="flex items-center">
               <Input
                 ref={label === "営業" ? firstInputRef : null}
-                className={`h-6 w-32 text-center ${inputColor}`}
+                className={`h-6 w-32 text-center ${hoverInputColor} ${focusInputColor}`}
                 defaultValue={"000000"}
                 maxLength={6}
                 onChange={(e) => handleNumericInput(e, 6)}
@@ -77,7 +77,7 @@ const AreaInfo = forwardRef<any, { showData: boolean }>((props, ref) => {
               <>
                 <div className="flex items-center">
                   <Input
-                    className={`h-6 w-32 text-center ${inputColor}`}
+                    className={`h-6 w-32 text-center ${hoverInputColor} ${focusInputColor}`}
                     defaultValue={"000"}
                     maxLength={3}
                     onChange={(e) => handleNumericInput(e, 3)}
@@ -103,7 +103,7 @@ const AreaInfo = forwardRef<any, { showData: boolean }>((props, ref) => {
 
                 <div className="flex items-center">
                   <Input
-                    className={`h-6 w-32 text-center ${inputColor}`}
+                    className={`h-6 w-32 text-center ${hoverInputColor} ${focusInputColor}`}
                     defaultValue={"0000"}
                     maxLength={4}
                     onChange={(e) => handleNumericInput(e, 4)}
@@ -111,7 +111,7 @@ const AreaInfo = forwardRef<any, { showData: boolean }>((props, ref) => {
                   />
                   <span className="mx-1">-</span>
                   <Input
-                    className={`h-6 w-32 text-center ${inputColor}`}
+                    className={`h-6 w-32 text-center ${hoverInputColor} ${focusInputColor}`}
                     defaultValue={"000"}
                     maxLength={3}
                     onChange={(e) => handleNumericInput(e, 3)}

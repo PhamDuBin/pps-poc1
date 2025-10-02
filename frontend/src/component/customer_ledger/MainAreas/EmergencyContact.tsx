@@ -6,7 +6,7 @@ import React, {
   useState,
 } from "react";
 import { Input, Select } from "antd";
-import { labelColor, inputColor } from "../../../constants/colors";
+import { labelColor, inputColor, focusInputColor, hoverInputColor } from "../../../constants/colors";
 import { blockTab } from "../../../utils/InputHandlers";
 import CodeInputSelect from "../../CodeInputSelect";
 
@@ -84,7 +84,7 @@ const EmergencyContact = forwardRef<any, { showData: boolean }>(
 
     const labelClass = `w-32 mr-2 h-6 border-gray-300 rounded-md ${labelColor} font-bold flex text-center justify-center items-center`;
     const inputCodeClass = `${inputColor} border border-black h-6 w-14 text-center`;
-    const inputClass = `${inputColor} border border-black h-6 w-32`;
+    const inputClass = `${hoverInputColor} ${focusInputColor} border border-black h-6 w-32`;
 
     return (
       <div onKeyDown={blockTab} className="w-full text-xs py-4">

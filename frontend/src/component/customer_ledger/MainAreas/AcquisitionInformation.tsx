@@ -7,7 +7,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { inputColor, labelColor } from "../../../constants/colors";
+import { inputColor, labelColor, hoverInputColor, focusInputColor } from "../../../constants/colors";
 import { blockTab } from "../../../utils/InputHandlers";
 import CodeInputSelect from "../../CodeInputSelect";
 
@@ -186,7 +186,7 @@ const AcquisitionInformation = forwardRef<any, { showData: boolean }>(
               <DatePicker
                 value={formValues.startDate}
                 onChange={(date) => handleValueChange("startDate", date)}
-                className={`h-6 w-1/4 ${inputColor}`}
+                className={`h-6 w-1/5 ${inputColor}`}
                 format="YYYY/MM/DD"
                 disabled={isFormDisabled}
               />
@@ -196,7 +196,7 @@ const AcquisitionInformation = forwardRef<any, { showData: boolean }>(
               <DatePicker
                 value={formValues.endDate}
                 onChange={(date) => handleValueChange("endDate", date)}
-                className={`h-6 w-1/4 ${inputColor}`}
+                className={`h-6 w-1/5 ${inputColor}`}
                 format="YYYY/MM/DD"
                 disabled={isFormDisabled}
               />
@@ -292,10 +292,10 @@ const AcquisitionInformation = forwardRef<any, { showData: boolean }>(
                 disabled={isFormDisabled}
               />
             </div>
-            <div className="w-1/2 flex">
+            <div className="w-1/2 flex pr-2">
               <div className={`font-semibold ${labelClass}`}>集合戸数</div>
               <Input
-                className={`${inputColor} w-2/5`}
+                className={`${hoverInputColor} ${focusInputColor} w-[70px] rounded-md`}
                 placeholder="0"
                 size="small"
                 disabled={isFormDisabled}
@@ -306,25 +306,25 @@ const AcquisitionInformation = forwardRef<any, { showData: boolean }>(
             <div className={`font-semibold ${labelClass}`}>集合親コード</div>
             <div className="flex gap-2 items-center w-4/5">
               <Input
-                className={`${inputColor} w-[25%] h-6 placeholder:text-black`}
+                className={`${hoverInputColor} ${focusInputColor} w-[9%] h-6 placeholder:text-black`}
                 placeholder="0000"
                 disabled={isFormDisabled}
               />
               <div> - </div>
               <Input
-                className={`${inputColor} w-[15%] h-6 placeholder:text-black`}
+                className={`${hoverInputColor} ${focusInputColor} w-[7%] h-6 placeholder:text-black`}
                 placeholder="000"
                 disabled={isFormDisabled}
               />
               <div> - </div>
               <Input
-                className={`${inputColor} w-[30%] h-6 placeholder:text-black`}
+                className={`${hoverInputColor} ${focusInputColor} w-[10%] h-6 placeholder:text-black`}
                 placeholder="000000"
                 disabled={isFormDisabled}
               />
               <div> - </div>
               <Input
-                className={`${inputColor} w-[15%] h-6 placeholder:text-black`}
+                className={`${hoverInputColor} ${focusInputColor} w-[7%] h-6 placeholder:text-black`}
                 placeholder="000"
                 disabled={isFormDisabled}
               />
@@ -389,12 +389,12 @@ const AcquisitionInformation = forwardRef<any, { showData: boolean }>(
               在宅日時
             </div>
             <div className="flex flex-col items-center gap-2 p-1 w-4/5">
-              <div className="w-full flex gap-2">
+              <div className="w-full flex gap-1">
                 <div className="flex items-center gap-1 mr-5">
                   <Input
                     defaultValue={"15"}
                     size="small"
-                    className={`w-[50px] ${inputColor}`}
+                    className={`w-[50px] ${hoverInputColor} ${focusInputColor}`}
                     disabled={isFormDisabled}
                   />
                   <div>日頃</div>
@@ -403,7 +403,7 @@ const AcquisitionInformation = forwardRef<any, { showData: boolean }>(
                   <Input
                     defaultValue={"13"}
                     size="small"
-                    className={`w-[50px] ${inputColor}`}
+                    className={`w-[50px] ${hoverInputColor} ${focusInputColor}`}
                     disabled={isFormDisabled}
                   />
                   <div>時 ～</div>
@@ -412,7 +412,7 @@ const AcquisitionInformation = forwardRef<any, { showData: boolean }>(
                   <Input
                     defaultValue={"17"}
                     size="small"
-                    className={`w-[50px] ${inputColor}`}
+                    className={`w-[50px] ${hoverInputColor} ${focusInputColor}`}
                     disabled={isFormDisabled}
                   />
                   <div>時</div>
@@ -421,9 +421,9 @@ const AcquisitionInformation = forwardRef<any, { showData: boolean }>(
                   <Input
                     disabled={isFormDisabled}
                     size="small"
-                    className={`w-[50px] ${inputColor}`}
+                    className={`w-[50px] ${hoverInputColor} ${focusInputColor}`}
                   />
-                  <Button disabled={isFormDisabled} className="w-6 h-6">
+                  <Button disabled={isFormDisabled} className="ml-1 w-6 h-6">
                     ▼
                   </Button>
                   <div>曜日</div>

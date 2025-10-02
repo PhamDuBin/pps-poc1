@@ -6,7 +6,7 @@ import React, {
   useState,
 } from "react";
 import { Input, Button, Radio } from "antd";
-import { labelColor } from "../../../constants/colors";
+import { labelColor, inputColor, hoverInputColor, focusInputColor } from "../../../constants/colors";
 import { blockTab } from "../../../utils/InputHandlers";
 import CodeInputSelect from "../../CodeInputSelect";
 import KanaInput from "../../KanaInput";
@@ -148,7 +148,7 @@ const initialEmptyValues = {
 const customerTypeOption = ["法人以外", "法人"];
 const transactionTypeOption = ["ガス顧客", "ガス外顧客"];
 
-const inputBaseClass = `hover:bg-[#ebcec0] border border-black h-6`;
+const inputBaseClass = `${hoverInputColor} ${focusInputColor} focus:!bg-[#ebcec0] border border-black h-6`;
 
 const BasicInformation = forwardRef<any, { showData: boolean }>(
   (props, ref) => {
@@ -214,7 +214,7 @@ const BasicInformation = forwardRef<any, { showData: boolean }>(
         case "住所":
           return (
             <KanaInput
-              className={`${inputBaseClass} flex-1`}
+              className={`${inputBaseClass} w-3/5`}
               value={formValues.address}
               onChange={(newValue) => handleValueChange("address", newValue)}
               disabled={isFormDisabled}
@@ -241,14 +241,14 @@ const BasicInformation = forwardRef<any, { showData: boolean }>(
 
         case "郵便番号":
           return (
-            <div className="flex items-center gap-2 flex-1">
+            <div className="flex items-center gap-2 w-1/3 pr-10">
               <Input
                 value={formValues.postalCode1}
                 onChange={(e) =>
                   handleValueChange("postalCode1", e.target.value)
                 }
                 disabled={isFormDisabled}
-                className={`${inputBaseClass} w-[80px]`}
+                className={`${inputBaseClass} w-[60px]`}
               />
               <span>-</span>
               <Input
@@ -257,11 +257,11 @@ const BasicInformation = forwardRef<any, { showData: boolean }>(
                   handleValueChange("postalCode2", e.target.value)
                 }
                 disabled={isFormDisabled}
-                className={`${inputBaseClass} w-[100px]`}
+                className={`${inputBaseClass} w-[72px]`}
               />
               <Button
                 type="default"
-                className="!bg-blue-600 !text-white hover:!bg-white hover:!text-blue-600 px-2 h-6 w-32"
+                className="!bg-blue-600 !text-white hover:!bg-white hover:!text-blue-600 px-2 h-6 w-[55%]"
                 onClick={handleSearchAddress}
                 disabled={isFormDisabled}
               >
@@ -287,7 +287,7 @@ const BasicInformation = forwardRef<any, { showData: boolean }>(
 
         case "管理部門":
           return (
-            <div className="flex gap-2 w-4/5">
+            <div className="flex gap-2">
               <CodeInputSelect
                 options={departmentOptions}
                 value={formValues.departmentCode}
@@ -310,7 +310,7 @@ const BasicInformation = forwardRef<any, { showData: boolean }>(
               {showData && <div>センター01番</div>}
 
               <KanaInput
-                className={`${inputBaseClass} flex-1`}
+                className={`${inputBaseClass} w-2/5`}
                 value={"9352716"}
                 onChange={(newValue) =>
                   handleValueChange("deliveryCenterCode", newValue)
@@ -334,7 +334,7 @@ const BasicInformation = forwardRef<any, { showData: boolean }>(
               {showData && <div>保安機関01番</div>}
 
               <KanaInput
-                className={`${inputBaseClass} flex-1`}
+                className={`${inputBaseClass} w-2/5`}
                 value={"TA90"}
                 onChange={(newValue) =>
                   handleValueChange("securityAgencyCode", newValue)
@@ -356,7 +356,7 @@ const BasicInformation = forwardRef<any, { showData: boolean }>(
               {showData && <div>集中監視01番</div>}
 
               <KanaInput
-                className={`${inputBaseClass} flex-1`}
+                className={`${inputBaseClass} w-2/5`}
                 value={"00503"}
                 onChange={(newValue) =>
                   handleValueChange("monitoringName", newValue)
@@ -369,7 +369,7 @@ const BasicInformation = forwardRef<any, { showData: boolean }>(
         case "案内":
           return (
             <Input
-              className={`${inputBaseClass} w-1/5`}
+              className={`${inputBaseClass} w-2/5`}
               disabled={isFormDisabled}
             />
           );
@@ -377,7 +377,7 @@ const BasicInformation = forwardRef<any, { showData: boolean }>(
         case "備考1":
           return (
             <KanaInput
-              className={`${inputBaseClass} flex-1`}
+              className={`${inputBaseClass} w-2/5`}
               value={formValues.備考1}
               onChange={(newValue) => handleValueChange("備考1", newValue)}
               disabled={isFormDisabled}
@@ -386,7 +386,7 @@ const BasicInformation = forwardRef<any, { showData: boolean }>(
         case "備考2":
           return (
             <KanaInput
-              className={`${inputBaseClass} flex-1`}
+              className={`${inputBaseClass} w-2/5`}
               value={formValues.備考2}
               onChange={(newValue) => handleValueChange("備考2", newValue)}
               disabled={isFormDisabled}
@@ -395,7 +395,7 @@ const BasicInformation = forwardRef<any, { showData: boolean }>(
         case "備考3":
           return (
             <KanaInput
-              className={`${inputBaseClass} flex-1`}
+              className={`${inputBaseClass} w-2/5`}
               value={formValues.備考3}
               onChange={(newValue) => handleValueChange("備考3", newValue)}
               disabled={isFormDisabled}
@@ -404,7 +404,7 @@ const BasicInformation = forwardRef<any, { showData: boolean }>(
         case "カナ":
           return (
             <KanaInput
-              className={`${inputBaseClass} flex-1`}
+              className={`${inputBaseClass} w-3/5`}
               value={formValues.カナ}
               onChange={(newValue) => handleValueChange("カナ", newValue)}
               disabled={isFormDisabled}
@@ -414,7 +414,7 @@ const BasicInformation = forwardRef<any, { showData: boolean }>(
         case "住所名称":
           return (
             <KanaInput
-              className={`${inputBaseClass} flex-1`}
+              className={`${inputBaseClass} w-3/5`}
               value={formValues.住所名称}
               onChange={(newValue) => handleValueChange("住所名称", newValue)}
               disabled={isFormDisabled}
@@ -427,7 +427,7 @@ const BasicInformation = forwardRef<any, { showData: boolean }>(
             return (
               <KanaInput
                 ref={label === "氏名" ? firstInputRef : null}
-                className={`${inputBaseClass} flex-1`}
+                className={`${inputBaseClass} w-3/5`}
                 value={formValues[fieldName]}
                 onChange={(value) => handleValueChange(fieldName, value)}
                 disabled={isFormDisabled}
