@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { DatePicker, Input, Button } from "antd";
 import dayjs from "dayjs";
 import CodeInputSelect from "../CodeInputSelect";
+import KanaFullWidthInput from "../KanaFullWidthInput";
 interface FamilyMember {
   id: number | null;
   relation: string;
@@ -143,9 +144,9 @@ const FamilyInfoModal: React.FC<ModalProps> = ({
             <label className="rounded-md w-24 h-6 flex items-center justify-center bg-gray-300">
               家族氏名
             </label>
-            <Input
+            <KanaFullWidthInput
               value={formData.name}
-              onChange={(e) => handleChange("name", e.target.value)}
+              onChange={(e) => handleChange("name", e)}
               type="text"
               className="h-6 ml-2 px-1 flex-1"
             />
@@ -198,7 +199,7 @@ const FamilyInfoModal: React.FC<ModalProps> = ({
             />
           </div>
           <div className="flex items-center col-span-2">
-            <label className="rounded-md w-[5.5rem] h-6 flex items-center justify-center bg-gray-300">
+            <label className="rounded-md w-24 h-6 flex items-center justify-center bg-gray-300">
               趣味
             </label>
             <CodeInputSelect

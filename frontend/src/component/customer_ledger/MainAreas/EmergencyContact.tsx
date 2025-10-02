@@ -6,9 +6,16 @@ import React, {
   useState,
 } from "react";
 import { Input, Select } from "antd";
-import { labelColor, inputColor, focusInputColor, hoverInputColor } from "../../../constants/colors";
+import {
+  labelColor,
+  inputColor,
+  focusInputColor,
+  hoverInputColor,
+} from "../../../constants/colors";
 import { blockTab } from "../../../utils/InputHandlers";
 import CodeInputSelect from "../../CodeInputSelect";
+import KanaFullWidthInput from "../../KanaFullWidthInput";
+import HalfWidthNumberInput from "../../HalfWidthNumberInput";
 
 const timeSlotOptions = [
   { code: "0", label: "0:空欄" },
@@ -133,69 +140,57 @@ const EmergencyContact = forwardRef<any, { showData: boolean }>(
 
           <div className="flex items-center">
             <label className={labelClass}>名称</label>
-            <Input
+            <KanaFullWidthInput
               className={inputClass}
               value={formValues.contact1.name}
-              onChange={(e) =>
-                handleValueChange("contact1", "name", e.target.value)
-              }
+              onChange={(e) => handleValueChange("contact1", "name", e)}
               disabled={isFormDisabled}
             />
           </div>
           <div className="flex items-center">
             <label className={labelClass}>名称</label>
-            <Input
+            <KanaFullWidthInput
               className={inputClass}
               value={formValues.contact2.name}
-              onChange={(e) =>
-                handleValueChange("contact2", "name", e.target.value)
-              }
+              onChange={(e) => handleValueChange("contact2", "name", e)}
               disabled={isFormDisabled}
             />
           </div>
 
           <div className="flex items-center">
             <label className={labelClass}>住所</label>
-            <Input
+            <KanaFullWidthInput
               className={inputClass}
               value={formValues.contact1.address}
-              onChange={(e) =>
-                handleValueChange("contact1", "address", e.target.value)
-              }
+              onChange={(e) => handleValueChange("contact1", "address", e)}
               disabled={isFormDisabled}
             />
           </div>
           <div className="flex items-center">
             <label className={labelClass}>住所</label>
-            <Input
+            <KanaFullWidthInput
               className={inputClass}
               value={formValues.contact2.address}
-              onChange={(e) =>
-                handleValueChange("contact2", "address", e.target.value)
-              }
+              onChange={(e) => handleValueChange("contact2", "address", e)}
               disabled={isFormDisabled}
             />
           </div>
 
           <div className="flex items-center">
             <label className={labelClass}>電話番号</label>
-            <Input
+            <HalfWidthNumberInput
               className={inputClass}
               value={formValues.contact1.phone}
-              onChange={(e) =>
-                handleValueChange("contact1", "phone", e.target.value)
-              }
+              onChange={(e) => handleValueChange("contact1", "phone", e)}
               disabled={isFormDisabled}
             />
           </div>
           <div className="flex items-center">
             <label className={labelClass}>電話番号</label>
-            <Input
+            <HalfWidthNumberInput
               className={inputClass}
               value={formValues.contact2.phone}
-              onChange={(e) =>
-                handleValueChange("contact2", "phone", e.target.value)
-              }
+              onChange={(e) => handleValueChange("contact2", "phone", e)}
               disabled={isFormDisabled}
             />
           </div>

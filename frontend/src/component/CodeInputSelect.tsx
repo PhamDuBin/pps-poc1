@@ -1,7 +1,8 @@
 import React, { useState, useRef, forwardRef } from "react";
-import { Input, Select } from "antd";
+import { Select } from "antd";
 import type { BaseSelectRef } from "rc-select";
 import type { InputRef } from "antd";
+import HalfWidthNumberInput from "./HalfWidthNumberInput";
 
 interface CodeOption {
   code: string;
@@ -65,11 +66,11 @@ const CodeInputSelect = forwardRef<InputRef, CodeInputSelectProps>(
     }
 
     return (
-      <div className="flex flex-row gap-1 items-center code-input-select w-full">
-        <Input
+      <div className="flex flex-row gap-1 items-center code-input-select">
+        <HalfWidthNumberInput
           ref={ref}
           value={value}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={(e) => onChange(e)}
           onKeyDown={handleKeyDown}
           disabled={disabled}
           className={`w-[70px] text-center h-6 ${inputClassName || ""}`}
@@ -79,7 +80,7 @@ const CodeInputSelect = forwardRef<InputRef, CodeInputSelectProps>(
           value={value || undefined}
           onChange={(newValue) => onChange(newValue)}
           disabled={disabled}
-          className={`ml-2 w-[60%] h-6 [&>.ant-select-selector]:!bg-[#ebcec0] ${
+          className={`ml-2 w-40 h-6 [&>.ant-select-selector]:!bg-[#ebcec0] ${
             selectClassName || ""
           }`}
           options={displayOptions}

@@ -1,13 +1,18 @@
-import { Input, Button } from "antd";
+import { Button } from "antd";
 import React, {
   forwardRef,
   useImperativeHandle,
   useRef,
   useState,
 } from "react";
-import { focusInputColor, hoverInputColor, inputColor, labelColor } from "../../../constants/colors";
+import {
+  focusInputColor,
+  hoverInputColor,
+  labelColor,
+} from "../../../constants/colors";
 import { blockTab } from "../../../utils/InputHandlers";
 import PersonnelSearchModal from "../../input_inspection_result/PersonnelSearchModal";
+import HalfWidthNumberInput from "../../HalfWidthNumberInput";
 
 const AreaInfo = forwardRef<any, { showData: boolean }>((props, ref) => {
   const headerCellClass = `h-6 px-2 ${labelColor} font-bold text-center flex items-center justify-center text-sm rounded-md`;
@@ -18,19 +23,20 @@ const AreaInfo = forwardRef<any, { showData: boolean }>((props, ref) => {
   const { showData } = props;
   const isFormDisabled = !showData;
 
+  const [formValues, setFormValues] = useState<any>({});
+
+  const handleChange = (name: string, val: string) => {
+    setFormValues((prev: any) => ({
+      ...prev,
+      [name]: val,
+    }));
+  };
+
   useImperativeHandle(ref, () => ({
     focusFirstButton: () => {
       firstInputRef.current?.focus();
     },
   }));
-
-  const handleNumericInput = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    max: number
-  ) => {
-    const value = e.target.value.replace(/\D/g, "");
-    e.target.value = value.slice(0, max);
-  };
 
   return (
     <div onKeyDown={blockTab} className="w-full text-xs">
@@ -51,13 +57,14 @@ const AreaInfo = forwardRef<any, { showData: boolean }>((props, ref) => {
             <div className={rowLabelClass}>{label}</div>
 
             <div className="flex items-center">
-              <Input
+              <HalfWidthNumberInput
                 ref={label === "営業" ? firstInputRef : null}
                 className={`h-6 w-32 text-center ${hoverInputColor} ${focusInputColor}`}
-                defaultValue={"000000"}
+                value={formValues[`${label}_person`] || ""}
                 maxLength={6}
-                onChange={(e) => handleNumericInput(e, 6)}
+                onChange={(val) => handleChange(`${label}_person`, val)}
                 disabled={isFormDisabled}
+                placeholder="000000"
               />
               <Button
                 onClick={() => setIsModalOpen(true)}
@@ -76,12 +83,13 @@ const AreaInfo = forwardRef<any, { showData: boolean }>((props, ref) => {
             ) : (
               <>
                 <div className="flex items-center">
-                  <Input
+                  <HalfWidthNumberInput
                     className={`h-6 w-32 text-center ${hoverInputColor} ${focusInputColor}`}
-                    defaultValue={"000"}
+                    value={formValues[`${label}_area`] || ""}
                     maxLength={3}
-                    onChange={(e) => handleNumericInput(e, 3)}
+                    onChange={(val) => handleChange(`${label}_area`, val)}
                     disabled={isFormDisabled}
+                    placeholder="000"
                   />
                   <Button
                     onClick={() => {
@@ -102,20 +110,22 @@ const AreaInfo = forwardRef<any, { showData: boolean }>((props, ref) => {
                 </div>
 
                 <div className="flex items-center">
-                  <Input
+                  <HalfWidthNumberInput
                     className={`h-6 w-32 text-center ${hoverInputColor} ${focusInputColor}`}
-                    defaultValue={"0000"}
+                    value={formValues[`${label}_route1`] || ""}
                     maxLength={4}
-                    onChange={(e) => handleNumericInput(e, 4)}
+                    onChange={(val) => handleChange(`${label}_route1`, val)}
                     disabled={isFormDisabled}
+                    placeholder="0000"
                   />
                   <span className="mx-1">-</span>
-                  <Input
+                  <HalfWidthNumberInput
                     className={`h-6 w-32 text-center ${hoverInputColor} ${focusInputColor}`}
-                    defaultValue={"000"}
+                    value={formValues[`${label}_route2`] || ""}
                     maxLength={3}
-                    onChange={(e) => handleNumericInput(e, 3)}
+                    onChange={(val) => handleChange(`${label}_route2`, val)}
                     disabled={isFormDisabled}
+                    placeholder="000"
                   />
                 </div>
               </>

@@ -1,13 +1,16 @@
-import { Button, Input } from "antd";
+import { Button } from "antd";
 import { labelColor, inputColor } from "../../../constants/colors";
 import { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import { blockTab } from "../../../utils/InputHandlers";
 import CodeInputSelect from "../../CodeInputSelect";
+import HalfWidthNumberInput from "../../HalfWidthNumberInput";
+import KanaFullWidthInput from "../../KanaFullWidthInput";
 
 const OtherInfo = forwardRef<any, { showData: boolean }>((props, ref) => {
   const firstButtonRef = useRef<any>(null);
   const { showData } = props;
   const isFormDisabled = !showData;
+
   const homeOwnershipOptions = [
     { code: "0", label: "0:空白" },
     { code: "1", label: "1:持家" },
@@ -27,11 +30,13 @@ const OtherInfo = forwardRef<any, { showData: boolean }>((props, ref) => {
     { code: "2", label: "2:2年" },
     { code: "3", label: "3:3年" },
   ];
+
   useImperativeHandle(ref, () => ({
     focusFirstButton: () => {
       firstButtonRef.current?.focus();
     },
   }));
+
   const [formValues, setFormValues] = useState({
     customerConstruction: "0000",
     introducer: "",
@@ -65,6 +70,7 @@ const OtherInfo = forwardRef<any, { showData: boolean }>((props, ref) => {
 
   const inputColorClass = `hover:${inputColor} focus:!${inputColor} border border-black`;
   const label = `w-32 mr-2 h-6 border-gray-300 rounded-md font-bold flex text-center justify-center items-center ${labelColor}`;
+
   return (
     <div onKeyDown={blockTab} className="w-full text-xs py-4">
       {/* Header */}
@@ -74,23 +80,24 @@ const OtherInfo = forwardRef<any, { showData: boolean }>((props, ref) => {
         その他情報
       </div>
 
-      {/* Form phía trên */}
+      {/* Form */}
       <div className="grid grid-cols-2 gap-x-6 gap-y-2 p-3">
-        {/* Cột trái */}
+        {/* 左列 */}
         <div className="flex items-center">
           <Button
             onClick={() => openPopup()}
             disabled={isFormDisabled}
             ref={firstButtonRef}
-            className={`${label} shadow-md shadow-zinc-500 focus:border-3 focus:border-yellow-600`}
+            className={`${label} shadow-md shadow-zinc-500`}
           >
             顧客工務店
           </Button>
-          <Input
-            className={` h-6 w-32 ${inputColorClass}`}
-            defaultValue={"0000"}
+          <HalfWidthNumberInput
+            className={`h-6 w-32 ${inputColorClass}`}
+            value={formValues.customerConstruction}
+            onChange={(val) => handleValueChange("customerConstruction", val)}
             disabled={isFormDisabled}
-          ></Input>
+          />
           <Button
             onClick={() => openPopup()}
             disabled={isFormDisabled}
@@ -99,13 +106,15 @@ const OtherInfo = forwardRef<any, { showData: boolean }>((props, ref) => {
             ▼
           </Button>
         </div>
+
         <div className="flex items-center">
           <label className={label}>紹介者</label>
-          <Input
-            className={` h-6 w-32 ${inputColorClass}`}
-            defaultValue={""}
+          <KanaFullWidthInput
+            className={`h-6 w-32 ${inputColorClass}`}
+            value={formValues.introducer}
+            onChange={(val) => handleValueChange("introducer", val)}
             disabled={isFormDisabled}
-          ></Input>
+          />
         </div>
 
         <div className="flex items-center">
@@ -116,11 +125,12 @@ const OtherInfo = forwardRef<any, { showData: boolean }>((props, ref) => {
           >
             紹介元工務店
           </Button>
-          <Input
-            className={` h-6 w-32 ${inputColorClass}`}
-            defaultValue={"0000"}
+          <HalfWidthNumberInput
+            className={`h-6 w-32 ${inputColorClass}`}
+            value={formValues.referralConstruction}
+            onChange={(val) => handleValueChange("referralConstruction", val)}
             disabled={isFormDisabled}
-          ></Input>
+          />
           <Button
             onClick={() => openPopup()}
             className="ml-2 h-6 w-6"
@@ -129,6 +139,7 @@ const OtherInfo = forwardRef<any, { showData: boolean }>((props, ref) => {
             ▼
           </Button>
         </div>
+
         <div className="flex items-center">
           <Button
             onClick={() => openPopup()}
@@ -137,11 +148,12 @@ const OtherInfo = forwardRef<any, { showData: boolean }>((props, ref) => {
           >
             前納入先
           </Button>
-          <Input
-            className={` h-6 w-32 ${inputColorClass}`}
-            defaultValue={"0000"}
+          <HalfWidthNumberInput
+            className={`h-6 w-32 ${inputColorClass}`}
+            value={formValues.previousSupplier}
+            onChange={(val) => handleValueChange("previousSupplier", val)}
             disabled={isFormDisabled}
-          ></Input>
+          />
           <Button
             onClick={() => openPopup()}
             disabled={isFormDisabled}
@@ -150,6 +162,7 @@ const OtherInfo = forwardRef<any, { showData: boolean }>((props, ref) => {
             ▼
           </Button>
         </div>
+
         <div className="flex items-center">
           <Button
             onClick={() => openPopup()}
@@ -158,11 +171,12 @@ const OtherInfo = forwardRef<any, { showData: boolean }>((props, ref) => {
           >
             オーナー
           </Button>
-          <Input
-            className={` h-6 w-32 ${inputColorClass}`}
-            defaultValue={"0000"}
+          <HalfWidthNumberInput
+            className={`h-6 w-32 ${inputColorClass}`}
+            value={formValues.owner}
+            onChange={(val) => handleValueChange("owner", val)}
             disabled={isFormDisabled}
-          ></Input>
+          />
           <Button
             onClick={() => openPopup()}
             className="ml-2 h-6 w-6"
@@ -171,6 +185,7 @@ const OtherInfo = forwardRef<any, { showData: boolean }>((props, ref) => {
             ▼
           </Button>
         </div>
+
         <div className="flex items-center">
           <Button
             onClick={() => openPopup()}
@@ -179,11 +194,12 @@ const OtherInfo = forwardRef<any, { showData: boolean }>((props, ref) => {
           >
             管理会社
           </Button>
-          <Input
-            className={` h-6 w-32 ${inputColorClass}`}
-            defaultValue={"0000"}
+          <HalfWidthNumberInput
+            className={`h-6 w-32 ${inputColorClass}`}
+            value={formValues.managementCompany}
+            onChange={(val) => handleValueChange("managementCompany", val)}
             disabled={isFormDisabled}
-          ></Input>
+          />
           <Button
             onClick={() => openPopup()}
             className="ml-2 h-6 w-6"
@@ -192,6 +208,7 @@ const OtherInfo = forwardRef<any, { showData: boolean }>((props, ref) => {
             ▼
           </Button>
         </div>
+
         <div className="flex items-center">
           <label className={label}>持家区分</label>
           <div className="w-4/5">
@@ -206,40 +223,49 @@ const OtherInfo = forwardRef<any, { showData: boolean }>((props, ref) => {
           </div>
           
         </div>
+
         <div className="flex items-center">
           <label className={label}>部屋数</label>
-          <Input
-            className={` h-6 w-32 ${inputColorClass}`}
-            defaultValue={""}
+          <HalfWidthNumberInput
+            className={`h-6 w-32 ${inputColorClass}`}
+            value={formValues.roomCount}
+            onChange={(val) => handleValueChange("roomCount", val)}
             disabled={isFormDisabled}
-          ></Input>
+          />
         </div>
+
         <div className="flex items-center">
           <label className={label}>家族人数</label>
-          <Input
-            className={` h-6 w-32 ${inputColorClass}`}
-            defaultValue={""}
+          <HalfWidthNumberInput
+            className={`h-6 w-32 ${inputColorClass}`}
+            value={formValues.familySize}
+            onChange={(val) => handleValueChange("familySize", val)}
             disabled={isFormDisabled}
-          ></Input>
+          />
         </div>
+
         <div className="flex items-center">
           <label className={label}>距離</label>
-          <Input
-            className={` h-6 w-32 ${inputColorClass}`}
-            defaultValue={""}
+          <HalfWidthNumberInput
+            className={`h-6 w-32 ${inputColorClass}`}
+            value={formValues.distance}
+            onChange={(val) => handleValueChange("distance", val)}
             disabled={isFormDisabled}
-          ></Input>
+          />
           <p>Km</p>
         </div>
+
         <div className="flex items-center">
           <label className={label}>時間</label>
-          <Input
-            className={` h-6 w-32 ${inputColorClass}`}
-            defaultValue={""}
+          <HalfWidthNumberInput
+            className={`h-6 w-32 ${inputColorClass}`}
+            value={formValues.time}
+            onChange={(val) => handleValueChange("time", val)}
             disabled={isFormDisabled}
-          ></Input>
+          />
           <p>分</p>
         </div>
+
         <div className="flex items-center">
           <label className={label}>周知対象区分</label>
           <div className="w-4/5">
@@ -254,13 +280,15 @@ const OtherInfo = forwardRef<any, { showData: boolean }>((props, ref) => {
           </div>
           
         </div>
+
         <div className="flex items-center">
           <label className={label}>財務補助コード</label>
-          <Input
-            className={` h-6 w-32 ${inputColorClass}`}
-            defaultValue={""}
+          <KanaFullWidthInput
+            className={`h-6 w-32 ${inputColorClass}`}
+            value={formValues.financeAuxCode}
+            onChange={(val) => handleValueChange("financeAuxCode", val)}
             disabled={isFormDisabled}
-          ></Input>
+          />
         </div>
       </div>
     </div>

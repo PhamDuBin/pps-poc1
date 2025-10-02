@@ -399,9 +399,6 @@ const AdvanceSearchModal: React.FC<AdvanceSearchModalProps> = ({
                 }`}
                 onClick={() => {
                   setActiveIndex(idx);
-                }}
-                onDoubleClick={() => {
-                  setActiveIndex(idx);
                   onRowEnter();
                   setShowAdvanceSearch(false);
                 }}

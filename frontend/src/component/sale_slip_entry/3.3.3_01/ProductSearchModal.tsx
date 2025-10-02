@@ -544,6 +544,7 @@ const ProductSearchModal: React.FC<ProductSearchModalProps> = ({
               <tbody ref={tableBodyRef} onKeyDown={handleKeyDown}>
                 {mockData.map((item, index) => (
                   <tr
+                    onClick={() => onNext()}
                     key={item.id}
                     tabIndex={-1}
                     className={

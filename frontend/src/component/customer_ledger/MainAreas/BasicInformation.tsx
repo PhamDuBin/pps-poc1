@@ -6,12 +6,18 @@ import React, {
   useState,
 } from "react";
 import { Input, Button, Radio } from "antd";
-import { labelColor, inputColor, hoverInputColor, focusInputColor } from "../../../constants/colors";
+import {
+  labelColor,
+  inputColor,
+  hoverInputColor,
+  focusInputColor,
+} from "../../../constants/colors";
 import { blockTab } from "../../../utils/InputHandlers";
 import CodeInputSelect from "../../CodeInputSelect";
-import KanaInput from "../../KanaInput";
+import KanaFullWidthInput from "../../KanaFullWidthInput";
 import { convertToFullWidth } from "../../../utils/InputHandlers";
-
+import HalfWidthKanaInput from "../../HalfWidthKanaInput";
+import HalfWidthNumberInput from "../../HalfWidthNumberInput";
 const labels = [
   "氏名",
   "顧客種別",
@@ -213,7 +219,7 @@ const BasicInformation = forwardRef<any, { showData: boolean }>(
 
         case "住所":
           return (
-            <KanaInput
+            <KanaFullWidthInput
               className={`${inputBaseClass} w-3/5`}
               value={formValues.address}
               onChange={(newValue) => handleValueChange("address", newValue)}
@@ -242,22 +248,18 @@ const BasicInformation = forwardRef<any, { showData: boolean }>(
         case "郵便番号":
           return (
             <div className="flex items-center gap-2 w-1/3 pr-10">
-              <Input
+              <HalfWidthNumberInput
                 value={formValues.postalCode1}
-                onChange={(e) =>
-                  handleValueChange("postalCode1", e.target.value)
-                }
+                onChange={(e) => handleValueChange("postalCode1", e)}
                 disabled={isFormDisabled}
                 className={`${inputBaseClass} w-[60px]`}
               />
               <span>-</span>
-              <Input
+              <HalfWidthNumberInput
                 value={formValues.postalCode2}
-                onChange={(e) =>
-                  handleValueChange("postalCode2", e.target.value)
-                }
+                onChange={(e) => handleValueChange("postalCode2", e)}
                 disabled={isFormDisabled}
-                className={`${inputBaseClass} w-[72px]`}
+                className={`${inputBaseClass} w-[60px]`}
               />
               <Button
                 type="default"
@@ -272,14 +274,14 @@ const BasicInformation = forwardRef<any, { showData: boolean }>(
 
         case "時間帯1":
         case "時間帯2":
-          const fieldName = label === "時間帯1" ? "time1" : "time2";
+          const timeFieldName = label === "時間帯1" ? "time1" : "time2";
 
           return (
             <div className="flex gap-2 flex-1">
               <CodeInputSelect
                 options={timeSlotOptions}
-                value={formValues[fieldName as keyof typeof formValues]}
-                onChange={(value) => handleValueChange(fieldName, value)}
+                value={formValues[timeFieldName as keyof typeof formValues]}
+                onChange={(value) => handleValueChange(timeFieldName, value)}
                 disabled={isFormDisabled}
               />
             </div>
@@ -309,15 +311,15 @@ const BasicInformation = forwardRef<any, { showData: boolean }>(
                   disabled={isFormDisabled}
                 />
               </div>
-              
-              {showData && <div className="flex w-[13%] justify-start">センター01番</div>}
 
-              <KanaInput
-                className={`${inputBaseClass} w-[40%]`}
+              {showData && (
+                <div className="flex w-[13%] justify-start">センター01番</div>
+              )}
+
+              <HalfWidthKanaInput
+                className={`${inputBaseClass} w-2/5`}
                 value={"9352716"}
-                onChange={(newValue) =>
-                  handleValueChange("deliveryCenterCode", newValue)
-                }
+                onChange={() => {}}
                 disabled={isFormDisabled}
               />
             </div>
@@ -329,22 +331,22 @@ const BasicInformation = forwardRef<any, { showData: boolean }>(
               <div className="w-[44%]">
                 <CodeInputSelect
                   options={securityAgencyOptions}
-                   value={formValues.securityAgencyCode}
+                  value={formValues.securityAgencyCode}
                   onChange={(value) =>
                     handleValueChange("securityAgencyCode", value)
                   }
                   disabled={isFormDisabled}
                 />
               </div>
-              
-              {showData && <div className="flex w-[13%] justify-start">保安機関01番</div>}
 
-              <KanaInput
+              {showData && (
+                <div className="flex w-[13%] justify-start">保安機関01番</div>
+              )}
+
+              <HalfWidthKanaInput
                 className={`${inputBaseClass} w-2/5`}
                 value={"TA90"}
-                onChange={(newValue) =>
-                  handleValueChange("securityAgencyCode", newValue)
-                }
+                onChange={() => {}}
                 disabled={isFormDisabled}
               />
             </div>
@@ -357,19 +359,21 @@ const BasicInformation = forwardRef<any, { showData: boolean }>(
                 <CodeInputSelect
                   options={monitoringOptions}
                   value={formValues.monitoringCode}
-                  onChange={(value) => handleValueChange("monitoringCode", value)}
+                  onChange={(value) =>
+                    handleValueChange("monitoringCode", value)
+                  }
                   disabled={isFormDisabled}
                 />
               </data>
-              
-              {showData && <div className="flex w-[13%] justify-start">集中監視01番</div>}
 
-              <KanaInput
+              {showData && (
+                <div className="flex w-[13%] justify-start">集中監視01番</div>
+              )}
+
+              <HalfWidthKanaInput
                 className={`${inputBaseClass} w-2/5`}
                 value={"00503"}
-                onChange={(newValue) =>
-                  handleValueChange("monitoringName", newValue)
-                }
+                onChange={() => {}}
                 disabled={isFormDisabled}
               />
             </div>
@@ -383,9 +387,29 @@ const BasicInformation = forwardRef<any, { showData: boolean }>(
             />
           );
 
+        case "検索キー1":
+          return (
+            <HalfWidthKanaInput
+              value={formValues.検索キー1}
+              onChange={(newValue) => handleValueChange("検索キー1", newValue)}
+              className={`${inputBaseClass} w-2/5`}
+              disabled={isFormDisabled}
+            />
+          );
+
+        case "検索キー2":
+          return (
+            <HalfWidthKanaInput
+              value={formValues.検索キー2}
+              onChange={(newValue) => handleValueChange("検索キー2", newValue)}
+              className={`${inputBaseClass} w-2/5`}
+              disabled={isFormDisabled}
+            />
+          );
+
         case "備考1":
           return (
-            <KanaInput
+            <KanaFullWidthInput
               className={`${inputBaseClass} w-2/5`}
               value={formValues.備考1}
               onChange={(newValue) => handleValueChange("備考1", newValue)}
@@ -394,7 +418,7 @@ const BasicInformation = forwardRef<any, { showData: boolean }>(
           );
         case "備考2":
           return (
-            <KanaInput
+            <KanaFullWidthInput
               className={`${inputBaseClass} w-2/5`}
               value={formValues.備考2}
               onChange={(newValue) => handleValueChange("備考2", newValue)}
@@ -403,7 +427,7 @@ const BasicInformation = forwardRef<any, { showData: boolean }>(
           );
         case "備考3":
           return (
-            <KanaInput
+            <KanaFullWidthInput
               className={`${inputBaseClass} w-2/5`}
               value={formValues.備考3}
               onChange={(newValue) => handleValueChange("備考3", newValue)}
@@ -412,7 +436,7 @@ const BasicInformation = forwardRef<any, { showData: boolean }>(
           );
         case "カナ":
           return (
-            <KanaInput
+            <HalfWidthKanaInput
               className={`${inputBaseClass} w-3/5`}
               value={formValues.カナ}
               onChange={(newValue) => handleValueChange("カナ", newValue)}
@@ -422,19 +446,45 @@ const BasicInformation = forwardRef<any, { showData: boolean }>(
 
         case "住所名称":
           return (
-            <KanaInput
+            <KanaFullWidthInput
               className={`${inputBaseClass} w-3/5`}
               value={formValues.住所名称}
               onChange={(newValue) => handleValueChange("住所名称", newValue)}
               disabled={isFormDisabled}
             />
           );
+        case "メールアドレス":
+          return (
+            <HalfWidthKanaInput
+              className={`${inputBaseClass} w-3/5`}
+              value={formValues.メールアドレス}
+              onChange={(value) => handleValueChange("メールアドレス", value)}
+              disabled={isFormDisabled}
+            />
+          );
+
+        case "電話番号1":
+        case "電話番号2":
+        case "電話番号3":
+        case "FAX":
+        case "地図番号":
+          const numberFieldName = label as keyof typeof formValues;
+          if (numberFieldName in formValues) {
+            return (
+              <HalfWidthNumberInput
+                className={`${inputBaseClass} w-3/5`}
+                value={formValues[numberFieldName]}
+                onChange={(value) => handleValueChange(numberFieldName, value)}
+                disabled={isFormDisabled}
+              />
+            );
+          }
 
         default: {
           const fieldName = label as keyof typeof formValues;
           if (fieldName in formValues) {
             return (
-              <KanaInput
+              <KanaFullWidthInput
                 ref={label === "氏名" ? firstInputRef : null}
                 className={`${inputBaseClass} w-3/5`}
                 value={formValues[fieldName]}

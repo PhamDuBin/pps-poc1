@@ -289,6 +289,13 @@ const PaperSelectionModal = ({
                   ? "custom-table-row selected-row"
                   : "custom-table-row"
               }
+              onRow={(record, rowIndex) => {
+                return {
+                  onClick: (event) => {
+                    onClose();
+                  },
+                };
+              }}
             />
           </div>
 

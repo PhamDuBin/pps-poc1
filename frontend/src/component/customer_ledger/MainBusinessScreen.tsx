@@ -13,6 +13,8 @@ import AdvanceSearchModal from "../transaction_information/1.1.1_03/AdvanceSearc
 import MessageModal from "../../context/MessageModal";
 import { Transition } from "@headlessui/react";
 import React from "react";
+import HalfWidthKanaInput from "../HalfWidthKanaInput";
+import KanaFullWidthInput from "../KanaFullWidthInput";
 
 const MainBusinessScreen = () => {
   const [activeSection, setActiveSection] = useState<string | null>(null);
@@ -142,7 +144,10 @@ const MainBusinessScreen = () => {
         part3: "000000",
         part4: "000",
       });
-      firstInputRef.current?.focus(); // Focus lại sau khi reset
+      setFullName("");
+      setRepresentativeName("");
+      setShouldShowData(false);
+      firstInputRef.current?.focus();
     },
     S: () => openConfirmationModal("更新しますが、よろしいですか？"),
     D: () => openConfirmationModal("削除しますが、よろしいですか？"),
@@ -219,29 +224,41 @@ const MainBusinessScreen = () => {
                 集中監視センターコード
               </Select.Option>
             </Select>
-            <Input
+            <HalfWidthKanaInput
               className={`w-10 !px-0 text-center hover:${inputColor}`}
               defaultValue={"0000"}
               value={customerCode.part1}
-            ></Input>
+              onChange={(e) =>
+                setCustomerCode((prev) => ({ ...prev, part1: e }))
+              }
+            ></HalfWidthKanaInput>
             <span>-</span>
-            <Input
+            <HalfWidthKanaInput
               className={`w-10 !px-0 text-center hover:${inputColor}`}
               defaultValue={"000"}
               value={customerCode.part2}
-            ></Input>
+              onChange={(e) =>
+                setCustomerCode((prev) => ({ ...prev, part2: e }))
+              }
+            ></HalfWidthKanaInput>
             <span>-</span>
-            <Input
+            <HalfWidthKanaInput
               className={`w-14 !px-0 text-center hover:${inputColor}`}
               defaultValue={"000000"}
               value={customerCode.part3}
-            ></Input>
+              onChange={(e) =>
+                setCustomerCode((prev) => ({ ...prev, part3: e }))
+              }
+            ></HalfWidthKanaInput>
             <span>-</span>
-            <Input
+            <HalfWidthKanaInput
               className={`w-10 !px-0 text-center hover:${inputColor}`}
               defaultValue={"000"}
               value={customerCode.part4}
-            ></Input>
+              onChange={(e) =>
+                setCustomerCode((prev) => ({ ...prev, part4: e }))
+              }
+            ></HalfWidthKanaInput>
             <Button
               onClick={() => setShowAdvanceSearch(true)}
               className={`${button} mx-2`}
@@ -295,20 +312,22 @@ const MainBusinessScreen = () => {
           </div>
           <div className="flex flex-row items-center justify-center mt-2">
             <label className={label}>氏名</label>
-            <Input
-              value={fullName}
+            <KanaFullWidthInput
               className={`w-[20%] !px-0 text-left hover:${inputColor}`}
-            ></Input>
+              value={fullName}
+              onChange={setFullName}
+            />
             <label className={label}>顧客種別</label>
             <Radio.Group defaultValue={"法人以外"}>
               <Radio value="法人以外">法人以外</Radio>
               <Radio value="法人 ">法人 </Radio>
             </Radio.Group>
             <label className={label}>代表者名</label>
-            <Input
-              value={representativeName}
+            <KanaFullWidthInput
               className={`w-[20%] !px-0 text-left hover:${inputColor}`}
-            ></Input>
+              value={representativeName}
+              onChange={setRepresentativeName}
+            />
           </div>
         </div>
       </div>
@@ -699,7 +718,7 @@ const MainBusinessScreen = () => {
         <div className="fixed inset-0 w-full flex items-center justify-center z-50 bg-black bg-opacity-50">
           <Transition.Child
             as="div"
-            className="transition-all w-1/2 duration-300 ease-out"
+            className="transition-all w-[700px] duration-300 ease-out"
             enterFrom="opacity-0 scale-95"
             enterTo="opacity-100 scale-100"
             leaveFrom="opacity-100 scale-100"
