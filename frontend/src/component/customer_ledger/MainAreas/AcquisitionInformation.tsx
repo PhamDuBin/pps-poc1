@@ -155,41 +155,51 @@ const AcquisitionInformation = forwardRef<any, { showData: boolean }>(
           獲得情報
         </div>
         <div className="flex flex-col p-3">
-          <div className="w-full flex py-1">
-            <Button
-              onClick={() => {
-                const newWindow = window.open(
-                  "/link-destination",
-                  "_blank",
-                  "width=500,height=300,noopener,noreferrer"
-                );
-                if (newWindow) {
-                  newWindow.focus();
-                }
-              }}
-              className={`font-semibold shadow-md shadow-zinc-500 ${labelClass}`}
-              disabled={isFormDisabled}
-              ref={firstSelectRef}
-            >
-              開閉栓区分
-            </Button>
-            <CodeInputSelect
-              options={openCloseOptions}
-              value={formValues.openCloseType}
-              onChange={(value) => handleValueChange("openCloseType", value)}
-              disabled={isFormDisabled}
-            />
+          <div className="w-full flex gap-4 py-1">
+            <div className="w-1/2 flex py-1">
+              <Button
+                onClick={() => {
+                  const newWindow = window.open(
+                    "/link-destination",
+                    "_blank",
+                    "width=500,height=300,noopener,noreferrer"
+                  );
+                  if (newWindow) {
+                    newWindow.focus();
+                  }
+                }}
+                className={`font-semibold shadow-md shadow-zinc-500 ${labelClass}`}
+                disabled={isFormDisabled}
+                ref={firstSelectRef}
+              >
+                開閉栓区分
+              </Button>
+              <div className="w-4/5">
+                <CodeInputSelect
+                  options={openCloseOptions}
+                  value={formValues.openCloseType}
+                  onChange={(value) => handleValueChange("openCloseType", value)}
+                  disabled={isFormDisabled}
+                />
+              </div>
+              
+            </div>
+            <div className="w-1/2"></div>
           </div>
-          <div className="w-full flex justify-between py-1">
+          
+          <div className="w-full gap-4 flex justify-between py-1">
             <div className="w-1/2 flex">
               <div className={`font-semibold ${labelClass}`}>取引開始日</div>
-              <DatePicker
-                value={formValues.startDate}
-                onChange={(date) => handleValueChange("startDate", date)}
-                className={`h-6 w-1/5 ${inputColor}`}
-                format="YYYY/MM/DD"
-                disabled={isFormDisabled}
-              />
+              <div className="w-4/5">
+                <DatePicker
+                  value={formValues.startDate}
+                  onChange={(date) => handleValueChange("startDate", date)}
+                  className={`h-6 w-2/5 ${inputColor}`}
+                  format="YYYY/MM/DD"
+                  disabled={isFormDisabled}
+                />
+              </div>
+              
             </div>
             <div className="w-1/2 flex">
               <div className={`font-semibold ${labelClass}`}>取引中止日</div>
@@ -202,244 +212,294 @@ const AcquisitionInformation = forwardRef<any, { showData: boolean }>(
               />
             </div>
           </div>
-          <div className="w-full flex py-1">
-            <div className={`font-semibold ${labelClass}`}>開閉栓区分</div>
-            <CodeInputSelect
-              options={contractOptions}
-              value={formValues.contractType}
-              onChange={(value) => handleValueChange("contractType", value)}
-              disabled={isFormDisabled}
-            />
-          </div>
-          <div className="flex w-full justify-between py-1">
-            <div className="flex w-1/2">
-              <div className={`font-semibold ${labelClass}`}>新規登録理由</div>
-              <CodeInputSelect
-                options={acquisitionRouteOptions}
-                value={formValues.acquisitionRoute}
-                onChange={(value) =>
-                  handleValueChange("acquisitionRoute", value)
-                }
-                disabled={isFormDisabled}
-              />
-            </div>
-            <div className="flex w-1/2">
-              <div className={`font-semibold ${labelClass}`}>新規登録理由</div>
-              <CodeInputSelect
-                options={customerStatusOptions}
-                value={formValues.customerStatus}
-                onChange={(value) => handleValueChange("customerStatus", value)}
-                disabled={isFormDisabled}
-              />
-            </div>
-          </div>
-          <div className="flex w-full py-1">
-            <div className={`font-semibold ${labelClass} h-[60px]`}>
-              取引開始
-            </div>
-            <div className="flex flex-col gap-2">
-              <div className="flex h-1/2 items-center gap-2">
-                <Button
-                  size="small"
-                  className="!bg-blue-600 !text-white hover:!bg-white hover:!text-black px-2 h-6 w-32"
-                  type="default"
-                  onClick={() => {
-                    const newWindow = window.open(
-                      "/link-destination",
-                      "_blank",
-                      "width=500,height=300,noopener,noreferrer"
-                    );
-                    if (newWindow) {
-                      newWindow.focus();
-                    }
-                  }}
+          <div className="w-full flex gap-4 py-1">
+            <div className="w-1/2 flex py-1">
+              <div className={`font-semibold ${labelClass}`}>開閉栓区分</div>
+              <div className="w-4/5">
+                <CodeInputSelect
+                  options={contractOptions}
+                  value={formValues.contractType}
+                  onChange={(value) => handleValueChange("contractType", value)}
                   disabled={isFormDisabled}
-                >
-                  LPG
-                </Button>
-                {showData && <div>2025/01/01</div>}
+                />
               </div>
-              <div className="flex h-1/2 items-center gap-2">
-                <Button
-                  size="small"
-                  className="!bg-blue-600 !text-white hover:!bg-white hover:!text-black px-2 h-6 w-32"
-                  type="default"
-                  onClick={() => {
-                    const newWindow = window.open(
-                      "/link-destination",
-                      "_blank",
-                      "width=500,height=300,noopener,noreferrer"
-                    );
-                    if (newWindow) {
-                      newWindow.focus();
+              
+            </div>
+            <div className="w-1/2"></div>
+          </div>
+          
+          <div className="flex justify-between gap-4 py-1">
+            <div className="flex w-1/2">
+                <div className={`font-semibold ${labelClass}`}>新規登録理由</div>
+                <div className="w-4/5">
+                  <CodeInputSelect
+                    options={acquisitionRouteOptions}
+                    value={formValues.acquisitionRoute}
+                    onChange={(value) =>
+                      handleValueChange("acquisitionRoute", value)
                     }
-                  }}
-                  disabled={isFormDisabled}
-                >
-                  電力
-                </Button>
-                {showData && <div>2025/01/01</div>}
+                    disabled={isFormDisabled}
+                  />
+                </div>
+            </div>
+            <div className="w-1/2">
+              <div className="flex ">
+                <div className={`font-semibold ${labelClass}`}>新規登録理由</div>
+                <div className="w-4/5">
+                    <CodeInputSelect
+                      options={customerStatusOptions}
+                      value={formValues.customerStatus}
+                      onChange={(value) => handleValueChange("customerStatus", value)}
+                      disabled={isFormDisabled}
+                    />
+                </div>
               </div>
             </div>
+            
           </div>
-          <div className="w-full flex justify-between py-1">
+          <div className="flex w-full gap-4 py-1">
+            <div className="w-1/2 flex">
+              <div className={`font-semibold ${labelClass} h-[60px]`}>
+                取引開始
+              </div>
+              <div className="flex flex-col gap-2 w-4/5">
+                <div className="flex h-1/2 items-center gap-2">
+                  <Button
+                    size="small"
+                    className="!bg-blue-600 !text-white hover:!bg-white hover:!text-black px-2 h-6 w-32"
+                    type="default"
+                    onClick={() => {
+                      const newWindow = window.open(
+                        "/link-destination",
+                        "_blank",
+                        "width=500,height=300,noopener,noreferrer"
+                      );
+                      if (newWindow) {
+                        newWindow.focus();
+                      }
+                    }}
+                    disabled={isFormDisabled}
+                  >
+                    LPG
+                  </Button>
+                  {showData && <div>2025/01/01</div>}
+                </div>
+                <div className="flex h-1/2 items-center gap-2">
+                  <Button
+                    size="small"
+                    className="!bg-blue-600 !text-white hover:!bg-white hover:!text-black px-2 h-6 w-32"
+                    type="default"
+                    onClick={() => {
+                      const newWindow = window.open(
+                        "/link-destination",
+                        "_blank",
+                        "width=500,height=300,noopener,noreferrer"
+                      );
+                      if (newWindow) {
+                        newWindow.focus();
+                      }
+                    }}
+                    disabled={isFormDisabled}
+                  >
+                    電力
+                  </Button>
+                  {showData && <div>2025/01/01</div>}
+                </div>
+              </div>
+            </div>
+            <div className="w-1/2">
+            </div>
+          </div>
+          <div className="w-full flex gap-4 justify-between py-1">
             <div className="w-1/2 flex">
               <div className={`font-semibold ${labelClass}`}>供給形態</div>
-              <CodeInputSelect
-                options={groupTypeOptions}
-                value={formValues.groupType}
-                onChange={(value) => handleValueChange("groupType", value)}
-                disabled={isFormDisabled}
-              />
+              <div className="w-4/5">
+                <CodeInputSelect
+                  options={groupTypeOptions}
+                  value={formValues.groupType}
+                  onChange={(value) => handleValueChange("groupType", value)}
+                  disabled={isFormDisabled}
+                />
+              </div>
             </div>
             <div className="w-1/2 flex pr-2">
               <div className={`font-semibold ${labelClass}`}>集合戸数</div>
-              <Input
-                className={`${hoverInputColor} ${focusInputColor} w-[70px] rounded-md`}
-                placeholder="0"
-                size="small"
-                disabled={isFormDisabled}
-              />
+              <div className="w-4/5">
+                <Input
+                  className={`${hoverInputColor} ${focusInputColor} w-[70px] rounded-md`}
+                  placeholder="0"
+                  size="small"
+                  disabled={isFormDisabled}
+                />
+              </div>
+              
             </div>
           </div>
-          <div className="flex w-4/5 py-1 items-center">
-            <div className={`font-semibold ${labelClass}`}>集合親コード</div>
-            <div className="flex gap-2 items-center w-4/5">
-              <Input
-                className={`${hoverInputColor} ${focusInputColor} w-[9%] h-6 placeholder:text-black`}
-                placeholder="0000"
-                disabled={isFormDisabled}
-              />
-              <div> - </div>
-              <Input
-                className={`${hoverInputColor} ${focusInputColor} w-[7%] h-6 placeholder:text-black`}
-                placeholder="000"
-                disabled={isFormDisabled}
-              />
-              <div> - </div>
-              <Input
-                className={`${hoverInputColor} ${focusInputColor} w-[10%] h-6 placeholder:text-black`}
-                placeholder="000000"
-                disabled={isFormDisabled}
-              />
-              <div> - </div>
-              <Input
-                className={`${hoverInputColor} ${focusInputColor} w-[7%] h-6 placeholder:text-black`}
-                placeholder="000"
-                disabled={isFormDisabled}
-              />
-              <Button className="w-6 h-6" disabled={isFormDisabled}>
-                ▼
-              </Button>
+          <div className="w-full flex gap-4 py-1">
+            <div className="flex w-1/2 py-1 items-center">
+              <div className={`font-semibold ${labelClass}`}>集合親コード</div>
+              <div className="flex gap-2 items-center w-4/5">
+                <Input
+                  className={`${hoverInputColor} ${focusInputColor} w-[20%] h-6 placeholder:text-black`}
+                  placeholder="0000"
+                  disabled={isFormDisabled}
+                />
+                <div> - </div>
+                <Input
+                  className={`${hoverInputColor} ${focusInputColor} w-[20%] h-6 placeholder:text-black`}
+                  placeholder="000"
+                  disabled={isFormDisabled}
+                />
+                <div> - </div>
+                <Input
+                  className={`${hoverInputColor} ${focusInputColor} w-[25%] h-6 placeholder:text-black`}
+                  placeholder="000000"
+                  disabled={isFormDisabled}
+                />
+                <div> - </div>
+                <Input
+                  className={`${hoverInputColor} ${focusInputColor} w-[20%] h-6 placeholder:text-black`}
+                  placeholder="000"
+                  disabled={isFormDisabled}
+                />
+               
+              </div>
+            </div>
+            <div className="w-1/2 flex items-center"> 
+                <Button className="w-6 h-6" disabled={isFormDisabled}>
+                  ▼
+                </Button>
 
-              {showData && <div className="w-[200px]">テストさん太郎</div>}
-            </div>
+                {showData && <div className="w-[200px]">テストさん太郎</div>}</div>
           </div>
-          <div className="w-full flex justify-between py-1">
+          
+          <div className="w-full flex gap-4 justify-between py-1">
             <div className="w-1/2 flex">
               <div className={`font-semibold ${labelClass}`}>ガス販売形態</div>
-              <CodeInputSelect
-                options={inspectionTypeOptions}
-                value={formValues.inspectionType}
-                onChange={(value) => handleValueChange("inspectionType", value)}
-                disabled={isFormDisabled}
-              />
+              <div className="w-4/5">
+                <CodeInputSelect
+                  options={inspectionTypeOptions}
+                  value={formValues.inspectionType}
+                  onChange={(value) => handleValueChange("inspectionType", value)}
+                  disabled={isFormDisabled}
+                />
+              </div>
+              
             </div>
             <div className="w-1/2 flex">
               <div className={`font-semibold ${labelClass}`}>販売用途区分</div>
-              <CodeInputSelect
-                options={usageTypeOptions}
-                value={formValues.usageType}
-                onChange={(value) => handleValueChange("usageType", value)}
-                disabled={isFormDisabled}
-              />
+              <div className="w-4/5">
+                <CodeInputSelect
+                  options={usageTypeOptions}
+                  value={formValues.usageType}
+                  onChange={(value) => handleValueChange("usageType", value)}
+                  disabled={isFormDisabled}
+                />
+              </div>
             </div>
           </div>
-          <div className="w-full flex py-1">
-            <div className={`font-semibold ${labelClass}`}>販売単価設定</div>
-            <CodeInputSelect
-              options={decisionStatusOptions}
-              value={formValues.decisionStatus}
-              onChange={(value) => handleValueChange("decisionStatus", value)}
-              disabled={isFormDisabled}
-            />
+          <div className="w-full flex py-1 gap-4">
+            <div className="w-1/2 flex">
+              <div className={`font-semibold ${labelClass}`}>販売単価設定</div>
+              <div className="w-4/5">
+                <CodeInputSelect
+                  options={decisionStatusOptions}
+                  value={formValues.decisionStatus}
+                  onChange={(value) => handleValueChange("decisionStatus", value)}
+                  disabled={isFormDisabled}
+                />
+              </div>
+            </div>
+            <div className="w-1/2"></div>
+            
           </div>
-          <div className="flex w-full justify-between py-1">
+          <div className="flex w-full gap-4 justify-between py-1">
             <div className="w-1/2 flex">
               <div className={`font-semibold ${labelClass}`}>オートガス</div>
-              <CodeInputSelect
-                options={availabilityOptions}
-                value={formValues.autoGas}
-                onChange={(value) => handleValueChange("autoGas", value)}
-                disabled={isFormDisabled}
-              />
+              <div className="w-4/5">
+                <CodeInputSelect
+                  options={availabilityOptions}
+                  value={formValues.autoGas}
+                  onChange={(value) => handleValueChange("autoGas", value)}
+                  disabled={isFormDisabled}
+                />
+              </div> 
             </div>
             <div className="w-1/2 flex">
               <div className={`font-semibold ${labelClass}`}>自家使用</div>
-              <CodeInputSelect
-                options={availabilityOptions}
-                value={formValues.privateUse}
-                onChange={(value) => handleValueChange("privateUse", value)}
-                disabled={isFormDisabled}
-              />
+              <div className="w-4/5">
+                <CodeInputSelect
+                  options={availabilityOptions}
+                  value={formValues.privateUse}
+                  onChange={(value) => handleValueChange("privateUse", value)}
+                  disabled={isFormDisabled}
+                />
+              </div>
+              
             </div>
           </div>
-          <div className="w-full flex py-1">
-            <div className={`font-semibold h-[60px] ${labelClass}`}>
-              在宅日時
+          <div className="flex w-full gap-4">
+            <div className="w-3/5 flex py-1">
+              <div className={`h-[60px] w-[120px] mr-2 border-gray-300 rounded-md bg-[#80bad7] font-bold flex text-center justify-center items-center`}>
+                在宅日時
+              </div>
+              <div className="flex flex-col items-center gap-2 p-1 w-4/5">
+                <div className="w-full flex gap-1">
+                  <div className="flex items-center gap-1 mr-5">
+                    <Input
+                      defaultValue={"15"}
+                      size="small"
+                      className={`w-[50px] ${hoverInputColor} ${focusInputColor}`}
+                      disabled={isFormDisabled}
+                    />
+                    <div>日頃</div>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Input
+                      defaultValue={"13"}
+                      size="small"
+                      className={`w-[50px] ${hoverInputColor} ${focusInputColor}`}
+                      disabled={isFormDisabled}
+                    />
+                    <div>時 ～</div>
+                  </div>
+                  <div className="flex items-center gap-1 mr-5">
+                    <Input
+                      defaultValue={"17"}
+                      size="small"
+                      className={`w-[50px] ${hoverInputColor} ${focusInputColor}`}
+                      disabled={isFormDisabled}
+                    />
+                    <div>時</div>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Input
+                      disabled={isFormDisabled}
+                      size="small"
+                      className={`w-[50px] ${hoverInputColor} ${focusInputColor}`}
+                    />
+                    <Button disabled={isFormDisabled} className="ml-1 w-6 h-6">
+                      ▼
+                    </Button>
+                    <div>曜日</div>
+                  </div>
+                </div>
+                <div className="w-full flex items-center gap-2">
+                  <Checkbox disabled={isFormDisabled}>土</Checkbox>
+                  <Checkbox disabled={isFormDisabled}>日</Checkbox>
+                  <Checkbox disabled={isFormDisabled}>月</Checkbox>
+                  <Checkbox disabled={isFormDisabled}>火</Checkbox>
+                  <Checkbox disabled={isFormDisabled}>水</Checkbox>
+                  <Checkbox disabled={isFormDisabled}>木</Checkbox>
+                  <Checkbox disabled={isFormDisabled}>金</Checkbox>
+                </div>
+              </div>
             </div>
-            <div className="flex flex-col items-center gap-2 p-1 w-4/5">
-              <div className="w-full flex gap-1">
-                <div className="flex items-center gap-1 mr-5">
-                  <Input
-                    defaultValue={"15"}
-                    size="small"
-                    className={`w-[50px] ${hoverInputColor} ${focusInputColor}`}
-                    disabled={isFormDisabled}
-                  />
-                  <div>日頃</div>
-                </div>
-                <div className="flex items-center gap-1">
-                  <Input
-                    defaultValue={"13"}
-                    size="small"
-                    className={`w-[50px] ${hoverInputColor} ${focusInputColor}`}
-                    disabled={isFormDisabled}
-                  />
-                  <div>時 ～</div>
-                </div>
-                <div className="flex items-center gap-1 mr-5">
-                  <Input
-                    defaultValue={"17"}
-                    size="small"
-                    className={`w-[50px] ${hoverInputColor} ${focusInputColor}`}
-                    disabled={isFormDisabled}
-                  />
-                  <div>時</div>
-                </div>
-                <div className="flex items-center gap-1">
-                  <Input
-                    disabled={isFormDisabled}
-                    size="small"
-                    className={`w-[50px] ${hoverInputColor} ${focusInputColor}`}
-                  />
-                  <Button disabled={isFormDisabled} className="ml-1 w-6 h-6">
-                    ▼
-                  </Button>
-                  <div>曜日</div>
-                </div>
-              </div>
-              <div className="w-full flex items-center gap-2">
-                <Checkbox disabled={isFormDisabled}>土</Checkbox>
-                <Checkbox disabled={isFormDisabled}>日</Checkbox>
-                <Checkbox disabled={isFormDisabled}>月</Checkbox>
-                <Checkbox disabled={isFormDisabled}>火</Checkbox>
-                <Checkbox disabled={isFormDisabled}>水</Checkbox>
-                <Checkbox disabled={isFormDisabled}>木</Checkbox>
-                <Checkbox disabled={isFormDisabled}>金</Checkbox>
-              </div>
+            <div className="w-2/5">
+
             </div>
           </div>
+          
         </div>
       </div>
     );

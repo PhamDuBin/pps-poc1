@@ -65,7 +65,7 @@ const CodeInputSelect = forwardRef<InputRef, CodeInputSelectProps>(
     }
 
     return (
-      <div className="flex flex-row gap-1 items-center code-input-select">
+      <div className="flex flex-row gap-1 items-center code-input-select w-full">
         <Input
           ref={ref}
           value={value}
@@ -79,7 +79,7 @@ const CodeInputSelect = forwardRef<InputRef, CodeInputSelectProps>(
           value={value || undefined}
           onChange={(newValue) => onChange(newValue)}
           disabled={disabled}
-          className={`ml-2 w-[290px] h-6 [&>.ant-select-selector]:!bg-[#ebcec0] ${
+          className={`ml-2 w-full max-w-[290px] h-6 [&>.ant-select-selector]:!bg-[#ebcec0] ${
             selectClassName || ""
           }`}
           options={displayOptions}

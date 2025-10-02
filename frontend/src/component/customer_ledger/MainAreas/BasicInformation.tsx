@@ -275,7 +275,7 @@ const BasicInformation = forwardRef<any, { showData: boolean }>(
           const fieldName = label === "時間帯1" ? "time1" : "time2";
 
           return (
-            <div className="flex gap-2 w-4/5">
+            <div className="flex gap-2 flex-1">
               <CodeInputSelect
                 options={timeSlotOptions}
                 value={formValues[fieldName as keyof typeof formValues]}
@@ -287,7 +287,7 @@ const BasicInformation = forwardRef<any, { showData: boolean }>(
 
         case "管理部門":
           return (
-            <div className="flex gap-2">
+            <div className="flex gap-2 flex-1">
               <CodeInputSelect
                 options={departmentOptions}
                 value={formValues.departmentCode}
@@ -298,19 +298,22 @@ const BasicInformation = forwardRef<any, { showData: boolean }>(
           );
         case "配送センターコード":
           return (
-            <div className="flex gap-2 w-4/5 items-center">
-              <CodeInputSelect
-                options={deliveryCenterOptions}
-                value={formValues.deliveryCenterCode}
-                onChange={(value) =>
-                  handleValueChange("deliveryCenterCode", value)
-                }
-                disabled={isFormDisabled}
-              />
-              {showData && <div>センター01番</div>}
+            <div className="flex gap-2 items-center w-4/5">
+              <div className="w-[40%]">
+                <CodeInputSelect
+                  options={deliveryCenterOptions}
+                  value={formValues.deliveryCenterCode}
+                  onChange={(value) =>
+                    handleValueChange("deliveryCenterCode", value)
+                  }
+                  disabled={isFormDisabled}
+                />
+              </div>
+              
+              {showData && <div className="flex w-[13%] justify-start">センター01番</div>}
 
               <KanaInput
-                className={`${inputBaseClass} w-2/5`}
+                className={`${inputBaseClass} w-[40%]`}
                 value={"9352716"}
                 onChange={(newValue) =>
                   handleValueChange("deliveryCenterCode", newValue)
@@ -323,15 +326,18 @@ const BasicInformation = forwardRef<any, { showData: boolean }>(
         case "保安機関コード":
           return (
             <div className="flex gap-2 w-4/5 items-center">
-              <CodeInputSelect
-                options={securityAgencyOptions}
-                value={formValues.securityAgencyCode}
-                onChange={(value) =>
-                  handleValueChange("securityAgencyCode", value)
-                }
-                disabled={isFormDisabled}
-              />
-              {showData && <div>保安機関01番</div>}
+              <div className="w-2/5">
+                <CodeInputSelect
+                  options={securityAgencyOptions}
+                   value={formValues.securityAgencyCode}
+                  onChange={(value) =>
+                    handleValueChange("securityAgencyCode", value)
+                  }
+                  disabled={isFormDisabled}
+                />
+              </div>
+              
+              {showData && <div className="flex w-[13%] justify-start">保安機関01番</div>}
 
               <KanaInput
                 className={`${inputBaseClass} w-2/5`}
@@ -347,13 +353,16 @@ const BasicInformation = forwardRef<any, { showData: boolean }>(
         case "集中監視コード":
           return (
             <div className="flex gap-2 w-4/5 items-center">
-              <CodeInputSelect
-                options={monitoringOptions}
-                value={formValues.monitoringCode}
-                onChange={(value) => handleValueChange("monitoringCode", value)}
-                disabled={isFormDisabled}
-              />
-              {showData && <div>集中監視01番</div>}
+              <data className="w-2/5">
+                <CodeInputSelect
+                  options={monitoringOptions}
+                  value={formValues.monitoringCode}
+                  onChange={(value) => handleValueChange("monitoringCode", value)}
+                  disabled={isFormDisabled}
+                />
+              </data>
+              
+              {showData && <div className="flex w-[13%] justify-start">集中監視01番</div>}
 
               <KanaInput
                 className={`${inputBaseClass} w-2/5`}

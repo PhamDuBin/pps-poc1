@@ -8,7 +8,7 @@ import React, {
 import { Button, DatePicker, Select, Input, Table } from "antd";
 import dayjs from "dayjs";
 import FamilyInfoModal from "../FamilyInfoModal";
-import { inputColor, labelColor } from "../../../constants/colors";
+import { inputColor, labelColor, hoverInputColor, focusInputColor } from "../../../constants/colors";
 import { blockTab } from "../../../utils/InputHandlers";
 import CodeInputSelect from "../../CodeInputSelect";
 
