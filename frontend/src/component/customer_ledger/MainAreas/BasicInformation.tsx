@@ -252,18 +252,18 @@ const BasicInformation = forwardRef<any, { showData: boolean }>(
                 value={formValues.postalCode1}
                 onChange={(e) => handleValueChange("postalCode1", e)}
                 disabled={isFormDisabled}
-                className={`${inputBaseClass} w-[60px]`}
+                className={`${inputBaseClass} w-[64px]`}
               />
               <span>-</span>
               <HalfWidthNumberInput
                 value={formValues.postalCode2}
                 onChange={(e) => handleValueChange("postalCode2", e)}
                 disabled={isFormDisabled}
-                className={`${inputBaseClass} w-[60px]`}
+                className={`${inputBaseClass} w-[64px]`}
               />
               <Button
                 type="default"
-                className="!bg-blue-600 !text-white hover:!bg-white hover:!text-blue-600 px-2 h-6 w-[55%]"
+                className="!bg-blue-600 !text-white hover:!bg-white hover:!text-blue-600 h-6 w-[56%]"
                 onClick={handleSearchAddress}
                 disabled={isFormDisabled}
               >
@@ -277,7 +277,7 @@ const BasicInformation = forwardRef<any, { showData: boolean }>(
           const timeFieldName = label === "時間帯1" ? "time1" : "time2";
 
           return (
-            <div className="flex gap-2 flex-1">
+            <div className="w-[78%]">
               <CodeInputSelect
                 options={timeSlotOptions}
                 value={formValues[timeFieldName as keyof typeof formValues]}
@@ -289,7 +289,7 @@ const BasicInformation = forwardRef<any, { showData: boolean }>(
 
         case "管理部門":
           return (
-            <div className="flex gap-2 w-[35%]">
+            <div className="md:w-[38%] w-[33%]">
               <CodeInputSelect
                 options={departmentOptions}
                 value={formValues.departmentCode}
@@ -301,7 +301,7 @@ const BasicInformation = forwardRef<any, { showData: boolean }>(
         case "配送センターコード":
           return (
             <div className="flex items-center w-4/5">
-              <div className="w-[44%]">
+              <div className="w-[48%]">
                 <CodeInputSelect
                   options={deliveryCenterOptions}
                   value={formValues.deliveryCenterCode}
@@ -328,7 +328,7 @@ const BasicInformation = forwardRef<any, { showData: boolean }>(
         case "保安機関コード":
           return (
             <div className="flex w-4/5 items-center">
-              <div className="w-[44%]">
+              <div className="w-[48%]">
                 <CodeInputSelect
                   options={securityAgencyOptions}
                   value={formValues.securityAgencyCode}
@@ -354,8 +354,8 @@ const BasicInformation = forwardRef<any, { showData: boolean }>(
 
         case "集中監視コード":
           return (
-            <div className="flex gap-2 w-4/5 items-center">
-              <data className="w-[44%]">
+            <div className="flex w-4/5 items-center">
+              <data className="w-[48%]">
                 <CodeInputSelect
                   options={monitoringOptions}
                   value={formValues.monitoringCode}
@@ -392,7 +392,7 @@ const BasicInformation = forwardRef<any, { showData: boolean }>(
             <HalfWidthKanaInput
               value={formValues.検索キー1}
               onChange={(newValue) => handleValueChange("検索キー1", newValue)}
-              className={`${inputBaseClass} w-2/5`}
+              className={`${inputBaseClass} w-3/5`}
               disabled={isFormDisabled}
             />
           );

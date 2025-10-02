@@ -110,7 +110,7 @@ const EmergencyContact = forwardRef<any, { showData: boolean }>(
           </div>
           <div className="flex items-center">
             <label className={labelClass}>時間帯</label>
-            <div className="w-4/5">
+            <div className="w-2/5">
               <CodeInputSelect
                 ref={firstInputRef}
                 options={timeSlotOptions}
@@ -125,7 +125,7 @@ const EmergencyContact = forwardRef<any, { showData: boolean }>(
           </div>
           <div className="flex items-center">
             <label className={labelClass}>時間帯</label>
-            <div className="w-4/5">
+            <div className="w-2/5">
               <CodeInputSelect
                 options={timeSlotOptions}
                 value={formValues.contact2.timeSlot}

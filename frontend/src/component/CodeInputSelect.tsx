@@ -80,7 +80,7 @@ const CodeInputSelect = forwardRef<InputRef, CodeInputSelectProps>(
           value={value || undefined}
           onChange={(newValue) => onChange(newValue)}
           disabled={disabled}
-          className={`ml-2 w-40 h-6 [&>.ant-select-selector]:!bg-[#ebcec0] ${
+          className={`ml-2 w-[60%] max-w-[290px] h-6 [&>.ant-select-selector]:!bg-[#ebcec0] ${
             selectClassName || ""
           }`}
           options={displayOptions}
