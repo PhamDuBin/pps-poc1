@@ -287,7 +287,7 @@ const BasicInformation = forwardRef<any, { showData: boolean }>(
 
         case "管理部門":
           return (
-            <div className="flex gap-2 w-[35%]">
+            <div className="flex gap-2 w-[38%]">
               <CodeInputSelect
                 options={departmentOptions}
                 value={formValues.departmentCode}
@@ -299,7 +299,7 @@ const BasicInformation = forwardRef<any, { showData: boolean }>(
         case "配送センターコード":
           return (
             <div className="flex items-center w-4/5">
-              <div className="w-[44%]">
+              <div className="w-[48%]">
                 <CodeInputSelect
                   options={deliveryCenterOptions}
                   value={formValues.deliveryCenterCode}
@@ -326,7 +326,7 @@ const BasicInformation = forwardRef<any, { showData: boolean }>(
         case "保安機関コード":
           return (
             <div className="flex w-4/5 items-center">
-              <div className="w-[44%]">
+              <div className="w-[48%]">
                 <CodeInputSelect
                   options={securityAgencyOptions}
                    value={formValues.securityAgencyCode}
@@ -353,7 +353,7 @@ const BasicInformation = forwardRef<any, { showData: boolean }>(
         case "集中監視コード":
           return (
             <div className="flex w-4/5 items-center">
-              <data className="w-[44%]">
+              <data className="w-[48%]">
                 <CodeInputSelect
                   options={monitoringOptions}
                   value={formValues.monitoringCode}
