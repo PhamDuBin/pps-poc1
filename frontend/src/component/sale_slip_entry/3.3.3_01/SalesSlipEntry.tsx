@@ -21,6 +21,8 @@ import {
   handleFormatting,
   allowDecimalInput,
 } from "../../../utils/InputHandlers";
+import { DatePicker } from "antd";
+import dayjs, { Dayjs } from "dayjs";
 
 type SalesSlipEntryProps = {
   onOpenLeftPanelForSearch: () => void;
@@ -49,11 +51,9 @@ const SalesSlipEntry = forwardRef(
     const slipRefs = useRef<(HTMLDivElement | null)[]>([]);
     const tooltipRef = useRef<HTMLDivElement | null>(null);
 
-    const [keiriDate, setKeiriDate] = useState<Date | undefined>(new Date());
-    const [showDatePicker, setShowDatePicker] = useState(false);
+    const [keiriDate, setKeiriDate] = useState<Dayjs>(dayjs());
 
-    const [uriageDate, setUriageDate] = useState<Date | undefined>(new Date());
-    const [showUriageDatePicker, setShowUriageDatePicker] = useState(false);
+    const [uriageDate, setUriageDate] = useState<Dayjs>(dayjs());
 
     const uriageDateInputRef = useRef<HTMLInputElement>(null);
     const billingDateButtonRef = useRef<HTMLInputElement>(null);
@@ -260,28 +260,13 @@ const SalesSlipEntry = forwardRef(
                 売上日
               </label>
               <div className="relative mx-1 w-1/2">
-                <input
-                  ref={uriageDateInputRef}
-                  type="text"
-                  value={uriageDate ? format(uriageDate, "yyyy/MM/dd") : ""}
-                  readOnly
-                  onClick={() => setShowUriageDatePicker(true)}
+                <DatePicker
+                  value={uriageDate}
+                  onChange={(date) => setUriageDate(date ?? dayjs())}
+                  format="YYYY/MM/DD"
                   placeholder="YYYY/MM/DD"
-                  className="w-full border border-black px-2 py-1 pr-8 cursor-pointer"
+                  className="w-full border border-black px-2 py-1 h-[26px] rounded-none "
                 />
-                <button
-                  className="absolute right-0 top-1/2 -translate-y-1/2 h-full flex items-center px-2 text-gray-500 cursor-pointer"
-                  onClick={() => setShowUriageDatePicker(!showUriageDatePicker)}
-                >
-                  <DownArrowIcon />
-                </button>
-                {showUriageDatePicker && (
-                  <MonthYearPicker
-                    selectedDate={uriageDate}
-                    onDateChange={setUriageDate}
-                    onClose={() => setShowUriageDatePicker(false)}
-                  />
-                )}
               </div>
             </div>
             <div className="flex items-center">
@@ -312,28 +297,14 @@ const SalesSlipEntry = forwardRef(
                 請求年月
               </label>
               <div className="relative ml-1 w-1/2">
-                <input
-                  ref={billingDateButtonRef}
-                  type="text"
-                  value={keiriDate ? format(keiriDate, "yyyy/MM") : ""}
-                  readOnly
-                  onClick={() => setShowDatePicker(true)}
+                <DatePicker
+                  picker="month"
+                  value={keiriDate}
+                  onChange={(date) => setKeiriDate(date)}
+                  format="YYYY/MM"
                   placeholder="YYYY/MM"
-                  className="w-full border border-black px-2 py-1 pr-8 cursor-pointer"
+                  className="w-full border border-black px-2 py-1 h-[26px] rounded-none"
                 />
-                <button
-                  className="absolute right-0 top-1/2 -translate-y-1/2 h-full flex items-center px-2 text-gray-500 cursor-pointer"
-                  onClick={() => setShowDatePicker(!showDatePicker)}
-                >
-                  <DownArrowIcon />
-                </button>
-                {showDatePicker && (
-                  <MonthYearPicker
-                    selectedDate={keiriDate}
-                    onDateChange={setKeiriDate}
-                    onClose={() => setShowDatePicker(false)}
-                  />
-                )}
               </div>
             </div>
             <div className="flex items-center">
