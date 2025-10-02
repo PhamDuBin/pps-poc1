@@ -352,7 +352,7 @@ const BasicInformation = forwardRef<any, { showData: boolean }>(
 
         case "集中監視コード":
           return (
-            <div className="flex gap-2 w-4/5 items-center">
+            <div className="flex w-4/5 items-center">
               <data className="w-[44%]">
                 <CodeInputSelect
                   options={monitoringOptions}
