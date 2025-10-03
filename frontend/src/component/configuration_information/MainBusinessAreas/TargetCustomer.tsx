@@ -41,7 +41,7 @@ const TargetCustomer = forwardRef<TargetCustomerRef, TargetCustomerProps>(
       "集金方法",
       "集金日",
       "自振区分",
-      "料金標No.",
+      "料金表No.",
       "検針予定日",
       "請求発行区分",
     ];

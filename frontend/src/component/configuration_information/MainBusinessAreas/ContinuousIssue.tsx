@@ -57,7 +57,7 @@ const ContinuousIssue = forwardRef<any>((props, ref) => {
 
         {/* 残高指定 */}
         <div className="flex items-center">
-          <div className={labelClass}> 殊高指定 </div>
+          <div className={labelClass}> 残高指定 </div>
           <Select
             defaultValue="残有り"
             className={`ml-2 max-w-[160px] w-full [&>.ant-select-selector]:!bg-[#ebcec0] `}
