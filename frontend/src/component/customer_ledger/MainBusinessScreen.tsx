@@ -91,45 +91,6 @@ const MainBusinessScreen = () => {
     }, 100);
   };
 
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-
-    const handleContainerKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Tab") {
-        e.preventDefault();
-        const currentSectionIndex = sections.indexOf(activeSection ?? "");
-        if (currentSectionIndex === -1) return;
-        if (e.shiftKey) {
-          const prevIndex =
-            (currentSectionIndex - 1 + sections.length) % sections.length;
-          handleScrollAndFocus(sections[prevIndex]);
-        } else {
-          const nextIndex = (currentSectionIndex + 1) % sections.length;
-          handleScrollAndFocus(sections[nextIndex]);
-        }
-        return;
-      }
-      const focusableElements = Array.from(
-        container.querySelectorAll(
-          "input:not([disabled]), button:not([disabled]), select:not([disabled]), textarea:not([disabled]) "
-        )
-      ) as HTMLElement[];
-
-      const activeElement = document.activeElement as HTMLElement;
-      const currentIndex = focusableElements.indexOf(activeElement);
-
-      if (currentIndex !== -1) {
-        handleNavigationKey040504(e, currentIndex, focusableElements);
-      }
-    };
-
-    container.addEventListener("keydown", handleContainerKeyDown as any);
-    return () => {
-      container.removeEventListener("keydown", handleContainerKeyDown as any);
-    };
-  }, [activeSection, sections]);
-
   const shortcuts = {
     "1": () => handleScrollAndFocus("basicInformation"),
     "2": () => handleScrollAndFocus("acquisitionInformation"),
@@ -137,6 +98,61 @@ const MainBusinessScreen = () => {
     "4": () => handleScrollAndFocus("emergencyContact"),
     "5": () => handleScrollAndFocus("otherInfo"),
     "6": () => handleScrollAndFocus("familyInfo"),
+
+    F1: () => {
+      const newWindow = window.open(
+        "/link-destination",
+        "_blank",
+        "width=500,height=300,noopener,noreferrer"
+      );
+      newWindow?.focus();
+    },
+
+    F2: () => {
+      const newWindow = window.open(
+        "/link-destination",
+        "_blank",
+        "width=500,height=300,noopener,noreferrer"
+      );
+      newWindow?.focus();
+    },
+
+    F3: () => {
+      const newWindow = window.open(
+        "/link-destination",
+        "_blank",
+        "width=500,height=300,noopener,noreferrer"
+      );
+      newWindow?.focus();
+    },
+
+    F5: () => {
+      const newWindow = window.open(
+        "/link-destination",
+        "_blank",
+        "width=500,height=300,noopener,noreferrer"
+      );
+      newWindow?.focus();
+    },
+
+    F6: () => {
+      const newWindow = window.open(
+        "/link-destination",
+        "_blank",
+        "width=500,height=300,noopener,noreferrer"
+      );
+      newWindow?.focus();
+    },
+
+    F7: () => {
+      const newWindow = window.open(
+        "/link-destination",
+        "_blank",
+        "width=500,height=300,noopener,noreferrer"
+      );
+      newWindow?.focus();
+    },
+
     F8: () => {
       setCustomerCode({
         part1: "0000",
@@ -149,11 +165,17 @@ const MainBusinessScreen = () => {
       setShouldShowData(false);
       firstInputRef.current?.focus();
     },
+
+    F9: () => {},
+    F10: () => {},
+    F11: () => {},
+    F12: () => {},
+
     S: () => openConfirmationModal("更新しますが、よろしいですか？"),
     D: () => openConfirmationModal("削除しますが、よろしいですか？"),
     C: () => {
       const closeButton = document.querySelector('a[href="/"]') as HTMLElement;
-      if (closeButton) closeButton.click();
+      closeButton?.click();
     },
   };
 
@@ -161,24 +183,59 @@ const MainBusinessScreen = () => {
     const container = containerRef.current;
     if (!container) return;
 
-    const handleShortcutKeyDown = (e: KeyboardEvent) => {
-      const isModifierPressed = (e.ctrlKey || e.metaKey) && e.altKey;
-      if (!isModifierPressed) return;
-
+    const handleKeyDown = (e: KeyboardEvent) => {
       const key = e.key.toUpperCase();
-      const action = shortcuts[key as keyof typeof shortcuts];
+      if (key.startsWith("F") && !isNaN(Number(key.substring(1)))) {
+        e.preventDefault();
+        const action = shortcuts[key as keyof typeof shortcuts];
+        if (action) {
+          action();
+        }
+        return;
+      }
+      const isMac = navigator.platform.toUpperCase().includes("MAC");
+      const isModifierPressed = isMac
+        ? e.metaKey && e.altKey
+        : e.ctrlKey && e.altKey;
 
-      if (action) {
+      const action = shortcuts[key as keyof typeof shortcuts];
+      if (isModifierPressed && action) {
         e.preventDefault();
         action();
+        return;
+      }
+      if (e.key === "Tab") {
+        e.preventDefault();
+        const currentSectionIndex = sections.indexOf(activeSection ?? "");
+        if (currentSectionIndex === -1) return;
+
+        const nextIndex = e.shiftKey
+          ? (currentSectionIndex - 1 + sections.length) % sections.length
+          : (currentSectionIndex + 1) % sections.length;
+
+        handleScrollAndFocus(sections[nextIndex]);
+        return;
+      }
+
+      const focusableElements = Array.from(
+        container.querySelectorAll(
+          "input:not([disabled]), button:not([disabled]), select:not([disabled]), textarea:not([disabled])"
+        )
+      ) as HTMLElement[];
+
+      const activeElement = document.activeElement as HTMLElement;
+      const currentIndex = focusableElements.indexOf(activeElement);
+
+      if (currentIndex !== -1) {
+        handleNavigationKey040504(e, currentIndex, focusableElements);
       }
     };
 
-    container.addEventListener("keydown", handleShortcutKeyDown);
+    container.addEventListener("keydown", handleKeyDown);
     return () => {
-      container.removeEventListener("keydown", handleShortcutKeyDown);
+      container.removeEventListener("keydown", handleKeyDown);
     };
-  }, []);
+  }, [activeSection, sections]);
 
   const label = `h-8 border border-gray-300 font-bold rounded-md flex text-center justify-center items-center px-2 ml-7 mr-2 ${labelColor}`;
   const button = `flex text-center justify-center items-center ${labelColor} border border-black xl:text-base text-xs font-bold shadow-md shadow-zinc-600 hover:bg-white`;
@@ -441,19 +498,46 @@ const MainBusinessScreen = () => {
       <div className="flex flex-col text-sm w-full justify-center items-center mt-2">
         <div className="flex flex-row justify-between items-center w-[90%]">
           <Button
-            disabled
+            onClick={() => {
+              const newWindow = window.open(
+                "/link-destination",
+                "_blank",
+                "width=500,height=300,noopener,noreferrer"
+              );
+              if (newWindow) {
+                newWindow.focus();
+              }
+            }}
             className={`!bg-[#80bad7] !text-black hover:!bg-white hover:!text-blue-600 w-28 shadow-md shadow-zinc-500`}
           >
             F1ヘルプ
           </Button>
           <Button
-            disabled
+            onClick={() => {
+              const newWindow = window.open(
+                "/link-destination",
+                "_blank",
+                "width=500,height=300,noopener,noreferrer"
+              );
+              if (newWindow) {
+                newWindow.focus();
+              }
+            }}
             className={`!bg-[#80bad7] !text-black hover:!bg-white hover:!text-blue-600 w-28 shadow-md shadow-zinc-500`}
           >
             F2入力切替
           </Button>
           <Button
-            disabled
+            onClick={() => {
+              const newWindow = window.open(
+                "/link-destination",
+                "_blank",
+                "width=500,height=300,noopener,noreferrer"
+              );
+              if (newWindow) {
+                newWindow.focus();
+              }
+            }}
             className={`!bg-[#80bad7] !text-black hover:!bg-white hover:!text-blue-600 w-28 shadow-md shadow-zinc-500`}
           >
             F3事業所変更
@@ -464,19 +548,46 @@ const MainBusinessScreen = () => {
             F4検索
           </Button>
           <Button
-            disabled
+            onClick={() => {
+              const newWindow = window.open(
+                "/link-destination",
+                "_blank",
+                "width=500,height=300,noopener,noreferrer"
+              );
+              if (newWindow) {
+                newWindow.focus();
+              }
+            }}
             className={`!bg-[#80bad7] !text-black hover:!bg-white hover:!text-blue-600 w-28 shadow-md shadow-zinc-500`}
           >
             F5前の顧客
           </Button>
           <Button
-            disabled
+            onClick={() => {
+              const newWindow = window.open(
+                "/link-destination",
+                "_blank",
+                "width=500,height=300,noopener,noreferrer"
+              );
+              if (newWindow) {
+                newWindow.focus();
+              }
+            }}
             className={`!bg-[#80bad7] !text-black hover:!bg-white hover:!text-blue-600 w-28 shadow-md shadow-zinc-500`}
           >
             F6次の顧客
           </Button>
           <Button
-            disabled
+            onClick={() => {
+              const newWindow = window.open(
+                "/link-destination",
+                "_blank",
+                "width=500,height=300,noopener,noreferrer"
+              );
+              if (newWindow) {
+                newWindow.focus();
+              }
+            }}
             className={`!bg-[#80bad7] !text-black hover:!bg-white hover:!text-blue-600 w-28 shadow-md shadow-zinc-500`}
           >
             F7顧客コード変更

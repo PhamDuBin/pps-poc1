@@ -45,6 +45,24 @@ const InspectionResultScreen = () => {
     };
   }, []);
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (/^F\d{1,2}$/.test(e.key)) {
+        if (![""].includes(e.key)) {
+          e.preventDefault();
+          return;
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      document.body.style.cursor = "default";
+    };
+  }, []);
+
   return (
     <div
       ref={containerRef}

@@ -21,64 +21,85 @@ interface ModalProps {
   initialData: FamilyMember | null;
 }
 const relationOptions = [
-  "本人",
-  "妻",
-  "父",
-  "母",
-  "兄",
-  "姉",
-  "弟",
-  "妹",
-  "子",
-  "祖父",
-  "祖母",
-  "義父",
-  "義母",
-  "義祖父",
-  "義祖母",
-  "義兄",
-  "義弟",
-  "義姉",
-  "義妹",
-  "その他",
-].map((item, index) => ({ code: String(index + 1), label: item }));
-const genderOptions = ["男性", "女性"].map((item, index) => ({
-  code: String(index + 1),
-  label: item,
-}));
-const jobOptions = ["会社員", "公務員", "自営業", "学生", "主婦", "無職"].map(
-  (item, index) => ({ code: String(index + 1), label: item })
-);
+  "0:空白",
+  "1:本人",
+  "2:妻",
+  "3:父",
+  "4:母",
+  "5:兄",
+  "6:姉",
+  "7:弟",
+  "8:妹",
+  "9:子",
+  "10:祖父",
+  "11:祖母",
+  "12:義父",
+  "13:義母",
+  "14:義祖父",
+  "15:義祖母",
+  "16:義兄",
+  "17:義弟",
+  "18:義姉",
+  "19:義妹",
+  "20:その他",
+].map((item) => {
+  const [code, label] = item.split(":");
+  return { code, label: item };
+});
+const genderOptions = ["0:空白", "1:男性", "2:女性"].map((item) => {
+  const [code, label] = item.split(":");
+  return { code, label: item };
+});
+const jobOptions = [
+  "0:空白",
+  "1:会社員",
+  "2:公務員",
+  "3:自営業",
+  "4:学生",
+  "5:主婦",
+  "6:無職",
+].map((item) => {
+  const [code, label] = item.split(":");
+  return { code, label: item };
+});
 const healthOptions = [
-  "肥満対応",
-  "健康食品",
-  "健康器具",
-  "美容飲料",
-  "良好",
-  "その他",
-].map((item, index) => ({ code: String(index + 1), label: item }));
+  "0:空白",
+  "1:肥満対応",
+  "2:健康食品",
+  "3:健康器具",
+  "4:美容飲料",
+  "5:良好",
+  "6:その他",
+].map((item) => {
+  const [code, label] = item.split(":");
+  return { code, label: item };
+});
 const hobbyOptions = [
-  "映画鑑賞",
-  "音楽鑑賞",
-  "美術鑑賞",
-  "スポーツ観戦",
-  "読書",
-  "フィッシング",
-  "ドライブ",
-  "サイクリング",
-  "ガーデニング",
-  "スキー",
-  "スノーボード",
-  "マリンスポーツ",
-  "登山",
-  "料理",
-  "写真",
-  "インターネット",
-  "旅行",
-  "ブリーディング",
-  "アウトドア",
-  "その他",
-].map((item, index) => ({ code: String(index + 1), label: item }));
+  "0:空白",
+  "1:映画鑑賞",
+  "2:音楽鑑賞",
+  "3:美術鑑賞",
+  "4:スポーツ観戦",
+  "5:読書",
+  "6:フィッシング",
+  "7:ドライブ",
+  "8:サイクリング",
+  "9:ガーデニング",
+  "10:スキー",
+  "11:スノーボード",
+  "12:マリンスポーツ",
+  "13:登山",
+  "14:料理",
+  "15:写真",
+  "16:インターネット",
+  "17:旅行",
+  "18:ブリーディング",
+  "19:アウトドア",
+  "20:その他",
+].map((item) => {
+  const [code, label] = item.split(":");
+  return { code, label: item };
+});
 
 const FamilyInfoModal: React.FC<ModalProps> = ({
   isOpen,
@@ -88,13 +109,13 @@ const FamilyInfoModal: React.FC<ModalProps> = ({
 }) => {
   const defaultFormData: FamilyMember = {
     id: null,
-    relation: "1",
+    relation: "0",
     name: "",
-    gender: "1",
+    gender: "0",
     dob: dayjs().format("YYYY/MM/DD"),
-    job: "1",
-    health: "5",
-    hobby: "1",
+    job: "0",
+    health: "0",
+    hobby: "0",
   };
 
   const firstInputRef = useRef<any>(null);

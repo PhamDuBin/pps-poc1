@@ -46,6 +46,33 @@ const MainBusinessScreen = () => {
     "2": () => handleScrollAndFocus("targetCustomer"),
     "3": () => handleScrollAndFocus("printingDesignation"),
     "4": () => handleScrollAndFocus("titleFormSetting"),
+    F1: () => {
+      ("");
+    },
+    F2: () => {
+      ("");
+    },
+    F4: () => {
+      ("");
+    },
+    F5: () => {
+      ("");
+    },
+    F6: () => {
+      ("");
+    },
+    F9: () => {
+      ("");
+    },
+    F10: () => {
+      ("");
+    },
+    F11: () => {
+      ("");
+    },
+    F12: () => {
+      ("");
+    },
     F3: () => {
       setModalF2Open(true);
       setTitleModal("条件保存（F3）");
@@ -74,39 +101,6 @@ const MainBusinessScreen = () => {
       window.location.href = "/";
     },
   };
-
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-
-    const handleShortcutKeyDown = (e: KeyboardEvent) => {
-      const isMac = navigator.platform.toUpperCase().includes("MAC");
-
-      let isModifierPressed = false;
-
-      if (isMac) {
-        isModifierPressed = e.metaKey && e.altKey;
-      } else {
-        isModifierPressed = e.ctrlKey && e.altKey;
-      }
-
-      if (!isModifierPressed) return;
-
-      const key = e.key.toUpperCase();
-      const action = shortcuts[key as keyof typeof shortcuts];
-
-      if (action) {
-        e.preventDefault();
-        action();
-      }
-    };
-
-    container.addEventListener("keydown", handleShortcutKeyDown);
-
-    return () => {
-      container.removeEventListener("keydown", handleShortcutKeyDown);
-    };
-  }, []);
 
   const handleCloseOperationSerachModal = () => {
     setIsOperationSeachModalOpen(false);
@@ -170,24 +164,44 @@ const MainBusinessScreen = () => {
     const container = containerRef.current;
     if (!container) return;
 
-    const handleContainerKeyDown = (e: KeyboardEvent) => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const key = e.key.toUpperCase();
+      if (key.startsWith("F") && !isNaN(Number(key.substring(1)))) {
+        e.preventDefault();
+
+        const action = shortcuts[key as keyof typeof shortcuts];
+        if (action) {
+          action();
+        }
+        return;
+      }
+      const isMac = navigator.platform.toUpperCase().includes("MAC");
+      const isModifierPressed = isMac
+        ? e.metaKey && e.altKey
+        : e.ctrlKey && e.altKey;
+
+      const action = shortcuts[key as keyof typeof shortcuts];
+      if (isModifierPressed && action) {
+        e.preventDefault();
+        action();
+        return;
+      }
       if (e.key === "Tab") {
         e.preventDefault();
         const currentSectionIndex = sections.indexOf(activeSection ?? "");
         if (currentSectionIndex === -1) return;
-        if (e.shiftKey) {
-          const prevIndex =
-            (currentSectionIndex - 1 + sections.length) % sections.length;
-          handleScrollAndFocus(sections[prevIndex]);
-        } else {
-          const nextIndex = (currentSectionIndex + 1) % sections.length;
-          handleScrollAndFocus(sections[nextIndex]);
-        }
+
+        const nextIndex = e.shiftKey
+          ? (currentSectionIndex - 1 + sections.length) % sections.length
+          : (currentSectionIndex + 1) % sections.length;
+
+        handleScrollAndFocus(sections[nextIndex]);
         return;
       }
+
       const focusableElements = Array.from(
         container.querySelectorAll(
-          "input:not([disabled]), button:not([disabled]), select:not([disabled]), textarea:not([disabled]) "
+          "input:not([disabled]), button:not([disabled]), select:not([disabled]), textarea:not([disabled])"
         )
       ) as HTMLElement[];
 
@@ -199,9 +213,9 @@ const MainBusinessScreen = () => {
       }
     };
 
-    container.addEventListener("keydown", handleContainerKeyDown as any);
+    container.addEventListener("keydown", handleKeyDown);
     return () => {
-      container.removeEventListener("keydown", handleContainerKeyDown as any);
+      container.removeEventListener("keydown", handleKeyDown);
     };
   }, [activeSection, sections]);
 

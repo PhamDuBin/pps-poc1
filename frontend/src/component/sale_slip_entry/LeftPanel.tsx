@@ -326,9 +326,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
               </React.Fragment>
             ))}
             <button
-              onClick={() => {
-                handleSearch(id1, id2);
-              }}
+              onClick={() => setShowAdvanceSearch(true)}
               className=" w-[20px] h-[20px] mt-1 inset-y-0 right-0 flex items-center px-1 bg-white border border-gray-500 cursor-pointer"
             >
               <DownArrowIcon />
@@ -367,9 +365,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
               }}
             />
             <button
-              onClick={() => {
-                handleSearch(id1, id2);
-              }}
+              onClick={() => setShowAdvanceSearch(true)}
               className=" w-[20px] h-[20px] mt-1 inset-y-0 right-0 flex items-center px-1 bg-white border border-gray-500 cursor-pointer"
             >
               <DownArrowIcon />
@@ -409,9 +405,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
               }}
             />
             <button
-              onClick={() => {
-                handleSearch(id1, id2);
-              }}
+              onClick={() => setShowAdvanceSearch(true)}
               className=" w-[20px] h-[20px] mt-1 inset-y-0 right-0 flex items-center px-1 bg-white border border-gray-500 cursor-pointer"
             >
               <DownArrowIcon />
@@ -435,9 +429,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
               }}
             />
             <button
-              onClick={() => {
-                handleSearch(id1);
-              }}
+              onClick={() => setShowAdvanceSearch(true)}
               className=" w-[20px] h-[20px] mt-1 inset-y-0 right-0 flex items-center px-1 bg-white border border-gray-500 cursor-pointer"
             >
               <DownArrowIcon />
@@ -521,9 +513,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
                 }}
               />
               <button
-                onClick={() => {
-                  handleSearchDepartment(postcode1, postcode2);
-                }}
+                onClick={() => setShowAdvanceSearch(true)}
                 className="mx-1 w-[20px] h-[20px] inset-y-0 right-0 flex items-center px-1 bg-white border border-gray-500 cursor-pointer"
               >
                 <DownArrowIcon />

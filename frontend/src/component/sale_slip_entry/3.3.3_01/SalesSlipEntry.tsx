@@ -56,7 +56,7 @@ const SalesSlipEntry = forwardRef(
     const [uriageDate, setUriageDate] = useState<Dayjs>(dayjs());
 
     const uriageDateInputRef = useRef<HTMLInputElement>(null);
-    const billingDateButtonRef = useRef<HTMLInputElement>(null);
+    const billingDatePickerRef = useRef<any>(null);
 
     useImperativeHandle(ref, () => ({
       focusUriageDateInput: () => {
@@ -66,7 +66,7 @@ const SalesSlipEntry = forwardRef(
         setIsOpenCategorySelection(true);
       },
       focusBillingDatePicker: () => {
-        billingDateButtonRef.current?.focus();
+        billingDatePickerRef.current?.focus();
       },
       toggleDepositProcess: () => {
         setIsOpenDepositProcess((prev) => !prev);
@@ -298,6 +298,7 @@ const SalesSlipEntry = forwardRef(
               </label>
               <div className="relative ml-1 w-1/2">
                 <DatePicker
+                  ref={billingDatePickerRef}
                   picker="month"
                   value={keiriDate}
                   onChange={(date) => setKeiriDate(date)}

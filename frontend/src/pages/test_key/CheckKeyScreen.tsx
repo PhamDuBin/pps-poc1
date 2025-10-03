@@ -16,6 +16,13 @@ export default function CheckKeyScreen(): JSX.Element {
     const isMac = navigator.platform.toUpperCase().includes("MAC");
 
     const handleKeyDown = (e: KeyboardEvent) => {
+      if (/^F\d{1,2}$/.test(e.key)) {
+        if (!["F1", "F2", "F3", "F4"].includes(e.key)) {
+          e.preventDefault();
+          return;
+        }
+      }
+
       if (e.key === "F1") {
         e.preventDefault();
         setModalF1Open(true);
@@ -56,7 +63,7 @@ export default function CheckKeyScreen(): JSX.Element {
         });
       }
 
-      // Cmd/Ctrl + Alt + T → toggle search modal
+      // Cmd/Ctrl + Alt + F → search modal
       if (e.code === "KeyF" && e.altKey && (isMac ? e.metaKey : e.ctrlKey)) {
         e.preventDefault();
         setShowSearchModal(true);
