@@ -1,10 +1,17 @@
-import { forwardRef, useImperativeHandle, useRef, useState } from "react";
+import { forwardRef, use, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { labelColor, inputColor } from "../../../constants/colors";
 import { Input, Select } from "antd";
 import { convertToFullWidth } from "../../../utils/InputHandlers";
 import { blockTab } from "../../../utils/InputHandlers";
+import CodeInputSelect from "../../CodeInputSelect";
 
-const labels = ["ご請求", "ご案内1", "ご案内2", "ご案内3", "ご案内4（仮）"];
+const labelOptions = [
+  { code: "0", label: "0:ご請求" },
+  { code: "1", label: "1:ご案内1" },
+  { code: "2", label: "2:ご案内2" },
+  { code: "3", label: "3:ご案内3" },
+  { code: "4", label: "4:ご案内4（仮）" }
+];
 const createOptions1 = (labels: string[]) =>
   labels.map((label, index) => ({
     label,
@@ -23,6 +30,7 @@ const TitleFormSetting = forwardRef<any>((props, ref) => {
     otherAdjustments: "",
     currentMonthTax: "",
     currentBilling: "",
+    labels:"0",
   });
 
   const firstInputRef = useRef<any>(null);
@@ -54,7 +62,7 @@ const TitleFormSetting = forwardRef<any>((props, ref) => {
   const [value, setValue] = useState("");
   const handleInputChange1 = (e: React.ChangeEvent<HTMLInputElement>) => {
     const num = e.target.value;
-    if (num === "" || (Number(num) >= 1 && Number(num) <= labels.length)) {
+    if (num === "" || (Number(num) >= 1 && Number(num) <= labelOptions.length)) {
       setValue(num);
     }
   };
@@ -62,6 +70,23 @@ const TitleFormSetting = forwardRef<any>((props, ref) => {
   const handleSelectChange = (val: string) => {
     setValue(val);
   };
+
+  const handleValueChange = (
+        fieldName: string,
+        value: string | null
+      ) => {
+        setFormValues((prev) => ({ ...prev, [fieldName]: value }));
+      };
+      useImperativeHandle(ref, () => ({
+        focusFirstButton: () => {
+          firstInputRef.current?.focus();
+        },
+      }));
+
+  useEffect(() => {
+    setFormValues((prev) => ({ ...prev, labels: "0" }));
+  }, []);
+
   return (
     <div
       tabIndex={0}
@@ -99,21 +124,13 @@ const TitleFormSetting = forwardRef<any>((props, ref) => {
           >
             請求書タイトル
           </div>
-          <Input
-            className="w-16 h-8 text-center"
-            type="number"
-            min={1}
-            max={labels.length}
-            value={value}
-            onChange={handleInputChange1}
-            placeholder="0"
-          />
-          <Select
-            className="w-48 [&>.ant-select-selector]:!bg-[#ebcec0]"
-            options={createOptions1(labels)}
-            value={value === "" ? undefined : value}
-            onChange={handleSelectChange}
-          />
+            <CodeInputSelect
+            options={labelOptions}
+            value={formValues.labels}
+            onChange={(value) =>
+            handleValueChange("labels", value)
+            }
+            />
         </div>
       </div>
 

@@ -240,7 +240,7 @@ const AcquisitionInformation = forwardRef<any, { showData: boolean }>(
           </div>
           <div className="w-full flex gap-4 py-1">
             <div className="w-1/2 flex py-1">
-              <div className={`font-semibold ${labelClass}`}>開閉栓区分</div>
+              <div className={`font-semibold ${labelClass}`}>入居区分</div>
               <div className="w-4/5">
                 <CodeInputSelect
                   options={contractOptions}
@@ -270,7 +270,7 @@ const AcquisitionInformation = forwardRef<any, { showData: boolean }>(
             <div className="w-1/2">
               <div className="flex ">
                 <div className={`font-semibold ${labelClass}`}>
-                  新規登録理由
+                  新規区分
                 </div>
                 <div className="w-4/5">
                   <CodeInputSelect
