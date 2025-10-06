@@ -253,7 +253,7 @@ const MainBusinessScreen = () => {
       </label>
       {/* customer search */}
       <div className="w-full flex justify-center items-center text-sm">
-        <div className="w-[90%] h-24 border border-black rounded-md p-2 flex flex-col mt-2 ">
+        <div className="w-[90%] h-14 border border-black rounded-md p-2 mt-2 ">
           <div className="w-full flex flex-row items-center justify-center">
             <Select
               className="w-40 mr-2 [&>.ant-select-selector]:!bg-[#ebcec0]"
@@ -367,7 +367,7 @@ const MainBusinessScreen = () => {
               保安
             </Button>
           </div>
-          <div className="flex flex-row items-center justify-center mt-2">
+          {/* <div className="flex flex-row items-center justify-center mt-2">
             <label className={label}>氏名</label>
             <KanaFullWidthInput
               className={`w-[20%] !px-0 text-left hover:${inputColor}`}
@@ -385,7 +385,7 @@ const MainBusinessScreen = () => {
               value={representativeName}
               onChange={setRepresentativeName}
             />
-          </div>
+          </div> */}
         </div>
       </div>
       {/* button group */}

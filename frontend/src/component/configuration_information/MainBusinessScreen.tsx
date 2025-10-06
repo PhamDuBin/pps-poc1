@@ -319,7 +319,11 @@ const MainBusinessScreen = () => {
       </div>
       <div
         onKeyDown={(e) => {
-          if (e.code === "Space") {
+          const target = e.target as HTMLElement;
+          const isInteractive = target.matches(
+            'input[type="radio"], input[type="checkbox"], button, a, select, textarea'
+          );
+          if (e.code === "Space" && !isInteractive) {
             e.preventDefault();
           }
         }}

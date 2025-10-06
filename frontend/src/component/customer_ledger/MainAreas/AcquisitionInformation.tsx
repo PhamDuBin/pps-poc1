@@ -200,7 +200,7 @@ const AcquisitionInformation = forwardRef<any, { showData: boolean }>(
               >
                 開閉栓区分
               </Button>
-              <div className="w-4/5">
+              <div className="w-2/5">
                 <CodeInputSelect
                   options={openCloseOptions}
                   value={formValues.openCloseType}
@@ -240,8 +240,8 @@ const AcquisitionInformation = forwardRef<any, { showData: boolean }>(
           </div>
           <div className="w-full flex gap-4 py-1">
             <div className="w-1/2 flex py-1">
-              <div className={`font-semibold ${labelClass}`}>開閉栓区分</div>
-              <div className="w-4/5">
+              <div className={`font-semibold ${labelClass}`}>入居区分</div>
+              <div className="w-2/5">
                 <CodeInputSelect
                   options={contractOptions}
                   value={formValues.contractType}
@@ -256,7 +256,7 @@ const AcquisitionInformation = forwardRef<any, { showData: boolean }>(
           <div className="flex justify-between gap-4 py-1">
             <div className="flex w-1/2">
               <div className={`font-semibold ${labelClass}`}>新規登録理由</div>
-              <div className="w-4/5">
+              <div className="w-2/5">
                 <CodeInputSelect
                   options={acquisitionRouteOptions}
                   value={formValues.acquisitionRoute}
@@ -270,9 +270,9 @@ const AcquisitionInformation = forwardRef<any, { showData: boolean }>(
             <div className="w-1/2">
               <div className="flex ">
                 <div className={`font-semibold ${labelClass}`}>
-                  新規登録理由
+                  新規区分
                 </div>
-                <div className="w-4/5">
+                <div className="w-2/5">
                   <CodeInputSelect
                     options={customerStatusOptions}
                     value={formValues.customerStatus}
@@ -340,7 +340,7 @@ const AcquisitionInformation = forwardRef<any, { showData: boolean }>(
           <div className="w-full flex gap-4 justify-between py-1">
             <div className="w-1/2 flex">
               <div className={`font-semibold ${labelClass}`}>供給形態</div>
-              <div className="w-4/5">
+              <div className="w-2/5">
                 <CodeInputSelect
                   options={groupTypeOptions}
                   value={formValues.groupType}
@@ -412,7 +412,7 @@ const AcquisitionInformation = forwardRef<any, { showData: boolean }>(
           <div className="w-full flex gap-4 justify-between py-1">
             <div className="w-1/2 flex">
               <div className={`font-semibold ${labelClass}`}>ガス販売形態</div>
-              <div className="w-4/5">
+              <div className="w-2/5">
                 <CodeInputSelect
                   options={inspectionTypeOptions}
                   value={formValues.inspectionType}
@@ -425,7 +425,7 @@ const AcquisitionInformation = forwardRef<any, { showData: boolean }>(
             </div>
             <div className="w-1/2 flex">
               <div className={`font-semibold ${labelClass}`}>販売用途区分</div>
-              <div className="w-4/5">
+              <div className="w-2/5">
                 <CodeInputSelect
                   options={usageTypeOptions}
                   value={formValues.usageType}
@@ -438,7 +438,7 @@ const AcquisitionInformation = forwardRef<any, { showData: boolean }>(
           <div className="w-full flex py-1 gap-4">
             <div className="w-1/2 flex">
               <div className={`font-semibold ${labelClass}`}>販売単価設定</div>
-              <div className="w-4/5">
+              <div className="w-2/5">
                 <CodeInputSelect
                   options={decisionStatusOptions}
                   value={formValues.decisionStatus}
@@ -454,7 +454,7 @@ const AcquisitionInformation = forwardRef<any, { showData: boolean }>(
           <div className="flex w-full gap-4 justify-between py-1">
             <div className="w-1/2 flex">
               <div className={`font-semibold ${labelClass}`}>オートガス</div>
-              <div className="w-4/5">
+              <div className="w-2/5">
                 <CodeInputSelect
                   options={availabilityOptions}
                   value={formValues.autoGas}
@@ -465,7 +465,7 @@ const AcquisitionInformation = forwardRef<any, { showData: boolean }>(
             </div>
             <div className="w-1/2 flex">
               <div className={`font-semibold ${labelClass}`}>自家使用</div>
-              <div className="w-4/5">
+              <div className="w-2/5">
                 <CodeInputSelect
                   options={availabilityOptions}
                   value={formValues.privateUse}
@@ -478,7 +478,7 @@ const AcquisitionInformation = forwardRef<any, { showData: boolean }>(
           <div className="flex w-full gap-4">
             <div className="w-3/5 flex py-1">
               <div
-                className={`h-[60px] w-[125px] mr-2 border-gray-300 rounded-md bg-[#80bad7] font-bold flex text-center justify-center items-center`}
+                className={`h-[60px] w-[128px] mr-2 border-gray-300 rounded-md bg-[#80bad7] font-bold flex text-center justify-center items-center`}
               >
                 在宅日時
               </div>
