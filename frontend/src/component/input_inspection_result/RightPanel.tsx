@@ -5,23 +5,8 @@ import CustomModal from "../../context/CustomModal";
 import { CustomerSearchModal } from "./CustomerSearchModal";
 import { inputColor, labelColor } from "../../constants/colors";
 import { handleNumericSelectKeyDown } from "../../utils/InputHandlers";
-import { AntdCodeTextPair } from "./AntdCodeInputSelect";
-import { Button, Input } from "antd";
-
-const { TextArea } = Input;
-const DownArrowIcon = () => (
-  <svg width="12" height="12" viewBox="0 0 1024 1024" fill="currentColor">
-    <path d="M512 801.92L40.96 323.84 117.76 247.04 512 641.28 906.24 247.04 983.04 323.84z" />
-  </svg>
-);
-
-type CustomSelectProps = {
-  value?: string;
-  onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-  disabled?: boolean;
-  className?: string;
-  children: React.ReactNode;
-};
+import { CustomCodeTextPair } from "./AntdCodeInputSelect";
+import { Button } from "antd";
 
 type SurveyRowProps = {
   onOpenModal: () => void;
@@ -232,86 +217,6 @@ const RightPanel = () => {
     { value: "10", label: "ガスメータ検満" },
   ];
 
-  // const handleNotificationChange = (
-  //   e: React.ChangeEvent<HTMLSelectElement>
-  // ) => {
-  //   const selectedValue = e.target.value;
-  //   const selectedOption = notificationOptions.find(
-  //     (option) => option.value === selectedValue
-  //   );
-
-  //   if (selectedOption) {
-  //     setNotificationLabel(selectedOption.value);
-  //     setTsuchihoCode(selectedOption.label);
-  //   }
-  // };
-
-  // const handleNotificationChange1 = (
-  //   e: React.ChangeEvent<HTMLSelectElement>
-  // ) => {
-  //   const selectedValue = e.target.value;
-  //   const selectedOption = notificationOptions1.find(
-  //     (option) => option.value === selectedValue
-  //   );
-
-  //   if (selectedOption) {
-  //     setNotificationLabel1(selectedOption.value);
-  //     setKaizenCode(selectedOption.label);
-  //   }
-  // };
-
-  // const handleNotificationChange2 = (
-  //   e: React.ChangeEvent<HTMLSelectElement>
-  // ) => {
-  //   const selectedValue = e.target.value;
-  //   const selectedOption = notificationOptions2.find(
-  //     (option) => option.value === selectedValue
-  //   );
-
-  //   if (selectedOption) {
-  //     setNotificationLabel2(selectedOption.value);
-  //     setKyokyuTsuchihoCode(selectedOption.label);
-  //   }
-  // };
-  // const handleNotificationChange3 = (
-  //   e: React.ChangeEvent<HTMLSelectElement>
-  // ) => {
-  //   const selectedValue = e.target.value;
-  //   const selectedOption = notificationOptions3.find(
-  //     (option) => option.value === selectedValue
-  //   );
-
-  //   if (selectedOption) {
-  //     setNotificationLabel3(selectedOption.value);
-  //     setKyokyuKaizenCode(selectedOption.label);
-  //   }
-  // };
-
-  // const handleCodeEnter = (
-  //   e: React.KeyboardEvent<HTMLInputElement>,
-  //   options: { value: string; label: string }[],
-  //   valueSetter: React.Dispatch<React.SetStateAction<string>>,
-  //   labelSetter: React.Dispatch<React.SetStateAction<string>>
-  // ) => {
-  //   if (e.key === "Enter") {
-  //     e.preventDefault();
-  //     const enteredValue = e.currentTarget.value;
-  //     const foundOption = options.find(
-  //       (option) => option.value === enteredValue
-  //     );
-
-  //     if (foundOption) {
-  //       // If found, set both inputs like the select menu does
-  //       valueSetter(foundOption.value);
-  //       labelSetter(foundOption.label);
-  //     } else {
-  //       // If not found, clear both inputs
-  //       valueSetter("");
-  //       labelSetter("");
-  //     }
-  //   }
-  // };
-
   useEffect(() => {
     if (options1[index3] !== "否") {
       setNotificationLabel("0");
@@ -518,7 +423,7 @@ const RightPanel = () => {
               {options1[index3]}
             </button>
           </div>
-          <AntdCodeTextPair
+          <CustomCodeTextPair
             label="通知事項"
             options={notificationOptions}
             codeValue={notificationLabel}
@@ -527,9 +432,7 @@ const RightPanel = () => {
             onTextChange={setTsuchihoCode}
             disabled={options1[index3] !== "否"}
           />
-
-          {/* --- KHỐI 2 ĐƯỢC THAY THẾ BẰNG 1 COMPONENT DUY NHẤT --- */}
-          <AntdCodeTextPair
+          <CustomCodeTextPair
             label="要改善"
             options={notificationOptions1}
             codeValue={notificationLabel1}
@@ -555,7 +458,7 @@ const RightPanel = () => {
               {options2[index4]}
             </button>
           </div>
-          <AntdCodeTextPair
+          <CustomCodeTextPair
             label="通知事項"
             options={notificationOptions2}
             codeValue={notificationLabel2}
@@ -565,8 +468,7 @@ const RightPanel = () => {
             disabled={options2[index4] !== "否"}
           />
 
-          {/* --- KHỐI 4 ĐƯỢC THAY THẾ BẰNG 1 COMPONENT DUY NHẤT --- */}
-          <AntdCodeTextPair
+          <CustomCodeTextPair
             label="要改善"
             options={notificationOptions3}
             codeValue={notificationLabel3}

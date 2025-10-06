@@ -31,7 +31,13 @@ export const handleNavigationKey = (
   const input = inputs[index];
   const key = e.key;
 
-  // if (["Tab", "Enter", "ArrowDown", "ArrowRight"].includes(key)) {
+  const isCustomDropdownOpen = document.querySelector(".custom-dropdown-open");
+  if (isCustomDropdownOpen) {
+    if (["ArrowUp", "ArrowDown", "Enter", "Tab"].includes(key)) {
+      return;
+    }
+  }
+
   if (["Tab", "ArrowDown", "ArrowRight"].includes(key)) {
     e.preventDefault();
     if (
