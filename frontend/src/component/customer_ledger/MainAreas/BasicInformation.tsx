@@ -306,7 +306,7 @@ const BasicInformation = forwardRef<any, { showData: boolean }>(
 
         case "管理部門":
           return (
-            <div className="w-[38%]">
+            <div className="w-[24%]">
               <CodeInputSelect
                 options={departmentOptions}
                 value={formValues.departmentCode}
@@ -328,7 +328,7 @@ const BasicInformation = forwardRef<any, { showData: boolean }>(
                   disabled={isFormDisabled}
                 />
                 {showData && (
-                  <div className="w-[150px]">センター01番</div>
+                  <div className="flex justify-center w-[120px]">センター01番</div>
                 )}
               </div>
 
@@ -356,7 +356,7 @@ const BasicInformation = forwardRef<any, { showData: boolean }>(
                   disabled={isFormDisabled}
                 />
                 {showData && (
-                  <div className="w-[150px]">保安機関01番</div>
+                  <div className="flex justify-center w-[120px]">保安機関01番</div>
                 )}
               </div>
 
@@ -384,7 +384,7 @@ const BasicInformation = forwardRef<any, { showData: boolean }>(
                   disabled={isFormDisabled}
                 />
                 {showData && (
-                  <div className="flex w-[150px]">集中監視01番</div>
+                  <div className="flex justify-center w-[120px]">集中監視01番</div>
                 )}
               </data>
 

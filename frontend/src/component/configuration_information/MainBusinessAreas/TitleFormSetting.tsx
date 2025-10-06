@@ -83,9 +83,7 @@ const TitleFormSetting = forwardRef<any>((props, ref) => {
         },
       }));
 
-  useEffect(() => {
-    setFormValues((prev) => ({ ...prev, labels: "0" }));
-  }, []);
+
 
   return (
     <div
