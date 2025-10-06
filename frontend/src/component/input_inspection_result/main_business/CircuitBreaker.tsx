@@ -7,7 +7,6 @@ const CircuitBreaker = () => {
 
   const symbols = ["", "◯", "×", "✔"];
   const totalRows = 5;
-
   const [states, setStates] = useState<number[]>(Array(totalRows).fill(0));
 
   const rows = [
@@ -17,15 +16,6 @@ const CircuitBreaker = () => {
     { group: "気化器", label: "気化装置停電対策" },
     { group: "気化器", label: "電気気化装置による手動復帰式自動ガス遮断器" },
   ];
-
-  const handleDetailKeyDown = (
-    e: React.KeyboardEvent<HTMLTableCellElement>
-  ) => {
-    if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-      setModalF1Open(true);
-    }
-  };
 
   const handleClick = (row: number) => {
     setStates((prev) => {
@@ -38,13 +28,13 @@ const CircuitBreaker = () => {
   return (
     <>
       <span
-        className={`flex justify-start text-start font-bold p-1 my-1 ${labelColor} mt-4`}
+        className={`flex justify-start font-bold p-1 my-1 mt-4 ${labelColor}`}
       >
         遮断器
       </span>
       <div className="w-full min-w-[922px] text-[10px]">
         <div className="overflow-auto border border-black">
-          <table className="w-full  table-fixed border-collapse">
+          <table className="w-full table-fixed border-collapse">
             <thead className={`h-[40px] ${labelColor}`}>
               <tr>
                 <th className="border border-black text-center"></th>
@@ -60,6 +50,16 @@ const CircuitBreaker = () => {
                   row.group &&
                   (idx === 0 || row.group !== rows[idx - 1]?.group);
                 const isSpecial = !row.model && !row.count;
+
+                const val = states[idx];
+                const bgColor =
+                  val === 2
+                    ? "bg-red-500"
+                    : val === 3
+                    ? "bg-green-600"
+                    : inputColor;
+
+                const rowHasCheck = states[idx] === 3;
 
                 return (
                   <tr key={idx} className="h-6">
@@ -81,20 +81,31 @@ const CircuitBreaker = () => {
                         >
                           {row.label}
                         </th>
-                        <td className={`border border-black text-center`}>
+                        <td className="border border-black text-center">
                           {row.model}
                         </td>
-                        <td className={`border border-black text-center `}>
+                        <td className="border border-black text-center">
                           {row.count}
                         </td>
-                        <td
-                          onClick={() => setModalF1Open(true)}
-                          onKeyDown={handleDetailKeyDown}
-                          className={`border border-black text-center cursor-pointer ${inputColor} ${
-                            states[idx] === 3 ? "bg-red-500" : ""
-                          }`}
-                        >
-                          ▼
+
+                        {/* 詳細 */}
+                        <td className="relative border border-black text-center p-0">
+                          <button
+                            type="button"
+                            tabIndex={0}
+                            onClick={() => setModalF1Open(true)}
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter" || e.key === " ") {
+                                e.preventDefault();
+                                setModalF1Open(true);
+                              }
+                            }}
+                            className={`absolute inset-0 w-full h-full flex items-center justify-center hover:bg-blue-100 ${
+                              rowHasCheck ? "bg-red-500" : inputColor
+                            }`}
+                          >
+                            ▼
+                          </button>
                         </td>
                       </>
                     ) : (
@@ -105,21 +116,46 @@ const CircuitBreaker = () => {
                         {row.label}
                       </th>
                     )}
+
+                    {/* 判定 */}
                     {idx < 3 && (
-                      <td
-                        className={`border border-black text-center cursor-pointer ${inputColor}`}
-                        onClick={() => handleClick(idx)}
-                      >
-                        {symbols[states[idx]]}
+                      <td className="relative border border-black text-center p-0">
+                        <button
+                          type="button"
+                          tabIndex={0}
+                          onClick={() => handleClick(idx)}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter" || e.key === " ") {
+                              e.preventDefault();
+                              handleClick(idx);
+                            }
+                          }}
+                          className={`absolute inset-0 w-full h-full flex items-center justify-center hover:bg-blue-100 ${bgColor}`}
+                        >
+                          {symbols[val]}
+                        </button>
                       </td>
                     )}
+
                     {idx === 3 && (
                       <td
                         rowSpan={2}
-                        className={`border border-black text-center cursor-pointer ${inputColor}`}
-                        onClick={() => handleClick(idx)}
+                        className="relative border border-black text-center p-0"
                       >
-                        {symbols[states[idx]]}
+                        <button
+                          type="button"
+                          tabIndex={0}
+                          onClick={() => handleClick(idx)}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter" || e.key === " ") {
+                              e.preventDefault();
+                              handleClick(idx);
+                            }
+                          }}
+                          className={`absolute inset-0 w-full h-full flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-black hover:bg-blue-100 ${bgColor}`}
+                        >
+                          {symbols[val]}
+                        </button>
                       </td>
                     )}
                   </tr>
@@ -129,6 +165,7 @@ const CircuitBreaker = () => {
           </table>
         </div>
       </div>
+
       <ModalF1 isOpen={modalF1Open} onClose={() => setModalF1Open(false)} />
     </>
   );

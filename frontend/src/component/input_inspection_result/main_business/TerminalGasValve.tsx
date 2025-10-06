@@ -125,10 +125,36 @@ const TerminalGasValve = () => {
                       return (
                         <td
                           key={col}
-                          className="border border-black text-center cursor-pointer"
-                          onClick={() => handleClick(row, col)}
+                          className="relative border border-black text-center p-0"
                         >
-                          {symbols[states[row][col]]}
+                          <button
+                            type="button"
+                            tabIndex={0}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleClick(row, col);
+                            }}
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter" || e.key === " ") {
+                                e.preventDefault();
+                                handleClick(row, col);
+                              }
+                            }}
+                            className={`
+                            absolute inset-0 w-full h-full flex items-center justify-center
+                            focus:outline-none focus:ring-2 focus:ring-black
+                            hover:bg-blue-100
+                            ${
+                              symbols[states[row][col]] === "×"
+                                ? "bg-red-500 text-white"
+                                : symbols[states[row][col]] === "✔"
+                                ? "bg-green-600 text-white"
+                                : ""
+                            }
+                          `}
+                          >
+                            {symbols[states[row][col]]}
+                          </button>
                         </td>
                       );
                     })}

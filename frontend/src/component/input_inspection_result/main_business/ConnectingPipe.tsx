@@ -70,14 +70,16 @@ const ConnectingPipe = () => {
       >
         供給設備
       </div>
+
       <span
         className={`flex justify-start text-start font-bold p-1 my-1 ${labelColor}`}
       >
         接続管
       </span>
+
       <div className="w-full min-w-[922px] text-[10px] mt-2">
         <div className="overflow-auto border border-black">
-          <table className="w-full  table-fixed border-collapse">
+          <table className="w-full table-fixed border-collapse">
             <thead className="h-[38px]">
               <tr className={`sticky top-0 ${labelColor} z-10`}>
                 <th
@@ -128,6 +130,7 @@ const ConnectingPipe = () => {
                 </th>
               </tr>
             </thead>
+
             <tbody>
               {rows.map((row, idx) => {
                 const rowHasCheck = states[idx].some((s) => s === 3);
@@ -144,22 +147,36 @@ const ConnectingPipe = () => {
                         {row.group}
                       </th>
                     )}
-                    <td className={`border border-black text-center  `}>
+
+                    <td className="border border-black text-center">
                       {row.no}
                     </td>
-                    <td className={`border border-black text-center`}>
-                      材料名
+                    <td className="border border-black text-center">材料名</td>
+
+                    {/* ▼ 詳細 */}
+                    <td className="relative border border-black text-center p-0">
+                      <button
+                        type="button"
+                        tabIndex={0}
+                        onClick={() => setModalF1Open(true)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            setModalF1Open(true);
+                          }
+                        }}
+                        className={`
+      absolute inset-0 w-full h-full flex items-center justify-center
+      cursor-pointer ${inputColor}
+      ${rowHasCheck ? "bg-red-500" : ""}
+      
+    `}
+                      >
+                        ▼
+                      </button>
                     </td>
-                    <td
-                      tabIndex={0}
-                      onClick={() => setModalF1Open(true)}
-                      onKeyDown={handleDetailKeyDown}
-                      className={`border border-black text-center cursor-pointer ${inputColor} ${
-                        rowHasCheck ? "bg-red-500" : ""
-                      }`}
-                    >
-                      ▼
-                    </td>
+
+                    {/* tick/select columns */}
                     {Array.from({ length: 6 }).map((_, col) => {
                       if (col === 3) {
                         return (
@@ -182,7 +199,7 @@ const ConnectingPipe = () => {
                                   });
                                 })
                               }
-                              className={`w-full h-full font-medium bg-transparent outline-none text-center ${inputColor}`}
+                              className={`w-full h-full text-center bg-[#ebcec0] cursor-pointer ${inputColor} focus:ring-2 focus:ring-black `}
                             >
                               {options.map((opt, i) => (
                                 <option key={i} value={i}>
@@ -193,13 +210,34 @@ const ConnectingPipe = () => {
                           </td>
                         );
                       }
+
+                      const val = states[idx][col];
+                      const bgColor =
+                        val === 2
+                          ? "bg-red-500"
+                          : val === 3
+                          ? "bg-green-600"
+                          : "bg-[#ebcec0]";
+
                       return (
                         <td
                           key={col}
-                          className={`border border-black text-center cursor-pointer ${inputColor}`}
-                          onClick={() => handleClick(idx, col)}
+                          className="relative border border-black text-center p-0"
                         >
-                          {symbols[states[idx][col]]}
+                          <button
+                            type="button"
+                            tabIndex={0}
+                            onClick={() => handleClick(idx, col)}
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter" || e.key === " ") {
+                                e.preventDefault();
+                                handleClick(idx, col);
+                              }
+                            }}
+                            className={`absolute inset-0 w-full h-full flex items-center justify-center hover:bg-blue-100 ${bgColor}`}
+                          >
+                            {symbols[val]}
+                          </button>
                         </td>
                       );
                     })}
@@ -210,6 +248,7 @@ const ConnectingPipe = () => {
           </table>
         </div>
       </div>
+
       <ModalF1 isOpen={modalF1Open} onClose={() => setModalF1Open(false)} />
     </>
   );

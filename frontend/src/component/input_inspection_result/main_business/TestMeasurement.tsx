@@ -4,19 +4,40 @@ import { labelColor, inputColor } from "../../../constants/colors";
 const TestMeasurement = () => {
   const label = `w-1/6 flex text-center justify-center ${labelColor} border border-black h-6`;
   const input = `w-1/12 flex text-center justify-center ${inputColor} border border-black h-6 border-gray-600`;
-  const button = `w-[30px] border border-black h-6 border-gray-600 ${inputColor}`;
+  const buttonBase = `w-[30px] border border-black h-6 border-gray-600`;
 
-  // State quản lý checkbox
   const [pressureChecked, setPressureChecked] = useState(false);
   const [airtightChecked, setAirtightChecked] = useState(false);
   const [leakageChecked, setLeakageChecked] = useState(false);
 
-  // State quản lý riêng cho nhiều nút (row 1 có 3 nút, row 2 có 2 nút)
   const [pressureButtonStates, setPressureButtonStates] = useState([0, 0, 0]);
   const [airtightButtonStates, setAirtightButtonStates] = useState([0, 0]);
   const [leakageButtonStates, setLeakageButtonStates] = useState([0, 0]);
 
   const symbols = ["", "◯", "✕", "✓"];
+
+  const getButtonColor = (val: number) => {
+    if (val === 2) return "bg-red-500";
+    if (val === 3) return "bg-green-600";
+    return inputColor;
+  };
+
+  const handleNumericSelectKeyDown = (
+    e: React.KeyboardEvent<HTMLSelectElement>
+  ) => {
+    const num = parseInt(e.key, 10);
+    if (!isNaN(num)) {
+      e.preventDefault();
+      const options = e.currentTarget.options;
+      for (let i = 0; i < options.length; i++) {
+        if (options[i].text.startsWith(num.toString() + ":")) {
+          e.currentTarget.value = options[i].value;
+          e.currentTarget.dispatchEvent(new Event("change", { bubbles: true }));
+          break;
+        }
+      }
+    }
+  };
 
   const handlePressureButtonClick = (index: number) => {
     setPressureButtonStates((prev) => {
@@ -44,15 +65,13 @@ const TestMeasurement = () => {
 
   return (
     <>
-      {/* Header */}
-      <div className={`p-1 flex flex-row text-[10px] w-full `}>
+      <div className={`p-1 flex flex-row text-[10px] w-full`}>
         <select className={`border border-black w-1/12 ${inputColor}`}>
           <option>供給点検</option>
           <option>消費調査</option>
           <option>供給消費</option>
         </select>
 
-        {/* radio */}
         <div className="flex items-center space-x-4 mx-3">
           <label className="flex items-center">
             <input
@@ -68,7 +87,6 @@ const TestMeasurement = () => {
           </label>
         </div>
 
-        {/* checkbox */}
         <div className="flex items-center space-x-4">
           <label className="flex items-center">
             <input
@@ -94,7 +112,7 @@ const TestMeasurement = () => {
               className="mr-1"
               checked={leakageChecked}
               onChange={(e) => setLeakageChecked(e.target.checked)}
-            />{" "}
+            />
             漏洩試験
           </label>
         </div>
@@ -112,8 +130,12 @@ const TestMeasurement = () => {
         )}
 
         <button
-          className={`${button} ${
-            !pressureChecked ? `${inputColor} cursor-not-allowed` : ""
+          className={`${buttonBase} ${getButtonColor(
+            pressureButtonStates[0]
+          )} ${
+            !pressureChecked
+              ? "cursor-not-allowed opacity-50"
+              : "hover:bg-blue-100"
           }`}
           disabled={!pressureChecked}
           onClick={() => handlePressureButtonClick(0)}
@@ -127,9 +149,14 @@ const TestMeasurement = () => {
         ) : (
           <span className={input}></span>
         )}
+
         <button
-          className={`${button} ${
-            !pressureChecked ? `${inputColor} cursor-not-allowed` : ""
+          className={`${buttonBase} ${getButtonColor(
+            pressureButtonStates[1]
+          )} ${
+            !pressureChecked
+              ? "cursor-not-allowed opacity-50"
+              : "hover:bg-blue-100"
           }`}
           disabled={!pressureChecked}
           onClick={() => handlePressureButtonClick(1)}
@@ -152,9 +179,14 @@ const TestMeasurement = () => {
         ) : (
           <span className={input}></span>
         )}
+
         <button
-          className={`${button} ${
-            !pressureChecked ? `${inputColor} cursor-not-allowed` : ""
+          className={`${buttonBase} ${getButtonColor(
+            pressureButtonStates[2]
+          )} ${
+            !pressureChecked
+              ? "cursor-not-allowed opacity-50"
+              : "hover:bg-blue-100"
           }`}
           disabled={!pressureChecked}
           onClick={() => handlePressureButtonClick(2)}
@@ -198,16 +230,17 @@ const TestMeasurement = () => {
         <span className={label}>点検方法</span>
         {airtightChecked ? (
           <select
-            className={`${inputColor} w-1/6 flex text-center justify-center border border-black h-6`}
+            className={`${inputColor} w-1/6 text-center border border-black h-6`}
+            onKeyDown={handleNumericSelectKeyDown}
           >
-            <option>空白</option>
-            <option>掘出調査</option>
-            <option>気密試験</option>
-            <option>漏洩試験</option>
-            <option>目視</option>
-            <option>ボーリング調査</option>
-            <option>検知装置</option>
-            <option>その他</option>
+            <option>0:空白</option>
+            <option>1:掘出調査</option>
+            <option>2:気密試験</option>
+            <option>3:漏洩試験</option>
+            <option>4:目視</option>
+            <option>5:ボーリング調査</option>
+            <option>6:検知装置</option>
+            <option>7:その他</option>
           </select>
         ) : (
           <select
@@ -217,8 +250,12 @@ const TestMeasurement = () => {
         )}
 
         <button
-          className={`${button} ${
-            !airtightChecked ? `${inputColor} cursor-not-allowed` : ""
+          className={`${buttonBase} ${getButtonColor(
+            airtightButtonStates[1]
+          )} ${
+            !airtightChecked
+              ? "cursor-not-allowed opacity-50"
+              : "hover:bg-blue-100"
           }`}
           disabled={!airtightChecked}
           onClick={() => handleAirtightButtonClick(1)}
@@ -226,9 +263,10 @@ const TestMeasurement = () => {
           {airtightChecked ? symbols[airtightButtonStates[1]] : ""}
         </button>
       </div>
+
       {/* row 3: 漏洩試験 */}
       <div className="flex flex-row text-[10px]">
-        <span className={`${label} font-bold`}>気密試験</span>
+        <span className={`${label} font-bold`}>漏洩試験</span>
         <span className={label}>初期圧力</span>
 
         {leakageChecked ? (
@@ -261,16 +299,17 @@ const TestMeasurement = () => {
         <span className={label}>点検方法</span>
         {leakageChecked ? (
           <select
-            className={`${inputColor} w-1/6 flex text-center justify-center border border-black h-6`}
+            className={`${inputColor} w-1/6 text-center border border-black h-6`}
+            onKeyDown={handleNumericSelectKeyDown}
           >
-            <option>空白</option>
-            <option>掘出調査</option>
-            <option>気密試験</option>
-            <option>漏洩試験</option>
-            <option>目視</option>
-            <option>ボーリング調査</option>
-            <option>検知装置</option>
-            <option>その他</option>
+            <option>0:空白</option>
+            <option>1:掘出調査</option>
+            <option>2:気密試験</option>
+            <option>3:漏洩試験</option>
+            <option>4:目視</option>
+            <option>5:ボーリング調査</option>
+            <option>6:検知装置</option>
+            <option>7:その他</option>
           </select>
         ) : (
           <select
@@ -280,8 +319,10 @@ const TestMeasurement = () => {
         )}
 
         <button
-          className={`${button} ${
-            !leakageChecked ? `${inputColor} cursor-not-allowed` : ""
+          className={`${buttonBase} ${getButtonColor(leakageButtonStates[1])} ${
+            !leakageChecked
+              ? "cursor-not-allowed opacity-50"
+              : "hover:bg-blue-100"
           }`}
           disabled={!leakageChecked}
           onClick={() => handleLeakageButtonClick(1)}

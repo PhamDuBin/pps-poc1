@@ -53,15 +53,6 @@ const Meter = () => {
   const handleClickSButton = () => setStatelabel((prev) => (prev + 1) % 3);
   const handleClickSButton2 = () => setStatelabel2((prev) => (prev + 1) % 3);
 
-  const handleDetailKeyDown = (
-    e: React.KeyboardEvent<HTMLTableCellElement>
-  ) => {
-    if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-      setModalF1Open(true);
-    }
-  };
-
   const handleClick = (row: number, col: number) => {
     setStates((prev) => {
       const newStates = prev.map((r) => [...r]);
@@ -81,6 +72,7 @@ const Meter = () => {
       >
         メーター
       </span>
+
       <div className="flex gap-x-4 mb-1 p-2 border border-black items-center text-xs">
         <div>認定対象区分</div>
         <button
@@ -90,9 +82,10 @@ const Meter = () => {
           {labels[statelabel]}
         </button>
       </div>
+
       <div className="w-full min-w-[922px] text-[10px]">
         <div className="overflow-auto border border-black">
-          <table className="w-full  table-fixed border-collapse">
+          <table className="w-full table-fixed border-collapse">
             <thead className={`h-[38px] ${labelColor}`}>
               <tr>
                 <th className="border border-black text-center">種別</th>
@@ -108,9 +101,19 @@ const Meter = () => {
                 </th>
               </tr>
             </thead>
+
             <tbody>
               {rows.map((row, idx) => {
-                const rowHasCheck = states[idx].some((s) => s === 3);
+                const val = states[idx][0];
+                const bgColor =
+                  val === 2
+                    ? "bg-red-500"
+                    : val === 3
+                    ? "bg-green-600"
+                    : inputColor;
+
+                const rowHasCheck = val === 3;
+
                 return (
                   <tr key={idx} className="h-6">
                     <td className={`border border-black text-center`}>
@@ -122,25 +125,39 @@ const Meter = () => {
                     <td className={`border border-black text-center`}>
                       {row.model}
                     </td>
-                    <td className={`border border-black text-center `}>
+                    <td className={`border border-black text-center`}>
                       {row.製造番号}
                     </td>
-                    <td
-                      tabIndex={0}
-                      onClick={() => setModalF1Open(true)}
-                      onKeyDown={handleDetailKeyDown}
-                      className={`border border-black text-center cursor-pointer ${inputColor} ${
-                        rowHasCheck ? "bg-red-500" : inputColor
-                      }`}
-                    >
-                      ▼
+
+                    {/* 詳細 */}
+                    <td className="relative border border-black text-center p-0">
+                      <button
+                        type="button"
+                        tabIndex={0}
+                        onClick={() => setModalF1Open(true)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            setModalF1Open(true);
+                          }
+                        }}
+                        className={`absolute inset-0 w-full h-full flex items-center justify-center  hover:bg-blue-100 ${
+                          rowHasCheck ? "bg-red-500" : inputColor
+                        }`}
+                      >
+                        ▼
+                      </button>
                     </td>
+
+                    {/* 指針 */}
                     <td className={`border border-black p-0`}>
                       <input
                         type="number"
-                        className={`w-full h-full border-none text-center bg-transparent outline-none`}
+                        className={`w-full h-full border-none text-center bg-transparent`}
                       />
                     </td>
+
+                    {/* 常時監視 */}
                     <td className={`border border-black p-0 ${inputColor}`}>
                       <select
                         value={selectValue}
@@ -153,7 +170,7 @@ const Meter = () => {
                             }
                           })
                         }
-                        className={`w-full h-full font-medium bg-transparent outline-none text-center`}
+                        className={`w-full h-full font-medium bg-transparent text-center`}
                       >
                         {options.map((opt, i) => (
                           <option key={i} value={i}>
@@ -162,16 +179,38 @@ const Meter = () => {
                         ))}
                       </select>
                     </td>
-                    <td
-                      className={`border border-black text-center cursor-pointer ${inputColor}`}
-                      onClick={() => handleClick(idx, 0)}
-                    >
-                      {symbols[states[idx][0]]}
-                    </td>
-                    <td className={`border border-black p-0 ${inputColor}`}>
+
+                    {/* 適合 */}
+                    <td className="relative border border-black text-center p-0">
                       <button
+                        type="button"
+                        tabIndex={0}
+                        onClick={() => handleClick(idx, 0)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            handleClick(idx, 0);
+                          }
+                        }}
+                        className={`absolute inset-0 w-full h-full flex items-center justify-center hover:bg-blue-100 ${bgColor}`}
+                      >
+                        {symbols[val]}
+                      </button>
+                    </td>
+
+                    {/* 中間ガス管 */}
+                    <td className="relative border border-black text-center p-0">
+                      <button
+                        type="button"
+                        tabIndex={0}
                         onClick={handleClickSButton2}
-                        className={`w-10 h-6 flex items-center justify-center ${inputColor}`}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            handleClickSButton2();
+                          }
+                        }}
+                        className={`absolute inset-0 w-full h-full flex items-center justify-center  hover:bg-blue-100 ${inputColor}`}
                       >
                         {labels[statelabel2]}
                       </button>
@@ -183,6 +222,7 @@ const Meter = () => {
           </table>
         </div>
       </div>
+
       <ModalF1 isOpen={modalF1Open} onClose={() => setModalF1Open(false)} />
     </>
   );

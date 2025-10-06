@@ -42,15 +42,6 @@ const SupplyPipe = () => {
   const handleClickSButton = () => setStatelabel((prev) => (prev + 1) % 3);
   const handleClickSButton2 = () => setStatelabel2((prev) => (prev + 1) % 3);
 
-  const handleDetailKeyDown = (
-    e: React.KeyboardEvent<HTMLTableCellElement>
-  ) => {
-    if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-      setModalF1Open(true);
-    }
-  };
-
   const handleClick = (row: number, col: number) => {
     setStates((prev) => {
       const newStates = prev.map((r) => [...r]);
@@ -96,7 +87,7 @@ const SupplyPipe = () => {
 
       <div className="w-full min-w-[922px] text-[10px]">
         <div className="overflow-auto border border-black">
-          <table className="w-full  table-fixed border-collapse">
+          <table className="w-full table-fixed border-collapse">
             <thead className={`h-[38px] ${labelColor}`}>
               <tr>
                 <th className="border border-black text-center"></th>
@@ -125,6 +116,7 @@ const SupplyPipe = () => {
                 <th className="border border-black text-center w-10">判定</th>
               </tr>
             </thead>
+
             <tbody>
               {rows.map((row, idx) => {
                 const rowHasCheck = states[idx].some((s) => s === 3);
@@ -141,63 +133,97 @@ const SupplyPipe = () => {
                         {row.group}
                       </th>
                     )}
-                    <td className={`border border-black text-center `}>
+                    <td className="border border-black text-center">
                       {row.no}
                     </td>
-                    <td className={`border border-black text-center `}>
-                      材料名
+                    <td className="border border-black text-center">材料名</td>
+                    <td className="border border-black text-center">-</td>
+
+                    <td className="relative border border-black text-center p-0">
+                      <button
+                        type="button"
+                        tabIndex={0}
+                        onClick={() => setModalF1Open(true)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            setModalF1Open(true);
+                          }
+                        }}
+                        className={`
+                          absolute inset-0 w-full h-full flex items-center justify-center
+                          cursor-pointer ${inputColor}
+                          ${rowHasCheck ? "bg-red-500" : ""}
+                          
+                        `}
+                      >
+                        ▼
+                      </button>
                     </td>
-                    <td className={`border border-black text-center `}>-</td>
-                    <td
-                      tabIndex={0}
-                      onClick={() => setModalF1Open(true)}
-                      onKeyDown={handleDetailKeyDown}
-                      className={`border border-black text-center cursor-pointer ${
-                        rowHasCheck ? "bg-red-500" : inputColor
-                      }`}
-                    >
-                      ▼
-                    </td>
-                    {Array.from({ length: 7 }).map((_, col) =>
-                      col === 3 ? (
-                        <td
-                          key={col}
-                          className={`border border-black p-0 ${inputColor}`}
-                        >
-                          <select
-                            value={selectValues[idx]}
-                            onChange={(e) => handleSelectChange(e, idx)}
-                            onKeyDown={(e) =>
-                              handleNumericSelectKeyDown(e, (val) => {
-                                setSelectValues((prev) => {
-                                  const newVals = [...prev];
-                                  const numVal = parseInt(val, 10);
-                                  if (numVal < options.length) {
-                                    newVals[idx] = numVal;
-                                  }
-                                  return newVals;
-                                });
-                              })
-                            }
-                            className={`w-full h-full font-medium bg-transparent outline-none text-center ${inputColor}`}
+                    {Array.from({ length: 7 }).map((_, col) => {
+                      if (col === 3) {
+                        return (
+                          <td
+                            key={col}
+                            className={`border border-black p-0 ${inputColor}`}
                           >
-                            {options.map((opt, i) => (
-                              <option key={i} value={i}>
-                                {opt}
-                              </option>
-                            ))}
-                          </select>
-                        </td>
-                      ) : (
+                            <select
+                              value={selectValues[idx]}
+                              onChange={(e) => handleSelectChange(e, idx)}
+                              onKeyDown={(e) =>
+                                handleNumericSelectKeyDown(e, (val) => {
+                                  setSelectValues((prev) => {
+                                    const newVals = [...prev];
+                                    const numVal = parseInt(val, 10);
+                                    if (numVal < options.length) {
+                                      newVals[idx] = numVal;
+                                    }
+                                    return newVals;
+                                  });
+                                })
+                              }
+                              className={`w-full h-full font-medium text-center ${inputColor}`}
+                            >
+                              {options.map((opt, i) => (
+                                <option key={i} value={i}>
+                                  {opt}
+                                </option>
+                              ))}
+                            </select>
+                          </td>
+                        );
+                      }
+
+                      const val = states[idx][col];
+                      const bgColor =
+                        val === 2
+                          ? "bg-red-500"
+                          : val === 3
+                          ? "bg-green-600"
+                          : inputColor;
+
+                      return (
                         <td
                           key={col}
-                          className={`border border-black text-center cursor-pointer ${inputColor}`}
-                          onClick={() => handleClick(idx, col)}
+                          className="relative border border-black text-center p-0"
                         >
-                          {symbols[states[idx][col]]}
+                          <button
+                            type="button"
+                            tabIndex={0}
+                            onClick={() => handleClick(idx, col)}
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter" || e.key === " ") {
+                                e.preventDefault();
+                                handleClick(idx, col);
+                              }
+                            }}
+                            className={`absolute inset-0 w-full h-full flex items-center justify-center  hover:bg-blue-100 ${bgColor}`}
+                          >
+                            {symbols[val]}
+                          </button>
                         </td>
-                      )
-                    )}
+                      );
+                    })}
                   </tr>
                 );
               })}
@@ -205,6 +231,7 @@ const SupplyPipe = () => {
           </table>
         </div>
       </div>
+
       <ModalF1 isOpen={modalF1Open} onClose={() => setModalF1Open(false)} />
     </>
   );

@@ -32,6 +32,12 @@ const Vessel = () => {
     });
   };
 
+  const getButtonColor = (val: number) => {
+    if (val === 2) return "bg-red-500";
+    if (val === 3) return "bg-green-600";
+    return inputColor;
+  };
+
   return (
     <>
       <span
@@ -89,57 +95,64 @@ const Vessel = () => {
         </div>
       </div>
 
-      {/* Bảng chính */}
       <div className="flex gap-x-2 min-w-[919px] text-[10px]">
-        {/* Bảng trái */}
         <div className="flex">
           <div
-            className={`flex  justify-center items-center font-bold border border-black w-36 ${labelColor}`}
+            className={`flex justify-center items-center font-bold border border-black w-36 ${labelColor}`}
           >
             基本項目
           </div>
           <div className="grid grid-cols-3">
-            {leftLabels.map((label, idx) => (
-              <div key={idx} className="flex items-center">
-                <div
-                  className={`border border-black h-8 flex items-center pl-2  w-36 ${labelColor}`}
-                >
-                  {label}
+            {leftLabels.map((label, idx) => {
+              const val = states[0][idx];
+              return (
+                <div key={idx} className="flex items-center">
+                  <div
+                    className={`border border-black h-8 flex items-center pl-2 w-36 ${labelColor}`}
+                  >
+                    {label}
+                  </div>
+                  <button
+                    className={`border border-slate-400 text-center cursor-pointer w-10 h-8 hover:bg-blue-100 ${getButtonColor(
+                      val
+                    )}`}
+                    onClick={() => handleClick(0, idx)}
+                  >
+                    {symbols[val] || ""}
+                  </button>
                 </div>
-                <button
-                  className={`border border-slate-400 text-center cursor-pointer w-10 h-8 ${inputColor}`}
-                  onClick={() => handleClick(0, idx)}
-                >
-                  {symbols[states[0][idx]] || ""}
-                </button>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
 
-        {/* Bảng phải */}
         <div className="flex">
           <div
-            className={`flex  justify-center items-center font-bold border border-black w-36 ${labelColor}`}
+            className={`flex justify-center items-center font-bold border border-black w-36 ${labelColor}`}
           >
             1t以上の貯蔵設備を対象
           </div>
           <div className="grid grid-cols-3">
-            {rightLabels.map((label, idx) => (
-              <div key={idx} className="flex items-center">
-                <div
-                  className={`border border-black h-8 flex items-center pl-2  w-36 ${labelColor}`}
-                >
-                  {label}
+            {rightLabels.map((label, idx) => {
+              const val = states[0][leftLabels.length + idx];
+              return (
+                <div key={idx} className="flex items-center">
+                  <div
+                    className={`border border-black h-8 flex items-center pl-2 w-36 ${labelColor}`}
+                  >
+                    {label}
+                  </div>
+                  <button
+                    className={`border border-slate-400 text-center cursor-pointer w-10 h-8 hover:bg-blue-100 ${getButtonColor(
+                      val
+                    )}`}
+                    onClick={() => handleClick(0, leftLabels.length + idx)}
+                  >
+                    {symbols[val] || ""}
+                  </button>
                 </div>
-                <button
-                  className={`border border-slate-400 text-center cursor-pointer w-10 h-8 ${inputColor}`}
-                  onClick={() => handleClick(0, leftLabels.length + idx)}
-                >
-                  {symbols[states[0][leftLabels.length + idx]] || ""}
-                </button>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </div>

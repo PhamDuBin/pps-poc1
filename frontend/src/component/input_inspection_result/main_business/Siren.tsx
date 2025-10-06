@@ -36,13 +36,34 @@ const Siren = () => {
         >
           設置施設区分
         </span>
-        <select className={`border border-black w-16 ml-3 ${inputColor}`}>
-          <option>未選択</option>
-          <option>義務</option>
-          <option>指導</option>
-          <option>その他</option>
-          <option>不要</option>
+        <select
+          className={`border border-black w-16 ml-3 ${inputColor}`}
+          onKeyDown={(e) => {
+            if (/^[0-9]$/.test(e.key)) {
+              e.preventDefault();
+              const options = [
+                "0:未選択",
+                "1:義務",
+                "2:指導",
+                "3:その他",
+                "4:不要",
+              ];
+              const index = parseInt(e.key, 10);
+              const match = options.find((opt) => opt.startsWith(`${index}:`));
+              if (match) {
+                const select = e.currentTarget as HTMLSelectElement;
+                select.value = match;
+              }
+            }
+          }}
+        >
+          <option>0:未選択</option>
+          <option>1:義務</option>
+          <option>2:指導</option>
+          <option>3:その他</option>
+          <option>4:不要</option>
         </select>
+
         <span
           className={`w-1/12 border border-black p-1 flex justify-center min-w-[83px] ${labelColor} ml-4`}
         >
@@ -143,10 +164,36 @@ const Siren = () => {
                       return (
                         <td
                           key={col}
-                          className="border border-black text-center cursor-pointer"
-                          onClick={() => handleClick(row, col)}
+                          className="relative border border-black text-center p-0"
                         >
-                          {symbols[states[row][col]]}
+                          <button
+                            type="button"
+                            tabIndex={0}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleClick(row, col);
+                            }}
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter" || e.key === " ") {
+                                e.preventDefault();
+                                handleClick(row, col);
+                              }
+                            }}
+                            className={`
+                            absolute inset-0 w-full h-full flex items-center justify-center
+                            focus:outline-none focus:ring-2 focus:ring-black
+                            hover:bg-blue-100
+                            ${
+                              symbols[states[row][col]] === "×"
+                                ? "bg-red-500 text-white"
+                                : symbols[states[row][col]] === "✔"
+                                ? "bg-green-600 text-white"
+                                : ""
+                            }
+                          `}
+                          >
+                            {symbols[states[row][col]]}
+                          </button>
                         </td>
                       );
                     })}

@@ -195,27 +195,80 @@ const SurveyDate = () => {
                           return (
                             <td
                               key={col}
-                              className="border border-black text-center cursor-pointer"
-                              onClick={() =>
-                                setStates((prev) => {
-                                  const newStates = prev.map((r) => [...r]);
-                                  newStates[row][col] =
-                                    (newStates[row][col] + 1) % warnings.length;
-                                  return newStates;
-                                })
-                              }
+                              className="relative border border-black text-center p-0"
                             >
-                              {warnings[states[row][col]]}
+                              <button
+                                type="button"
+                                tabIndex={0}
+                                onClick={() =>
+                                  setStates((prev) => {
+                                    const newStates = prev.map((r) => [...r]);
+                                    newStates[row][col] =
+                                      (newStates[row][col] + 1) %
+                                      warnings.length;
+                                    return newStates;
+                                  })
+                                }
+                                onKeyDown={(e) => {
+                                  if (e.key === "Enter" || e.key === " ") {
+                                    e.preventDefault();
+                                    setStates((prev) => {
+                                      const newStates = prev.map((r) => [...r]);
+                                      newStates[row][col] =
+                                        (newStates[row][col] + 1) %
+                                        warnings.length;
+                                      return newStates;
+                                    });
+                                  }
+                                }}
+                                className={`
+          absolute inset-0 w-full h-full flex items-center justify-center
+          focus:outline-none focus:ring-2 focus:ring-black
+          hover:bg-blue-100 text-[9px]
+          ${
+            warnings[states[row][col]] === "×"
+              ? "bg-red-500 text-white"
+              : warnings[states[row][col]] === "✔"
+              ? "bg-green-600 text-white"
+              : ""
+          }
+        `}
+                              >
+                                {warnings[states[row][col]]}
+                              </button>
                             </td>
                           );
                         }
+
                         return (
                           <td
                             key={col}
-                            className="border border-black text-center cursor-pointer"
-                            onClick={() => handleClick(row, col)}
+                            className="relative border border-black text-center p-0"
                           >
-                            {symbols[states[row][col]]}
+                            <button
+                              type="button"
+                              tabIndex={0}
+                              onClick={() => handleClick(row, col)}
+                              onKeyDown={(e) => {
+                                if (e.key === "Enter" || e.key === " ") {
+                                  e.preventDefault();
+                                  handleClick(row, col);
+                                }
+                              }}
+                              className={`
+        absolute inset-0 w-full h-full flex items-center justify-center
+        focus:outline-none focus:ring-2 focus:ring-black hover:bg-blue-100
+        ${
+          symbols[states[row][col]] === "×"
+            ? "bg-red-500 text-white"
+            : symbols[states[row][col]] === "✔"
+            ? "bg-green-600 text-white"
+            : ""
+        }
+      `}
+                            >
+                              {symbols[states[row][col]]}
+                            </button>
                           </td>
                         );
                       })}

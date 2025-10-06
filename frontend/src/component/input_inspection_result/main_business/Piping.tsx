@@ -157,7 +157,13 @@ const Piping = () => {
                             className={`border border-black text-center p-0 ${inputColor}`}
                           >
                             <select
-                              className={`w-full h-full outline-none cursor-pointer text-center ${inputColor}`}
+                              className={`
+      w-full h-full text-center cursor-pointer
+      ${inputColor}
+      outline-none
+      focus-visible:ring-2 focus-visible:ring-black
+      focus-visible:ring-offset-0
+    `}
                               value={values[row]}
                               onChange={(e) => handleSelectChange(e, row)}
                               onKeyDown={(e) =>
@@ -182,10 +188,36 @@ const Piping = () => {
                       return (
                         <td
                           key={col}
-                          className={`border border-black text-center cursor-pointer ${inputColor}`}
-                          onClick={() => handleClick(row, col)}
+                          className="relative border border-black text-center p-0"
                         >
-                          {symbols[states[row][col]]}
+                          <button
+                            type="button"
+                            tabIndex={0}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleClick(row, col);
+                            }}
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter" || e.key === " ") {
+                                e.preventDefault();
+                                handleClick(row, col);
+                              }
+                            }}
+                            className={`
+                              absolute inset-0 w-full h-full flex items-center justify-center
+                              focus:outline-none focus:ring-2 focus:ring-black
+                              hover:bg-blue-100
+                              ${
+                                symbols[states[row][col]] === "×"
+                                  ? "bg-red-500 text-white"
+                                  : symbols[states[row][col]] === "✔"
+                                  ? "bg-green-600 text-white"
+                                  : ""
+                              }
+                            `}
+                          >
+                            {symbols[states[row][col]]}
+                          </button>
                         </td>
                       );
                     })}
