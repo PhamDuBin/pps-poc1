@@ -8,7 +8,6 @@ import React, {
 import { Input, Button, Radio } from "antd";
 import {
   labelColor,
-  inputColor,
   hoverInputColor,
   focusInputColor,
 } from "../../../constants/colors";
@@ -18,144 +17,19 @@ import KanaFullWidthInput from "../../KanaFullWidthInput";
 import { convertToFullWidth } from "../../../utils/InputHandlers";
 import HalfWidthKanaInput from "../../HalfWidthKanaInput";
 import HalfWidthNumberInput from "../../HalfWidthNumberInput";
-const labels = [
-  "氏名",
-  "顧客種別",
-  "カナ",
-  "取引種類",
-  "代表者名",
-  "郵便番号",
-  "住所",
-  "番地",
-  "住所名称",
-  "電話番号1",
-  "時間帯1",
-  "電話番号2",
-  "時間帯2",
-  "電話番号3",
-  "FAX",
-  "地図番号",
-  "メールアドレス",
-  "管理部門",
-  "検索キー1",
-  "検索キー2",
-  "配送センターコード",
-  "保安機関コード",
-  "集中監視コード",
-  "案内",
-  "備考1",
-  "備考2",
-  "備考3",
-];
-
-const labelGroups = [
-  "代表者名",
-  "郵便番号",
-  "住所名称",
-  "管理部門",
-  "配送センターコード",
-  "保安機関コード",
-  "集中監視コード",
-  "案内",
-  "備考1",
-  "備考2",
-  "備考3",
-  "番地",
-  "住所",
-];
-
-const timeSlotOptions = [
-  { code: "0", label: "0:空白" },
-  { code: "1", label: "1:随時" },
-  { code: "2", label: "2:昼間" },
-  { code: "3", label: "3:夜間" },
-];
-
-const departmentOptions = [
-  { code: "0", label: "0:空白" },
-  { code: "1", label: "1:部門1" },
-  { code: "2", label: "2:部門2" },
-  { code: "3", label: "3:部門3" },
-];
-
-const deliveryCenterOptions = [
-  { code: "0", label: "空白" },
-  { code: "1", label: "拠点名0001" },
-  { code: "2", label: "拠点名0002" },
-  { code: "3", label: "拠点名0003" },
-  { code: "4", label: "拠点名0004" },
-];
-
-const securityAgencyOptions = [
-  { code: "0", label: "空白" },
-  { code: "1", label: "保安機関0001" },
-  { code: "2", label: "保安機関0002" },
-  { code: "3", label: "保安機関0003" },
-  { code: "4", label: "保安機関0005" },
-];
-
-const monitoringOptions = [
-  { code: "0", label: "空白" },
-  { code: "1", label: "集中監視0001" },
-  { code: "2", label: "集中監視002" },
-  { code: "3", label: "集中監視003" },
-];
-
-const defaultInputValues: { [key: string]: string } = {
-  氏名: "テストさん太郎",
-  カナ: "ﾃｽﾄｻﾝﾀﾛｳ",
-  代表者名: "代表者テスト",
-  番地: "1-2-3",
-  住所名称: "◯◯ハイツ文京区",
-  部屋番号: "203",
-  電話番号1: "050-1234-9999",
-  電話番号2: "090-1234-5555",
-  メールアドレス: "sample_user@gmail.com",
-  検索キー1: "A0001BBB",
-  検索キー2: "Testkey001",
-  案内: "電話番号2を通常で使う",
-  備考1: "電話番号2を通常で使う",
-  備考2: "電話番号2を通常で使う",
-  備考3: "電話番号2を通常で使う",
-};
-
-const initialEmptyValues = {
-  time1: "0",
-  time2: "0",
-  departmentCode: "0",
-  deliveryCenterCode: "0",
-  securityAgencyCode: "0",
-  monitoringCode: "0",
-  postalCode1: "",
-  postalCode2: "",
-  address: "",
-  氏名: "",
-  カナ: "",
-  代表者名: "",
-  番地: "",
-  住所名称: "",
-  電話番号1: "",
-  電話番号2: "",
-  電話番号3: "",
-  FAX: "",
-  地図番号: "",
-  メールアドレス: "",
-  検索キー1: "",
-  検索キー2: "",
-  案内: "",
-  備考1: "",
-  備考2: "",
-  備考3: "",
-  representativeName:"",
-  customerType: "法人以外",
-  transactionType: "ガス顧客",
-  deliveryCenterName: "9352716",
-  securityAgencyName: "TA90",
-  monitoringName: "00503",
-};
-
-const customerTypeOption = ["法人以外", "法人"];
-const transactionTypeOption = ["ガス顧客", "ガス外顧客"];
+import {
+  labels,
+  labelGroups,
+  timeSlotOptions,
+  departmentOptions,
+  deliveryCenterOptions,
+  securityAgencyOptions,
+  monitoringOptions,
+  defaultInputValues,
+  initialEmptyValues,
+  customerTypeOption,
+  transactionTypeOption,
+} from "../../../constants/customer_ledger";
 
 const inputBaseClass = `${hoverInputColor} ${focusInputColor} focus:!bg-[#ebcec0] border border-black h-6`;
 
@@ -230,18 +104,18 @@ const BasicInformation = forwardRef<any, { showData: boolean }>(
             />
           );
 
-          case "代表者名":
+        case "代表者名":
           return (
             <div className="w-1/2">
-
               <KanaFullWidthInput
-              className={`${inputBaseClass} w-[59%]`}
-              value={formValues.representativeName}
-              onChange={(newValue) => handleValueChange("representativeName", newValue)}
-              disabled={isFormDisabled}
-            />
+                className={`${inputBaseClass} w-[59%]`}
+                value={formValues.representativeName}
+                onChange={(newValue) =>
+                  handleValueChange("representativeName", newValue)
+                }
+                disabled={isFormDisabled}
+              />
             </div>
-            
           );
 
         case "取引種類":
@@ -328,11 +202,11 @@ const BasicInformation = forwardRef<any, { showData: boolean }>(
                   disabled={isFormDisabled}
                 />
                 {showData && (
-                  <div className="flex justify-center w-[120px]">センター01番</div>
+                  <div className="flex justify-center w-[120px]">
+                    センター01番
+                  </div>
                 )}
               </div>
-
-              
 
               <HalfWidthKanaInput
                 className={`${inputBaseClass} w-2/5`}
@@ -356,11 +230,11 @@ const BasicInformation = forwardRef<any, { showData: boolean }>(
                   disabled={isFormDisabled}
                 />
                 {showData && (
-                  <div className="flex justify-center w-[120px]">保安機関01番</div>
+                  <div className="flex justify-center w-[120px]">
+                    保安機関01番
+                  </div>
                 )}
               </div>
-
-              
 
               <HalfWidthKanaInput
                 className={`${inputBaseClass} w-2/5`}
@@ -384,11 +258,11 @@ const BasicInformation = forwardRef<any, { showData: boolean }>(
                   disabled={isFormDisabled}
                 />
                 {showData && (
-                  <div className="flex justify-center w-[120px]">集中監視01番</div>
+                  <div className="flex justify-center w-[120px]">
+                    集中監視01番
+                  </div>
                 )}
               </data>
-
-              
 
               <HalfWidthKanaInput
                 className={`${inputBaseClass} w-2/5`}
@@ -407,7 +281,6 @@ const BasicInformation = forwardRef<any, { showData: boolean }>(
                 disabled={isFormDisabled}
               />
             </div>
-            
           );
 
         case "検索キー1":
@@ -477,7 +350,6 @@ const BasicInformation = forwardRef<any, { showData: boolean }>(
                 disabled={isFormDisabled}
               />
             </div>
-            
           );
         case "メールアドレス":
           return (

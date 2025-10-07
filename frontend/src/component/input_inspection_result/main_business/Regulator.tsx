@@ -1,37 +1,17 @@
 import { useState } from "react";
 import ModalF1 from "../../modal/Modal_F1";
 import { labelColor, inputColor } from "../../../constants/colors";
-
+import {
+  symbols,
+  rowsRegulator,
+} from "../../../constants/input_inspection_result";
 const Regulator = () => {
   const [modalF1Open, setModalF1Open] = useState(false);
-
-  const symbols = ["", "◯", "×", "✔"];
   const totalRows = 2;
 
   const [states, setStates] = useState<number[][]>(
     Array.from({ length: totalRows }, () => Array(3).fill(0))
   );
-
-  const rows = [
-    {
-      no: "1",
-      type: "種別01",
-      maker: "xxx003",
-      model: "00001",
-      capacity: "00001",
-      manufacture: "2012/01",
-      valid: "2012/01",
-    },
-    {
-      no: "2",
-      type: "種別02",
-      maker: "xxx003",
-      model: "00001",
-      capacity: "00001",
-      manufacture: "2012/01",
-      valid: "2012/01",
-    },
-  ];
 
   const handleClick = (row: number, col: number) => {
     setStates((prev) => {
@@ -71,7 +51,7 @@ const Regulator = () => {
             </thead>
 
             <tbody>
-              {rows.map((row, idx) => {
+              {rowsRegulator.map((row, idx) => {
                 const rowHasCheck = states[idx].some((s) => s === 3);
 
                 return (

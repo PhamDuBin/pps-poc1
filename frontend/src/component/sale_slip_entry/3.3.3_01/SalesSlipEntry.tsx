@@ -10,17 +10,10 @@ import {
 import DepositProcess from "./DepositProcess";
 import CategorySelectionModal from "./CategorySelectionModal";
 import SalesSlipEntryRegistration from "./SalesSlipEntryRegistration";
-import { DownArrowIcon } from "../../transaction_information/LeftPanel";
 import ProductSearchModal from "./ProductSearchModal";
 import SaleDetailModal from "./SaleDetail/SaleDetailModal";
 import { createPortal } from "react-dom";
-import { MonthYearPicker } from "../../../context/MonthYearPicker";
-import { format } from "date-fns";
-import {
-  extractHalfWidthDigits,
-  handleFormatting,
-  allowDecimalInput,
-} from "../../../utils/InputHandlers";
+import { allowDecimalInput } from "../../../utils/InputHandlers";
 import { DatePicker } from "antd";
 import dayjs, { Dayjs } from "dayjs";
 
@@ -322,7 +315,7 @@ const SalesSlipEntry = forwardRef(
                   className="absolute right-0 top-1/2 -translate-y-1/2 h-full flex items-center px-2 text-gray-500 cursor-pointer"
                   onClick={onOpenLeftPanelForSearch}
                 >
-                  <DownArrowIcon />
+                  ▼
                 </button>
               </div>
             </div>

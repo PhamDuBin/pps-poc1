@@ -1,11 +1,9 @@
 import ModalF1 from "../../modal/Modal_F1";
 import { useState } from "react";
 import { labelColor, inputColor } from "../../../constants/colors";
-
+import { symbols } from "../../../constants/input_inspection_result";
 const TerminalGasValve = () => {
   const [modalF1Open, setModalF1Open] = useState(false);
-
-  const symbols = ["", "◯", "×", "✔"];
 
   const totalRows = 20;
 

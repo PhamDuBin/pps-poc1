@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { labelColor, inputColor } from "../../../constants/colors";
-
+import { labelColor } from "../../../constants/colors";
+import { headers } from "../../../constants/input_inspection_result";
 const Equipment = () => {
   const [rowStates, setRowStates] = useState([false, false, false]);
 
@@ -9,8 +9,6 @@ const Equipment = () => {
       prev.map((state, i) => (i === rowIndex ? !state : state))
     );
   };
-
-  const headers = ["開放式湯弗器", "給温器", "風呂釜"];
 
   return (
     <>

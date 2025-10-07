@@ -1,29 +1,10 @@
-import {
-  forwardRef,
-  use,
-  useEffect,
-  useImperativeHandle,
-  useRef,
-  useState,
-} from "react";
+import { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import { labelColor, inputColor } from "../../../constants/colors";
-import { Input, Select } from "antd";
+import { Input } from "antd";
 import { convertToFullWidth } from "../../../utils/InputHandlers";
 import { blockTab } from "../../../utils/InputHandlers";
 import CodeInputSelect from "../../CodeInputSelect";
-
-const labelOptions = [
-  { code: "0", label: "0:ご請求" },
-  { code: "1", label: "1:ご案内1" },
-  { code: "2", label: "2:ご案内2" },
-  { code: "3", label: "3:ご案内3" },
-  { code: "4", label: "4:ご案内4（仮）" },
-];
-const createOptions1 = (labels: string[]) =>
-  labels.map((label, index) => ({
-    label,
-    value: String(index + 1),
-  }));
+import { labelOptions } from "../../../constants/configuration_information";
 
 const labelClass = `${labelColor} border border-black px-2 flex items-center justify-center h-[32px] w-[180px]`;
 
@@ -61,24 +42,6 @@ const TitleFormSetting = forwardRef<any>((props, ref) => {
       ...prev,
       [fieldName]: value,
     }));
-  };
-
-  const createOptions = (optionsArray: string[]) =>
-    optionsArray.map((opt, idx) => ({ value: String(idx), label: opt }));
-
-  const [value, setValue] = useState("");
-  const handleInputChange1 = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const num = e.target.value;
-    if (
-      num === "" ||
-      (Number(num) >= 1 && Number(num) <= labelOptions.length)
-    ) {
-      setValue(num);
-    }
-  };
-
-  const handleSelectChange = (val: string) => {
-    setValue(val);
   };
 
   const handleValueChange = (fieldName: string, value: string | null) => {

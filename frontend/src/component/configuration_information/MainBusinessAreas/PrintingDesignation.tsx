@@ -6,58 +6,19 @@ import {
   handleFormatting,
 } from "../../../utils/InputHandlers";
 import { blockTab } from "../../../utils/InputHandlers";
-
-const printingButtons: { [key: string]: string[] } = {
-  group1: ["事業者", "事業所", "部門"],
-  group2: ["取引区分", "営業地区", "集金地区", "検針地区", "点検地区"],
-  group3: [
-    "営業担当",
-    "集金担当",
-    "点検担当",
-    "検針担当",
-    "配送担当",
-    "保安担当",
-  ],
-  group4: ["集金方法", "請求書発行区分"],
-};
-
-const printingOrderOptions = [
-  "顧客コード",
-  "五十音順",
-  "検針順",
-  "営業順",
-  "集金順",
-  "配送順",
-  "点検順",
-  "検索１順",
-  "検索２順",
-];
-const detailOptions = ["全明細", "集金明細", "自振明細"];
-const taxTypeOptions = ["外税", "内税"];
-const taxCollectOptions = ["する", "しない"];
-const printItemOptions = [
-  "事業所名",
-  "ガス料金名称",
-  "電話番号",
-  "領収額",
-  "振込先",
-  "お買い上げ先",
-];
-const memoOptions = ["伝票メモ", "ポイント"];
-const memoRadioOptions = [
-  "割引（割引対象外顧客の場合は伝票メモを印字）",
-  "割引（割引対象外顧客の場合はポイントを印字）",
-];
-const parentChildOptions = [
-  "請求親子取りまとめて発行する。",
-  "個別に発行する。",
-];
-const addressOptions = ["宛先登録内容を印字しない", "宛先登録内容を印字する"];
-const detailOrderOptions = [
-  "日付順",
-  "大分類・商品コード・日付順",
-  "大分類・日付順",
-];
+import {
+  printingButtons,
+  printingOrderOptions,
+  detailOptions,
+  taxTypeOptions,
+  taxCollectOptions,
+  printItemOptions,
+  memoOptions,
+  memoRadioOptions,
+  parentChildOptions,
+  addressOptions,
+  detailOrderOptions,
+} from "../../../constants/configuration_information";
 
 const PrintingDesignation = forwardRef<any>((props, ref) => {
   const [selectedOrder, setSelectedOrder] = useState("0");

@@ -2,23 +2,14 @@ import { useState } from "react";
 import ModalF1 from "../../modal/Modal_F1";
 import { labelColor, inputColor } from "../../../constants/colors";
 import { handleNumericSelectKeyDown } from "../../../utils/InputHandlers";
-
+import {
+  symbols,
+  optionsSupplyPipe,
+  rowsSupplyPipe,
+} from "../../../constants/input_inspection_result";
 const SupplyPipe = () => {
   const [modalF1Open, setModalF1Open] = useState(false);
-
-  const symbols = ["", "◯", "×", "✔"];
   const totalRows = 4;
-
-  const options = [
-    "0: 未選択",
-    "1: 掘出調査",
-    "2: 気密試験",
-    "3: 漏洩試験",
-    "4: 目視",
-    "5: ボーリング調査",
-    "6: 検知装置",
-    "9: その他",
-  ];
 
   const [states, setStates] = useState<number[][]>(
     Array.from({ length: totalRows }, () => Array(7).fill(0))
@@ -27,13 +18,6 @@ const SupplyPipe = () => {
   const [selectValues, setSelectValues] = useState<number[]>(
     Array(totalRows).fill(0)
   );
-
-  const rows = [
-    { group: "高圧側", no: 1 },
-    { group: "高圧側", no: 2 },
-    { group: "低圧側", no: 1 },
-    { group: "低圧側", no: 2 },
-  ];
 
   const [statelabel, setStatelabel] = useState<number>(0);
   const [statelabel2, setStatelabel2] = useState<number>(0);
@@ -118,10 +102,10 @@ const SupplyPipe = () => {
             </thead>
 
             <tbody>
-              {rows.map((row, idx) => {
+              {rowsSupplyPipe.map((row, idx) => {
                 const rowHasCheck = states[idx].some((s) => s === 3);
                 const showGroup =
-                  idx === 0 || row.group !== rows[idx - 1].group;
+                  idx === 0 || row.group !== rowsSupplyPipe[idx - 1].group;
 
                 return (
                   <tr key={idx} className="h-6">
@@ -175,7 +159,7 @@ const SupplyPipe = () => {
                                   setSelectValues((prev) => {
                                     const newVals = [...prev];
                                     const numVal = parseInt(val, 10);
-                                    if (numVal < options.length) {
+                                    if (numVal < optionsSupplyPipe.length) {
                                       newVals[idx] = numVal;
                                     }
                                     return newVals;
@@ -184,7 +168,7 @@ const SupplyPipe = () => {
                               }
                               className={`w-full h-full font-medium text-center ${inputColor}`}
                             >
-                              {options.map((opt, i) => (
+                              {optionsSupplyPipe.map((opt, i) => (
                                 <option key={i} value={i}>
                                   {opt}
                                 </option>

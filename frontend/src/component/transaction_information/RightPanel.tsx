@@ -1,5 +1,5 @@
 import React, { forwardRef } from "react";
-
+import { handleOpenWindow } from "../../constants/functions";
 interface RightPanelProps {
   onButtonClick: (buttonName: string) => void;
   activeButton: string | null;
@@ -9,17 +9,6 @@ interface RightPanelProps {
 
 const RightPanel = forwardRef<HTMLDivElement, RightPanelProps>(
   ({ onButtonClick, activeButton, buttons, onFirstButtonFocus }, ref) => {
-    const handleOpenWindow = () => {
-      const win = window.open(
-        "/link-destination",
-        "_blank",
-        "width=800,height=600,noopener,noreferrer"
-      );
-      if (win) {
-        win.focus();
-      }
-    };
-
     return (
       <div ref={ref} className="w-2/12 border bg-[#d8dadc] border-black h-full">
         <div className="mx-3 font-bold text-base text-black flex flex-col gap-2 overflow-auto h-full">

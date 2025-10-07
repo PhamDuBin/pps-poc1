@@ -4,27 +4,9 @@ import AdvanceSearchModal from "./1.1.1_03/AdvanceSearchModal";
 import TooltipPortal from "./1.1.1_03/TooltipPortal";
 import {
   extractHalfWidthDigits,
-  convertToFullWidth,
-  handleFormatting,
   allowDecimalInput,
 } from "../../utils/InputHandlers";
-
-export const DownArrowIcon = () => (
-  <svg
-    className="w-3 h-3 text-black"
-    fill="none"
-    stroke="currentColor"
-    viewBox="0 0 24 24"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth="3"
-      d="M19 9l-7 7-7-7"
-    ></path>
-  </svg>
-);
+import { handleOpenWindow } from "../../constants/functions";
 
 type LeftPanelProps = {
   showAdvanceSearch: boolean;
@@ -208,18 +190,6 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [showAdvanceSearch]);
 
-  const handleOpenWindow = () => {
-    const win = window.open(
-      "/link-destination",
-      "_blank",
-      "width=800,height=600,noopener,noreferrer"
-    );
-
-    if (win) {
-      win.focus();
-    }
-  };
-
   return (
     <div className="w-72 overflow-y-auto  h-screen p-3 bg-[#d8dadc] border-2 border-gray-400 font-sans">
       <div className="mb-4">
@@ -263,7 +233,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
                 }}
                 className="mx-1 w-[20px] h-[20px] inset-y-0 right-0 flex items-center px-1 bg-gray-200 border border-black cursor-pointer"
               >
-                <DownArrowIcon />
+                ▼
               </button>
             </>
           ) : (
@@ -326,7 +296,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
                 }}
                 className="mx-1 w-[20px] h-[20px] inset-y-0 right-0 flex items-center px-1 bg-gray-200 border border-black cursor-pointer"
               >
-                <DownArrowIcon />
+                ▼
               </button>
             </>
           ) : (

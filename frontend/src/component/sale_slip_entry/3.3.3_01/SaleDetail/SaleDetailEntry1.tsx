@@ -5,23 +5,12 @@ import {
   allowDecimalInput,
   convertToFullWidth,
 } from "../../../../utils/InputHandlers";
+import { handleOpenWindow } from "../../../../constants/functions";
 
 interface SaleDetailEntry1Props {
   onChange: (field: string, value: string) => void;
   formData: any;
 }
-
-const handleOpenWindow = () => {
-  const win = window.open(
-    "/link-destination",
-    "_blank",
-    "width=800,height=600,noopener,noreferrer"
-  );
-
-  if (win) {
-    win.focus();
-  }
-};
 
 const SaleDetailEntry1: React.FC<SaleDetailEntry1Props> = ({
   onChange,

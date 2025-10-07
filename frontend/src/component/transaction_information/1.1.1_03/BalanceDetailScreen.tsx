@@ -1,67 +1,26 @@
 // ■04残高内訳_明細
 import React, { useState } from "react";
 import { useScreenNavigation } from "../../../utils/useScreenNavigation";
+import {
+  detailsHeaders,
+  categoryHeaders,
+  categoryItemNames,
+} from "../../../constants/transaction_information";
+import { handleOpenWindow } from "../../../constants/functions";
 
 const BalanceDetailScreen = ({ onSwitchScreen }: any) => {
   const [view, setView] = useState("category");
   const containerRef = useScreenNavigation<HTMLDivElement>(onSwitchScreen);
-  const handleOpenWindow = () => {
-    const win = window.open(
-      "/link-destination",
-      "_blank",
-      "width=800,height=600,noopener,noreferrer"
-    );
-
-    if (win) {
-      win.focus();
-    }
-  };
 
   const buttonStyle =
     "px-4 py-1.5 rounded-sm font-semibold w-[150px] bg-[#4770a5] cursor-pointer hover:bg-white shadow-md shadow-zinc-600 transition-all duration-200 active:shadow-none active:translate-y-px";
 
-  const detailsHeaders = [
-    "日付",
-    "伝票番号",
-    "項目名",
-    "売上金額（税込）",
-    "入金金額",
-    "残高",
-    "自振対象",
-  ];
   const detailsRowCount = 15;
   const detailsCellStyle =
     " bg-[#ebcec0] border-b border-r border-black p-2 h-9";
   const detailsHeaderCellStyle =
     "bg-[#80bad7] border-b text-center p-2 font-semibold text-sm border-r border-black";
 
-  const categoryHeaders = [
-    "項目名",
-    "前月残高",
-    "当月売上額",
-    "当月入金額",
-    "調整額・返品",
-    "大分類別残高",
-  ];
-  const categoryItemNames = [
-    "LPG",
-    "ガス器具",
-    "その他器具・工事",
-    "リース",
-    "大分類5",
-    "大分類6",
-    "大分類7",
-    "大分類8",
-    "大分類9",
-    "電力",
-    "その他",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "割賦金",
-  ];
   const categoryLabelStyle =
     "bg-[#80bad7] border border-black  px-4 py-2 text-center font-semibold text-sm w-full";
   const categoryOperatorStyle =

@@ -2,24 +2,14 @@ import { useState } from "react";
 import ModalF1 from "../../modal/Modal_F1";
 import { labelColor, inputColor } from "../../../constants/colors";
 import { handleNumericSelectKeyDown } from "../../../utils/InputHandlers";
+import {
+  symbols,
+  inspectionMethods,
+} from "../../../constants/input_inspection_result";
 const Piping = () => {
   const [modalF1Open, setModalF1Open] = useState(false);
-
-  const symbols = ["", "◯", "×", "✔"];
   const labels = ["空白", "有", "無"];
   const [state, setState] = useState(0);
-
-  const inspectionMethods = [
-    { value: 0, label: "0:未選択" },
-    { value: 1, label: "1:掘出調査" },
-    { value: 2, label: "2:気密試験" },
-    { value: 3, label: "3:漏洩試験" },
-    { value: 4, label: "4:目視" },
-    { value: 5, label: "5:ボーリング調査" },
-    { value: 6, label: "6:検知装置" },
-    { value: 9, label: "7:その他" },
-  ];
-
   const totalRows = 20;
 
   const [states, setStates] = useState(

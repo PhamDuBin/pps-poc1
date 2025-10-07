@@ -9,142 +9,13 @@ import {
   handleFormatting,
   allowDecimalInput,
 } from "../../utils/InputHandlers";
-const DownArrowIcon = () => (
-  <svg
-    className="w-3 h-3 text-black"
-    fill="none"
-    stroke="currentColor"
-    viewBox="0 0 24 24"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth="3"
-      d="M19 9l-7 7-7-7"
-    ></path>
-  </svg>
-);
-
-export const kanaButtons = [
-  "ア",
-  "カ",
-  "サ",
-  "タ",
-  "ナ",
-  "ハ",
-  "マ",
-  "ヤ",
-  "ラ",
-  "ワ",
-  { label: "その他", wide: true },
-  { label: "全て", wide: true },
-];
-
-export const tableHeaders = ["コード", "氏名", "カナ氏名", "所属事務所名"];
-
-export const rowData = [
-  "00000001",
-  "担当者太郎",
-  "タントウシャタロウ",
-  "東京事務所03",
-];
-
-const tableData = [
-  {
-    code: "00000001",
-    name: "担当者 太郎",
-    kana: "タントウシャ タロウ",
-    office: "東京事務所03",
-  },
-  {
-    code: "00000002",
-    name: "顧客 次郎",
-    kana: "コキャク ジロウ",
-    office: "大阪事務所01",
-  },
-  {
-    code: "00000003",
-    name: "商品 三郎",
-    kana: "ショウヒン サブロウ",
-    office: "名古屋事務所02",
-  },
-  {
-    code: "00000004",
-    name: "山田 花子",
-    kana: "ヤマダ ハナコ",
-    office: "福岡事務所04",
-  },
-  {
-    code: "00000005",
-    name: "佐藤 一郎",
-    kana: "サトウ イチロウ",
-    office: "札幌事務所05",
-  },
-  {
-    code: "00000006",
-    name: "鈴木 健太",
-    kana: "スズキ ケンタ",
-    office: "東京事務所03",
-  },
-  {
-    code: "00000007",
-    name: "高橋 直子",
-    kana: "タカハシ ナオコ",
-    office: "広島事務所06",
-  },
-  {
-    code: "00000008",
-    name: "田中 雄大",
-    kana: "タナカ ユウダイ",
-    office: "仙台事務所07",
-  },
-];
-
-export const colWidths = ["15%", "25%", "25%", "35%"];
-
-export const fieldDefinitions = [
-  { id: "customerCode", label: "顧客コード", type: "double" },
-  { id: "searchKey1", label: "検索キー１", type: "input" },
-  { id: "searchKey2", label: "検索キー２", type: "input" },
-  { id: "computerCode", label: "電算コード", type: "single" },
-  { id: "eavesbarCode", label: "軒先バーコード", type: "input" },
-  {
-    id: "deleveryOrderCode",
-    label: "配送順コード",
-    type: "multi",
-    partSizes: [50, 70, 50],
-  },
-  {
-    id: "inspectionOderCode",
-    label: "点検順コード",
-    type: "multi",
-    partSizes: [50, 70, 50],
-  },
-  {
-    id: "saleOrderCode",
-    label: "営業順コード",
-    type: "multi",
-    partSizes: [50, 70, 50],
-  },
-  {
-    id: "meterReadingOrderCode",
-    label: "検針順コード",
-    type: "multi",
-    partSizes: [50, 70, 50],
-  },
-  {
-    id: "collectionOderCode",
-    label: "集金順コード",
-    type: "multi",
-    partSizes: [50, 70, 50],
-  },
-  { id: "distributionCenterCD", label: "配送センターCD", type: "dropdown" },
-  { id: "securityAgencyCD", label: "保安機関CD", type: "dropdown" },
-  { id: "centralMonitoringCD", label: "集中監視CD", type: "dropdown" },
-  { id: "oderManagementNo", label: "受注管理No.", type: "input" },
-  { id: "deliverySlipNo", label: "出庫伝票No.", type: "input" },
-] as const;
+import {
+  kanaButtons,
+  tableHeaders,
+  tableData,
+  colWidths,
+  fieldDefinitionsLeftPanel,
+} from "../../constants/sale_slip_entry";
 
 type LeftPanelProps = {
   showAdvanceSearch: boolean;
@@ -243,14 +114,16 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
     }
   }, [showCustomer]);
 
-  type FieldId = (typeof fieldDefinitions)[number]["id"];
+  type FieldId = (typeof fieldDefinitionsLeftPanel)[number]["id"];
   type FormValues = { [key in FieldId]?: string | string[] };
 
   const [selectedFieldId, setSelectedFieldId] = useState<FieldId>(
-    fieldDefinitions[0].id
+    fieldDefinitionsLeftPanel[0].id
   );
   const [formValues, setFormValues] = useState<FormValues>({});
-  const currentField = fieldDefinitions.find((f) => f.id === selectedFieldId);
+  const currentField = fieldDefinitionsLeftPanel.find(
+    (f) => f.id === selectedFieldId
+  );
 
   const handleValueChange = (
     value: string,
@@ -327,9 +200,9 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
             ))}
             <button
               onClick={() => setShowAdvanceSearch(true)}
-              className=" w-[20px] h-[20px] mt-1 inset-y-0 right-0 flex items-center px-1 bg-white border border-gray-500 cursor-pointer"
+              className=" w-[20px] h-[20px] mt-1 flex items-center justify-center px-1 bg-white border border-gray-500 cursor-pointer"
             >
-              <DownArrowIcon />
+              ▼
             </button>
           </div>
         );
@@ -366,9 +239,9 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
             />
             <button
               onClick={() => setShowAdvanceSearch(true)}
-              className=" w-[20px] h-[20px] mt-1 inset-y-0 right-0 flex items-center px-1 bg-white border border-gray-500 cursor-pointer"
+              className=" w-[20px] h-[20px] mt-1 flex items-center justify-center px-1 bg-white border border-gray-500 cursor-pointer"
             >
-              <DownArrowIcon />
+              ▼
             </button>
           </div>
         );
@@ -406,9 +279,9 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
             />
             <button
               onClick={() => setShowAdvanceSearch(true)}
-              className=" w-[20px] h-[20px] mt-1 inset-y-0 right-0 flex items-center px-1 bg-white border border-gray-500 cursor-pointer"
+              className=" w-[20px] h-[20px] mt-1 flex items-center justify-center px-1 bg-white border border-gray-500 cursor-pointer"
             >
-              <DownArrowIcon />
+              ▼
             </button>
           </div>
         );
@@ -430,9 +303,9 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
             />
             <button
               onClick={() => setShowAdvanceSearch(true)}
-              className=" w-[20px] h-[20px] mt-1 inset-y-0 right-0 flex items-center px-1 bg-white border border-gray-500 cursor-pointer"
+              className=" w-[20px] h-[20px] mt-1 flex items-center justify-center px-1 bg-white border border-gray-500 cursor-pointer"
             >
-              <DownArrowIcon />
+              ▼
             </button>
           </>
         );
@@ -514,9 +387,9 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
               />
               <button
                 onClick={() => setShowAdvanceSearch(true)}
-                className="mx-1 w-[20px] h-[20px] inset-y-0 right-0 flex items-center px-1 bg-white border border-gray-500 cursor-pointer"
+                className="mx-1 w-[20px] h-[20px] flex items-center justify-center px-1 bg-white border border-gray-500 cursor-pointer"
               >
-                <DownArrowIcon />
+                ▼
               </button>
             </>
           ) : (
@@ -552,7 +425,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
                 value={selectedFieldId}
                 onChange={(e) => setSelectedFieldId(e.target.value as FieldId)}
               >
-                {fieldDefinitions.map((field) => (
+                {fieldDefinitionsLeftPanel.map((field) => (
                   <option key={field.id} value={field.id}>
                     {field.label}
                   </option>

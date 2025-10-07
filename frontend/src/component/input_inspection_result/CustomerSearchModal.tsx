@@ -1,6 +1,6 @@
 import AdvanceSearchModal from "../transaction_information/1.1.1_03/AdvanceSearchModal";
 import { useEffect, useRef, useState, KeyboardEvent } from "react";
-import { fieldDefinitions } from "../sale_slip_entry/LeftPanel";
+import { fieldDefinitionsLeftPanel } from "../../constants/sale_slip_entry";
 import React from "react";
 import { Button } from "antd";
 
@@ -24,13 +24,15 @@ interface CustomerDetails {
 }
 
 export const CustomerSearchModal = ({ onClose }: { onClose: () => void }) => {
-  type FieldId = (typeof fieldDefinitions)[number]["id"];
+  type FieldId = (typeof fieldDefinitionsLeftPanel)[number]["id"];
   type FormValues = { [key in FieldId]?: string | string[] };
   const [showAdvanceSearch, setShowAdvanceSearch] = useState(false);
   const [selectedFieldId, setSelectedFieldId] = useState<FieldId>(
-    fieldDefinitions[0].id
+    fieldDefinitionsLeftPanel[0].id
   );
-  const currentField = fieldDefinitions.find((f) => f.id === selectedFieldId);
+  const currentField = fieldDefinitionsLeftPanel.find(
+    (f) => f.id === selectedFieldId
+  );
   const [formValues, setFormValues] = useState<FormValues>({});
   const [officeCode, setOfficeCode] = useState(["", ""]);
   const [officeName, setOfficeName] = useState("");
@@ -334,7 +336,7 @@ export const CustomerSearchModal = ({ onClose }: { onClose: () => void }) => {
                       setCustomerData(null);
                     }}
                   >
-                    {fieldDefinitions.map((field) => (
+                    {fieldDefinitionsLeftPanel.map((field) => (
                       <option key={field.id} value={field.id}>
                         {field.label}
                       </option>

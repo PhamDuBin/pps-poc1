@@ -14,39 +14,14 @@ import {
 import dayjs from "dayjs";
 import jaJP from "antd/es/locale/ja_JP";
 import "../../styles/04.05.04/style.css";
+import {
+  existCommonData,
+  existIndividualData,
+  newData,
+  columns,
+} from "../../constants/configuration_information";
 
 const { Option } = Select;
-
-// Sample table data
-const existCommonData = [
-  { key: 1, type: "伝票", form: "請求書（15日）" },
-  { key: 2, type: "伝票", form: "請求書（月末）" },
-  { key: 3, type: "伝票", form: "請求書（15日）" },
-  { key: 4, type: "伝票", form: "請求書特別" },
-  { key: 5, type: "伝票", form: "請求書（15日）〇〇あて" },
-  { key: 6, type: "伝票", form: "請求書（15日）" },
-  { key: 7, type: "伝票", form: "請求書（月末）" },
-  { key: 8, type: "伝票", form: "請求書（15日）" },
-  { key: 9, type: "伝票", form: "請求書特別" },
-  { key: 10, type: "伝票", form: "請求書（15日）〇〇あて" },
-];
-
-const existIndividualData = [
-  {
-    key: 1,
-    type: "伝票",
-    form: "テスト作成",
-  },
-];
-
-const newData = [{ key: 1, type: "伝票", form: "空白(null)" }];
-
-// Table columns
-const columns = [
-  { title: "帳票種類", dataIndex: "type", key: "type" },
-  { title: "ファイル名称", dataIndex: "form", key: "form" },
-];
-
 const PaperSelectionModal = ({
   open,
   onClose,

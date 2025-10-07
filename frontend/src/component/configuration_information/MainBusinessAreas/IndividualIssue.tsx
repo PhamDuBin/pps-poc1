@@ -8,6 +8,7 @@ import { forwardRef } from "react";
 import { labelColor, inputColor } from "../../../constants/colors";
 import { allowDecimalInput } from "../../../utils/InputHandlers";
 import { blockTab } from "../../../utils/InputHandlers";
+import { options } from "../../../constants/configuration_information";
 
 const { MonthPicker } = DatePicker;
 const { Option } = Select;
@@ -56,18 +57,6 @@ const IndividualIssue = forwardRef<any>((props, ref) => {
       btnRef.current?.focus();
     }
   };
-
-  const options = [
-    { value: "0", label: "顧客コード" },
-    { value: "1", label: "五十音順" },
-    { value: "2", label: "検針順" },
-    { value: "3", label: "営業順" },
-    { value: "4", label: "集金順" },
-    { value: "5", label: "配送順" },
-    { value: "6", label: "点検順" },
-    { value: "7", label: "検索１順" },
-    { value: "8", label: "検索２順" },
-  ];
 
   return (
     <div

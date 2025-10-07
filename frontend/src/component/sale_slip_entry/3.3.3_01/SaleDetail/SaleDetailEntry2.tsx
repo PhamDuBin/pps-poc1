@@ -5,18 +5,7 @@ import {
   allowDecimalInput,
   convertToFullWidth,
 } from "../../../../utils/InputHandlers";
-
-const handleOpenWindow = () => {
-  const win = window.open(
-    "/link-destination",
-    "_blank",
-    "width=800,height=600,noopener,noreferrer"
-  );
-
-  if (win) {
-    win.focus();
-  }
-};
+import { handleOpenWindow } from "../../../../constants/functions";
 
 interface SaleDetailEntry2Props {
   onChange: (field: string, value: string) => void;

@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { fieldDefinitions } from "../../../constants/transaction_information";
 
 type TableRowData = {
   kanaName: string;
@@ -6,78 +7,6 @@ type TableRowData = {
   address: string;
   building: string;
 };
-
-const fieldDefinitions = [
-  { id: "allTel", label: "カナ氏名（あいまい）", type: "single" },
-  {
-    id: "customerCode",
-    label: "顧客コード",
-    type: "multi",
-    partSizes: [45, 35, 65, 35],
-  },
-  { id: "searchCode1", label: "検索コード１", type: "single" },
-  { id: "kanaName", label: "カナ氏名", type: "single" },
-  { id: "securityCode", label: "保安機関コード", type: "dropdown" },
-  { id: "searchCode2", label: "検索コード２", type: "single" },
-  { id: "tel1", label: "電話番号１", type: "single" },
-  {
-    id: "meterRouteCode",
-    label: "検針順コード",
-    type: "multi",
-    partSizes: [50, 40, 40],
-  },
-  {
-    id: "keroseneCode",
-    label: "灯油配達順コード",
-    type: "multi",
-    partSizes: [50, 40, 40],
-  },
-  { id: "tel2", label: "電話番号２", type: "single" },
-  {
-    id: "deliveryRouteCode",
-    label: "配送順コード",
-    type: "multi",
-    partSizes: [50, 40, 40],
-  },
-  {
-    id: "salesRepCode",
-    label: "営業順コード",
-    type: "multi",
-    partSizes: [50, 40, 40],
-  },
-  { id: "tel3", label: "電話番号３", type: "single" },
-  {
-    id: "gMeterCode",
-    label: "点検順コード",
-    type: "multi",
-    partSizes: [50, 40, 40],
-  },
-  {
-    id: "chimneyCode",
-    label: "集金順コード",
-    type: "multi",
-    partSizes: [50, 40, 40],
-  },
-  {
-    id: "addressName",
-    label: "住所＋カナ",
-    type: "double",
-    placeholders: ["住所", "カナ氏名"],
-  },
-  {
-    id: "managementCenterCode",
-    label: "集中管理センターコード",
-    type: "dropdown",
-  },
-  { id: "deliveryCenterCode", label: "配送センターコード", type: "dropdown" },
-  {
-    id: "addressName",
-    label: "住所名称＋カナ",
-    type: "double",
-    placeholders: ["住所名称", "カナ氏名"],
-  },
-  { id: "gasMeterSerial", label: "ガスメータ製造番号", type: "single" },
-] as const;
 
 type FieldId = (typeof fieldDefinitions)[number]["id"];
 type FormValues = { [key in FieldId]?: string | string[] };

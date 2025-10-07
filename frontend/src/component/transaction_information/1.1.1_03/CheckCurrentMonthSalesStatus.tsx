@@ -1,7 +1,6 @@
 // ■02当月売上状況
-import React, { useEffect, useRef } from "react";
 import { useScreenNavigation } from "../../../utils/useScreenNavigation";
-
+import { handleOpenWindow } from "../../../constants/functions";
 const billingLabels = [
   "前月繰越金",
   "当月売上（税込）",
@@ -33,18 +32,6 @@ const borderContainerClass = "border border-black p-1";
 const borderContainerBillingClass = "border border-black mb-1 p-1 h-[265px]";
 
 function CheckCurrentMonthSalesStatusScreen({ onSwitchScreen }: any) {
-  const handleOpenWindow = () => {
-    const win = window.open(
-      "/link-destination",
-      "_blank",
-      "width=800,height=600,noopener,noreferrer"
-    );
-
-    if (win) {
-      win.focus();
-    }
-  };
-
   const containerRef = useScreenNavigation<HTMLDivElement>(onSwitchScreen);
   return (
     <>

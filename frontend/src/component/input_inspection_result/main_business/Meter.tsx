@@ -2,35 +2,14 @@ import { useState } from "react";
 import ModalF1 from "../../modal/Modal_F1";
 import { labelColor, inputColor } from "../../../constants/colors";
 import { handleNumericSelectKeyDown } from "../../../utils/InputHandlers";
+import {
+  optionsMeter,
+  symbols,
+} from "../../../constants/input_inspection_result";
 
 const Meter = () => {
   const [modalF1Open, setModalF1Open] = useState(false);
-
-  const symbols = ["", "◯", "×", "✔"];
   const totalRows = 1;
-
-  const options = [
-    "0: 空白",
-    "01: 火災・爆発",
-    "02: 地震",
-    "03: CO",
-    "04: ガス漏れ",
-    "05: ガス臭",
-    "06: 不着火",
-    "07: 圧力異常",
-    "08: 遮断異常",
-    "09: 使用時間遮断",
-    "10: 流量遮断",
-    "11: ガス漏れ警報",
-    "12: 圧力低下遮断",
-    "13: 閉塞圧異常警報",
-    "14: 電池圧力低下",
-    "15: 流量式減少",
-    "16: 圧力式減少",
-    "17: 異常なし",
-    "18: 電源プラグ",
-    "30: その他",
-  ];
 
   const [states, setStates] = useState<number[][]>(
     Array.from({ length: totalRows }, () => Array(1).fill(0))
@@ -165,14 +144,14 @@ const Meter = () => {
                         onKeyDown={(e) =>
                           handleNumericSelectKeyDown(e, (val) => {
                             const numVal = parseInt(val, 10);
-                            if (numVal < options.length) {
+                            if (numVal < optionsMeter.length) {
                               setSelectValue(numVal);
                             }
                           })
                         }
                         className={`w-full h-full font-medium bg-transparent text-center`}
                       >
-                        {options.map((opt, i) => (
+                        {optionsMeter.map((opt, i) => (
                           <option key={i} value={i}>
                             {opt}
                           </option>

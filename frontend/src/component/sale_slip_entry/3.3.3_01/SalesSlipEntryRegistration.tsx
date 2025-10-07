@@ -1,22 +1,5 @@
 import React from "react";
-
-// Map key → label tiếng Nhật
-const fieldLabelMap: Record<string, string> = {
-  productName: "商品名",
-  supplierName: "仕入先",
-  supplierCode: "仕入先コード",
-  quantity: "数量",
-  tax: "消費税",
-  note: "備考",
-  saleAmount: "売上金額",
-  salesPrice: "売上単価",
-  discountAmount: "値引金額",
-  expenseNo: "経費分類No.",
-  purchasePrice: "仕入単価",
-  purchaseAmount: "仕入金額",
-  supplier:"仕入先 ",
-  expenseText:"経費分類No. ",
-};
+import { fieldLabelMap } from "../../../constants/sale_slip_entry";
 
 type HeaderRow = {
   no: string | number;

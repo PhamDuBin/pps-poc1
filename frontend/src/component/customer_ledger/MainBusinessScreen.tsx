@@ -1,5 +1,5 @@
 import { labelColor, inputColor } from "../../constants/colors";
-import { Select, Button, Radio, Input } from "antd";
+import { Select, Button } from "antd";
 import BasicInformation from "./MainAreas/BasicInformation";
 import FamilyInfo from "./MainAreas/FamilyInfo";
 import OtherInfo from "./MainAreas/OtherInfo";
@@ -14,7 +14,6 @@ import MessageModal from "../../context/MessageModal";
 import { Transition } from "@headlessui/react";
 import React from "react";
 import HalfWidthKanaInput from "../HalfWidthKanaInput";
-import KanaFullWidthInput from "../KanaFullWidthInput";
 
 const MainBusinessScreen = () => {
   const [activeSection, setActiveSection] = useState<string | null>(null);

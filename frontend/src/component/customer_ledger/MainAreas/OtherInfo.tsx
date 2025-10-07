@@ -5,31 +5,15 @@ import { blockTab } from "../../../utils/InputHandlers";
 import CodeInputSelect from "../../CodeInputSelect";
 import HalfWidthNumberInput from "../../HalfWidthNumberInput";
 import KanaFullWidthInput from "../../KanaFullWidthInput";
+import {
+  homeOwnershipOptions,
+  notificationTypeOptions,
+} from "../../../constants/customer_ledger";
 
 const OtherInfo = forwardRef<any, { showData: boolean }>((props, ref) => {
   const firstButtonRef = useRef<any>(null);
   const { showData } = props;
   const isFormDisabled = !showData;
-
-  const homeOwnershipOptions = [
-    { code: "0", label: "0:空白" },
-    { code: "1", label: "1:持家" },
-    { code: "2", label: "2:借家" },
-    { code: "3", label: "3:マンション" },
-    { code: "4", label: "4:アパート" },
-    { code: "5", label: "5:公営住宅" },
-    { code: "6", label: "6:社宅・寮" },
-    { code: "7", label: "7:店舗事務所" },
-    { code: "8", label: "8:別荘" },
-    { code: "9", label: "9:その他" },
-  ];
-
-  const notificationTypeOptions = [
-    { code: "0", label: "0:空欄" },
-    { code: "1", label: "1:1年" },
-    { code: "2", label: "2:2年" },
-    { code: "3", label: "3:3年" },
-  ];
 
   useImperativeHandle(ref, () => ({
     focusFirstButton: () => {
@@ -221,7 +205,6 @@ const OtherInfo = forwardRef<any, { showData: boolean }>((props, ref) => {
               disabled={isFormDisabled}
             />
           </div>
-          
         </div>
 
         <div className="flex items-center">
@@ -278,7 +261,6 @@ const OtherInfo = forwardRef<any, { showData: boolean }>((props, ref) => {
               disabled={isFormDisabled}
             />
           </div>
-          
         </div>
 
         <div className="flex items-center">

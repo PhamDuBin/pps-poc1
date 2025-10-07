@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { labelColor, inputColor } from "../../../constants/colors";
+import { symbols } from "../../../constants/input_inspection_result";
 
 const TestMeasurement = () => {
   const label = `w-1/6 flex text-center justify-center ${labelColor} border border-black h-6`;
@@ -13,8 +14,6 @@ const TestMeasurement = () => {
   const [pressureButtonStates, setPressureButtonStates] = useState([0, 0, 0]);
   const [airtightButtonStates, setAirtightButtonStates] = useState([0, 0]);
   const [leakageButtonStates, setLeakageButtonStates] = useState([0, 0]);
-
-  const symbols = ["", "◯", "✕", "✓"];
 
   const getButtonColor = (val: number) => {
     if (val === 2) return "bg-red-500";

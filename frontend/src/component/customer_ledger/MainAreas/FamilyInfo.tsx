@@ -5,114 +5,19 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { Button, DatePicker, Select, Input, Table } from "antd";
+import { Button, DatePicker } from "antd";
 import dayjs from "dayjs";
 import FamilyInfoModal from "../FamilyInfoModal";
-import { inputColor, labelColor, hoverInputColor, focusInputColor } from "../../../constants/colors";
+import { inputColor, labelColor } from "../../../constants/colors";
 import { blockTab } from "../../../utils/InputHandlers";
 import CodeInputSelect from "../../CodeInputSelect";
-
-const workingCoupleOptions = [
-  { code: "0", label: "0 空欄" },
-  { code: "1", label: "1 共働き" },
-];
-
-const housingTypeOptions = [
-  { code: "0", label: "00:空白" },
-  { code: "1", label: "01:戸建て" },
-  { code: "2", label: "02:3LDK" },
-  { code: "3", label: "03:3DK" },
-  { code: "4", label: "04:2LDK" },
-  { code: "5", label: "05:2DK" },
-  { code: "6", label: "06:1ルーム" },
-  { code: "20", label: "20:その他" },
-];
-
-const relationshipOptions = [
-  { code: "0", label: "0:空欄" },
-  { code: "1", label: "1:A" },
-  { code: "2", label: "2:B" },
-  { code: "3", label: "3:C" },
-  { code: "4", label: "4:D" },
-];
-
-const freeDescriptionOptions = [
-  { code: "0", label: "0:空欄" },
-  { code: "1", label: "1:null" },
-  { code: "2", label: "2:null" },
-  { code: "3", label: "3:null" },
-  { code: "4", label: "4:null" },
-  { code: "5", label: "5:null" },
-  { code: "6", label: "6:null" },
-  { code: "7", label: "7:null" },
-  { code: "8", label: "8:null" },
-  { code: "9", label: "9:null" },
-];
-
-const familyData = [
-  {
-    id: 1,
-    relation: "父",
-    name: "テスト氏名1",
-    gender: "男性",
-    dob: "1980/01/01",
-    job: "会社員",
-    health: "その他",
-    hobby: "マリンスポーツ",
-  },
-  {
-    id: 2,
-    relation: "母",
-    name: "テスト氏名2",
-    gender: "女性",
-    dob: "1982/05/10",
-    job: "主婦",
-    health: "良好",
-    hobby: "読書",
-  },
-  {
-    id: 3,
-    relation: "長男",
-    name: "テスト氏名3",
-    gender: "男性",
-    dob: "2010/11/20",
-    job: "学生",
-    health: "良好",
-    hobby: "ゲーム",
-  },
-];
-const initialFamilyData = [
-  {
-    id: 1,
-    relation: "父",
-    name: "テスト氏名1",
-    gender: "男性",
-    dob: "1980/01/01",
-    job: "会社員",
-    health: "その他",
-    hobby: "マリンスポーツ",
-  },
-  {
-    id: 2,
-    relation: "母",
-    name: "テスト氏名2",
-    gender: "女性",
-    dob: "1982/05/10",
-    job: "主婦",
-    health: "良好",
-    hobby: "読書",
-  },
-  {
-    id: 3,
-    relation: "長男",
-    name: "テスト氏名3",
-    gender: "男性",
-    dob: "2010/11/20",
-    job: "学生",
-    health: "良好",
-    hobby: "ゲーム",
-  },
-];
+import {
+  workingCoupleOptions,
+  housingTypeOptions,
+  relationshipOptions,
+  freeDescriptionOptions,
+  initialFamilyData,
+} from "../../../constants/customer_ledger";
 
 const FamilyInfo = forwardRef<any, { showData: boolean }>((props, ref) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -225,11 +130,12 @@ const FamilyInfo = forwardRef<any, { showData: boolean }>((props, ref) => {
             <CodeInputSelect
               options={workingCoupleOptions}
               value={formValues.workingCoupleType}
-              onChange={(value) => handleValueChange("workingCoupleType", value)}
+              onChange={(value) =>
+                handleValueChange("workingCoupleType", value)
+              }
               disabled={isFormDisabled}
             />
           </div>
-          
         </div>
 
         <div className="flex items-center">
@@ -242,7 +148,6 @@ const FamilyInfo = forwardRef<any, { showData: boolean }>((props, ref) => {
               disabled={isFormDisabled}
             />
           </div>
-          
         </div>
         <div className="flex items-center">
           <label className={labelClass}>取引関係</label>
@@ -256,7 +161,6 @@ const FamilyInfo = forwardRef<any, { showData: boolean }>((props, ref) => {
               disabled={isFormDisabled}
             />
           </div>
-          
         </div>
         <div className="flex items-center">
           <label className={labelClass}>信用状況</label>
@@ -268,7 +172,6 @@ const FamilyInfo = forwardRef<any, { showData: boolean }>((props, ref) => {
               disabled={isFormDisabled}
             />
           </div>
-          
         </div>
         <div className="flex items-center">
           <label className={labelClass}>購買力</label>
@@ -280,8 +183,6 @@ const FamilyInfo = forwardRef<any, { showData: boolean }>((props, ref) => {
               disabled={isFormDisabled}
             />
           </div>
-
-          
         </div>
 
         <div className="flex items-center">
@@ -294,7 +195,6 @@ const FamilyInfo = forwardRef<any, { showData: boolean }>((props, ref) => {
               disabled={isFormDisabled}
             />
           </div>
-          
         </div>
         <div className="flex items-center">
           <label className={labelClass}>総合ランク</label>
@@ -306,7 +206,6 @@ const FamilyInfo = forwardRef<any, { showData: boolean }>((props, ref) => {
               disabled={isFormDisabled}
             />
           </div>
-          
         </div>
 
         <div className="flex items-center ">
@@ -319,7 +218,6 @@ const FamilyInfo = forwardRef<any, { showData: boolean }>((props, ref) => {
               disabled={isFormDisabled}
             />
           </div>
-          
         </div>
       </div>
       <div className="px-3 pb-2">

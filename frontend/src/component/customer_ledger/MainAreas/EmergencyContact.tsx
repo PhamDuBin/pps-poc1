@@ -5,7 +5,6 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { Input, Select } from "antd";
 import {
   labelColor,
   inputColor,
@@ -16,13 +15,7 @@ import { blockTab } from "../../../utils/InputHandlers";
 import CodeInputSelect from "../../CodeInputSelect";
 import KanaFullWidthInput from "../../KanaFullWidthInput";
 import HalfWidthNumberInput from "../../HalfWidthNumberInput";
-
-const timeSlotOptions = [
-  { code: "0", label: "0:空欄" },
-  { code: "1", label: "1:随時" },
-  { code: "2", label: "2:昼間" },
-  { code: "3", label: "3:夜間" },
-];
+import { timeSlotOptions } from "../../../constants/customer_ledger";
 
 const EmergencyContact = forwardRef<any, { showData: boolean }>(
   (props, ref) => {
@@ -121,7 +114,6 @@ const EmergencyContact = forwardRef<any, { showData: boolean }>(
                 disabled={isFormDisabled}
               />
             </div>
-            
           </div>
           <div className="flex items-center">
             <label className={labelClass}>時間帯</label>
@@ -135,7 +127,6 @@ const EmergencyContact = forwardRef<any, { showData: boolean }>(
                 disabled={isFormDisabled}
               />
             </div>
-            
           </div>
 
           <div className="flex items-center">

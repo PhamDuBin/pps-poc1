@@ -1,42 +1,7 @@
 //■03大分類別売上
 import clsx from "clsx";
 import { useScreenNavigation } from "../../../utils/useScreenNavigation";
-
-const labels = [
-  "LPG",
-  "ガス器具",
-  "その他器具・工事",
-  "リース",
-  "大分類5",
-  "大分類6",
-  "大分類7",
-  "大分類8",
-  "大分類9",
-  "電力",
-  "割賦金",
-  "その他",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "合計",
-];
+import { labels } from "../../../constants/transaction_information";
 
 function CheckSaleByCategoryScreen({ onSwitchScreen }: any) {
   const columns = [0, 1, 2].map((col) =>

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, KeyboardEvent } from "react";
-import { kanaButtons } from "../sale_slip_entry/LeftPanel";
+import { kanaButtons } from "../../constants/sale_slip_entry";
 import {
   convertToFullWidth,
   handleFormatting,

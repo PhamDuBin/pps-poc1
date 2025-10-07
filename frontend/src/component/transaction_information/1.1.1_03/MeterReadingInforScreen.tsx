@@ -1,20 +1,9 @@
 // ■05検針情報
 import React from "react";
 import { useScreenNavigation } from "../../../utils/useScreenNavigation";
+import { handleOpenWindow } from "../../../constants/functions";
 
 const MeterReadingInforScreen = ({ onSwitchScreen }: any) => {
-  const handleOpenWindow = () => {
-    const win = window.open(
-      "/link-destination",
-      "_blank",
-      "width=800,height=600,noopener,noreferrer"
-    );
-
-    if (win) {
-      win.focus();
-    }
-  };
-
   const headerFields = [
     { label: "検針地区", value: "016 16番地区" },
     { label: "検針順路", value: "0000-780" },

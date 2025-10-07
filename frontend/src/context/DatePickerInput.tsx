@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import { DatePicker } from "antd";
 import type { Dayjs } from "dayjs";
 import dayjs from "dayjs";
-import { DownArrowIcon } from "../component/transaction_information/LeftPanel";
 
 type DatePickerInputProps = {
   disabled?: boolean;
@@ -31,7 +30,7 @@ export const DatePickerInput: React.FC<DatePickerInputProps> = ({
         style={{ fontSize: "10px" }}
         placeholder="yyyy/mm/dd"
         className="w-full bg-[#ebcec0] px-2 py-1 border border-black"
-        suffixIcon={<DownArrowIcon />}
+        suffixIcon={"▼"}
       />
     </div>
   );

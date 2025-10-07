@@ -1,6 +1,7 @@
 // ■07CRM
 import React from "react";
 import { useScreenNavigation } from "../../../utils/useScreenNavigation";
+import { handleOpenWindow } from "../../../constants/functions";
 
 const CRM = ({ onSwitchScreen }: any) => {
   const tableHeaders = [
@@ -22,18 +23,6 @@ const CRM = ({ onSwitchScreen }: any) => {
   ];
 
   const rowCount = 10;
-
-  const handleOpenWindow = () => {
-    const win = window.open(
-      "/link-destination",
-      "_blank",
-      "width=800,height=600,noopener,noreferrer"
-    );
-
-    if (win) {
-      win.focus();
-    }
-  };
   const containerRef = useScreenNavigation<HTMLDivElement>(onSwitchScreen);
   return (
     <div ref={containerRef} className="p-4 text-black w-full text-sm">

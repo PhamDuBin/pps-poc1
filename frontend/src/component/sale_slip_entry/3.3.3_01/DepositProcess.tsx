@@ -1,29 +1,15 @@
 import { useEffect, useRef, useState } from "react";
-import { DownArrowIcon } from "../../transaction_information/LeftPanel";
 import { CustomDatePicker } from "../../../context/CustomDatePicker";
 import { format, parse, isValid } from "date-fns";
-
+import {
+  shukinOptions,
+  nyukinOptions,
+} from "../../../constants/sale_slip_entry";
 type Props = {
   isDeposited: boolean;
   onClose: () => void;
   onSave: () => void;
 };
-
-const shukinOptions = [
-  { value: "集金", code: "0" },
-  { value: "クレジット", code: "13" },
-];
-
-const nyukinOptions = [
-  { value: "現金", code: "1" },
-  { value: "小切手", code: "2" },
-  { value: "振込", code: "3" },
-  { value: "手形", code: "4" },
-  { value: "相殺", code: "5" },
-  { value: "自振", code: "7" },
-  { value: "コンビニ", code: "8" },
-  { value: "その他", code: "9" },
-];
 
 export default function DepositProcess({
   isDeposited,
@@ -89,7 +75,7 @@ export default function DepositProcess({
               className="absolute right-0 top-1/2 -translate-y-1/2 h-full flex items-center px-2 text-gray-500 cursor-pointer"
               onClick={() => setShowDatePicker(!showDatePicker)}
             >
-              <DownArrowIcon />
+              ▼
             </button>
 
             {showDatePicker && (

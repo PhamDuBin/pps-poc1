@@ -1,12 +1,10 @@
 import { useState } from "react";
 import ModalF1 from "../../modal/Modal_F1";
 import { labelColor, inputColor } from "../../../constants/colors";
+import { symbols } from "../../../constants/input_inspection_result";
 
 const Siren = () => {
   const [modalF1Open, setModalF1Open] = useState(false);
-
-  const symbols = ["", "◯", "×", "✔"];
-
   const totalRows = 20;
 
   const [states, setStates] = useState(

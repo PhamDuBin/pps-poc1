@@ -1,19 +1,9 @@
 // ■01当月明細
 import React from "react";
 import { useScreenNavigation } from "../../../utils/useScreenNavigation";
+import { handleOpenWindow } from "../../../constants/functions";
 
 const CurrentMonthDetails = ({ onSwitchScreen }: any) => {
-  const handleOpenWindow = () => {
-    const win = window.open(
-      "/link-destination",
-      "_blank",
-      "width=800,height=600,noopener,noreferrer"
-    );
-
-    if (win) {
-      win.focus();
-    }
-  };
   const containerRef = useScreenNavigation<HTMLDivElement>(onSwitchScreen);
   const balanceMonths = [
     "2025年05月",

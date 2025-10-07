@@ -2,23 +2,14 @@ import { useState } from "react";
 import ModalF1 from "../../modal/Modal_F1";
 import { labelColor, inputColor } from "../../../constants/colors";
 import { handleNumericSelectKeyDown } from "../../../utils/InputHandlers";
-
+import {
+  options,
+  rowsPipe,
+  symbols,
+} from "../../../constants/input_inspection_result";
 const ConnectingPipe = () => {
   const [modalF1Open, setModalF1Open] = useState(false);
-
-  const symbols = ["", "◯", "×", "✔"];
   const totalRows = 4;
-
-  const options = [
-    "0: 未選択",
-    "1: 掘出調査",
-    "2: 気密試験",
-    "3: 漏洩試験",
-    "4: 目視",
-    "5: ボーリング調査",
-    "6: 検知装置",
-    "9: その他",
-  ];
 
   const [states, setStates] = useState<number[][]>(
     Array.from({ length: totalRows }, () => Array(10).fill(0))
@@ -27,22 +18,6 @@ const ConnectingPipe = () => {
   const [selectValues, setSelectValues] = useState<number[]>(
     Array(totalRows).fill(0)
   );
-
-  const rows = [
-    { group: "高圧側", no: 1 },
-    { group: "高圧側", no: 2 },
-    { group: "低圧側", no: 1 },
-    { group: "低圧側", no: 2 },
-  ];
-
-  const handleDetailKeyDown = (
-    e: React.KeyboardEvent<HTMLTableCellElement>
-  ) => {
-    if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-      setModalF1Open(true);
-    }
-  };
 
   const handleClick = (row: number, col: number) => {
     setStates((prev) => {
@@ -132,10 +107,10 @@ const ConnectingPipe = () => {
             </thead>
 
             <tbody>
-              {rows.map((row, idx) => {
+              {rowsPipe.map((row, idx) => {
                 const rowHasCheck = states[idx].some((s) => s === 3);
                 const showGroup =
-                  idx === 0 || row.group !== rows[idx - 1].group;
+                  idx === 0 || row.group !== rowsPipe[idx - 1].group;
 
                 return (
                   <tr key={idx} className="h-6">

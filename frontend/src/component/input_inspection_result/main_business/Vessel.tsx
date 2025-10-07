@@ -1,27 +1,11 @@
 import { useState } from "react";
 import { labelColor, inputColor } from "../../../constants/colors";
-
+import {
+  symbols,
+  leftLabels,
+  rightLabels,
+} from "../../../constants/input_inspection_result";
 const Vessel = () => {
-  const symbols = ["", "◯", "×", "✔"];
-
-  const leftLabels = [
-    "①火気制限",
-    "②40℃以下",
-    "③設置場所",
-    "④転倒転落週出防止",
-    "⑤バルブ損傷防止",
-    "⑥腐食防止",
-  ];
-
-  const rightLabels = [
-    "⑦保安距離",
-    "⑧滞留防止",
-    "⑨柵塀設置",
-    "⑩警戒標",
-    "⑪消火設備",
-    "⑫屋根・遮蔽板",
-  ];
-
   const [states, setStates] = useState<number[][]>([Array(12).fill(0)]);
 
   const handleClick = (row: number, col: number) => {

@@ -1,21 +1,11 @@
 import { useState } from "react";
 import ModalF1 from "../../modal/Modal_F1";
 import { labelColor, inputColor } from "../../../constants/colors";
-
+import { rows, symbols } from "../../../constants/input_inspection_result";
 const CircuitBreaker = () => {
   const [modalF1Open, setModalF1Open] = useState(false);
-
-  const symbols = ["", "◯", "×", "✔"];
   const totalRows = 5;
   const [states, setStates] = useState<number[]>(Array(totalRows).fill(0));
-
-  const rows = [
-    { label: "放出防止", model: "00001", count: "00001" },
-    { label: "耐震遮断", model: "00001", count: "00001" },
-    { label: "警報遮断", model: "00001", count: "00001" },
-    { group: "気化器", label: "気化装置停電対策" },
-    { group: "気化器", label: "電気気化装置による手動復帰式自動ガス遮断器" },
-  ];
 
   const handleClick = (row: number) => {
     setStates((prev) => {

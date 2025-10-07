@@ -1,4 +1,3 @@
-import { DownArrowIcon } from "../transaction_information/LeftPanel";
 import { useState, KeyboardEvent, useRef, useEffect } from "react";
 import PersonnelSearchModal from "./PersonnelSearchModal";
 import { inputColor, labelColor } from "../../constants/colors";
@@ -91,9 +90,9 @@ const TopBar = () => {
           <button
             ref={btnRef}
             onClick={() => setIsModalOpen(true)}
-            className=" w-[20px] h-[20px] mt-1 inset-y-0 right-0 flex items-center px-1 bg-white border border-gray-500 cursor-pointer mr-5"
+            className=" w-[20px] h-[20px] mt-1 flex items-center justify-center px-1 bg-white border border-gray-500 cursor-pointer mr-5"
           >
-            <DownArrowIcon />
+            ▼
           </button>
           <span className={label}>立会人</span>
           <select

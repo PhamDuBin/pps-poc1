@@ -1,4 +1,4 @@
-import { Button, Checkbox, DatePicker, Input, Select } from "antd";
+import { Button, Checkbox, DatePicker } from "antd";
 import dayjs, { Dayjs } from "dayjs";
 import {
   forwardRef,
@@ -16,90 +16,17 @@ import {
 import { blockTab } from "../../../utils/InputHandlers";
 import CodeInputSelect from "../../CodeInputSelect";
 import HalfWidthNumberInput from "../../HalfWidthNumberInput";
-
-const openCloseOptions = [
-  { code: "0", label: "0 新規開栓" },
-  { code: "1", label: "1 入居開栓" },
-  { code: "2", label: "2 閉栓解除" },
-  { code: "3", label: "3 季節開栓" },
-  { code: "4", label: "4 解約閉栓" },
-  { code: "5", label: "5 引越閉栓" },
-  { code: "6", label: "6 季節中断閉栓" },
-  { code: "7", label: "7 強制中断閉栓" },
-  { code: "9", label: "9 対象外" },
-  { code: "12", label: "12 未入居閉栓" },
-];
-
-const contractOptions = [
-  { code: "0", label: "0 空白" },
-  { code: "1", label: "1 新設" },
-  { code: "2", label: "2 転入" },
-  { code: "3", label: "3 解約" },
-  { code: "4", label: "4 対象外" },
-  { code: "9", label: "9 債権者" },
-];
-
-const acquisitionRouteOptions = [
-  { code: "0", label: "0 空白" },
-  { code: "1", label: "1 既存工務店紹介" },
-  { code: "2", label: "2 新規工務店紹介" },
-  { code: "3", label: "3 転換営業" },
-  { code: "4", label: "4 顧客からの紹介" },
-  { code: "5", label: "5 取引先からの紹介" },
-  { code: "6", label: "6 社内紹介" },
-  { code: "7", label: "7 受託" },
-  { code: "8", label: "8 買収" },
-  { code: "9", label: "9 建替" },
-  { code: "10", label: "10 増築" },
-  { code: "20", label: "20 その他" },
-];
-
-const customerStatusOptions = [
-  { code: "0", label: "0 空白" },
-  { code: "1", label: "1 新規" },
-  { code: "2", label: "2 買収" },
-  { code: "9", label: "9 その他" },
-];
-
-const groupTypeOptions = [
-  { code: "0", label: "0 個別" },
-  { code: "1", label: "1 集合親" },
-  { code: "2", label: "2 集合子" },
-];
-
-const inspectionTypeOptions = [
-  { code: "0", label: "0 対象外" },
-  { code: "1", label: "1 検針（シリンダー）" },
-  { code: "2", label: "2 検針（バルク）" },
-  { code: "3", label: "3 検針（新バルク）" },
-  { code: "4", label: "4 重量（シリンダー）" },
-  { code: "5", label: "5 ローリー（バルク）" },
-  { code: "6", label: "6 ローリー（新バルク）" },
-];
-
-const usageTypeOptions = [
-  { code: "01", label: "01 家庭用・戸建" },
-  { code: "07", label: "07 家庭用・集合" },
-  { code: "09", label: "09 集合ファミリー・借家" },
-  { code: "11", label: "11 バルク" },
-  { code: "12", label: "12 簡易ガス" },
-  { code: "13", label: "13 業務用" },
-  { code: "15", label: "15 業務用（空調）" },
-  { code: "16", label: "16 業務用（事務所他）" },
-  { code: "17", label: "17 工業用（一般）" },
-  { code: "19", label: "19 集計なし" },
-  { code: "20", label: "20 その他" },
-];
-
-const decisionStatusOptions = [
-  { code: "0", label: "0 確定" },
-  { code: "1", label: "1 仮" },
-];
-
-const availabilityOptions = [
-  { code: "0", label: "0 無" },
-  { code: "1", label: "1 有" },
-];
+import {
+  openCloseOptions,
+  contractOptions,
+  acquisitionRouteOptions,
+  customerStatusOptions,
+  groupTypeOptions,
+  inspectionTypeOptions,
+  usageTypeOptions,
+  decisionStatusOptions,
+  availabilityOptions,
+} from "../../../constants/customer_ledger";
 
 const labelClass = `w-32 mr-2 h-6 border-gray-300 rounded-md ${labelColor} font-bold flex text-center justify-center items-center`;
 
@@ -269,9 +196,7 @@ const AcquisitionInformation = forwardRef<any, { showData: boolean }>(
             </div>
             <div className="w-1/2">
               <div className="flex ">
-                <div className={`font-semibold ${labelClass}`}>
-                  新規区分
-                </div>
+                <div className={`font-semibold ${labelClass}`}>新規区分</div>
                 <div className="w-2/5">
                   <CodeInputSelect
                     options={customerStatusOptions}

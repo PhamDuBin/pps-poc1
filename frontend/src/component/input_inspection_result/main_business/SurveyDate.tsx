@@ -1,11 +1,9 @@
 import ModalF1 from "../../modal/Modal_F1";
 import { useState } from "react";
 import { labelColor, inputColor } from "../../../constants/colors";
-
+import { symbols } from "../../../constants/input_inspection_result";
 const SurveyDate = () => {
   const [modalF1Open, setModalF1Open] = useState(false);
-
-  const symbols = ["", "◯", "×", "✔"];
   const warnings = ["", "使用注意", "換気注意", "危険", "使用禁止"];
 
   const totalRows = 20;

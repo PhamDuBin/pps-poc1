@@ -3,6 +3,7 @@ import ModalF1 from "../../modal/Modal_F1";
 import { inputColor, labelColor } from "../../../constants/colors";
 import { Button } from "antd";
 import { blockTab } from "../../../utils/InputHandlers";
+import { buttonTitle } from "../../../constants/configuration_information";
 interface TargetCustomerProps {
   onLabelClick?: (title: string) => void;
 }
@@ -29,22 +30,6 @@ const TargetCustomer = forwardRef<TargetCustomerRef, TargetCustomerProps>(
     const [isOpenModalF1, setModalF1Open] = useState(false);
 
     const labelClass = `${labelColor} border border-gray-400 px-2 flex items-center justify-center min-h-[32px] w-[160px]`;
-
-    const buttonTitle = [
-      "事業者",
-      "事業所",
-      "管理部門",
-      "開閉栓区分",
-      "供給業態",
-      "販売用途区分",
-      "締日",
-      "集金方法",
-      "集金日",
-      "自振区分",
-      "料金表No.",
-      "検針予定日",
-      "請求発行区分",
-    ];
     const gridItems = Array.from(
       { length: 18 },
       (_, index) => buttonTitle[index] || null
