@@ -1,5 +1,5 @@
 import "react-day-picker/dist/style.css";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { DatePickerInput } from "../../context/DatePickerInput";
 import CustomModal from "../../context/CustomModal";
 import { CustomerSearchModal } from "./CustomerSearchModal";
@@ -87,8 +87,8 @@ const RightPanel = () => {
   const [titleModal, setTitleModal] = useState("");
 
   const options = ["", "済", "無"];
-  const options1 = ["", "良", "否"];
-  const options2 = ["", "良", "否"];
+  const options1 = useMemo(() => ["", "良", "否"], []);
+  const options2 = useMemo(() => ["", "良", "否"], []);
   const [index, setIndex] = useState(0);
   const [index2, setIndex2] = useState(0);
   const [index3, setIndex3] = useState(0);
@@ -224,7 +224,7 @@ const RightPanel = () => {
       setNotificationLabel1("0");
       setKaizenCode("");
     }
-  }, [index3]);
+  }, [index3, options1]);
 
   useEffect(() => {
     if (options2[index4] !== "否") {
@@ -233,7 +233,7 @@ const RightPanel = () => {
       setNotificationLabel3("0");
       setKyokyuKaizenCode("");
     }
-  }, [index4]);
+  }, [index4, options2]);
 
   const label =
     "bg-[#80bad7] h-[24px] flex justify-center items-center border border-black";

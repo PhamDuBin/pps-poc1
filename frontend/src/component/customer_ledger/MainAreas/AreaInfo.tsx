@@ -13,6 +13,7 @@ import {
 import { blockTab } from "../../../utils/InputHandlers";
 import PersonnelSearchModal from "../../input_inspection_result/PersonnelSearchModal";
 import HalfWidthNumberInput from "../../HalfWidthNumberInput";
+import { handleOpenWindow } from "../../../constants/functions";
 
 const AreaInfo = forwardRef<any, { showData: boolean }>((props, ref) => {
   const headerCellClass = `h-6 px-2 ${labelColor} font-bold text-center flex items-center justify-center text-sm rounded-md`;
@@ -93,14 +94,7 @@ const AreaInfo = forwardRef<any, { showData: boolean }>((props, ref) => {
                   />
                   <Button
                     onClick={() => {
-                      const newWindow = window.open(
-                        "/link-destination",
-                        "_blank",
-                        "width=500,height=300,noopener,noreferrer"
-                      );
-                      if (newWindow) {
-                        newWindow.focus();
-                      }
+                      handleOpenWindow();
                     }}
                     className="h-6 w-6 p-0 rounded-md shadow-md shadow-zinc-500 ml-2"
                     disabled={isFormDisabled}

@@ -101,8 +101,6 @@ const FamilyInfo = forwardRef<any, { showData: boolean }>((props, ref) => {
     }
   }, [selectedRowIndex]);
   const labelClass = `w-32 mr-2 h-6 border-gray-300 rounded-md font-bold flex text-center justify-center items-center ${labelColor}`;
-  const inputCodeClass = `${inputColor} border border-black h-6 w-14 text-center`;
-
   // --- JSX ---
   return (
     <div onKeyDown={blockTab} className="w-full text-xs">

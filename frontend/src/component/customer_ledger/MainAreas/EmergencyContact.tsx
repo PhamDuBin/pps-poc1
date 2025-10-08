@@ -7,7 +7,6 @@ import React, {
 } from "react";
 import {
   labelColor,
-  inputColor,
   focusInputColor,
   hoverInputColor,
 } from "../../../constants/colors";
@@ -83,7 +82,6 @@ const EmergencyContact = forwardRef<any, { showData: boolean }>(
     }));
 
     const labelClass = `p-1 w-32 mr-2 h-6 border-gray-300 rounded-md ${labelColor} font-bold flex text-center justify-center items-center`;
-    const inputCodeClass = `${inputColor} border border-black h-6 w-14 text-center`;
     const inputClass = `${hoverInputColor} ${focusInputColor} border border-black h-6 w-32`;
 
     return (

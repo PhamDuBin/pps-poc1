@@ -27,6 +27,7 @@ import {
   decisionStatusOptions,
   availabilityOptions,
 } from "../../../constants/customer_ledger";
+import { handleOpenWindow } from "../../../constants/functions";
 
 const labelClass = `w-32 mr-2 h-6 border-gray-300 rounded-md ${labelColor} font-bold flex text-center justify-center items-center`;
 
@@ -112,14 +113,7 @@ const AcquisitionInformation = forwardRef<any, { showData: boolean }>(
             <div className="w-1/2 flex py-1">
               <Button
                 onClick={() => {
-                  const newWindow = window.open(
-                    "/link-destination",
-                    "_blank",
-                    "width=500,height=300,noopener,noreferrer"
-                  );
-                  if (newWindow) {
-                    newWindow.focus();
-                  }
+                  handleOpenWindow();
                 }}
                 className={`font-semibold shadow-md shadow-zinc-500 ${labelClass}`}
                 disabled={isFormDisabled}
@@ -222,14 +216,7 @@ const AcquisitionInformation = forwardRef<any, { showData: boolean }>(
                     className="!bg-blue-600 !text-white hover:!bg-white hover:!text-black px-2 h-6 w-32"
                     type="default"
                     onClick={() => {
-                      const newWindow = window.open(
-                        "/link-destination",
-                        "_blank",
-                        "width=500,height=300,noopener,noreferrer"
-                      );
-                      if (newWindow) {
-                        newWindow.focus();
-                      }
+                      handleOpenWindow();
                     }}
                     disabled={isFormDisabled}
                   >
@@ -243,14 +230,7 @@ const AcquisitionInformation = forwardRef<any, { showData: boolean }>(
                     className="!bg-blue-600 !text-white hover:!bg-white hover:!text-black px-2 h-6 w-32"
                     type="default"
                     onClick={() => {
-                      const newWindow = window.open(
-                        "/link-destination",
-                        "_blank",
-                        "width=500,height=300,noopener,noreferrer"
-                      );
-                      if (newWindow) {
-                        newWindow.focus();
-                      }
+                      handleOpenWindow();
                     }}
                     disabled={isFormDisabled}
                   >

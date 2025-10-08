@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import OperatorSelectionModal from "./OperatorSelectionModal";
 import ContinuousIssue from "./MainBusinessAreas/ContinuousIssue";
 import IndividualIssue from "./MainBusinessAreas/IndividualIssue";
@@ -29,79 +29,115 @@ const MainBusinessScreen = () => {
   const [activeSection, setActiveSection] = useState<string | null>(null);
   const [modalF2Open, setModalF2Open] = useState<boolean>(false);
   const [titleModal, setTitleModal] = useState("");
-  const sections = [
-    "extraForm",
-    "targetCustomer",
-    "printingDesignation",
-    "titleFormSetting",
-  ];
+  const sections = useMemo(
+    () => [
+      "extraForm",
+      "targetCustomer",
+      "printingDesignation",
+      "titleFormSetting",
+    ],
+    []
+  );
   const isInitialMount = useRef(true);
   const containerRef = useRef<HTMLDivElement>(null);
   const activeButton = `bg-yellow-300 border-yellow-400`;
   const button = `flex text-center justify-center items-center ${labelColor} border border-black xl:text-base text-xs font-bold shadow-md shadow-zinc-600 hover:bg-white`;
   const span = `w-[10%] flex justify-center text-center items-center font-bold ${labelColor}`;
   const focusFirstButtonRef = useRef<HTMLButtonElement>(null);
-  const shortcuts = {
-    "1": () => handleScrollAndFocus("extraForm"),
-    "2": () => handleScrollAndFocus("targetCustomer"),
-    "3": () => handleScrollAndFocus("printingDesignation"),
-    "4": () => handleScrollAndFocus("titleFormSetting"),
-    F1: () => {
-      ("");
-    },
-    F2: () => {
-      ("");
-    },
-    F4: () => {
-      ("");
-    },
-    F5: () => {
-      ("");
-    },
-    F6: () => {
-      ("");
-    },
-    F9: () => {
-      ("");
-    },
-    F10: () => {
-      ("");
-    },
-    F11: () => {
-      ("");
-    },
-    F12: () => {
-      ("");
-    },
-    F3: () => {
-      setModalF2Open(true);
-      setTitleModal("条件保存（F3）");
-    },
-    F7: () => {
-      setModalF2Open(true);
-      setTitleModal("伝票メモ設定(F7)");
-    },
-    F8: () => {
-      setModalF2Open(true);
-      setTitleModal("再入力（F8）");
-    },
-    V: () => {
-      setModalF2Open(true);
-      setTitleModal("プレビュー（V）");
-    },
-    P: () => {
-      setModalF2Open(true);
-      setTitleModal("印刷（P）");
-    },
-    H: () => {
-      setModalF2Open(true);
-      setTitleModal("データ（H）");
-    },
-    C: () => {
-      window.location.href = "/";
-    },
-  };
 
+  const handleScrollAndFocus = useCallback(
+    (sectionName: string) => {
+      setActiveSection(sectionName);
+      scroller.scrollTo(`${sectionName}Section`, {
+        duration: 500,
+        smooth: true,
+        containerId: "scroll-container",
+      });
+
+      setTimeout(() => {
+        switch (sectionName) {
+          case "extraForm":
+            if (condition === "連続発行") datePickerRef.current?.focus();
+            else monthPickerRef.current?.focus();
+            break;
+          case "targetCustomer":
+            targetCustomerRef.current?.focusFirstButton();
+            break;
+          case "printingDesignation":
+            printingDesignationRef.current?.focusFirstButton();
+            break;
+          case "titleFormSetting":
+            TitleFormSettingRef.current?.focusFirstButton();
+            break;
+        }
+      }, 100);
+    },
+    [condition]
+  );
+
+  const shortcuts = useMemo(
+    () => ({
+      "1": () => handleScrollAndFocus("extraForm"),
+      "2": () => handleScrollAndFocus("targetCustomer"),
+      "3": () => handleScrollAndFocus("printingDesignation"),
+      "4": () => handleScrollAndFocus("titleFormSetting"),
+      F1: () => {
+        ("");
+      },
+      F2: () => {
+        ("");
+      },
+      F4: () => {
+        ("");
+      },
+      F5: () => {
+        ("");
+      },
+      F6: () => {
+        ("");
+      },
+      F9: () => {
+        ("");
+      },
+      F10: () => {
+        ("");
+      },
+      F11: () => {
+        ("");
+      },
+      F12: () => {
+        ("");
+      },
+      F3: () => {
+        setModalF2Open(true);
+        setTitleModal("条件保存（F3）");
+      },
+      F7: () => {
+        setModalF2Open(true);
+        setTitleModal("伝票メモ設定(F7)");
+      },
+      F8: () => {
+        setModalF2Open(true);
+        setTitleModal("再入力（F8）");
+      },
+      V: () => {
+        setModalF2Open(true);
+        setTitleModal("プレビュー（V）");
+      },
+      P: () => {
+        setModalF2Open(true);
+        setTitleModal("印刷（P）");
+      },
+      H: () => {
+        setModalF2Open(true);
+        setTitleModal("データ（H）");
+      },
+      C: () => {
+        window.location.href = "/";
+      },
+    }),
+    [handleScrollAndFocus]
+  );
   const handleCloseOperationSerachModal = () => {
     setIsOperationSeachModalOpen(false);
   };
@@ -122,7 +158,7 @@ const MainBusinessScreen = () => {
     if (!isPaperSelectionModalOpen) {
       handleScrollAndFocus("extraForm");
     }
-  }, [condition]);
+  }, [condition, handleScrollAndFocus, isPaperSelectionModalOpen]);
   const handleRadioKeyDown = (
     e: React.KeyboardEvent<HTMLElement>,
     value: string
@@ -132,32 +168,6 @@ const MainBusinessScreen = () => {
 
       setCondition(value);
     }
-  };
-  const handleScrollAndFocus = (sectionName: string) => {
-    setActiveSection(sectionName);
-    scroller.scrollTo(`${sectionName}Section`, {
-      duration: 500,
-      smooth: true,
-      containerId: "scroll-container",
-    });
-
-    setTimeout(() => {
-      switch (sectionName) {
-        case "extraForm":
-          if (condition === "連続発行") datePickerRef.current?.focus();
-          else monthPickerRef.current?.focus();
-          break;
-        case "targetCustomer":
-          targetCustomerRef.current?.focusFirstButton();
-          break;
-        case "printingDesignation":
-          printingDesignationRef.current?.focusFirstButton();
-          break;
-        case "titleFormSetting":
-          TitleFormSettingRef.current?.focusFirstButton();
-          break;
-      }
-    }, 100);
   };
 
   useEffect(() => {
@@ -175,10 +185,8 @@ const MainBusinessScreen = () => {
         }
         return;
       }
-      const isMac = navigator.platform.toUpperCase().includes("MAC");
-      const isModifierPressed = isMac
-        ? e.metaKey && e.altKey
-        : e.ctrlKey && e.altKey;
+      // const isMac = navigator.platform.toUpperCase().includes("MAC");
+      const isModifierPressed = e.ctrlKey && e.altKey;
 
       const action = shortcuts[key as keyof typeof shortcuts];
       if (isModifierPressed && action) {
@@ -217,7 +225,7 @@ const MainBusinessScreen = () => {
     return () => {
       container.removeEventListener("keydown", handleKeyDown);
     };
-  }, [activeSection, sections]);
+  }, [activeSection, sections, handleScrollAndFocus, shortcuts]);
 
   return (
     <div

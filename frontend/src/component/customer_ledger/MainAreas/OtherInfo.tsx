@@ -9,6 +9,7 @@ import {
   homeOwnershipOptions,
   notificationTypeOptions,
 } from "../../../constants/customer_ledger";
+import { handleOpenWindow } from "../../../constants/functions";
 
 const OtherInfo = forwardRef<any, { showData: boolean }>((props, ref) => {
   const firstButtonRef = useRef<any>(null);
@@ -41,17 +42,6 @@ const OtherInfo = forwardRef<any, { showData: boolean }>((props, ref) => {
     setFormValues((prev) => ({ ...prev, [fieldName]: value }));
   };
 
-  const openPopup = (url = "/link-destination") => {
-    const newWindow = window.open(
-      url,
-      "_blank",
-      "width=500,height=300,noopener,noreferrer"
-    );
-    if (newWindow) {
-      newWindow.focus();
-    }
-  };
-
   const inputColorClass = `hover:${inputColor} focus:!${inputColor} border border-black`;
   const label = `w-32 mr-2 h-6 border-gray-300 rounded-md font-bold flex text-center justify-center items-center ${labelColor}`;
 
@@ -69,7 +59,7 @@ const OtherInfo = forwardRef<any, { showData: boolean }>((props, ref) => {
         {/* 左列 */}
         <div className="flex items-center">
           <Button
-            onClick={() => openPopup()}
+            onClick={() => handleOpenWindow()}
             disabled={isFormDisabled}
             ref={firstButtonRef}
             className={`${label} shadow-md shadow-zinc-500`}
@@ -83,7 +73,7 @@ const OtherInfo = forwardRef<any, { showData: boolean }>((props, ref) => {
             disabled={isFormDisabled}
           />
           <Button
-            onClick={() => openPopup()}
+            onClick={() => handleOpenWindow()}
             disabled={isFormDisabled}
             className="ml-2 h-6 w-6"
           >
@@ -103,7 +93,7 @@ const OtherInfo = forwardRef<any, { showData: boolean }>((props, ref) => {
 
         <div className="flex items-center">
           <Button
-            onClick={() => openPopup()}
+            onClick={() => handleOpenWindow()}
             className={`${label} shadow-md shadow-zinc-500`}
             disabled={isFormDisabled}
           >
@@ -116,7 +106,7 @@ const OtherInfo = forwardRef<any, { showData: boolean }>((props, ref) => {
             disabled={isFormDisabled}
           />
           <Button
-            onClick={() => openPopup()}
+            onClick={() => handleOpenWindow()}
             className="ml-2 h-6 w-6"
             disabled={isFormDisabled}
           >
@@ -126,7 +116,7 @@ const OtherInfo = forwardRef<any, { showData: boolean }>((props, ref) => {
 
         <div className="flex items-center">
           <Button
-            onClick={() => openPopup()}
+            onClick={() => handleOpenWindow()}
             className={`${label} shadow-md shadow-zinc-500`}
             disabled={isFormDisabled}
           >
@@ -139,7 +129,7 @@ const OtherInfo = forwardRef<any, { showData: boolean }>((props, ref) => {
             disabled={isFormDisabled}
           />
           <Button
-            onClick={() => openPopup()}
+            onClick={() => handleOpenWindow()}
             disabled={isFormDisabled}
             className="ml-2 h-6 w-6"
           >
@@ -149,7 +139,7 @@ const OtherInfo = forwardRef<any, { showData: boolean }>((props, ref) => {
 
         <div className="flex items-center">
           <Button
-            onClick={() => openPopup()}
+            onClick={() => handleOpenWindow()}
             className={`${label} shadow-md shadow-zinc-500`}
             disabled={isFormDisabled}
           >
@@ -162,7 +152,7 @@ const OtherInfo = forwardRef<any, { showData: boolean }>((props, ref) => {
             disabled={isFormDisabled}
           />
           <Button
-            onClick={() => openPopup()}
+            onClick={() => handleOpenWindow()}
             className="ml-2 h-6 w-6"
             disabled={isFormDisabled}
           >
@@ -172,7 +162,7 @@ const OtherInfo = forwardRef<any, { showData: boolean }>((props, ref) => {
 
         <div className="flex items-center">
           <Button
-            onClick={() => openPopup()}
+            onClick={() => handleOpenWindow()}
             className={`${label} shadow-md shadow-zinc-500`}
             disabled={isFormDisabled}
           >
@@ -185,7 +175,7 @@ const OtherInfo = forwardRef<any, { showData: boolean }>((props, ref) => {
             disabled={isFormDisabled}
           />
           <Button
-            onClick={() => openPopup()}
+            onClick={() => handleOpenWindow()}
             className="ml-2 h-6 w-6"
             disabled={isFormDisabled}
           >

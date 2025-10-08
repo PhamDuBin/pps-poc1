@@ -23,27 +23,6 @@ const SurveyDate = () => {
     });
   };
 
-  const handleKeyDown = (
-    e: React.KeyboardEvent<HTMLTableCellElement>,
-    idx: number
-  ) => {
-    if (e.key === "ArrowUp") {
-      e.preventDefault();
-      setValues((prev) => {
-        const newVals = [...prev];
-        newVals[idx] = parseFloat((newVals[idx] + 0.0001).toFixed(4));
-        return newVals;
-      });
-    } else if (e.key === "ArrowDown") {
-      e.preventDefault();
-      setValues((prev) => {
-        const newVals = [...prev];
-        newVals[idx] = parseFloat((newVals[idx] - 0.0001).toFixed(4));
-        return newVals;
-      });
-    }
-  };
-
   const handleValueChange = (rowIndex: number, amount: number) => {
     setValues((currentValues) => {
       const newValues = [...currentValues];

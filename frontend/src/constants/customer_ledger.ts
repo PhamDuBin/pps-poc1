@@ -317,11 +317,11 @@ export const relationOptions = [
   "19:義妹",
   "20:その他",
 ].map((item) => {
-  const [code, label] = item.split(":");
+  const [code] = item.split(":");
   return { code, label: item };
 });
 export const genderOptions = ["0:空白", "1:男性", "2:女性"].map((item) => {
-  const [code, label] = item.split(":");
+  const [code] = item.split(":");
   return { code, label: item };
 });
 export const jobOptions = [
@@ -333,7 +333,7 @@ export const jobOptions = [
   "5:主婦",
   "6:無職",
 ].map((item) => {
-  const [code, label] = item.split(":");
+  const [code] = item.split(":");
   return { code, label: item };
 });
 export const healthOptions = [
@@ -345,7 +345,7 @@ export const healthOptions = [
   "5:良好",
   "6:その他",
 ].map((item) => {
-  const [code, label] = item.split(":");
+  const [code] = item.split(":");
   return { code, label: item };
 });
 export const hobbyOptions = [
@@ -371,6 +371,6 @@ export const hobbyOptions = [
   "19:アウトドア",
   "20:その他",
 ].map((item) => {
-  const [code, label] = item.split(":");
+  const [code] = item.split(":");
   return { code, label: item };
 });

@@ -6,7 +6,7 @@ import OtherInfo from "./MainAreas/OtherInfo";
 import AcquisitionInformation from "./MainAreas/AcquisitionInformation";
 import AreaInfo from "./MainAreas/AreaInfo";
 import EmergencyContact from "./MainAreas/EmergencyContact";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { scroller } from "react-scroll";
 import { handleNavigationKey040504 } from "../../utils/InputHandlers";
 import AdvanceSearchModal from "../transaction_information/1.1.1_03/AdvanceSearchModal";
@@ -14,6 +14,7 @@ import MessageModal from "../../context/MessageModal";
 import { Transition } from "@headlessui/react";
 import React from "react";
 import HalfWidthKanaInput from "../HalfWidthKanaInput";
+import { handleOpenWindow } from "../../constants/functions";
 
 const MainBusinessScreen = () => {
   const [activeSection, setActiveSection] = useState<string | null>(null);
@@ -24,14 +25,17 @@ const MainBusinessScreen = () => {
   const areaInfoRef = useRef<any>(null);
   const emergencyContactRef = useRef<any>(null);
   const [shouldShowData, setShouldShowData] = useState(false);
-  const sections = [
-    "basicInformation",
-    "acquisitionInformation",
-    "areaInfo",
-    "emergencyContact",
-    "otherInfo",
-    "familyInfo",
-  ];
+  const sections = useMemo(
+    () => [
+      "basicInformation",
+      "acquisitionInformation",
+      "areaInfo",
+      "emergencyContact",
+      "otherInfo",
+      "familyInfo",
+    ],
+    []
+  );
   const [showAdvanceSearch, setShowAdvanceSearch] = useState(true);
   const [customerCode, setCustomerCode] = useState({
     part1: "0000",
@@ -39,8 +43,6 @@ const MainBusinessScreen = () => {
     part3: "000000",
     part4: "000",
   });
-  const [fullName, setFullName] = useState("");
-  const [representativeName, setRepresentativeName] = useState("");
   const [modalConfig, setModalConfig] = useState({
     isOpen: false,
     message: "",
@@ -90,93 +92,72 @@ const MainBusinessScreen = () => {
     }, 100);
   };
 
-  const shortcuts = {
-    "1": () => handleScrollAndFocus("basicInformation"),
-    "2": () => handleScrollAndFocus("acquisitionInformation"),
-    "3": () => handleScrollAndFocus("areaInfo"),
-    "4": () => handleScrollAndFocus("emergencyContact"),
-    "5": () => handleScrollAndFocus("otherInfo"),
-    "6": () => handleScrollAndFocus("familyInfo"),
+  const shortcuts = useMemo(
+    () => ({
+      "1": () => handleScrollAndFocus("basicInformation"),
+      "2": () => handleScrollAndFocus("acquisitionInformation"),
+      "3": () => handleScrollAndFocus("areaInfo"),
+      "4": () => handleScrollAndFocus("emergencyContact"),
+      "5": () => handleScrollAndFocus("otherInfo"),
+      "6": () => handleScrollAndFocus("familyInfo"),
 
-    F1: () => {
-      const newWindow = window.open(
-        "/link-destination",
-        "_blank",
-        "width=500,height=300,noopener,noreferrer"
-      );
-      newWindow?.focus();
-    },
+      F1: () => {
+        handleOpenWindow();
+      },
 
-    F2: () => {
-      const newWindow = window.open(
-        "/link-destination",
-        "_blank",
-        "width=500,height=300,noopener,noreferrer"
-      );
-      newWindow?.focus();
-    },
+      F2: () => {
+        handleOpenWindow();
+      },
 
-    F3: () => {
-      const newWindow = window.open(
-        "/link-destination",
-        "_blank",
-        "width=500,height=300,noopener,noreferrer"
-      );
-      newWindow?.focus();
-    },
+      F3: () => {
+        handleOpenWindow();
+      },
 
-    F5: () => {
-      const newWindow = window.open(
-        "/link-destination",
-        "_blank",
-        "width=500,height=300,noopener,noreferrer"
-      );
-      newWindow?.focus();
-    },
+      F5: () => {
+        handleOpenWindow();
+      },
 
-    F6: () => {
-      const newWindow = window.open(
-        "/link-destination",
-        "_blank",
-        "width=500,height=300,noopener,noreferrer"
-      );
-      newWindow?.focus();
-    },
+      F6: () => {
+        handleOpenWindow();
+      },
 
-    F7: () => {
-      const newWindow = window.open(
-        "/link-destination",
-        "_blank",
-        "width=500,height=300,noopener,noreferrer"
-      );
-      newWindow?.focus();
-    },
+      F7: () => {
+        handleOpenWindow();
+      },
 
-    F8: () => {
-      setCustomerCode({
-        part1: "0000",
-        part2: "000",
-        part3: "000000",
-        part4: "000",
-      });
-      setFullName("");
-      setRepresentativeName("");
-      setShouldShowData(false);
-      firstInputRef.current?.focus();
-    },
+      F8: () => {
+        setCustomerCode({
+          part1: "0000",
+          part2: "000",
+          part3: "000000",
+          part4: "000",
+        });
+        setShouldShowData(false);
+        firstInputRef.current?.focus();
+      },
 
-    F9: () => {},
-    F10: () => {},
-    F11: () => {},
-    F12: () => {},
+      F9: () => {},
+      F10: () => {},
+      F11: () => {},
+      F12: () => {},
 
-    S: () => openConfirmationModal("更新しますが、よろしいですか？"),
-    D: () => openConfirmationModal("削除しますが、よろしいですか？"),
-    C: () => {
-      const closeButton = document.querySelector('a[href="/"]') as HTMLElement;
-      closeButton?.click();
-    },
-  };
+      S: () => openConfirmationModal("更新しますが、よろしいですか？"),
+      D: () => openConfirmationModal("削除しますが、よろしいですか？"),
+      C: () => {
+        const closeButton = document.querySelector(
+          'a[href="/"]'
+        ) as HTMLElement;
+        closeButton?.click();
+      },
+    }),
+    [
+      handleScrollAndFocus,
+      setCustomerCode,
+      setShouldShowData,
+      firstInputRef,
+      openConfirmationModal,
+    ]
+  );
 
   useEffect(() => {
     const container = containerRef.current;
@@ -234,7 +215,7 @@ const MainBusinessScreen = () => {
     return () => {
       container.removeEventListener("keydown", handleKeyDown);
     };
-  }, [activeSection, sections]);
+  }, [activeSection, sections, shortcuts]);
 
   const label = `h-8 border border-gray-300 font-bold rounded-md flex text-center justify-center items-center px-2 ml-7 mr-2 ${labelColor}`;
   const button = `flex text-center justify-center items-center ${labelColor} border border-black xl:text-base text-xs font-bold shadow-md shadow-zinc-600 hover:bg-white`;
@@ -330,8 +311,6 @@ const MainBusinessScreen = () => {
                   part3: "000000",
                   part4: "000",
                 });
-                setFullName("");
-                setRepresentativeName("");
                 setShouldShowData(false);
               }}
               className={`${button} mx-2`}
@@ -366,25 +345,6 @@ const MainBusinessScreen = () => {
               保安
             </Button>
           </div>
-          {/* <div className="flex flex-row items-center justify-center mt-2">
-            <label className={label}>氏名</label>
-            <KanaFullWidthInput
-              className={`w-[20%] !px-0 text-left hover:${inputColor}`}
-              value={fullName}
-              onChange={setFullName}
-            />
-            <label className={label}>顧客種別</label>
-            <Radio.Group defaultValue={"法人以外"}>
-              <Radio value="法人以外">法人以外</Radio>
-              <Radio value="法人 ">法人 </Radio>
-            </Radio.Group>
-            <label className={label}>代表者名</label>
-            <KanaFullWidthInput
-              className={`w-[20%] !px-0 text-left hover:${inputColor}`}
-              value={representativeName}
-              onChange={setRepresentativeName}
-            />
-          </div> */}
         </div>
       </div>
       {/* button group */}
@@ -498,14 +458,7 @@ const MainBusinessScreen = () => {
         <div className="flex flex-row justify-between items-center w-[90%]">
           <Button
             onClick={() => {
-              const newWindow = window.open(
-                "/link-destination",
-                "_blank",
-                "width=500,height=300,noopener,noreferrer"
-              );
-              if (newWindow) {
-                newWindow.focus();
-              }
+              handleOpenWindow();
             }}
             className={`!bg-[#80bad7] !text-black hover:!bg-white hover:!text-blue-600 w-28 shadow-md shadow-zinc-500`}
           >
@@ -513,14 +466,7 @@ const MainBusinessScreen = () => {
           </Button>
           <Button
             onClick={() => {
-              const newWindow = window.open(
-                "/link-destination",
-                "_blank",
-                "width=500,height=300,noopener,noreferrer"
-              );
-              if (newWindow) {
-                newWindow.focus();
-              }
+              handleOpenWindow();
             }}
             className={`!bg-[#80bad7] !text-black hover:!bg-white hover:!text-blue-600 w-28 shadow-md shadow-zinc-500`}
           >
@@ -528,14 +474,7 @@ const MainBusinessScreen = () => {
           </Button>
           <Button
             onClick={() => {
-              const newWindow = window.open(
-                "/link-destination",
-                "_blank",
-                "width=500,height=300,noopener,noreferrer"
-              );
-              if (newWindow) {
-                newWindow.focus();
-              }
+              handleOpenWindow();
             }}
             className={`!bg-[#80bad7] !text-black hover:!bg-white hover:!text-blue-600 w-28 shadow-md shadow-zinc-500`}
           >
@@ -548,14 +487,7 @@ const MainBusinessScreen = () => {
           </Button>
           <Button
             onClick={() => {
-              const newWindow = window.open(
-                "/link-destination",
-                "_blank",
-                "width=500,height=300,noopener,noreferrer"
-              );
-              if (newWindow) {
-                newWindow.focus();
-              }
+              handleOpenWindow();
             }}
             className={`!bg-[#80bad7] !text-black hover:!bg-white hover:!text-blue-600 w-28 shadow-md shadow-zinc-500`}
           >
@@ -563,14 +495,7 @@ const MainBusinessScreen = () => {
           </Button>
           <Button
             onClick={() => {
-              const newWindow = window.open(
-                "/link-destination",
-                "_blank",
-                "width=500,height=300,noopener,noreferrer"
-              );
-              if (newWindow) {
-                newWindow.focus();
-              }
+              handleOpenWindow();
             }}
             className={`!bg-[#80bad7] !text-black hover:!bg-white hover:!text-blue-600 w-28 shadow-md shadow-zinc-500`}
           >
@@ -578,14 +503,7 @@ const MainBusinessScreen = () => {
           </Button>
           <Button
             onClick={() => {
-              const newWindow = window.open(
-                "/link-destination",
-                "_blank",
-                "width=500,height=300,noopener,noreferrer"
-              );
-              if (newWindow) {
-                newWindow.focus();
-              }
+              handleOpenWindow();
             }}
             className={`!bg-[#80bad7] !text-black hover:!bg-white hover:!text-blue-600 w-28 shadow-md shadow-zinc-500`}
           >
@@ -619,14 +537,7 @@ const MainBusinessScreen = () => {
               <div className="flex flex-row w-full">
                 <Button
                   onClick={() => {
-                    const newWindow = window.open(
-                      "/link-destination",
-                      "_blank",
-                      "width=500,height=300,noopener,noreferrer"
-                    );
-                    if (newWindow) {
-                      newWindow.focus();
-                    }
+                    handleOpenWindow();
                   }}
                   className={`flex-1 h-20 m-0.5 shadow-md shadow-zinc-500 leading-tight whitespace-pre-line ${labelColor}`}
                 >
@@ -634,14 +545,7 @@ const MainBusinessScreen = () => {
                 </Button>
                 <Button
                   onClick={() => {
-                    const newWindow = window.open(
-                      "/link-destination",
-                      "_blank",
-                      "width=500,height=300,noopener,noreferrer"
-                    );
-                    if (newWindow) {
-                      newWindow.focus();
-                    }
+                    handleOpenWindow();
                   }}
                   className={`flex-1 h-20 m-0.5 shadow-md shadow-zinc-500 leading-tight whitespace-pre-line ${labelColor}`}
                 >
@@ -649,14 +553,7 @@ const MainBusinessScreen = () => {
                 </Button>
                 <Button
                   onClick={() => {
-                    const newWindow = window.open(
-                      "/link-destination",
-                      "_blank",
-                      "width=500,height=300,noopener,noreferrer"
-                    );
-                    if (newWindow) {
-                      newWindow.focus();
-                    }
+                    handleOpenWindow();
                   }}
                   className={`flex-1 h-20 m-0.5 shadow-md shadow-zinc-500 leading-tight whitespace-pre-line ${labelColor}`}
                 >
@@ -664,14 +561,7 @@ const MainBusinessScreen = () => {
                 </Button>
                 <Button
                   onClick={() => {
-                    const newWindow = window.open(
-                      "/link-destination",
-                      "_blank",
-                      "width=500,height=300,noopener,noreferrer"
-                    );
-                    if (newWindow) {
-                      newWindow.focus();
-                    }
+                    handleOpenWindow();
                   }}
                   className={`flex-1 h-20 m-0.5 shadow-md shadow-zinc-500 leading-tight whitespace-pre-line ${labelColor}`}
                 >
@@ -679,14 +569,7 @@ const MainBusinessScreen = () => {
                 </Button>
                 <Button
                   onClick={() => {
-                    const newWindow = window.open(
-                      "/link-destination",
-                      "_blank",
-                      "width=500,height=300,noopener,noreferrer"
-                    );
-                    if (newWindow) {
-                      newWindow.focus();
-                    }
+                    handleOpenWindow();
                   }}
                   className={`flex-1 h-20 m-0.5 shadow-md shadow-zinc-500 leading-tight whitespace-pre-line ${labelColor}`}
                 >
@@ -694,14 +577,7 @@ const MainBusinessScreen = () => {
                 </Button>
                 <Button
                   onClick={() => {
-                    const newWindow = window.open(
-                      "/link-destination",
-                      "_blank",
-                      "width=500,height=300,noopener,noreferrer"
-                    );
-                    if (newWindow) {
-                      newWindow.focus();
-                    }
+                    handleOpenWindow();
                   }}
                   className={`flex-1 h-20 m-0.5 shadow-md shadow-zinc-500 leading-tight whitespace-pre-line ${labelColor}`}
                 >
@@ -709,14 +585,7 @@ const MainBusinessScreen = () => {
                 </Button>
                 <Button
                   onClick={() => {
-                    const newWindow = window.open(
-                      "/link-destination",
-                      "_blank",
-                      "width=500,height=300,noopener,noreferrer"
-                    );
-                    if (newWindow) {
-                      newWindow.focus();
-                    }
+                    handleOpenWindow();
                   }}
                   className={`flex-1 h-20 m-0.5 shadow-md shadow-zinc-500 leading-tight whitespace-pre-line ${labelColor}`}
                 >
@@ -735,14 +604,7 @@ const MainBusinessScreen = () => {
               <div className="flex flex-row w-full">
                 <Button
                   onClick={() => {
-                    const newWindow = window.open(
-                      "/link-destination",
-                      "_blank",
-                      "width=500,height=300,noopener,noreferrer"
-                    );
-                    if (newWindow) {
-                      newWindow.focus();
-                    }
+                    handleOpenWindow();
                   }}
                   className={`flex-1 h-20 m-0.5 shadow-md shadow-zinc-500 leading-tight whitespace-pre-line ${labelColor}`}
                 >
@@ -750,14 +612,7 @@ const MainBusinessScreen = () => {
                 </Button>
                 <Button
                   onClick={() => {
-                    const newWindow = window.open(
-                      "/link-destination",
-                      "_blank",
-                      "width=500,height=300,noopener,noreferrer"
-                    );
-                    if (newWindow) {
-                      newWindow.focus();
-                    }
+                    handleOpenWindow();
                   }}
                   className={`flex-1 h-20 m-0.5 shadow-md shadow-zinc-500 leading-tight whitespace-pre-line ${labelColor}`}
                 >
@@ -765,14 +620,7 @@ const MainBusinessScreen = () => {
                 </Button>
                 <Button
                   onClick={() => {
-                    const newWindow = window.open(
-                      "/link-destination",
-                      "_blank",
-                      "width=500,height=300,noopener,noreferrer"
-                    );
-                    if (newWindow) {
-                      newWindow.focus();
-                    }
+                    handleOpenWindow();
                   }}
                   className={`flex-1 h-20 m-0.5 shadow-md shadow-zinc-500 leading-tight whitespace-pre-line ${labelColor}`}
                 >
@@ -780,14 +628,7 @@ const MainBusinessScreen = () => {
                 </Button>
                 <Button
                   onClick={() => {
-                    const newWindow = window.open(
-                      "/link-destination",
-                      "_blank",
-                      "width=500,height=300,noopener,noreferrer"
-                    );
-                    if (newWindow) {
-                      newWindow.focus();
-                    }
+                    handleOpenWindow();
                   }}
                   className={`flex-1 h-20 m-0.5 shadow-md shadow-zinc-500 leading-tight whitespace-pre-line ${labelColor}`}
                 >
@@ -844,8 +685,6 @@ const MainBusinessScreen = () => {
                   part3: "000001",
                   part4: "020",
                 });
-                setFullName("テストさん太郎");
-                setRepresentativeName("代表者テスト");
                 setShouldShowData(true);
                 firstInputRef.current?.focus();
               }}

@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from "react";
-import { DatePicker, Input, Button } from "antd";
+import React, { useState, useEffect, useRef, useMemo } from "react";
+import { DatePicker, Button } from "antd";
 import dayjs from "dayjs";
 import CodeInputSelect from "../CodeInputSelect";
 import KanaFullWidthInput from "../KanaFullWidthInput";
@@ -33,16 +33,19 @@ const FamilyInfoModal: React.FC<ModalProps> = ({
   onSave,
   initialData,
 }) => {
-  const defaultFormData: FamilyMember = {
-    id: null,
-    relation: "0",
-    name: "",
-    gender: "0",
-    dob: dayjs().format("YYYY/MM/DD"),
-    job: "0",
-    health: "0",
-    hobby: "0",
-  };
+  const defaultFormData: FamilyMember = useMemo(
+    () => ({
+      id: null,
+      relation: "0",
+      name: "",
+      gender: "0",
+      dob: dayjs().format("YYYY/MM/DD"),
+      job: "0",
+      health: "0",
+      hobby: "0",
+    }),
+    []
+  );
 
   const firstInputRef = useRef<any>(null);
   const [formData, setFormData] = useState<FamilyMember>(defaultFormData);
@@ -54,7 +57,7 @@ const FamilyInfoModal: React.FC<ModalProps> = ({
         firstInputRef.current?.focus();
       }, 100);
     }
-  }, [isOpen, initialData]);
+  }, [isOpen, initialData, defaultFormData]);
 
   const handleChange = (field: keyof FamilyMember, value: any) => {
     setFormData((prev) => ({ ...prev, [field]: value }));

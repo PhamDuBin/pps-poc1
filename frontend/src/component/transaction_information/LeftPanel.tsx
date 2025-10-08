@@ -188,7 +188,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [showAdvanceSearch]);
+  }, [showAdvanceSearch, setShowAdvanceSearch]);
 
   return (
     <div className="w-72 overflow-y-auto  h-screen p-3 bg-[#d8dadc] border-2 border-gray-400 font-sans">

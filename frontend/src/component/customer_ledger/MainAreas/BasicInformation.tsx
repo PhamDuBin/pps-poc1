@@ -377,7 +377,7 @@ const BasicInformation = forwardRef<any, { showData: boolean }>(
               />
             );
           }
-
+          break;
         default: {
           const fieldName = label as keyof typeof formValues;
           if (fieldName in formValues) {
