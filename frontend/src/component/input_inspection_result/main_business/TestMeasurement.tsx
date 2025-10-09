@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { labelColor, inputColor } from "../../../constants/colors";
+import { labelColor } from "../../../constants/colors";
 import { symbols } from "../../../constants/input_inspection_result";
 
 const TestMeasurement = () => {
   const label = `w-1/6 flex text-center justify-center ${labelColor} border border-black h-6`;
-  const input = `w-1/12 flex text-center justify-center ${inputColor} border border-black h-6 border-gray-600`;
+  const input = `w-1/12 flex text-center justify-center hover:bg-gray-400 border border-black h-6 border-gray-600`;
   const buttonBase = `w-[30px] border border-black h-6 border-gray-600`;
 
   const [pressureChecked, setPressureChecked] = useState(false);
@@ -18,7 +18,7 @@ const TestMeasurement = () => {
   const getButtonColor = (val: number) => {
     if (val === 2) return "bg-red-500";
     if (val === 3) return "bg-green-600";
-    return inputColor;
+    return "";
   };
 
   const handleNumericSelectKeyDown = (
@@ -65,7 +65,7 @@ const TestMeasurement = () => {
   return (
     <>
       <div className={`p-1 flex flex-row text-[10px] w-full`}>
-        <select className={`border border-black w-1/12 ${inputColor}`}>
+        <select className={`border border-black w-1/12`}>
           <option>供給点検</option>
           <option>消費調査</option>
           <option>供給消費</option>
@@ -223,13 +223,13 @@ const TestMeasurement = () => {
         {airtightChecked ? (
           <input className={`${input} !w-[30px]`} placeholder="0" />
         ) : (
-          <span className={`${input} !w-[30px]`}></span>
+          <input className={`${input} !w-[30px]`} placeholder="" disabled />
         )}
 
         <span className={label}>点検方法</span>
         {airtightChecked ? (
           <select
-            className={`${inputColor} w-1/6 text-center border border-black h-6`}
+            className={`$ w-1/6 text-center border border-black h-6`}
             onKeyDown={handleNumericSelectKeyDown}
           >
             <option>0:空白</option>
@@ -244,7 +244,7 @@ const TestMeasurement = () => {
         ) : (
           <select
             disabled
-            className={`w-1/6 border border-gray-300 h-6 ${inputColor}`}
+            className={`w-1/6 border border-gray-300 h-6 `}
           ></select>
         )}
 
@@ -292,13 +292,13 @@ const TestMeasurement = () => {
         {leakageChecked ? (
           <input className={`${input} !w-[30px]`} placeholder="0" />
         ) : (
-          <span className={`${input} !w-[30px]`}></span>
+          <input className={`${input} !w-[30px]`} placeholder="" disabled />
         )}
 
         <span className={label}>点検方法</span>
         {leakageChecked ? (
           <select
-            className={`${inputColor} w-1/6 text-center border border-black h-6`}
+            className={` w-1/6 text-center border border-black h-6`}
             onKeyDown={handleNumericSelectKeyDown}
           >
             <option>0:空白</option>
@@ -313,7 +313,7 @@ const TestMeasurement = () => {
         ) : (
           <select
             disabled
-            className={`w-1/6 border border-gray-300 h-6 ${inputColor}`}
+            className={`w-1/6 border border-gray-300 h-6`}
           ></select>
         )}
 

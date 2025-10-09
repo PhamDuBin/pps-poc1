@@ -43,11 +43,7 @@ const CircuitBreaker = () => {
 
                 const val = states[idx];
                 const bgColor =
-                  val === 2
-                    ? "bg-red-500"
-                    : val === 3
-                    ? "bg-green-600"
-                    : inputColor;
+                  val === 2 ? "bg-red-500" : val === 3 ? "bg-green-600" : "";
 
                 const rowHasCheck = states[idx] === 3;
 
@@ -71,10 +67,10 @@ const CircuitBreaker = () => {
                         >
                           {row.label}
                         </th>
-                        <td className="border border-black text-center">
+                        <td className="border border-black text-center bg-[#ebcec0]">
                           {row.model}
                         </td>
-                        <td className="border border-black text-center">
+                        <td className="border border-black text-center bg-[#ebcec0]">
                           {row.count}
                         </td>
 
@@ -90,8 +86,8 @@ const CircuitBreaker = () => {
                                 setModalF1Open(true);
                               }
                             }}
-                            className={`absolute inset-0 w-full h-full flex items-center justify-center hover:bg-blue-100 ${
-                              rowHasCheck ? "bg-red-500" : inputColor
+                            className={`absolute inset-0 w-full h-full flex items-center justify-center hover:bg-gray-400 ${
+                              rowHasCheck ? "bg-red-500" : ""
                             }`}
                           >
                             ▼
@@ -120,7 +116,7 @@ const CircuitBreaker = () => {
                               handleClick(idx);
                             }
                           }}
-                          className={`absolute inset-0 w-full h-full flex items-center justify-center hover:bg-blue-100 ${bgColor}`}
+                          className={`absolute inset-0 w-full h-full flex items-center justify-center hover:bg-gray-400 ${bgColor}`}
                         >
                           {symbols[val]}
                         </button>
@@ -142,7 +138,7 @@ const CircuitBreaker = () => {
                               handleClick(idx);
                             }
                           }}
-                          className={`absolute inset-0 w-full h-full flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-black hover:bg-blue-100 ${bgColor}`}
+                          className={`absolute inset-0 w-full h-full flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-black hover:bg-gray-400 ${bgColor}`}
                         >
                           {symbols[val]}
                         </button>

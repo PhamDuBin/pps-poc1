@@ -19,7 +19,7 @@ const Vessel = () => {
   const getButtonColor = (val: number) => {
     if (val === 2) return "bg-red-500";
     if (val === 3) return "bg-green-600";
-    return inputColor;
+    return "";
   };
 
   return (
@@ -35,7 +35,7 @@ const Vessel = () => {
         <div className="flex my-2 gap-x-2 items-center">
           <input
             type="text"
-            className={`text-right border border-black p-2 w-16 h-8 placeholder-slate-950 ${inputColor}`}
+            className={`text-right border border-black p-2 w-16 h-8 placeholder-slate-950 `}
             placeholder="0"
           />
           <div>kg</div>
@@ -43,7 +43,7 @@ const Vessel = () => {
         <div className="flex my-2 gap-x-2 items-center">
           <input
             type="text"
-            className={`text-right border border-black p-2 w-12 h-8 placeholder-slate-950 ${inputColor}`}
+            className={`text-right border border-black p-2 w-12 h-8 placeholder-slate-950 `}
             placeholder="0"
           />
           <div>本</div>
@@ -51,7 +51,7 @@ const Vessel = () => {
         <div className="flex my-2 gap-x-2 items-center">
           <input
             type="text"
-            className={`text-right border border-black p-2 w-16 h-8 placeholder-slate-950 ${inputColor}`}
+            className={`text-right border border-black p-2 w-16 h-8 placeholder-slate-950`}
             placeholder="0"
           />
           <div>kg</div>
@@ -59,7 +59,7 @@ const Vessel = () => {
         <div className="flex my-2 gap-x-2 items-center">
           <input
             type="text"
-            className={`text-right border border-black p-2 w-12 h-8 placeholder-slate-950 ${inputColor}`}
+            className={`text-right border border-black p-2 w-12 h-8 placeholder-slate-950`}
             placeholder="0"
           />
           <div>本</div>
@@ -72,7 +72,7 @@ const Vessel = () => {
         <div className="flex my-2 gap-x-2 items-center">
           <input
             type="text"
-            className={`text-right border border-black p-2 w-16 h-8 placeholder-slate-950 ${inputColor}`}
+            className={`text-right border border-black p-2 w-16 h-8 placeholder-slate-950 `}
             placeholder="0"
           />
           <div>kg</div>
@@ -97,7 +97,7 @@ const Vessel = () => {
                     {label}
                   </div>
                   <button
-                    className={`border border-slate-400 text-center cursor-pointer w-10 h-8 hover:bg-blue-100 ${getButtonColor(
+                    className={`border border-slate-400 text-center cursor-pointer w-10 h-8 hover:bg-gray-400 ${getButtonColor(
                       val
                     )}`}
                     onClick={() => handleClick(0, idx)}

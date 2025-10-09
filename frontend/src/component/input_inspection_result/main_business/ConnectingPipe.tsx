@@ -123,10 +123,12 @@ const ConnectingPipe = () => {
                       </th>
                     )}
 
-                    <td className="border border-black text-center">
+                    <td className="border border-black text-center bg-[#ebcec0]">
                       {row.no}
                     </td>
-                    <td className="border border-black text-center">材料名</td>
+                    <td className="border border-black text-center bg-[#ebcec0]">
+                      材料名
+                    </td>
 
                     {/* ▼ 詳細 */}
                     <td className="relative border border-black text-center p-0">
@@ -142,7 +144,7 @@ const ConnectingPipe = () => {
                         }}
                         className={`
       absolute inset-0 w-full h-full flex items-center justify-center
-      cursor-pointer ${inputColor}
+      cursor-pointer hover:bg-gray-400
       ${rowHasCheck ? "bg-red-500" : ""}
       
     `}
@@ -157,7 +159,7 @@ const ConnectingPipe = () => {
                         return (
                           <td
                             key={col}
-                            className={`border border-black p-0 ${inputColor}`}
+                            className={`border border-black p-0 hover:bg-gray-400`}
                           >
                             <select
                               value={selectValues[idx]}
@@ -174,7 +176,7 @@ const ConnectingPipe = () => {
                                   });
                                 })
                               }
-                              className={`w-full h-full text-center bg-[#ebcec0] cursor-pointer ${inputColor} focus:ring-2 focus:ring-black `}
+                              className={`w-full h-full text-center cursor-pointer focus:ring-2 focus:ring-black hover:bg-gray-400`}
                             >
                               {options.map((opt, i) => (
                                 <option key={i} value={i}>
@@ -192,7 +194,7 @@ const ConnectingPipe = () => {
                           ? "bg-red-500"
                           : val === 3
                           ? "bg-green-600"
-                          : "bg-[#ebcec0]";
+                          : "";
 
                       return (
                         <td
@@ -209,7 +211,7 @@ const ConnectingPipe = () => {
                                 handleClick(idx, col);
                               }
                             }}
-                            className={`absolute inset-0 w-full h-full flex items-center justify-center hover:bg-blue-100 ${bgColor}`}
+                            className={`absolute inset-0 w-full h-full flex items-center justify-center hover:bg-gray-400 ${bgColor}`}
                           >
                             {symbols[val]}
                           </button>

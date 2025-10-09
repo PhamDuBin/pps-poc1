@@ -92,21 +92,21 @@ const SurveyDate = () => {
                 {Array.from({ length: totalRows }).map((_, row) => {
                   const rowHasCheck = states[row].some((s) => s === 3);
                   return (
-                    <tr key={row} className={`${inputColor} h-6`}>
-                      <td className="border border-black text-center bg-[#F5F5F5]">
+                    <tr key={row} className={` h-6`}>
+                      <td className="border border-black text-center bg-[#ebcec0]">
                         {row + 1}
                       </td>
-                      <td className="border border-black text-center bg-[#F5F5F5]">
+                      <td className="border border-black text-center bg-[#ebcec0]">
                         ◯◯◯コンロ
                       </td>
-                      <td className="border border-black text-center bg-[#F5F5F5]">
+                      <td className="border border-black text-center bg-[#ebcec0]">
                         メーカー01
                       </td>
-                      <td className="border border-black text-center bg-[#F5F5F5]">
+                      <td className="border border-black text-center bg-[#ebcec0]">
                         BGC001
                       </td>
                       <td
-                        className={`border border-black text-center ${
+                        className={`border border-black text-center hover:bg-gray-400 ${
                           rowHasCheck ? "bg-red-500" : ""
                         }`}
                       >
@@ -122,12 +122,12 @@ const SurveyDate = () => {
                           return (
                             <td
                               key={col}
-                              className="border border-black text-center"
+                              className="border border-black text-center hover:bg-gray-400"
                             >
                               <input
                                 type="text"
                                 defaultValue="0"
-                                className="w-full text-center bg-[#ebcec0] outline-none"
+                                className="w-full h-full text-center outline-none hover:bg-gray-400"
                               />
                             </td>
                           );
@@ -149,7 +149,7 @@ const SurveyDate = () => {
                                     onClick={() =>
                                       handleValueChange(row, 0.0001)
                                     }
-                                    className="h-2 w-5 border-b border-l border-gray-400 flex items-center justify-center text-[8px] hover:bg-gray-200 active:bg-gray-300"
+                                    className="h-2 w-5 border-b border-l border-gray-400 flex items-center justify-center text-[8px] hover:bg-gray-400 active:bg-gray-300"
                                     tabIndex={-1}
                                   >
                                     ▲
@@ -158,7 +158,7 @@ const SurveyDate = () => {
                                     onClick={() =>
                                       handleValueChange(row, -0.0001)
                                     }
-                                    className="h-2 w-5 border-l border-gray-400 flex items-center justify-center text-[8px] hover:bg-gray-200 active:bg-gray-300"
+                                    className="h-2 w-5 border-l border-gray-400 flex items-center justify-center text-[8px] hover:bg-gray-400 active:bg-gray-300"
                                     tabIndex={-1}
                                   >
                                     ▼
@@ -201,7 +201,7 @@ const SurveyDate = () => {
                                 className={`
           absolute inset-0 w-full h-full flex items-center justify-center
           focus:outline-none focus:ring-2 focus:ring-black
-          hover:bg-blue-100 text-[9px]
+          hover:bg-gray-400 text-[9px]
           ${
             warnings[states[row][col]] === "×"
               ? "bg-red-500 text-white"
@@ -234,7 +234,7 @@ const SurveyDate = () => {
                               }}
                               className={`
         absolute inset-0 w-full h-full flex items-center justify-center
-        focus:outline-none focus:ring-2 focus:ring-black hover:bg-blue-100
+        focus:outline-none focus:ring-2 focus:ring-black hover:bg-gray-400
         ${
           symbols[states[row][col]] === "×"
             ? "bg-red-500 text-white"

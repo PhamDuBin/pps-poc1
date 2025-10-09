@@ -55,7 +55,7 @@ const Piping = () => {
           埋設管
         </span>
         <button
-          className={`border border-black w-12 ml-3 ${inputColor}`}
+          className={`border border-black w-12 ml-3`}
           onClick={handleClickBtn}
         >
           {labels[state]}
@@ -119,22 +119,22 @@ const Piping = () => {
               {Array.from({ length: totalRows }).map((_, row) => {
                 const rowHasCheck = states[row].some((s) => s === 3);
                 return (
-                  <tr key={row} className={`${inputColor} h-6`}>
-                    <td className="border border-black text-center bg-white">
+                  <tr key={row} className={` h-6`}>
+                    <td className="border border-black text-center bg-[#ebcec0]">
                       {row + 1}
                     </td>
-                    <td className="border border-black text-center bg-white">
+                    <td className="border border-black text-center bg-[#ebcec0]">
                       材料名
                     </td>
-                    <td className="border border-black text-center bg-white"></td>
+                    <td className="border border-black text-center bg-[#ebcec0]"></td>
                     <td
-                      className={`border border-black text-center ${
+                      className={`border border-black text-center hover:bg-gray-400 ${
                         rowHasCheck ? "bg-red-500" : ""
                       }`}
                     >
                       <button
                         onClick={() => setModalF1Open(true)}
-                        className="flex items-center justify-center w-full h-full"
+                        className="flex items-center justify-center w-full h-full hover:bg-gray-400"
                       >
                         ▼
                       </button>
@@ -144,15 +144,15 @@ const Piping = () => {
                         return (
                           <td
                             key={col}
-                            className={`border border-black text-center p-0 ${inputColor}`}
+                            className={`border border-black text-center p-0 hover:bg-gray-400`}
                           >
                             <select
                               className={`
       w-full h-full text-center cursor-pointer
-      ${inputColor}
+     
       outline-none
       focus-visible:ring-2 focus-visible:ring-black
-      focus-visible:ring-offset-0
+      focus-visible:ring-offset-0 hover:bg-gray-400
     `}
                               value={values[row]}
                               onChange={(e) => handleSelectChange(e, row)}
@@ -196,7 +196,7 @@ const Piping = () => {
                             className={`
                               absolute inset-0 w-full h-full flex items-center justify-center
                               focus:outline-none focus:ring-2 focus:ring-black
-                              hover:bg-blue-100
+                              hover:bg-gray-400
                               ${
                                 symbols[states[row][col]] === "×"
                                   ? "bg-red-500 text-white"

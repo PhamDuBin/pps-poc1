@@ -56,25 +56,25 @@ const Regulator = () => {
 
                 return (
                   <tr key={idx} className="h-6">
-                    <td className="border border-black text-center bg-white">
+                    <td className="border border-black text-center bg-[#ebcec0]">
                       {row.no}
                     </td>
-                    <td className="border border-black text-center bg-white">
+                    <td className="border border-black text-center bg-[#ebcec0]">
                       {row.type}
                     </td>
-                    <td className="border border-black text-center bg-white">
+                    <td className="border border-black text-center bg-[#ebcec0]">
                       {row.maker}
                     </td>
-                    <td className="border border-black text-center bg-white">
+                    <td className="border border-black text-center bg-[#ebcec0]">
                       {row.model}
                     </td>
-                    <td className="border border-black text-center bg-white">
+                    <td className="border border-black text-center bg-[#ebcec0]">
                       {row.capacity}
                     </td>
-                    <td className="border border-black text-center bg-white">
+                    <td className="border border-black text-center bg-[#ebcec0]">
                       {row.manufacture}
                     </td>
-                    <td className="border border-black text-center bg-white">
+                    <td className="border border-black text-center bg-[#ebcec0]">
                       {row.valid}
                     </td>
 
@@ -89,8 +89,8 @@ const Regulator = () => {
                             setModalF1Open(true);
                           }
                         }}
-                        className={`absolute inset-0 w-full h-full flex items-center justify-center hover:bg-blue-100 ${
-                          rowHasCheck ? "bg-red-500" : inputColor
+                        className={`absolute inset-0 w-full h-full flex items-center justify-center hover:bg-gray-400 ${
+                          rowHasCheck ? "bg-red-500" : ""
                         }`}
                       >
                         ▼
@@ -104,7 +104,7 @@ const Regulator = () => {
                           ? "bg-red-500"
                           : val === 3
                           ? "bg-green-600"
-                          : inputColor;
+                          : "";
 
                       return (
                         <td
@@ -121,7 +121,7 @@ const Regulator = () => {
                                 handleClick(idx, col);
                               }
                             }}
-                            className={`absolute inset-0 w-full h-full flex items-center justify-center hover:bg-blue-100 ${bgColor}`}
+                            className={`absolute inset-0 w-full h-full flex items-center justify-center hover:bg-gray-400 ${bgColor}`}
                           >
                             {symbols[val]}
                           </button>

@@ -56,7 +56,7 @@ const Meter = () => {
         <div>認定対象区分</div>
         <button
           onClick={handleClickSButton}
-          className={`border border-black w-6 h-6 flex items-center justify-center ${inputColor}`}
+          className={`border border-black w-6 h-6 flex items-center justify-center`}
         >
           {labels[statelabel]}
         </button>
@@ -85,26 +85,30 @@ const Meter = () => {
               {rows.map((row, idx) => {
                 const val = states[idx][0];
                 const bgColor =
-                  val === 2
-                    ? "bg-red-500"
-                    : val === 3
-                    ? "bg-green-600"
-                    : inputColor;
+                  val === 2 ? "bg-red-500" : val === 3 ? "bg-green-600" : "";
 
                 const rowHasCheck = val === 3;
 
                 return (
                   <tr key={idx} className="h-6">
-                    <td className={`border border-black text-center`}>
+                    <td
+                      className={`border border-black text-center bg-[#ebcec0]`}
+                    >
                       {row.type}
                     </td>
-                    <td className={`border border-black text-center`}>
+                    <td
+                      className={`border border-black text-center bg-[#ebcec0]`}
+                    >
                       {row.manufacturer}
                     </td>
-                    <td className={`border border-black text-center`}>
+                    <td
+                      className={`border border-black text-center bg-[#ebcec0]`}
+                    >
                       {row.model}
                     </td>
-                    <td className={`border border-black text-center`}>
+                    <td
+                      className={`border border-black text-center bg-[#ebcec0]`}
+                    >
                       {row.製造番号}
                     </td>
 
@@ -120,8 +124,8 @@ const Meter = () => {
                             setModalF1Open(true);
                           }
                         }}
-                        className={`absolute inset-0 w-full h-full flex items-center justify-center  hover:bg-blue-100 ${
-                          rowHasCheck ? "bg-red-500" : inputColor
+                        className={`absolute inset-0 w-full h-full flex items-center justify-center  hover:bg-gray-400 ${
+                          rowHasCheck ? "bg-red-500" : ""
                         }`}
                       >
                         ▼
@@ -132,12 +136,14 @@ const Meter = () => {
                     <td className={`border border-black p-0`}>
                       <input
                         type="number"
-                        className={`w-full h-full border-none text-center bg-transparent`}
+                        className={`w-full h-full border-none text-center hover:bg-gray-400 `}
                       />
                     </td>
 
                     {/* 常時監視 */}
-                    <td className={`border border-black p-0 ${inputColor}`}>
+                    <td
+                      className={`border border-black p-0 hover:bg-gray-400 `}
+                    >
                       <select
                         value={selectValue}
                         onChange={handleSelectChange}
@@ -149,7 +155,7 @@ const Meter = () => {
                             }
                           })
                         }
-                        className={`w-full h-full font-medium bg-transparent text-center`}
+                        className={`w-full h-full font-medium   text-center`}
                       >
                         {optionsMeter.map((opt, i) => (
                           <option key={i} value={i}>
@@ -171,7 +177,7 @@ const Meter = () => {
                             handleClick(idx, 0);
                           }
                         }}
-                        className={`absolute inset-0 w-full h-full flex items-center justify-center hover:bg-blue-100 ${bgColor}`}
+                        className={`absolute inset-0 w-full h-full flex items-center justify-center hover:bg-gray-400 ${bgColor}`}
                       >
                         {symbols[val]}
                       </button>
@@ -189,7 +195,7 @@ const Meter = () => {
                             handleClickSButton2();
                           }
                         }}
-                        className={`absolute inset-0 w-full h-full flex items-center justify-center  hover:bg-blue-100 ${inputColor}`}
+                        className={`absolute inset-0 w-full h-full flex items-center justify-center hover:bg-gray-400`}
                       >
                         {labels[statelabel2]}
                       </button>

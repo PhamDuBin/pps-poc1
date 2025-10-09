@@ -56,14 +56,14 @@ const SupplyPipe = () => {
         <div>埋設管</div>
         <button
           onClick={handleClickSButton}
-          className={`border border-black w-6 h-6 flex items-center justify-center ${inputColor}`}
+          className={`border border-black w-6 h-6 flex items-center justify-center `}
         >
           {labels[statelabel]}
         </button>
         <div>高圧側｜集合装置</div>
         <button
           onClick={handleClickSButton2}
-          className={`border border-black w-6 h-6 flex items-center justify-center ${inputColor}`}
+          className={`border border-black w-6 h-6 flex items-center justify-center`}
         >
           {labels[statelabel2]}
         </button>
@@ -117,11 +117,15 @@ const SupplyPipe = () => {
                         {row.group}
                       </th>
                     )}
-                    <td className="border border-black text-center">
+                    <td className="border border-black text-center bg-[#ebcec0]">
                       {row.no}
                     </td>
-                    <td className="border border-black text-center">材料名</td>
-                    <td className="border border-black text-center">-</td>
+                    <td className="border border-black text-center bg-[#ebcec0]">
+                      材料名
+                    </td>
+                    <td className="border border-black text-center bg-[#ebcec0]">
+                      -
+                    </td>
 
                     <td className="relative border border-black text-center p-0">
                       <button
@@ -136,7 +140,7 @@ const SupplyPipe = () => {
                         }}
                         className={`
                           absolute inset-0 w-full h-full flex items-center justify-center
-                          cursor-pointer ${inputColor}
+                          cursor-pointer hover:bg-gray-400
                           ${rowHasCheck ? "bg-red-500" : ""}
                           
                         `}
@@ -149,7 +153,7 @@ const SupplyPipe = () => {
                         return (
                           <td
                             key={col}
-                            className={`border border-black p-0 ${inputColor}`}
+                            className={`border border-black p-0 hover:bg-gray-400`}
                           >
                             <select
                               value={selectValues[idx]}
@@ -166,7 +170,7 @@ const SupplyPipe = () => {
                                   });
                                 })
                               }
-                              className={`w-full h-full font-medium text-center ${inputColor}`}
+                              className={`w-full h-full font-medium text-center hover:bg-gray-400`}
                             >
                               {optionsSupplyPipe.map((opt, i) => (
                                 <option key={i} value={i}>
@@ -184,7 +188,7 @@ const SupplyPipe = () => {
                           ? "bg-red-500"
                           : val === 3
                           ? "bg-green-600"
-                          : inputColor;
+                          : "";
 
                       return (
                         <td
@@ -201,7 +205,7 @@ const SupplyPipe = () => {
                                 handleClick(idx, col);
                               }
                             }}
-                            className={`absolute inset-0 w-full h-full flex items-center justify-center  hover:bg-blue-100 ${bgColor}`}
+                            className={`absolute inset-0 w-full h-full flex items-center justify-center  hover:bg-gray-400 ${bgColor}`}
                           >
                             {symbols[val]}
                           </button>

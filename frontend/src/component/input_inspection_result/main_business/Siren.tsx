@@ -35,7 +35,7 @@ const Siren = () => {
           設置施設区分
         </span>
         <select
-          className={`border border-black w-16 ml-3 ${inputColor}`}
+          className={`border border-black w-16 ml-3`}
           onKeyDown={(e) => {
             if (/^[0-9]$/.test(e.key)) {
               e.preventDefault();
@@ -67,17 +67,13 @@ const Siren = () => {
         >
           必要個数
         </span>
-        <input
-          className={`border border-black w-12 ml-3 ${inputColor}`}
-        ></input>
+        <input className={`border border-black w-12 ml-3`}></input>
         <span
           className={`w-1/12 border border-black p-1 flex justify-center min-w-[83px] ${labelColor} ml-4`}
         >
           設置個数
         </span>
-        <input
-          className={`border border-black w-12 ml-3 ${inputColor}`}
-        ></input>
+        <input className={`border border-black w-12 ml-3 `}></input>
       </div>
       <div className="w-full min-w-[922px] text-[10px] mt-2">
         <div className="overflow-auto h-40 border border-black">
@@ -130,30 +126,30 @@ const Siren = () => {
               {Array.from({ length: totalRows }).map((_, row) => {
                 const rowHasCheck = states[row].some((s) => s === 3);
                 return (
-                  <tr key={row} className={`${inputColor} h-6`}>
-                    <td className="border border-black text-center bg-white">
+                  <tr key={row} className={` h-6`}>
+                    <td className="border border-black text-center bg-[#ebcec0]">
                       {row + 1}
                     </td>
-                    <td className="border border-black text-center bg-white">
+                    <td className="border border-black text-center bg-[#ebcec0]">
                       メーカー名
                     </td>
-                    <td className="border border-black text-center bg-white">
+                    <td className="border border-black text-center bg-[#ebcec0]">
                       xxx003
                     </td>
-                    <td className="border border-black text-center bg-white">
+                    <td className="border border-black text-center bg-[#ebcec0]">
                       00001
                     </td>
-                    <td className="border border-black text-center bg-white">
+                    <td className="border border-black text-center bg-[#ebcec0]">
                       2012/01
                     </td>
                     <td
-                      className={`border border-black text-center ${
+                      className={`border border-black text-center hover:bg-gray-400 ${
                         rowHasCheck ? "bg-red-500" : ""
                       }`}
                     >
                       <button
                         onClick={() => setModalF1Open(true)}
-                        className="flex items-center justify-center w-full h-full"
+                        className="flex items-center justify-center w-full h-full hover:bg-gray-400"
                       >
                         ▼
                       </button>
@@ -180,7 +176,7 @@ const Siren = () => {
                             className={`
                             absolute inset-0 w-full h-full flex items-center justify-center
                             focus:outline-none focus:ring-2 focus:ring-black
-                            hover:bg-blue-100
+                            hover:bg-gray-400 
                             ${
                               symbols[states[row][col]] === "×"
                                 ? "bg-red-500 text-white"
