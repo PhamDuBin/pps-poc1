@@ -34,33 +34,25 @@ const TerminalGasValve = () => {
         >
           設置個数
         </span>
-        <input
-          className={`border border-black w-12 ml-3 hover:bg-gray-400`}
-        ></input>
+        <input className={`border border-black w-12 ml-3 `}></input>
         <span
           className={`w-1/12 border border-black p-1 flex justify-center min-w-[83px] ${labelColor} ml-4`}
         >
           合計口数
         </span>
-        <input
-          className={`border border-black w-12 ml-3 hover:bg-gray-400`}
-        ></input>
+        <input className={`border border-black w-12 ml-3 `}></input>
         <span
           className={`w-1/12 border border-black p-1 flex justify-center min-w-[83px] ${labelColor} ml-4`}
         >
           使用口数
         </span>
-        <input
-          className={`border border-black w-12 ml-3 hover:bg-gray-400`}
-        ></input>
+        <input className={`border border-black w-12 ml-3 `}></input>
         <span
           className={`w-1/12 border border-black p-1 flex justify-center min-w-[83px] ${labelColor} ml-4`}
         >
           未使用口数
         </span>
-        <input
-          className={`border border-black w-12 ml-3 hover:bg-gray-400`}
-        ></input>
+        <input className={`border border-black w-12 ml-3 `}></input>
       </div>
 
       <div className="w-full min-w-[922px] text-[10px] mt-2">
@@ -108,13 +100,13 @@ const TerminalGasValve = () => {
                       3
                     </td>
                     <td
-                      className={`border border-black text-center hover:bg-gray-400 ${
+                      className={`border border-black text-center hover:bg-[#E5F7E5] ${
                         rowHasCheck ? "bg-red-500" : ""
                       }`}
                     >
                       <button
                         onClick={() => setModalF1Open(true)}
-                        className="flex items-center justify-center w-full h-full hover:bg-gray-400"
+                        className="flex items-center justify-center w-full h-full hover:bg-[#E5F7E5]"
                       >
                         ▼
                       </button>
@@ -141,7 +133,7 @@ const TerminalGasValve = () => {
                             className={`
                             absolute inset-0 w-full h-full flex items-center justify-center
                             focus:outline-none focus:ring-2 focus:ring-black
-                            hover:bg-gray-400 
+                            hover:bg-[#E5F7E5] 
                             ${
                               symbols[states[row][col]] === "×"
                                 ? "bg-red-500 text-white"

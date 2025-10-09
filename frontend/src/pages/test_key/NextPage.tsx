@@ -17,7 +17,7 @@ const NextPage: React.FC = () => {
 
         <button
           onClick={() => navigate(-1)}
-          className="bg-gray-300 px-6 py-2 rounded shadow hover:bg-gray-400"
+          className="bg-gray-300 px-6 py-2 rounded shadow hover:bg-[#E5F7E5]"
         >
           前のページへ
         </button>

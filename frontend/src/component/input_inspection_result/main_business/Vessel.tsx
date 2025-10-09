@@ -97,7 +97,7 @@ const Vessel = () => {
                     {label}
                   </div>
                   <button
-                    className={`border border-slate-400 text-center cursor-pointer w-10 h-8 hover:bg-gray-400 ${getButtonColor(
+                    className={`border border-slate-400 text-center cursor-pointer w-10 h-8 hover:bg-[#E5F7E5] ${getButtonColor(
                       val
                     )}`}
                     onClick={() => handleClick(0, idx)}

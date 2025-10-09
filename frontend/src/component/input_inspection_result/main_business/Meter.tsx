@@ -124,7 +124,7 @@ const Meter = () => {
                             setModalF1Open(true);
                           }
                         }}
-                        className={`absolute inset-0 w-full h-full flex items-center justify-center  hover:bg-gray-400 ${
+                        className={`absolute inset-0 w-full h-full flex items-center justify-center  hover:bg-[#E5F7E5] ${
                           rowHasCheck ? "bg-red-500" : ""
                         }`}
                       >
@@ -136,13 +136,13 @@ const Meter = () => {
                     <td className={`border border-black p-0`}>
                       <input
                         type="number"
-                        className={`w-full h-full border-none text-center hover:bg-gray-400 `}
+                        className={`w-full h-full border-none text-center hover:bg-[#E5F7E5] `}
                       />
                     </td>
 
                     {/* 常時監視 */}
                     <td
-                      className={`border border-black p-0 hover:bg-gray-400 `}
+                      className={`border border-black p-0 hover:bg-[#E5F7E5] `}
                     >
                       <select
                         value={selectValue}
@@ -177,7 +177,7 @@ const Meter = () => {
                             handleClick(idx, 0);
                           }
                         }}
-                        className={`absolute inset-0 w-full h-full flex items-center justify-center hover:bg-gray-400 ${bgColor}`}
+                        className={`absolute inset-0 w-full h-full flex items-center justify-center hover:bg-[#E5F7E5] ${bgColor}`}
                       >
                         {symbols[val]}
                       </button>
@@ -195,7 +195,7 @@ const Meter = () => {
                             handleClickSButton2();
                           }
                         }}
-                        className={`absolute inset-0 w-full h-full flex items-center justify-center hover:bg-gray-400`}
+                        className={`absolute inset-0 w-full h-full flex items-center justify-center hover:bg-[#E5F7E5]`}
                       >
                         {labels[statelabel2]}
                       </button>

@@ -140,13 +140,13 @@ const AdvancedSearchForm: React.FC<{
       <div className="flex flex-col gap-1 h-[64px]">
         <button
           onClick={handleSearchClick}
-          className="bg-gray-300 border border-gray-500 rounded px-8 font-bold hover:bg-gray-400 h-[30px] shadow-md shadow-zinc-600"
+          className="bg-gray-300 border border-gray-500 rounded px-8 font-bold hover:bg-[#E5F7E5] h-[30px] shadow-md shadow-zinc-600"
         >
           検索
         </button>
         <button
           onClick={handleResetClick}
-          className="bg-gray-300 border border-gray-500 rounded px-8 font-bold hover:bg-gray-400 h-[30px] shadow-md shadow-zinc-600"
+          className="bg-gray-300 border border-gray-500 rounded px-8 font-bold hover:bg-[#E5F7E5] h-[30px] shadow-md shadow-zinc-600"
         >
           再入力
         </button>
@@ -409,7 +409,7 @@ const ProductSearchModal: React.FC<ProductSearchModalProps> = ({
         <div className="flex gap-4 w-full justify-center items-center">
           <button
             onClick={onClose}
-            className="bg-gray-300 border border-gray-500 rounded px-10 py-2 font-bold hover:bg-gray-400 shadow-md shadow-zinc-600"
+            className="bg-gray-300 border border-gray-500 rounded px-10 py-2 font-bold hover:bg-[#E5F7E5] shadow-md shadow-zinc-600"
           >
             戻る (R)
           </button>
@@ -418,7 +418,7 @@ const ProductSearchModal: React.FC<ProductSearchModalProps> = ({
             disabled={activeIndex === null}
             className={`border border-gray-500 rounded px-10 py-2 font-bold shadow-md shadow-zinc-600 ${
               activeIndex !== null
-                ? "bg-gray-300 hover:bg-gray-400"
+                ? "bg-gray-300 hover:bg-[#E5F7E5]"
                 : "bg-gray-200 text-gray-400 cursor-not-allowed"
             }`}
           >

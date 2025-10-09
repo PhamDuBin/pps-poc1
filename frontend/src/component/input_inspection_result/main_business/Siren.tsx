@@ -143,13 +143,13 @@ const Siren = () => {
                       2012/01
                     </td>
                     <td
-                      className={`border border-black text-center hover:bg-gray-400 ${
+                      className={`border border-black text-center hover:bg-[#E5F7E5] ${
                         rowHasCheck ? "bg-red-500" : ""
                       }`}
                     >
                       <button
                         onClick={() => setModalF1Open(true)}
-                        className="flex items-center justify-center w-full h-full hover:bg-gray-400"
+                        className="flex items-center justify-center w-full h-full hover:bg-[#E5F7E5]"
                       >
                         ▼
                       </button>
@@ -176,7 +176,7 @@ const Siren = () => {
                             className={`
                             absolute inset-0 w-full h-full flex items-center justify-center
                             focus:outline-none focus:ring-2 focus:ring-black
-                            hover:bg-gray-400 
+                            hover:bg-[#E5F7E5] 
                             ${
                               symbols[states[row][col]] === "×"
                                 ? "bg-red-500 text-white"

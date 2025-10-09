@@ -4,7 +4,7 @@ import { symbols } from "../../../constants/input_inspection_result";
 
 const TestMeasurement = () => {
   const label = `w-1/6 flex text-center justify-center ${labelColor} border border-black h-6`;
-  const input = `w-1/12 flex text-center justify-center hover:bg-gray-400 border border-black h-6 border-gray-600`;
+  const input = `w-1/12 flex text-center justify-center hover:bg-[#E5F7E5] border border-black h-6 border-gray-600`;
   const buttonBase = `w-[30px] border border-black h-6 border-gray-600`;
 
   const [pressureChecked, setPressureChecked] = useState(false);

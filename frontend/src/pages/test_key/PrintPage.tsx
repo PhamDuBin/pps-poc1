@@ -37,13 +37,13 @@ const PrintPage: React.FC = () => {
         <div className="flex gap-4 justify-center">
           <button
             onClick={startProgress}
-            className="bg-gray-300 px-6 py-2 rounded shadow hover:bg-gray-400"
+            className="bg-gray-300 px-6 py-2 rounded shadow hover:bg-[#E5F7E5]"
           >
             印刷
           </button>
           <button
             onClick={() => navigate("/next-page")}
-            className="bg-gray-300 px-6 py-2 rounded shadow hover:bg-gray-400"
+            className="bg-gray-300 px-6 py-2 rounded shadow hover:bg-[#E5F7E5]"
           >
             次のページへ
           </button>

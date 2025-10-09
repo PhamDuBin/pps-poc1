@@ -140,7 +140,7 @@ const SupplyPipe = () => {
                         }}
                         className={`
                           absolute inset-0 w-full h-full flex items-center justify-center
-                          cursor-pointer hover:bg-gray-400
+                          cursor-pointer hover:bg-[#E5F7E5]
                           ${rowHasCheck ? "bg-red-500" : ""}
                           
                         `}
@@ -153,7 +153,7 @@ const SupplyPipe = () => {
                         return (
                           <td
                             key={col}
-                            className={`border border-black p-0 hover:bg-gray-400`}
+                            className={`border border-black p-0 hover:bg-[#E5F7E5]`}
                           >
                             <select
                               value={selectValues[idx]}
@@ -170,7 +170,7 @@ const SupplyPipe = () => {
                                   });
                                 })
                               }
-                              className={`w-full h-full font-medium text-center hover:bg-gray-400`}
+                              className={`w-full h-full font-medium text-center hover:bg-[#E5F7E5]`}
                             >
                               {optionsSupplyPipe.map((opt, i) => (
                                 <option key={i} value={i}>
@@ -205,7 +205,7 @@ const SupplyPipe = () => {
                                 handleClick(idx, col);
                               }
                             }}
-                            className={`absolute inset-0 w-full h-full flex items-center justify-center  hover:bg-gray-400 ${bgColor}`}
+                            className={`absolute inset-0 w-full h-full flex items-center justify-center  hover:bg-[#E5F7E5] ${bgColor}`}
                           >
                             {symbols[val]}
                           </button>

@@ -89,7 +89,7 @@ const Regulator = () => {
                             setModalF1Open(true);
                           }
                         }}
-                        className={`absolute inset-0 w-full h-full flex items-center justify-center hover:bg-gray-400 ${
+                        className={`absolute inset-0 w-full h-full flex items-center justify-center hover:bg-[#E5F7E5] ${
                           rowHasCheck ? "bg-red-500" : ""
                         }`}
                       >
@@ -121,7 +121,7 @@ const Regulator = () => {
                                 handleClick(idx, col);
                               }
                             }}
-                            className={`absolute inset-0 w-full h-full flex items-center justify-center hover:bg-gray-400 ${bgColor}`}
+                            className={`absolute inset-0 w-full h-full flex items-center justify-center hover:bg-[#E5F7E5] ${bgColor}`}
                           >
                             {symbols[val]}
                           </button>

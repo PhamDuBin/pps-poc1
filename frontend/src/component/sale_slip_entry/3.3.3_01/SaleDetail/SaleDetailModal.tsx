@@ -305,7 +305,7 @@ const SaleDetailModal: React.FC<SaleDetailModalProps> = ({
         <div className="flex gap-4 w-full justify-center items-center">
           <button
             onClick={onClose}
-            className="bg-gray-300 border border-gray-500 rounded px-10 py-2 font-bold hover:bg-gray-400 shadow-md shadow-zinc-600"
+            className="bg-gray-300 border border-gray-500 rounded px-10 py-2 font-bold hover:bg-[#E5F7E5] shadow-md shadow-zinc-600"
           >
             戻る (R)
           </button>
@@ -313,7 +313,7 @@ const SaleDetailModal: React.FC<SaleDetailModalProps> = ({
             onClick={() => {
               handleNext();
             }}
-            className="bg-gray-300 border border-gray-500 rounded px-10 py-2 font-bold hover:bg-gray-400 shadow-md shadow-zinc-600"
+            className="bg-gray-300 border border-gray-500 rounded px-10 py-2 font-bold hover:bg-[#E5F7E5] shadow-md shadow-zinc-600"
           >
             選択 (N)
           </button>

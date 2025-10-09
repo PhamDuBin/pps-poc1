@@ -106,7 +106,7 @@ const SurveyDate = () => {
                         BGC001
                       </td>
                       <td
-                        className={`border border-black text-center hover:bg-gray-400 ${
+                        className={`border border-black text-center hover:bg-[#E5F7E5] ${
                           rowHasCheck ? "bg-red-500" : ""
                         }`}
                       >
@@ -122,12 +122,12 @@ const SurveyDate = () => {
                           return (
                             <td
                               key={col}
-                              className="border border-black text-center hover:bg-gray-400"
+                              className="border border-black text-center hover:bg-[#E5F7E5]"
                             >
                               <input
                                 type="text"
                                 defaultValue="0"
-                                className="w-full h-full text-center outline-none hover:bg-gray-400"
+                                className="w-full h-full text-center outline-none hover:bg-[#E5F7E5]"
                               />
                             </td>
                           );
@@ -149,7 +149,7 @@ const SurveyDate = () => {
                                     onClick={() =>
                                       handleValueChange(row, 0.0001)
                                     }
-                                    className="h-2 w-5 border-b border-l border-gray-400 flex items-center justify-center text-[8px] hover:bg-gray-400 active:bg-gray-300"
+                                    className="h-2 w-5 border-b border-l border-gray-400 flex items-center justify-center text-[8px] hover:bg-[#E5F7E5] active:bg-gray-300"
                                     tabIndex={-1}
                                   >
                                     ▲
@@ -158,7 +158,7 @@ const SurveyDate = () => {
                                     onClick={() =>
                                       handleValueChange(row, -0.0001)
                                     }
-                                    className="h-2 w-5 border-l border-gray-400 flex items-center justify-center text-[8px] hover:bg-gray-400 active:bg-gray-300"
+                                    className="h-2 w-5 border-l border-gray-400 flex items-center justify-center text-[8px] hover:bg-[#E5F7E5] active:bg-gray-300"
                                     tabIndex={-1}
                                   >
                                     ▼
@@ -201,7 +201,7 @@ const SurveyDate = () => {
                                 className={`
           absolute inset-0 w-full h-full flex items-center justify-center
           focus:outline-none focus:ring-2 focus:ring-black
-          hover:bg-gray-400 text-[9px]
+          hover:bg-[#E5F7E5] text-[9px]
           ${
             warnings[states[row][col]] === "×"
               ? "bg-red-500 text-white"
@@ -234,7 +234,7 @@ const SurveyDate = () => {
                               }}
                               className={`
         absolute inset-0 w-full h-full flex items-center justify-center
-        focus:outline-none focus:ring-2 focus:ring-black hover:bg-gray-400
+        focus:outline-none focus:ring-2 focus:ring-black hover:bg-[#E5F7E5]
         ${
           symbols[states[row][col]] === "×"
             ? "bg-red-500 text-white"
