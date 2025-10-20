@@ -40,9 +40,11 @@ const TargetCustomer = forwardRef<TargetCustomerRef, TargetCustomerProps>(
           tabIndex={0}
           onKeyDown={blockTab}
           ref={containerRef}
-          className="border border-black min-h-[120px] p-2 xl:text-base text-sm"
+          className="min-h-[120px] p-2 xl:text-base text-sm"
         >
-          <div className={`${labelColor} font-bold text-center py-2`}>
+          <div
+            className={`${labelColor} font-bold text-center py-2 rounded-md`}
+          >
             対象顧客
           </div>
           <div className="grid grid-cols-4 my-2">

@@ -42,7 +42,7 @@ const MainBusinessScreen = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const activeButton = `bg-yellow-300 border-yellow-400`;
   const button = `flex text-center justify-center items-center ${labelColor} border border-black xl:text-base text-xs font-bold shadow-md shadow-zinc-600 hover:bg-white`;
-  const span = `w-[10%] flex justify-center text-center items-center font-bold ${labelColor}`;
+  const span = `w-[10%] flex justify-center text-center items-center font-bold ${labelColor} rounded-md`;
   const focusFirstButtonRef = useRef<HTMLButtonElement>(null);
 
   const handleScrollAndFocus = useCallback(
@@ -233,7 +233,7 @@ const MainBusinessScreen = () => {
       className="h-screen w-full flex flex-col p-4 min-w-[1080px]"
     >
       <span
-        className={`w-full h-10 font-bold xl:text-2xl text-xl flex text-center justify-center items-center ${labelColor}`}
+        className={`w-full h-10 font-bold xl:text-2xl text-xl flex text-center justify-center items-center rounded-md ${labelColor}`}
       >
         請求書発行
       </span>

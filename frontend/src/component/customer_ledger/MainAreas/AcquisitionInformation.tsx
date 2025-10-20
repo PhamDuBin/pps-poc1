@@ -104,7 +104,7 @@ const AcquisitionInformation = forwardRef<any, { showData: boolean }>(
     return (
       <div onKeyDown={blockTab} className="w-full text-xs py-4">
         <div
-          className={`h-8 border text-sm border-gray-300 rounded-md font-bold flex items-center px-3 ${labelColor}`}
+          className={`h-8 border text-sm border-gray-300 rounded-md font-semibold flex items-center px-3 ${labelColor}`}
         >
           獲得情報
         </div>
@@ -115,7 +115,7 @@ const AcquisitionInformation = forwardRef<any, { showData: boolean }>(
                 onClick={() => {
                   handleOpenWindow();
                 }}
-                className={`font-semibold shadow-md shadow-zinc-500 ${labelClass}`}
+                className={`shadow-md shadow-zinc-500 ${labelClass}`}
                 disabled={isFormDisabled}
                 ref={firstSelectRef}
               >
@@ -137,7 +137,7 @@ const AcquisitionInformation = forwardRef<any, { showData: boolean }>(
 
           <div className="w-full gap-4 flex justify-between py-1">
             <div className="w-1/2 flex">
-              <div className={`font-semibold ${labelClass}`}>取引開始日</div>
+              <div className={`${labelClass}`}>取引開始日</div>
               <div className="w-4/5">
                 <DatePicker
                   value={formValues.startDate}
@@ -149,7 +149,7 @@ const AcquisitionInformation = forwardRef<any, { showData: boolean }>(
               </div>
             </div>
             <div className="w-1/2 flex">
-              <div className={`font-semibold ${labelClass}`}>取引中止日</div>
+              <div className={`${labelClass}`}>取引中止日</div>
               <DatePicker
                 value={formValues.endDate}
                 onChange={(date) => handleValueChange("endDate", date)}
@@ -161,7 +161,7 @@ const AcquisitionInformation = forwardRef<any, { showData: boolean }>(
           </div>
           <div className="w-full flex gap-4 py-1">
             <div className="w-1/2 flex py-1">
-              <div className={`font-semibold ${labelClass}`}>入居区分</div>
+              <div className={`${labelClass}`}>入居区分</div>
               <div className="w-2/5">
                 <CodeInputSelect
                   options={contractOptions}
@@ -176,7 +176,7 @@ const AcquisitionInformation = forwardRef<any, { showData: boolean }>(
 
           <div className="flex justify-between gap-4 py-1">
             <div className="flex w-1/2">
-              <div className={`font-semibold ${labelClass}`}>新規登録理由</div>
+              <div className={`${labelClass}`}>新規登録理由</div>
               <div className="w-2/5">
                 <CodeInputSelect
                   options={acquisitionRouteOptions}
@@ -190,7 +190,7 @@ const AcquisitionInformation = forwardRef<any, { showData: boolean }>(
             </div>
             <div className="w-1/2">
               <div className="flex ">
-                <div className={`font-semibold ${labelClass}`}>新規区分</div>
+                <div className={`${labelClass}`}>新規区分</div>
                 <div className="w-2/5">
                   <CodeInputSelect
                     options={customerStatusOptions}
@@ -206,9 +206,7 @@ const AcquisitionInformation = forwardRef<any, { showData: boolean }>(
           </div>
           <div className="flex w-full gap-4 py-1">
             <div className="w-1/2 flex">
-              <div className={`font-semibold ${labelClass} h-[60px]`}>
-                取引開始
-              </div>
+              <div className={`${labelClass} h-[60px]`}>取引開始</div>
               <div className="flex flex-col gap-2 w-4/5">
                 <div className="flex h-1/2 items-center gap-2">
                   <Button
@@ -244,7 +242,7 @@ const AcquisitionInformation = forwardRef<any, { showData: boolean }>(
           </div>
           <div className="w-full flex gap-4 justify-between py-1">
             <div className="w-1/2 flex">
-              <div className={`font-semibold ${labelClass}`}>供給形態</div>
+              <div className={`${labelClass}`}>供給形態</div>
               <div className="w-2/5">
                 <CodeInputSelect
                   options={groupTypeOptions}
@@ -255,7 +253,7 @@ const AcquisitionInformation = forwardRef<any, { showData: boolean }>(
               </div>
             </div>
             <div className="w-1/2 flex pr-2">
-              <div className={`font-semibold ${labelClass}`}>集合戸数</div>
+              <div className={`${labelClass}`}>集合戸数</div>
               <div className="w-4/5">
                 <HalfWidthNumberInput
                   className={`${hoverInputColor} ${focusInputColor} w-[70px] rounded-md`}
@@ -270,7 +268,7 @@ const AcquisitionInformation = forwardRef<any, { showData: boolean }>(
           </div>
           <div className="w-full flex gap-4 py-1">
             <div className="flex w-1/2 py-1 items-center">
-              <div className={`font-semibold ${labelClass}`}>集合親コード</div>
+              <div className={`${labelClass}`}>集合親コード</div>
               <div className="flex gap-2 items-center w-4/5">
                 <HalfWidthNumberInput
                   value={formValues.groupParent1 ?? ""}
@@ -316,7 +314,7 @@ const AcquisitionInformation = forwardRef<any, { showData: boolean }>(
 
           <div className="w-full flex gap-4 justify-between py-1">
             <div className="w-1/2 flex">
-              <div className={`font-semibold ${labelClass}`}>ガス販売形態</div>
+              <div className={`${labelClass}`}>ガス販売形態</div>
               <div className="w-2/5">
                 <CodeInputSelect
                   options={inspectionTypeOptions}
@@ -329,7 +327,7 @@ const AcquisitionInformation = forwardRef<any, { showData: boolean }>(
               </div>
             </div>
             <div className="w-1/2 flex">
-              <div className={`font-semibold ${labelClass}`}>販売用途区分</div>
+              <div className={`${labelClass}`}>販売用途区分</div>
               <div className="w-2/5">
                 <CodeInputSelect
                   options={usageTypeOptions}
@@ -342,7 +340,7 @@ const AcquisitionInformation = forwardRef<any, { showData: boolean }>(
           </div>
           <div className="w-full flex py-1 gap-4">
             <div className="w-1/2 flex">
-              <div className={`font-semibold ${labelClass}`}>販売単価設定</div>
+              <div className={`${labelClass}`}>販売単価設定</div>
               <div className="w-2/5">
                 <CodeInputSelect
                   options={decisionStatusOptions}
@@ -358,7 +356,7 @@ const AcquisitionInformation = forwardRef<any, { showData: boolean }>(
           </div>
           <div className="flex w-full gap-4 justify-between py-1">
             <div className="w-1/2 flex">
-              <div className={`font-semibold ${labelClass}`}>オートガス</div>
+              <div className={`${labelClass}`}>オートガス</div>
               <div className="w-2/5">
                 <CodeInputSelect
                   options={availabilityOptions}
@@ -369,7 +367,7 @@ const AcquisitionInformation = forwardRef<any, { showData: boolean }>(
               </div>
             </div>
             <div className="w-1/2 flex">
-              <div className={`font-semibold ${labelClass}`}>自家使用</div>
+              <div className={`${labelClass}`}>自家使用</div>
               <div className="w-2/5">
                 <CodeInputSelect
                   options={availabilityOptions}

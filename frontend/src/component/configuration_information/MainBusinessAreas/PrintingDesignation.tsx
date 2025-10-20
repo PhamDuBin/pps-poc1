@@ -100,19 +100,21 @@ const PrintingDesignation = forwardRef<any>((props, ref) => {
       tabIndex={0}
       onKeyDown={blockTab}
       ref={containerRef}
-      className="p-2 border border-black mt-2 xl:text-base text-sm"
+      className="p-2 mt-2 xl:text-base text-sm"
     >
       <div
-        className={`w-full ${labelColor} flex justify-center items-center p-2 font-bold`}
+        className={`w-full ${labelColor} flex justify-center items-center p-2 font-bold rounded-md`}
       >
         印刷指定
       </div>
 
-      <div className={`flex gap-x-4 mt-4 w-full ${labelColor} p-2`}>
+      <div
+        className={`flex gap-x-4 mt-4 w-full ${labelColor} p-2 rounded-t-md`}
+      >
         <div className="min-w-[100px] font-bold">印刷区分指定</div>
         <input
           type="text"
-          className={`w-[50%] border border-black ${inputColor}`}
+          className={`w-[50%] border border-black rounded-md ${inputColor}`}
           value={Object.values(selectedGroup).filter(Boolean).join("・")}
           readOnly
         />
@@ -124,7 +126,7 @@ const PrintingDesignation = forwardRef<any>((props, ref) => {
         </button>
       </div>
 
-      <div className="border border-black h-36 grid grid-rows-6 grid-cols-9 gap-1 py-2 px-[2%] grid-flow-col">
+      <div className="border border-black h-36 grid grid-rows-6 grid-cols-9 gap-1 py-2 px-[2%] grid-flow-col rounded-b-md">
         {Object.entries(printingButtons).map(([groupName, buttons]) =>
           buttons.map((label, idx) => {
             const isActive = selectedGroup[groupName] === label;
@@ -173,7 +175,7 @@ const PrintingDesignation = forwardRef<any>((props, ref) => {
         <div className="flex justify-between items-center gap-3">
           <div className="flex gap-3 items-center w-[40%]">
             <div
-              className={`flex items-center justify-center font-bold w-[120px] min-w-[120px] p-1 ${labelColor}`}
+              className={`flex items-center justify-center font-bold w-[120px] min-w-[120px] p-1 rounded-md ${labelColor}`}
             >
               印刷順
             </div>
@@ -186,7 +188,7 @@ const PrintingDesignation = forwardRef<any>((props, ref) => {
           </div>
           <div className="flex gap-3 items-center w-[60%]">
             <div
-              className={`flex items-center justify-center font-bold w-[120px] min-w-[120px] p-1 ${labelColor}`}
+              className={`flex items-center justify-center font-bold w-[120px] min-w-[120px] p-1 rounded-md ${labelColor}`}
             >
               請求親子
             </div>
@@ -206,7 +208,7 @@ const PrintingDesignation = forwardRef<any>((props, ref) => {
         <div className="flex justify-between items-center gap-3">
           <div className="flex gap-3 items-center w-[40%]">
             <div
-              className={`flex items-center justify-center font-bold w-[120px] min-w-[120px] p-1 ${labelColor}`}
+              className={`flex items-center justify-center font-bold w-[120px] min-w-[120px] p-1 rounded-md ${labelColor}`}
             >
               自振顧客明細
             </div>
@@ -219,7 +221,7 @@ const PrintingDesignation = forwardRef<any>((props, ref) => {
           </div>
           <div className="flex gap-3 items-center w-[60%]">
             <div
-              className={`flex items-center justify-center font-bold w-[120px] min-w-[120px] p-1 ${labelColor}`}
+              className={`flex items-center justify-center font-bold w-[120px] min-w-[120px] p-1 rounded-md ${labelColor}`}
             >
               宛先印字
             </div>
@@ -239,7 +241,7 @@ const PrintingDesignation = forwardRef<any>((props, ref) => {
         <div className="flex justify-between items-center gap-3">
           <div className="flex gap-3 items-center w-[40%]">
             <div
-              className={`flex items-center justify-center font-bold w-[120px] min-w-[120px] p-1 ${labelColor}`}
+              className={`flex items-center justify-center font-bold w-[120px] min-w-[120px] p-1 rounded-md ${labelColor}`}
             >
               鑑部税表現
             </div>
@@ -252,7 +254,7 @@ const PrintingDesignation = forwardRef<any>((props, ref) => {
           </div>
           <div className="flex gap-3 items-center w-[60%]">
             <div
-              className={`flex items-center justify-center font-bold w-[120px] min-w-[120px] p-1 ${labelColor}`}
+              className={`flex items-center justify-center font-bold w-[120px] min-w-[120px] p-1 rounded-md ${labelColor}`}
             >
               明細順
             </div>
@@ -267,7 +269,7 @@ const PrintingDesignation = forwardRef<any>((props, ref) => {
 
         <div className="flex gap-3 items-center w-[40%]">
           <div
-            className={`flex items-center justify-center font-bold w-[120px] min-w-[120px] p-1 ${labelColor}`}
+            className={`flex items-center justify-center font-bold w-[120px] min-w-[120px] p-1 rounded-md ${labelColor}`}
           >
             税取りまとめ
           </div>
@@ -281,7 +283,7 @@ const PrintingDesignation = forwardRef<any>((props, ref) => {
 
         <div className="flex gap-3 items-start">
           <div
-            className={`flex items-center justify-center font-bold w-[120px] min-w-[120px] p-1 ${labelColor}`}
+            className={`flex items-center justify-center font-bold w-[120px] min-w-[120px] p-1 rounded-md ${labelColor}`}
           >
             印刷項目
           </div>
@@ -296,7 +298,7 @@ const PrintingDesignation = forwardRef<any>((props, ref) => {
         <div className="flex items-center gap-3">
           <div className="flex gap-3 items-center w-[40%]">
             <div
-              className={`flex items-center justify-center font-bold w-[120px] min-w-[120px] p-1 ${labelColor}`}
+              className={`flex items-center justify-center font-bold w-[120px] min-w-[120px] p-1 rounded-md ${labelColor}`}
             >
               伝票メモ
             </div>
@@ -323,7 +325,7 @@ const PrintingDesignation = forwardRef<any>((props, ref) => {
         <div className="flex justify-between items-center gap-3">
           <div className="flex gap-3 items-center w-[40%]">
             <div
-              className={`flex items-center justify-center font-bold w-[120px] min-w-[120px] p-1 ${labelColor}`}
+              className={`flex items-center justify-center font-bold w-[120px] min-w-[120px] p-1 rounded-md ${labelColor}`}
             >
               印刷担当
             </div>
@@ -336,7 +338,7 @@ const PrintingDesignation = forwardRef<any>((props, ref) => {
           </div>
           <div className="flex gap-3 items-center w-[60%]">
             <div
-              className={`flex text-center items-center justify-center font-bold w-[120px] min-w-[120px] p-1 ${labelColor}`}
+              className={`flex text-center items-center justify-center font-bold w-[120px] min-w-[120px] p-1 rounded-md ${labelColor}`}
             >
               施設使用料とりまとめ名称
             </div>
@@ -357,7 +359,7 @@ const PrintingDesignation = forwardRef<any>((props, ref) => {
         <div className="flex justify-between items-center gap-3">
           <div className="flex gap-3 items-center w-[40%]">
             <div
-              className={`flex items-center justify-center font-bold w-[120px] min-w-[120px] p-1 ${labelColor}`}
+              className={`flex items-center justify-center font-bold w-[120px] min-w-[120px] p-1 rounded-md ${labelColor}`}
             >
               領収書の担当
             </div>
@@ -370,7 +372,7 @@ const PrintingDesignation = forwardRef<any>((props, ref) => {
           </div>
           <div className="flex gap-3 items-center w-[60%]">
             <div
-              className={`flex items-center justify-center font-bold w-[120px] min-w-[120px] p-1 ${labelColor}`}
+              className={`flex items-center justify-center font-bold w-[120px] min-w-[120px] p-1 rounded-md ${labelColor}`}
             >
               原料費調整通知
             </div>

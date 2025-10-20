@@ -388,6 +388,5 @@ export const handleNumericSelectKeyDown = (
 export const blockTab = (e: React.KeyboardEvent) => {
   if (e.key === "Tab") {
     e.preventDefault();
-    console.log("Tab is blocked!");
   }
 };

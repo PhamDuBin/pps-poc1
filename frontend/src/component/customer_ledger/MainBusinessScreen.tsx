@@ -173,10 +173,8 @@ const MainBusinessScreen = () => {
         }
         return;
       }
-      const isMac = navigator.platform.toUpperCase().includes("MAC");
-      const isModifierPressed = isMac
-        ? e.metaKey && e.altKey
-        : e.ctrlKey && e.altKey;
+      // const isMac = navigator.platform.toUpperCase().includes("MAC");
+      const isModifierPressed = e.ctrlKey && e.altKey;
 
       const action = shortcuts[key as keyof typeof shortcuts];
       if (isModifierPressed && action) {
@@ -505,7 +503,7 @@ const MainBusinessScreen = () => {
             onClick={() => {
               handleOpenWindow();
             }}
-            className={`!bg-[#80bad7] !text-black hover:!bg-white hover:!text-blue-600 w-28 shadow-md shadow-zinc-500`}
+            className={`!bg-[#80bad7] !text-black hover:!bg-white hover:!text-blue-600 w-32 shadow-md shadow-zinc-500`}
           >
             F7顧客コード変更
           </Button>

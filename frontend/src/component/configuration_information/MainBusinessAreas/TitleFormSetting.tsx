@@ -6,7 +6,7 @@ import { blockTab } from "../../../utils/InputHandlers";
 import CodeInputSelect from "../../CodeInputSelect";
 import { labelOptions } from "../../../constants/configuration_information";
 
-const labelClass = `${labelColor} border border-black px-2 flex items-center justify-center h-[32px] w-[180px]`;
+const labelClass = `${labelColor} px-2 flex items-center justify-center h-[32px] w-[180px] rounded-md`;
 
 const TitleFormSetting = forwardRef<any>((props, ref) => {
   const [formValues, setFormValues] = useState({
@@ -58,11 +58,11 @@ const TitleFormSetting = forwardRef<any>((props, ref) => {
       tabIndex={0}
       onKeyDown={blockTab}
       ref={containerRef}
-      className="p-2 border border-black mt-2 xl:text-base text-xs"
+      className="p-2 mt-2 xl:text-base text-xs"
     >
       {/* Header */}
       <div
-        className={`w-full ${labelColor} flex justify-center items-center p-2 font-bold`}
+        className={`w-full ${labelColor} flex justify-center items-center p-2 font-bold rounded-md`}
       >
         タイトル・鑑設定
       </div>
@@ -71,7 +71,7 @@ const TitleFormSetting = forwardRef<any>((props, ref) => {
       <div className="flex gap-10 mt-4 w-full ">
         <div className="flex gap-3 items-center">
           <div
-            className={`w-[200px] ${labelColor} flex justify-center items-center p-1 font-bold`}
+            className={`w-[200px] ${labelColor} flex justify-center items-center p-1 font-bold rounded-md`}
           >
             請求書タイトル
           </div>
@@ -86,7 +86,7 @@ const TitleFormSetting = forwardRef<any>((props, ref) => {
         </div>
         <div className="flex gap-3 items-center w-[40%]">
           <div
-            className={`w-[160px] ${labelColor} flex justify-center items-center p-1 font-bold`}
+            className={`w-[160px] ${labelColor} flex justify-center items-center p-1 font-bold rounded-md`}
           >
             請求書案内文
           </div>

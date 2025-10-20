@@ -12,16 +12,12 @@ const ContinuousIssue = forwardRef<any>((props, ref) => {
   const [rangeEnd, setRangeEnd] = useState<dayjs.Dayjs | null>(null);
 
   const labelClass =
-    "bg-[#80bad7] border border-gray-400 text-sm font-bold flex items-center justify-center min-h-[32px] w-[120px] px-2";
+    "bg-[#80bad7] border border-gray-400 text-sm font-bold flex items-center justify-center min-h-[32px] w-[120px] px-2 rounded-md";
 
   return (
-    <div
-      tabIndex={0}
-      onKeyDown={blockTab}
-      className="border border-black w-full p-2"
-    >
+    <div tabIndex={0} onKeyDown={blockTab} className="w-full p-2">
       {/* Title */}
-      <div className="bg-[#80bad7] font-bold text-center py-2">
+      <div className="bg-[#80bad7] font-bold text-center py-2 rounded-md">
         抽出条件｜連続発行
       </div>
 

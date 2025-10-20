@@ -2,6 +2,7 @@
 import React from "react";
 import { useScreenNavigation } from "../../../utils/useScreenNavigation";
 import { handleOpenWindow } from "../../../constants/functions";
+import { blockTab } from "../../../utils/InputHandlers";
 
 const CurrentMonthDetails = ({ onSwitchScreen }: any) => {
   const containerRef = useScreenNavigation<HTMLDivElement>(onSwitchScreen);
@@ -47,7 +48,7 @@ const CurrentMonthDetails = ({ onSwitchScreen }: any) => {
       <div className="px-4 flex lg:flex-row flex-col gap-4 text-black font-sans w-full">
         <div className="flex flex-col items-center flex-shrink-0 w-[10%] ">
           <div className={titleStyle}>＜判定＞</div>
-          <div className="p-1 border border-black bg-[#80bad7]   w-full">
+          <div className="p-1 border border-black bg-[#80bad7] w-full">
             <div className="p-0.5 border border-black flex flex-col justify-between items-center bg-white h-full">
               <div className="w-full aspect-square rounded-full bg-red-300 border border-gray-400"></div>
               <div className="w-full aspect-square rounded-full bg-yellow-200 border border-gray-400"></div>

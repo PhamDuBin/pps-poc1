@@ -122,6 +122,15 @@ const TrancInfoScreen = () => {
       const activeElement = document.activeElement as HTMLElement;
       const leftPanel = leftPanelRef.current;
       if (leftPanel && leftPanel.contains(activeElement)) {
+        if (
+          e.key === "Tab" &&
+          !e.shiftKey &&
+          activeElement === lastLeftPanelButtonRef.current
+        ) {
+          e.preventDefault();
+          setShowLeftPanel(false);
+          return;
+        }
         const focusableElements = Array.from(
           leftPanel.querySelectorAll(
             'input:not([disabled]), button:not([disabled]), [role="button"], select, textarea'

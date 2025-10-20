@@ -13,7 +13,7 @@ import { options } from "../../../constants/configuration_information";
 const { MonthPicker } = DatePicker;
 const { Option } = Select;
 
-const labelClass = `${labelColor} border border-black px-2 flex items-center justify-center min-h-[32px] w-[120px]`;
+const labelClass = `${labelColor} border border-black px-2 flex items-center justify-center min-h-[32px] w-[120px] rounded-md`;
 
 const IndividualIssue = forwardRef<any>((props, ref) => {
   const [selected, setSelected] = useState("0");
@@ -62,7 +62,7 @@ const IndividualIssue = forwardRef<any>((props, ref) => {
     <div
       tabIndex={0}
       onKeyDown={blockTab}
-      className="relative border border-black p-2 xl:text-base text-sm"
+      className="relative p-2 xl:text-base text-sm"
     >
       {showAdvanceSearch && (
         <>
@@ -86,7 +86,7 @@ const IndividualIssue = forwardRef<any>((props, ref) => {
       )}
 
       {/* Header */}
-      <div className="bg-[#80bad7] font-bold text-center p-2">
+      <div className="bg-[#80bad7] font-bold text-center p-2 rounded-md">
         抽出条件｜個別発行
       </div>
 
@@ -157,7 +157,13 @@ const IndividualIssue = forwardRef<any>((props, ref) => {
             <Select
               value={selected}
               onChange={(value) => setSelected(value)}
-              className={`w-[120px] text-black [&>.ant-select-selector]:!bg-blue-300 [&>.ant-select-selector]:!border-black [&>.ant-select-selector]:!text-black [&>.ant-select-selector]:!rounded-none [&>.ant-select-selector]:!text-center`}
+              className={`w-[120px] text-black 
+                [&>.ant-select-selector]:!bg-blue-300 
+                [&>.ant-select-selector]:!border-black 
+                [&>.ant-select-selector]:!text-black 
+                [&>.ant-select-selector]:!text-center 
+                [&>.ant-select-selector]:!rounded-md
+              `}
             >
               {options.map((option) => (
                 <Option key={option.value} value={option.value}>
@@ -165,6 +171,7 @@ const IndividualIssue = forwardRef<any>((props, ref) => {
                 </Option>
               ))}
             </Select>
+
             <Input
               disabled={showCustomerInfor}
               className={`w-[100px] ${inputColor}  ${
