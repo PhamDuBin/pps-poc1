@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(tree:*)",
+      "Bash(find:*)",
+      "Bash(node scripts/replaceColors.js:*)",
+      "Bash(npm run build:*)",
+      "Bash(timeout /t 30)",
+      "Bash(nul)",
+      "Bash(exit 0)",
+      "Bash(timeout /t 45)",
+      "Bash(timeout /t 60)",
+      "Bash(timeout /t 90)",
+      "Bash(npm install:*)",
+      "Bash(node scripts/fixWarnings.js:*)",
+      "Bash(timeout /t 20)",
+      "Bash(if exist node_modules rmdir /s /q node_modules)",
+      "Bash(if exist package-lock.json del /f /q package-lock.json)",
+      "Bash(npm start)",
+      "Bash(netstat:*)",
+      "Bash(findstr:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

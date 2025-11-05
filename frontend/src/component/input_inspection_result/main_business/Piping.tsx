@@ -1,6 +1,6 @@
 import { useState } from "react";
 import ModalF1 from "../../modal/Modal_F1";
-import { labelColor, inputColor } from "../../../constants/colors";
+import { labelColor } from "../../../constants/colors";
 import { handleNumericSelectKeyDown } from "../../../utils/InputHandlers";
 import {
   symbols,
@@ -120,13 +120,13 @@ const Piping = () => {
                 const rowHasCheck = states[row].some((s) => s === 3);
                 return (
                   <tr key={row} className={` h-6`}>
-                    <td className="border border-black text-center bg-[#ebcec0]">
+                    <td className="border border-black text-center bg-input">
                       {row + 1}
                     </td>
-                    <td className="border border-black text-center bg-[#ebcec0]">
+                    <td className="border border-black text-center bg-input">
                       材料名
                     </td>
-                    <td className="border border-black text-center bg-[#ebcec0]"></td>
+                    <td className="border border-black text-center bg-input"></td>
                     <td
                       className={`border border-black text-center hover:bg-[#E5F7E5] ${
                         rowHasCheck ? "bg-red-500" : ""

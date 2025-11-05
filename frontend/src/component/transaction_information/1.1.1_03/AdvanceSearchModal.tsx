@@ -171,7 +171,7 @@ const AdvancedSearchForm: React.FC<{
       </div>
 
       <div className="flex-grow">
-        <label className="flex text-center justify-center text-xs font-semibold mb-1 p-1 bg-[#80bad7]">
+        <label className="flex text-center justify-center text-xs font-semibold mb-1 p-1 bg-label">
           {currentField?.label}
         </label>
         {renderDynamicInput()}
@@ -180,13 +180,13 @@ const AdvancedSearchForm: React.FC<{
       <div className="flex flex-col space-y-1">
         <button
           onClick={onSearch}
-          className="bg-[#80bad7] border border-black px-4 py-1 h-[26px] flex items-center justify-center shadow-md shadow-zinc-600"
+          className="bg-label border border-black px-4 py-1 h-[26px] flex items-center justify-center shadow-md shadow-zinc-600"
         >
           検索
         </button>
         <button
           onClick={handleResetForm}
-          className="bg-[#80bad7] border border-black px-4 py-1 h-[26px] flex items-center justify-center shadow-md shadow-zinc-600"
+          className="bg-label border border-black px-4 py-1 h-[26px] flex items-center justify-center shadow-md shadow-zinc-600"
         >
           再入力
         </button>
@@ -268,12 +268,12 @@ const AdvanceSearchModal: React.FC<AdvanceSearchModalProps> = ({
 
   return (
     <div className="p-4 bg-white text-black w-full text-sm">
-      <div className="bg-[#80bad7] border border-black p-2 text-center font-bold mb-2">
+      <div className="bg-label border border-black p-2 text-center font-bold mb-2">
         顧客検索
       </div>
 
       {/* Search mode */}
-      <div className="flex items-center space-x-6 bg-[#80bad7] p-2 border border-black">
+      <div className="flex items-center space-x-6 bg-label p-2 border border-black">
         <div className="flex items-center space-x-2">
           <label className="font-semibold">事務所</label>
           <span>0000-000 全指定</span>
@@ -311,7 +311,7 @@ const AdvanceSearchModal: React.FC<AdvanceSearchModalProps> = ({
         style={{ height: "200px" }}
       >
         <table className="min-w-full border-collapse border border-black text-sm">
-          <thead className="sticky top-0 bg-[#80bad7] z-50">
+          <thead className="sticky top-0 bg-label z-50">
             <tr>
               <th className="border border-black p-1">カナ氏名</th>
               <th className="border border-black p-1">氏名</th>
@@ -368,7 +368,7 @@ const AdvanceSearchModal: React.FC<AdvanceSearchModalProps> = ({
       <div className="flex justify-center">
         <button
           onClick={() => setShowAdvanceSearch(false)}
-          className="w-20 border border-black bg-[#80bad7] px-2 py-1 flex mt-2 justify-center shadow-md shadow-zinc-600"
+          className="w-20 border border-black bg-label px-2 py-1 flex mt-2 justify-center shadow-md shadow-zinc-600"
         >
           閉じる
         </button>

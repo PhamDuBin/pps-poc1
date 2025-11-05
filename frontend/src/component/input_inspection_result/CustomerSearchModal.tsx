@@ -179,7 +179,7 @@ export const CustomerSearchModal = ({ onClose }: { onClose: () => void }) => {
                   ref={customerCode1Ref}
                   type="text"
                   placeholder="000"
-                  className="w-20 h-6 border border-black p-1 text-center placeholder-gray-400 bg-[#ebcec0]"
+                  className="w-20 h-6 border border-black p-1 text-center placeholder-gray-400 bg-input"
                   style={{ width: `${size}px` }}
                   value={(Array.isArray(value) && value[index]) || ""}
                   onChange={(e) => handleValueChange(e.target.value, index)}
@@ -196,7 +196,7 @@ export const CustomerSearchModal = ({ onClose }: { onClose: () => void }) => {
             <input
               ref={customerCode1Ref}
               type="text"
-              className="border border-black p-1 placeholder-gray-400 w-20 h-6 bg-[#ebcec0]"
+              className="border border-black p-1 placeholder-gray-400 w-20 h-6 bg-input"
               placeholder="000000"
               value={(Array.isArray(value) && value[0]) || ""}
               onChange={(e) => handleValueChange(e.target.value, 0)}
@@ -205,7 +205,7 @@ export const CustomerSearchModal = ({ onClose }: { onClose: () => void }) => {
             <span> - </span>
             <input
               type="text"
-              className="border w-20 h-6 border-gray-400 p-1 bg-[#ebcec0]"
+              className="border w-20 h-6 border-gray-400 p-1 bg-input"
               value={(Array.isArray(value) && value[1]) || ""}
               onChange={(e) => handleValueChange(e.target.value, 1)}
               placeholder="000000"
@@ -219,7 +219,7 @@ export const CustomerSearchModal = ({ onClose }: { onClose: () => void }) => {
             <input
               ref={customerCode1Ref}
               type="text"
-              className="border w-20 h-6 border-gray-400 p-1 placeholder-gray-400 bg-[#ebcec0]"
+              className="border w-20 h-6 border-gray-400 p-1 placeholder-gray-400 bg-input"
               value={(Array.isArray(value) && value[0]) || ""}
               onChange={(e) => handleValueChange(e.target.value, 0)}
               placeholder="000000"
@@ -228,7 +228,7 @@ export const CustomerSearchModal = ({ onClose }: { onClose: () => void }) => {
             <div>-</div>
             <input
               type="text"
-              className="border w-20 h-6 border-gray-400 p-1 placeholder-gray-400 bg-[#ebcec0]"
+              className="border w-20 h-6 border-gray-400 p-1 placeholder-gray-400 bg-input"
               value={(Array.isArray(value) && value[1]) || ""}
               onChange={(e) => handleValueChange(e.target.value, 1)}
               placeholder="000000"
@@ -242,7 +242,7 @@ export const CustomerSearchModal = ({ onClose }: { onClose: () => void }) => {
             <input
               ref={customerCode1Ref}
               type="text"
-              className="border h-6 border-black p-1 w-[197px] mr-[-1px] bg-[#ebcec0]"
+              className="border h-6 border-black p-1 w-[197px] mr-[-1px] bg-input"
               value={(typeof value === "string" && value) || ""}
               onChange={(e) => handleValueChange(e.target.value)}
               {...commonInputProps}

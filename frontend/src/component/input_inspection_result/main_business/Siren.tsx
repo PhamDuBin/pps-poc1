@@ -1,6 +1,6 @@
 import { useState } from "react";
 import ModalF1 from "../../modal/Modal_F1";
-import { labelColor, inputColor } from "../../../constants/colors";
+import { labelColor } from "../../../constants/colors";
 import { symbols } from "../../../constants/input_inspection_result";
 
 const Siren = () => {
@@ -127,19 +127,19 @@ const Siren = () => {
                 const rowHasCheck = states[row].some((s) => s === 3);
                 return (
                   <tr key={row} className={` h-6`}>
-                    <td className="border border-black text-center bg-[#ebcec0]">
+                    <td className="border border-black text-center bg-input">
                       {row + 1}
                     </td>
-                    <td className="border border-black text-center bg-[#ebcec0]">
+                    <td className="border border-black text-center bg-input">
                       メーカー名
                     </td>
-                    <td className="border border-black text-center bg-[#ebcec0]">
+                    <td className="border border-black text-center bg-input">
                       xxx003
                     </td>
-                    <td className="border border-black text-center bg-[#ebcec0]">
+                    <td className="border border-black text-center bg-input">
                       00001
                     </td>
-                    <td className="border border-black text-center bg-[#ebcec0]">
+                    <td className="border border-black text-center bg-input">
                       2012/01
                     </td>
                     <td

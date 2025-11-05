@@ -204,7 +204,7 @@ export const CustomCodeTextPair = forwardRef<
         }`}
         onKeyDown={handleDropdownKeyDown}
       >
-        <span className="w-[10%] h-[80px] bg-[#80bad7] flex justify-center items-center text-center border border-black">
+        <span className="w-[10%] h-[80px] bg-label flex justify-center items-center text-center border border-black">
           {label}
         </span>
 
@@ -259,7 +259,7 @@ export const CustomCodeTextPair = forwardRef<
           disabled={disabled}
           value={textValue}
           onChange={(e) => onTextChange(e.target.value)}
-          className="w-11/12 h-[80px] border border-black border-l-0 bg-[#ebcec0] p-1 resize-none"
+          className="w-11/12 h-[80px] border border-black border-l-0 bg-input p-1 resize-none"
           style={{ backgroundColor: "#ebcec0" }}
         />
       </div>

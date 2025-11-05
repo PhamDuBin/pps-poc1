@@ -9,9 +9,9 @@ function CheckSaleByCategoryScreen({ onSwitchScreen }: any) {
   );
 
   const labelClass =
-    "bg-[#80bad7] text-base font-medium w-full h-8 flex items-center justify-center bg-[#80bad7]";
+    "bg-label text-base font-medium w-full h-8 flex items-center justify-center bg-label";
   const inputClass =
-    "border border-black text-base w-full h-8 text-center bg-[#ebcec0]";
+    "border border-black text-base w-full h-8 text-center bg-input";
 
   const containerRef = useScreenNavigation<HTMLDivElement>(
     onSwitchScreen,
@@ -20,7 +20,7 @@ function CheckSaleByCategoryScreen({ onSwitchScreen }: any) {
 
   return (
     <div ref={containerRef} tabIndex={0} className="p-4 w-full outline-none">
-      <div className="bg-[#80bad7] w-full h-8 text-center font-semibold text-lg mb-2 leading-8 border border-black">
+      <div className="bg-label w-full h-8 text-center font-semibold text-lg mb-2 leading-8 border border-black">
         ＜大分類別売上＞
       </div>
 

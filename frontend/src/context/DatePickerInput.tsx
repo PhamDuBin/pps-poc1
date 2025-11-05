@@ -29,7 +29,7 @@ export const DatePickerInput: React.FC<DatePickerInputProps> = ({
         format="YYYY/MM/DD"
         style={{ fontSize: "10px" }}
         placeholder="yyyy/mm/dd"
-        className="w-full bg-[#ebcec0] px-2 py-1 border border-black"
+        className="w-full bg-input px-2 py-1 border border-black"
         suffixIcon={"▼"}
       />
     </div>

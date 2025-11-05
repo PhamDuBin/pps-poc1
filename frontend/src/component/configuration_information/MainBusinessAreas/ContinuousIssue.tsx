@@ -12,12 +12,12 @@ const ContinuousIssue = forwardRef<any>((props, ref) => {
   const [rangeEnd, setRangeEnd] = useState<dayjs.Dayjs | null>(null);
 
   const labelClass =
-    "bg-[#80bad7] border border-gray-400 text-sm font-bold flex items-center justify-center min-h-[32px] w-[120px] px-2 rounded-md";
+    "bg-label border border-gray-400 text-sm font-bold flex items-center justify-center min-h-[32px] w-[120px] px-2 rounded-md";
 
   return (
     <div tabIndex={0} onKeyDown={blockTab} className="w-full p-2">
       {/* Title */}
-      <div className="bg-[#80bad7] font-bold text-center py-2 rounded-md">
+      <div className="bg-label font-bold text-center py-2 rounded-md">
         抽出条件｜連続発行
       </div>
 
@@ -42,7 +42,7 @@ const ContinuousIssue = forwardRef<any>((props, ref) => {
           <div className={labelClass}>締切指定</div>
           <Select
             defaultValue="締切残"
-            className={`ml-2 max-w-[160px] w-full [&>.ant-select-selector]:!bg-[#ebcec0] `}
+            className={`ml-2 max-w-[160px] w-full [&>.ant-select-selector]:!bg-input `}
             options={[
               { value: "締切残", label: "締切残" },
               { value: "現在残", label: "現在残" },
@@ -56,7 +56,7 @@ const ContinuousIssue = forwardRef<any>((props, ref) => {
           <div className={labelClass}> 残高指定 </div>
           <Select
             defaultValue="残有り"
-            className={`ml-2 max-w-[160px] w-full [&>.ant-select-selector]:!bg-[#ebcec0] `}
+            className={`ml-2 max-w-[160px] w-full [&>.ant-select-selector]:!bg-input `}
             options={[
               { value: "残有り", label: "残有り" },
               { value: "取引有り", label: "取引有り" },
@@ -83,7 +83,7 @@ const ContinuousIssue = forwardRef<any>((props, ref) => {
               format="YYYY/MM/DD"
               style={{ flex: 1, minWidth: 0 }}
               placeholder="開始日"
-              className={`bg-[#ebcec0] `}
+              className={`bg-input `}
             />
             <span className="select-none">〜</span>
             <DatePicker
@@ -92,7 +92,7 @@ const ContinuousIssue = forwardRef<any>((props, ref) => {
               format="YYYY/MM/DD"
               style={{ flex: 1, minWidth: 0 }}
               placeholder="終了日"
-              className={`bg-[#ebcec0] `}
+              className={`bg-input `}
             />
           </div>
         </div>
@@ -102,7 +102,7 @@ const ContinuousIssue = forwardRef<any>((props, ref) => {
           <div className={labelClass}>売上の条件</div>
           <Select
             defaultValue="無条件"
-            className={`ml-2 max-w-[160px] w-full [&>.ant-select-selector]:!bg-[#ebcec0] `}
+            className={`ml-2 max-w-[160px] w-full [&>.ant-select-selector]:!bg-input `}
             options={[
               { value: "無条件", label: "無条件" },
               { value: "検針後売上有り", label: "検針後売上有り" },

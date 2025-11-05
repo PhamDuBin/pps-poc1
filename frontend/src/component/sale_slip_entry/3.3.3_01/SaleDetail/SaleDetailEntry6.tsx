@@ -28,7 +28,7 @@ const SaleDetailEntry6: React.FC<SaleDetailEntry6Props> = ({
       <div className="flex gap-2 p-1 border border-black h-[150px]">
         {/* 数量 */}
         <div className="w-20 text-center h-[64px]">
-          <div className="bg-[#80bad7] h-1/2">数量</div>
+          <div className="bg-label h-1/2">数量</div>
           <div className="h-1/2">
             <input
               ref={firstInputRef}
@@ -46,7 +46,7 @@ const SaleDetailEntry6: React.FC<SaleDetailEntry6Props> = ({
 
         {/* 単位 */}
         <div className="w-14 text-center h-[64px]">
-          <div className="bg-[#80bad7] h-1/2">単位</div>
+          <div className="bg-label h-1/2">単位</div>
           <div className="h-1/2">
             <input
               type="text"
@@ -66,7 +66,7 @@ const SaleDetailEntry6: React.FC<SaleDetailEntry6Props> = ({
         <div className="grid grid-cols-4 grid-rows-2 gap-2 p-1 border border-black h-[150px]">
           {/* 売上単価 */}
           <div className="text-center h-[64px]">
-            <div className="bg-[#80bad7] h-1/2">仕入単価</div>
+            <div className="bg-label h-1/2">仕入単価</div>
             <div className="h-1/2">
               <input
                 type="text"
@@ -86,7 +86,7 @@ const SaleDetailEntry6: React.FC<SaleDetailEntry6Props> = ({
 
           {/* 仕入単価区分 */}
           <div className="text-center h-[64px] relative">
-            <div className="bg-[#80bad7] h-1/2">仕入単価区分</div>
+            <div className="bg-label h-1/2">仕入単価区分</div>
             <select
               className="border border-black w-full h-1/2"
               value={
@@ -103,7 +103,7 @@ const SaleDetailEntry6: React.FC<SaleDetailEntry6Props> = ({
 
           {/* 仕入金額 */}
           <div className="text-center h-[64px] relative">
-            <div className="bg-[#80bad7] h-1/2">仕入金額</div>
+            <div className="bg-label h-1/2">仕入金額</div>
             <input
               type="text"
               placeholder="0"
@@ -131,7 +131,7 @@ const SaleDetailEntry6: React.FC<SaleDetailEntry6Props> = ({
 
           {/* 当月外 */}
           <div className="text-center h-[64px] relative">
-            <div className="bg-[#80bad7] h-1/2">当月外</div>
+            <div className="bg-label h-1/2">当月外</div>
             <select
               className="border border-black w-full h-1/2"
               value={
@@ -148,7 +148,7 @@ const SaleDetailEntry6: React.FC<SaleDetailEntry6Props> = ({
 
           {/* 備考 */}
           <div className="text-center h-[64px] col-span-2 relative">
-            <div className="bg-[#80bad7] h-1/2">備考</div>
+            <div className="bg-label h-1/2">備考</div>
             <input
               type="text"
               className="w-full h-1/2 border px-1 border-black placeholder-black-200"

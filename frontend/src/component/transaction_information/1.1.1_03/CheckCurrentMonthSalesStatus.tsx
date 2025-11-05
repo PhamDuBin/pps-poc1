@@ -15,19 +15,19 @@ const thirdOtherLabels = ["保証金", "与信限度額"];
 const autoDebitLabels = ["自振区分", "自振状況", "自振履歴"];
 const paymentInformationLabels = ["請求金額", "有効期限", "有効期限"];
 
-const inputClass = "border border-black text-base h-8 text-center bg-[#ebcec0]";
+const inputClass = "border border-black text-base h-8 text-center bg-input";
 const halfInputClass =
-  "border border-black text-base h-8 text-center w-[50%] bg-[#ebcec0]";
+  "border border-black text-base h-8 text-center w-[50%] bg-input";
 const labelClass =
-  "bg-[#80bad7] text-base font-medium h-8 flex items-center justify-center";
+  "bg-label text-base font-medium h-8 flex items-center justify-center";
 const containerClass = "flex items-center space-x-2 grid pb-1 grid-cols-2";
 const container4colClass = "flex items-center space-x-2 grid pb-1 grid-cols-4";
 const containerBillingClass =
   "flex items-center space-x-2 mb-2 grid grid-cols-2";
 const titleClass =
-  "mb-1 font-semibold text-[16px] text-center bg-[#80bad7] h-8 flex items-center justify-center";
+  "mb-1 font-semibold text-[16px] text-center bg-label h-8 flex items-center justify-center";
 const borderClass =
-  "bg-[#ebcec0] border border-black font-semibold text-[16px] text-center h-8 flex items-center justify-center";
+  "bg-input border border-black font-semibold text-[16px] text-center h-8 flex items-center justify-center";
 const borderContainerClass = "border border-black p-1";
 const borderContainerBillingClass = "border border-black mb-1 p-1 h-[265px]";
 
@@ -36,7 +36,7 @@ function CheckCurrentMonthSalesStatusScreen({ onSwitchScreen }: any) {
   return (
     <>
       <div
-        className={`font-semibold h-8 text-lg flex justify-center items-center p-1 mx-4 mt-4 text-center border bg-[#80bad7]`}
+        className={`font-semibold h-8 text-lg flex justify-center items-center p-1 mx-4 mt-4 text-center border bg-label`}
       >
         ＜当月売上状況＞
       </div>
@@ -95,7 +95,7 @@ function CheckCurrentMonthSalesStatusScreen({ onSwitchScreen }: any) {
                     <div className={containerClass} key={idx}>
                       <button
                         onClick={handleOpenWindow}
-                        className={`text-base font-medium h-8 flex items-center justify-center bg-[#4770a5] w-full cursor-pointer hover:bg-white shadow-md shadow-zinc-600 transition-all duration-200 active:shadow-none active:translate-y-px`}
+                        className={`text-base font-medium h-8 flex items-center justify-center bg-button-primary w-full cursor-pointer hover:bg-white shadow-md shadow-zinc-600 transition-all duration-200 active:shadow-none active:translate-y-px`}
                       >
                         {label}
                       </button>
@@ -116,7 +116,7 @@ function CheckCurrentMonthSalesStatusScreen({ onSwitchScreen }: any) {
                       {label === "保証金" ? (
                         <button
                           onClick={handleOpenWindow}
-                          className={`text-base font-medium h-8 flex items-center justify-center bg-[#4770a5] w-full cursor-pointer hover:bg-white shadow-md shadow-zinc-600 transition-all duration-200 active:shadow-none active:translate-y-px`}
+                          className={`text-base font-medium h-8 flex items-center justify-center bg-button-primary w-full cursor-pointer hover:bg-white shadow-md shadow-zinc-600 transition-all duration-200 active:shadow-none active:translate-y-px`}
                         >
                           {label}
                         </button>
@@ -147,7 +147,7 @@ function CheckCurrentMonthSalesStatusScreen({ onSwitchScreen }: any) {
                     {label === "自振履歴" ? (
                       <button
                         onClick={handleOpenWindow}
-                        className={`text-base font-medium h-8 flex items-center justify-center bg-[#4770a5] w-full cursor-pointer hover:bg-white shadow-md shadow-zinc-600 transition-all duration-200 active:shadow-none active:translate-y-px`}
+                        className={`text-base font-medium h-8 flex items-center justify-center bg-button-primary w-full cursor-pointer hover:bg-white shadow-md shadow-zinc-600 transition-all duration-200 active:shadow-none active:translate-y-px`}
                       >
                         {label}
                       </button>

@@ -6,7 +6,7 @@ import OtherInfo from "./MainAreas/OtherInfo";
 import AcquisitionInformation from "./MainAreas/AcquisitionInformation";
 import AreaInfo from "./MainAreas/AreaInfo";
 import EmergencyContact from "./MainAreas/EmergencyContact";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useCallback, useRef, useState } from "react";
 import { scroller } from "react-scroll";
 import { handleNavigationKey040504 } from "../../utils/InputHandlers";
 import AdvanceSearchModal from "../transaction_information/1.1.1_03/AdvanceSearchModal";
@@ -47,20 +47,20 @@ const MainBusinessScreen = () => {
     isOpen: false,
     message: "",
   });
-  const openConfirmationModal = (message: string) => {
+  const openConfirmationModal = useCallback((message: string) => {
     setModalConfig({
       isOpen: true,
       message: message,
     });
-  };
+  }, []);
 
-  const handleCloseModal = () => {
+  const handleCloseModal = useCallback(() => {
     setModalConfig({ isOpen: false, message: "" });
-  };
+  }, []);
   const containerRef = useRef<HTMLDivElement>(null);
   const firstInputRef = useRef<HTMLButtonElement>(null);
 
-  const handleScrollAndFocus = (sectionName: string) => {
+  const handleScrollAndFocus = useCallback((sectionName: string) => {
     setActiveSection(sectionName);
     scroller.scrollTo(`${sectionName}Section`, {
       duration: 500,
@@ -90,7 +90,7 @@ const MainBusinessScreen = () => {
           break;
       }
     }, 100);
-  };
+  }, []);
 
   const shortcuts = useMemo(
     () => ({
@@ -234,7 +234,7 @@ const MainBusinessScreen = () => {
         <div className="w-[90%] h-14 border border-black rounded-md p-2 mt-2 ">
           <div className="w-full flex flex-row items-center justify-center">
             <Select
-              className="w-40 mr-2 [&>.ant-select-selector]:!bg-[#ebcec0]"
+              className="w-40 mr-2 [&>.ant-select-selector]:!bg-input"
               defaultValue="顧客コード"
             >
               <Select.Option value="顧客コード">顧客コード</Select.Option>
@@ -458,7 +458,7 @@ const MainBusinessScreen = () => {
             onClick={() => {
               handleOpenWindow();
             }}
-            className={`!bg-[#80bad7] !text-black hover:!bg-white hover:!text-blue-600 w-28 shadow-md shadow-zinc-500`}
+            className={`!bg-label !text-black hover:!bg-white hover:!text-blue-600 w-28 shadow-md shadow-zinc-500`}
           >
             F1ヘルプ
           </Button>
@@ -466,7 +466,7 @@ const MainBusinessScreen = () => {
             onClick={() => {
               handleOpenWindow();
             }}
-            className={`!bg-[#80bad7] !text-black hover:!bg-white hover:!text-blue-600 w-28 shadow-md shadow-zinc-500`}
+            className={`!bg-label !text-black hover:!bg-white hover:!text-blue-600 w-28 shadow-md shadow-zinc-500`}
           >
             F2入力切替
           </Button>
@@ -474,12 +474,12 @@ const MainBusinessScreen = () => {
             onClick={() => {
               handleOpenWindow();
             }}
-            className={`!bg-[#80bad7] !text-black hover:!bg-white hover:!text-blue-600 w-28 shadow-md shadow-zinc-500`}
+            className={`!bg-label !text-black hover:!bg-white hover:!text-blue-600 w-28 shadow-md shadow-zinc-500`}
           >
             F3事業所変更
           </Button>
           <Button
-            className={`!bg-[#80bad7] !text-black hover:!bg-white hover:!text-blue-600 w-28 shadow-md shadow-zinc-500`}
+            className={`!bg-label !text-black hover:!bg-white hover:!text-blue-600 w-28 shadow-md shadow-zinc-500`}
           >
             F4検索
           </Button>
@@ -487,7 +487,7 @@ const MainBusinessScreen = () => {
             onClick={() => {
               handleOpenWindow();
             }}
-            className={`!bg-[#80bad7] !text-black hover:!bg-white hover:!text-blue-600 w-28 shadow-md shadow-zinc-500`}
+            className={`!bg-label !text-black hover:!bg-white hover:!text-blue-600 w-28 shadow-md shadow-zinc-500`}
           >
             F5前の顧客
           </Button>
@@ -495,7 +495,7 @@ const MainBusinessScreen = () => {
             onClick={() => {
               handleOpenWindow();
             }}
-            className={`!bg-[#80bad7] !text-black hover:!bg-white hover:!text-blue-600 w-28 shadow-md shadow-zinc-500`}
+            className={`!bg-label !text-black hover:!bg-white hover:!text-blue-600 w-28 shadow-md shadow-zinc-500`}
           >
             F6次の顧客
           </Button>
@@ -503,7 +503,7 @@ const MainBusinessScreen = () => {
             onClick={() => {
               handleOpenWindow();
             }}
-            className={`!bg-[#80bad7] !text-black hover:!bg-white hover:!text-blue-600 w-32 shadow-md shadow-zinc-500`}
+            className={`!bg-label !text-black hover:!bg-white hover:!text-blue-600 w-32 shadow-md shadow-zinc-500`}
           >
             F7顧客コード変更
           </Button>
@@ -517,7 +517,7 @@ const MainBusinessScreen = () => {
               });
               setShowAdvanceSearch(true);
             }}
-            className={`!bg-[#80bad7] !text-black hover:!bg-white hover:!text-blue-600 w-28 shadow-md shadow-zinc-500`}
+            className={`!bg-label !text-black hover:!bg-white hover:!text-blue-600 w-28 shadow-md shadow-zinc-500`}
           >
             F8再入力
           </Button>

@@ -38,7 +38,7 @@ const SurveyRow: React.FC<SurveyRowProps> = ({
           handleNumericSelectKeyDown(e, (val) => onValueChange(val as string));
           onSelectKeyDown(e);
         }}
-        className="border border-black rounded-lg bg-[#ebcec0] w-[25%] text-[10px]"
+        className="border border-black rounded-lg bg-input w-[25%] text-[10px]"
       >
         <option value="" disabled hidden></option>
         <option value="0">0:空白</option>
@@ -55,7 +55,7 @@ const SurveyRow: React.FC<SurveyRowProps> = ({
         onClick={onOpenModal}
         disabled={isDisabled}
         className={`w-[30%] border border-black text-[10px] ${
-          isDisabled ? "bg-gray-300 cursor-not-allowed" : "bg-[#80bad7]"
+          isDisabled ? "bg-gray-300 cursor-not-allowed" : "bg-label"
         }`}
       >
         備考
@@ -236,7 +236,7 @@ const RightPanel = () => {
   }, [index4, options2]);
 
   const label =
-    "bg-[#80bad7] h-[24px] flex justify-center items-center border border-black";
+    "bg-label h-[24px] flex justify-center items-center border border-black";
 
   return (
     <div className="w-[350px] relative  border border-black p-2 h-full overflow-y-auto text-xs">
@@ -253,7 +253,7 @@ const RightPanel = () => {
           </div>
         </div>
         <div className="flex flex-row w-full text-[10px]">
-          <span className="w-[10%] h-[120px] bg-[#80bad7] flex justify-center items-center text-center border border-black">
+          <span className="w-[10%] h-[120px] bg-label flex justify-center items-center text-center border border-black">
             調査区分
           </span>
           <div className="flex flex-col w-[35%] ">
@@ -299,7 +299,7 @@ const RightPanel = () => {
             ))}
           </div>
         </div>
-        <span className="bg-[#80bad7] h-[25px] rounded-md mt-2 w-full p-1 border border-black flex text-center justify-center items-center">
+        <span className="bg-label h-[25px] rounded-md mt-2 w-full p-1 border border-black flex text-center justify-center items-center">
           訪問履歴
         </span>
         <div className="mt-2">
@@ -353,13 +353,13 @@ const RightPanel = () => {
               ▼
             </button>
 
-            <span className="w-[15%] flex items-center justify-center border border-black bg-[#80bad7]">
+            <span className="w-[15%] flex items-center justify-center border border-black bg-label">
               周知
             </span>
 
             <button
               onClick={handleClick}
-              className="w-[28%] border border-black bg-[#ebcec0]"
+              className="w-[28%] border border-black bg-input"
             >
               {options[index]}
             </button>
@@ -384,7 +384,7 @@ const RightPanel = () => {
             <div className="max-h-[70px] overflow-y-scroll">
               <table className="w-full border-collapse">
                 <thead>
-                  <tr className="bg-[#80bad7]">
+                  <tr className="bg-label">
                     <th className={`border border-black`}>金額</th>
                     <th className={`border border-black`}>数量</th>
                     <th className={`border border-black`}>商品名</th>
@@ -392,7 +392,7 @@ const RightPanel = () => {
                 </thead>
                 <tbody>
                   {rows.map((row) => (
-                    <tr key={row} className="border border-black bg-[#ebcec0]">
+                    <tr key={row} className="border border-black bg-input">
                       <td
                         onClick={() => {
                           setModalF2Open(true);
@@ -479,7 +479,7 @@ const RightPanel = () => {
           />
           <div className="flex flex-row relative">
             <span className={`${label} !h-[30px] w-[40%]`}>連絡済相手</span>
-            <input className="w-[60%] border border-black bg-[#ebcec0]"></input>
+            <input className="w-[60%] border border-black bg-input"></input>
           </div>
         </div>
         <div className="flex flex-row justify-between mt-2 ">

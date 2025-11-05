@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { labelColor, inputColor } from "../../../constants/colors";
+import { labelColor } from "../../../constants/colors";
 import {
   symbols,
   leftLabels,

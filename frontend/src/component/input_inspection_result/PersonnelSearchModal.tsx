@@ -103,17 +103,17 @@ const PersonnelSearchModal: React.FC<PersonnelSearchModalProps> = ({
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
       <div className="bg-white p-4 rounded-lg shadow-xl border border-gray-400 w-[800px]">
         <div>
-          <div className="text-center h-8 text-sm bg-[#80bad7] border border-black py-1 font-semibold">
+          <div className="text-center h-8 text-sm bg-label border border-black py-1 font-semibold">
             担当者検索
           </div>
           <div className="flex items-center justify-between mt-2">
             <div>
               <div className="text-sm flex items-center flex-row py-2">
                 <>
-                  <label className="bg-[#80bad7] p-1 font-bold w-24 text-center mr-2">
+                  <label className="bg-label p-1 font-bold w-24 text-center mr-2">
                     検索種類
                   </label>
-                  <label className="bg-[#80bad7] w-64 p-1 font-bold text-center">
+                  <label className="bg-label w-64 p-1 font-bold text-center">
                     カナ
                   </label>
                 </>
@@ -121,7 +121,7 @@ const PersonnelSearchModal: React.FC<PersonnelSearchModalProps> = ({
               <div className="text-sm flex items-center flex-row py-2 w-full">
                 <>
                   <form>
-                    <select className=" h-7 mr-2 bg-[#ebcec0] border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-24">
+                    <select className=" h-7 mr-2 bg-input border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-24">
                       <option value="0">カナ</option>
                       <option value="1">コード</option>
                     </select>
@@ -129,7 +129,7 @@ const PersonnelSearchModal: React.FC<PersonnelSearchModalProps> = ({
                   <input
                     ref={firstInputRef}
                     type="text"
-                    className="w-64 p-1 border border-gray-500 bg-[#ebcec0]"
+                    className="w-64 p-1 border border-gray-500 bg-input"
                     onKeyDown={(e) => {
                       handleFormatting(e, convertToFullWidth);
                       handleOpenTable(e);
@@ -155,16 +155,16 @@ const PersonnelSearchModal: React.FC<PersonnelSearchModalProps> = ({
             <div>
               <div className="text-sm flex items-center flex-row py-2 w-full">
                 <>
-                  <label className="bg-[#80bad7] p-1 font-bold w-24 text-center mr-2">
+                  <label className="bg-label p-1 font-bold w-24 text-center mr-2">
                     表示順
                   </label>
                   <form>
-                    <select className=" mr-2 bg-[#ebcec0] border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-24">
+                    <select className=" mr-2 bg-input border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-24">
                       <option value="0">コード順</option>
                       <option value="1">五十音順</option>
                     </select>
                   </form>
-                  <label className="bg-[#80bad7] p-1 font-bold w-24 text-center mr-2">
+                  <label className="bg-label p-1 font-bold w-24 text-center mr-2">
                     検索種類
                   </label>
                   <div className="flex items-center w-24 justify-center">
@@ -222,7 +222,7 @@ const PersonnelSearchModal: React.FC<PersonnelSearchModalProps> = ({
                 <div
                   key={header}
                   style={{ width: colWidths[colIndex] }}
-                  className="flex pl-1 text-sm bg-[#80bad7] font-semibold border border-[#5D5D5D] m-0.5 h-8 items-center"
+                  className="flex pl-1 text-sm bg-label font-semibold border border-[#5D5D5D] m-0.5 h-8 items-center"
                 >
                   {header}
                 </div>

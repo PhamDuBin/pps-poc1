@@ -1,5 +1,10 @@
 // src/constants/colors.ts
-export const labelColor = "bg-[#80bad7]";
-export const inputColor = "bg-[#ebcec0]";
-export const focusInputColor = `focus:!bg-[#ebcec0]`;
-export const hoverInputColor = `hover:bg-[#ebcec0]`;
+// Updated to use Tailwind theme colors
+export const labelColor = "bg-label";
+export const inputColor = "bg-input";
+export const focusInputColor = "focus:!bg-input";
+export const hoverInputColor = "hover:bg-input";
+export const buttonPrimaryColor = "bg-button-primary";
+export const bgAltColor = "bg-bg-alt";
+export const bgGrayColor = "bg-bg-gray";
+export const borderDefaultColor = "border-border-default";

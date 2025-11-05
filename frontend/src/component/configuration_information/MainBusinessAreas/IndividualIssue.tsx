@@ -86,7 +86,7 @@ const IndividualIssue = forwardRef<any>((props, ref) => {
       )}
 
       {/* Header */}
-      <div className="bg-[#80bad7] font-bold text-center p-2 rounded-md">
+      <div className="bg-label font-bold text-center p-2 rounded-md">
         抽出条件｜個別発行
       </div>
 

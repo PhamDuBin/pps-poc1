@@ -249,7 +249,7 @@ const MainBusinessScreen = () => {
         </Button>
         <span className={`${span}`}>フォーム選択</span>
         <Select
-          className="w-[15%] h-7 [&>.ant-select-selector]:!bg-[#ebcec0] "
+          className="w-[15%] h-7 [&>.ant-select-selector]:!bg-input "
           defaultValue="請求書（大）"
           options={[
             { value: "請求書（大）", label: "請求書（大）" },

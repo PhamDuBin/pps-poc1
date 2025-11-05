@@ -28,7 +28,7 @@ const SaleDetailEntry5: React.FC<SaleDetailEntry5Props> = ({
     <div className="flex gap-1 ">
       <div className="flex gap-2 p-1 border border-black h-56">
         <div className=" w-20 text-center h-[64px]">
-          <div className="bg-[#80bad7] h-1/2">仕入単価</div>
+          <div className="bg-label h-1/2">仕入単価</div>
           <div className="h-1/2">
             <input
               type="text"
@@ -46,7 +46,7 @@ const SaleDetailEntry5: React.FC<SaleDetailEntry5Props> = ({
           </div>
         </div>
         <div className=" w-14 text-center h-[64px]">
-          <div className="bg-[#80bad7] h-1/2">数量</div>
+          <div className="bg-label h-1/2">数量</div>
           <div className="h-1/2 ">
             <input
               type="text"
@@ -65,7 +65,7 @@ const SaleDetailEntry5: React.FC<SaleDetailEntry5Props> = ({
       <div className="max-w-lg">
         <div className="grid grid-cols-4 grid-rows-3 gap-2 p-1 border border-black h-56">
           <div className=" text-center h-[64px]">
-            <div className="bg-[#80bad7] h-1/2">売上単価</div>
+            <div className="bg-label h-1/2">売上単価</div>
             <div className="h-1/2">
               <input
                 type="text"
@@ -81,7 +81,7 @@ const SaleDetailEntry5: React.FC<SaleDetailEntry5Props> = ({
           </div>
 
           <div className=" text-center h-[64px] relative">
-            <div className="bg-[#80bad7] h-1/2">仕入単価区分</div>
+            <div className="bg-label h-1/2">仕入単価区分</div>
             <select
               className="border border-black w-full h-1/2"
               value={
@@ -97,7 +97,7 @@ const SaleDetailEntry5: React.FC<SaleDetailEntry5Props> = ({
           </div>
 
           <div className=" text-center h-[64px] relative">
-            <div className="bg-[#80bad7] h-1/2">仕入金額</div>
+            <div className="bg-label h-1/2">仕入金額</div>
             <input
               type="text"
               placeholder="0"
@@ -123,7 +123,7 @@ const SaleDetailEntry5: React.FC<SaleDetailEntry5Props> = ({
           </div>
 
           <div className=" col-span-3 text-center h-[64px] relative">
-            <div className="bg-[#80bad7] h-1/2">経費分類No.</div>
+            <div className="bg-label h-1/2">経費分類No.</div>
             <div className="flex gap-2">
               <div className="flex w-1/4 relative text-center">
                 <select
@@ -152,7 +152,7 @@ const SaleDetailEntry5: React.FC<SaleDetailEntry5Props> = ({
           </div>
 
           <div className=" text-center h-[64px] relative">
-            <div className="bg-[#80bad7] h-1/2">当月外</div>
+            <div className="bg-label h-1/2">当月外</div>
             <select
               className="border border-black w-full h-1/2"
               value={
@@ -168,7 +168,7 @@ const SaleDetailEntry5: React.FC<SaleDetailEntry5Props> = ({
           </div>
 
           <div className=" text-center h-[64px] col-span-2 relative">
-            <div className="bg-[#80bad7] h-1/2">備考</div>
+            <div className="bg-label h-1/2">備考</div>
             <input
               type="text"
               className="w-full h-1/2 border px-1 border-black placeholder-black-200"

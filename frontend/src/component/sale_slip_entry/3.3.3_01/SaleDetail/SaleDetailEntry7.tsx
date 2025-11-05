@@ -24,7 +24,7 @@ const SaleDetailEntry7: React.FC<SaleDetailEntry7Props> = ({
   return (
     <div className="flex gap-2">
       <div className="h-[64px] w-[100px]">
-        <div className="h-1/2 bg-[#80bad7] p-1">商品コード</div>
+        <div className="h-1/2 bg-label p-1">商品コード</div>
         <input
           type="text"
           className="h-1/2 w-full border border-black text-center placeholder-black"
@@ -35,7 +35,7 @@ const SaleDetailEntry7: React.FC<SaleDetailEntry7Props> = ({
       </div>
 
       <div className="h-[64px] w-[100px]">
-        <div className="h-1/2 bg-[#80bad7] p-1">商品名</div>
+        <div className="h-1/2 bg-label p-1">商品名</div>
         <input
           ref={firstInputRef}
           type="text"
@@ -47,7 +47,7 @@ const SaleDetailEntry7: React.FC<SaleDetailEntry7Props> = ({
       </div>
 
       <div className="h-[64px] w-[100px]">
-        <div className="h-1/2 bg-[#80bad7] p-1">型式</div>
+        <div className="h-1/2 bg-label p-1">型式</div>
         <input
           type="text"
           className="h-1/2 w-full border border-black text-center"
@@ -57,7 +57,7 @@ const SaleDetailEntry7: React.FC<SaleDetailEntry7Props> = ({
       </div>
 
       <div className="h-[64px] w-[120px]">
-        <div className="h-1/2 bg-[#80bad7] p-1">売上消費税</div>
+        <div className="h-1/2 bg-label p-1">売上消費税</div>
         <input
           type="text"
           className="h-1/2 w-full border border-black text-center"
@@ -71,7 +71,7 @@ const SaleDetailEntry7: React.FC<SaleDetailEntry7Props> = ({
       </div>
 
       <div className="h-[64px] w-[120px]">
-        <div className="h-1/2 bg-[#80bad7] p-1">自振対象</div>
+        <div className="h-1/2 bg-label p-1">自振対象</div>
         <select
           className="border border-black w-full h-1/2 text-center"
           value={
@@ -87,7 +87,7 @@ const SaleDetailEntry7: React.FC<SaleDetailEntry7Props> = ({
       </div>
 
       <div className="h-[64px] w-[120px]">
-        <div className="h-1/2 bg-[#80bad7] p-1">当月外</div>
+        <div className="h-1/2 bg-label p-1">当月外</div>
         <select
           className="border border-black w-full h-1/2 text-center"
           value={

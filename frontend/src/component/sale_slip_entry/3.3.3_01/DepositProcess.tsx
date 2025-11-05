@@ -199,7 +199,7 @@ export default function DepositProcess({
       {/* --- Buttons --- */}
       <div className="flex space-x-4 justify-center items-center mx-20 my-5 font-bold text-black">
         <button
-          className="bg-[#EEEEEE] border border-black px-12 py-2 rounded shadow-md shadow-zinc-600"
+          className="bg-bg-gray border border-black px-12 py-2 rounded shadow-md shadow-zinc-600"
           onClick={onSave}
         >
           保存登録

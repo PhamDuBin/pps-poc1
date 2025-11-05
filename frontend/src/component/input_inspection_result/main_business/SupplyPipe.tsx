@@ -1,6 +1,6 @@
 import { useState } from "react";
 import ModalF1 from "../../modal/Modal_F1";
-import { labelColor, inputColor } from "../../../constants/colors";
+import { labelColor } from "../../../constants/colors";
 import { handleNumericSelectKeyDown } from "../../../utils/InputHandlers";
 import {
   symbols,
@@ -117,13 +117,13 @@ const SupplyPipe = () => {
                         {row.group}
                       </th>
                     )}
-                    <td className="border border-black text-center bg-[#ebcec0]">
+                    <td className="border border-black text-center bg-input">
                       {row.no}
                     </td>
-                    <td className="border border-black text-center bg-[#ebcec0]">
+                    <td className="border border-black text-center bg-input">
                       材料名
                     </td>
-                    <td className="border border-black text-center bg-[#ebcec0]">
+                    <td className="border border-black text-center bg-input">
                       -
                     </td>
 

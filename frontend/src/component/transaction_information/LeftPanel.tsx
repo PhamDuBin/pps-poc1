@@ -191,9 +191,9 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
   }, [showAdvanceSearch, setShowAdvanceSearch]);
 
   return (
-    <div className="w-72 overflow-y-auto  h-screen p-3 bg-[#d8dadc] border-2 border-gray-400 font-sans">
+    <div className="w-72 overflow-y-auto  h-screen p-3 bg-bg-alt border-2 border-gray-400 font-sans">
       <div className="mb-4">
-        <div className="text-center text-sm bg-[#80bad7] py-1 font-semibold border border-black">
+        <div className="text-center text-sm bg-label py-1 font-semibold border border-black">
           {!showDepart ? "事務所コード" : "事務所情報"}
         </div>
         <div className="text-xs flex items-center flex-row py-2 w-full">
@@ -204,7 +204,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
                 type="text"
                 placeholder="0000"
                 value={postcode1} // MODIFIED: Bind value
-                className="w-[30%] bg-[#ebcec0] px-1 py-0.5 border border-black"
+                className="w-[30%] bg-input px-1 py-0.5 border border-black"
                 onChange={(e) =>
                   setPostcode1(extractHalfWidthDigits(e.target.value))
                 }
@@ -218,7 +218,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
                 type="text"
                 placeholder="000"
                 value={postcode2} // MODIFIED: Bind value
-                className="w-[30%] bg-[#ebcec0] px-1 py-0.5 border border-black "
+                className="w-[30%] bg-input px-1 py-0.5 border border-black "
                 onChange={(e) =>
                   setPostcode2(extractHalfWidthDigits(e.target.value))
                 }
@@ -260,7 +260,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
 
       {/* Customer Code Section */}
       <div className="mb-4">
-        <div className="text-center text-sm bg-[#80bad7] border border-black py-1 font-semibold">
+        <div className="text-center text-sm bg-label border border-black py-1 font-semibold">
           {!showCustomer ? "顧客コード" : "顧客情報"}
         </div>
         <div className="text-xs flex items-center flex-row py-2 w-full">
@@ -271,7 +271,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
                 type="text"
                 placeholder="000000"
                 value={id1} // MODIFIED: Bind value
-                className="w-[30%] bg-[#ebcec0] px-1 py-0.5 border border-gray-500"
+                className="w-[30%] bg-input px-1 py-0.5 border border-gray-500"
                 onChange={(e) => setId1(extractHalfWidthDigits(e.target.value))}
                 onKeyDown={(e) => {
                   handleCustomerIdKeyDown(e);
@@ -283,7 +283,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
                 type="text"
                 placeholder="000"
                 value={id2} // MODIFIED: Bind value
-                className="w-[30%] bg-[#ebcec0] px-1 py-0.5 border border-gray-500"
+                className="w-[30%] bg-input px-1 py-0.5 border border-gray-500"
                 onChange={(e) => setId2(extractHalfWidthDigits(e.target.value))}
                 onKeyDown={(e) => {
                   handleCustomerIdKeyDown(e);
@@ -407,7 +407,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
               )
             }
             onMouseLeave={handleHideTooltip}
-            className="w-1/2 font-bold border text-center border-black p-2 bg-[#80bad7] shadow-md shadow-zinc-600"
+            className="w-1/2 font-bold border text-center border-black p-2 bg-label shadow-md shadow-zinc-600"
           >
             担当者
           </button>
@@ -424,7 +424,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
               )
             }
             onMouseLeave={handleHideTooltip}
-            className="w-1/2 font-bold border text-center border-black p-2 bg-[#80bad7] shadow-md shadow-zinc-600"
+            className="w-1/2 font-bold border text-center border-black p-2 bg-label shadow-md shadow-zinc-600"
           >
             顧客備考
           </button>
@@ -445,7 +445,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
             }
             onBlur={handleHideTooltip}
             onMouseLeave={handleHideTooltip}
-            className="w-1/2 font-bold border text-center border-black p-2 bg-[#80bad7] shadow-md shadow-zinc-600"
+            className="w-1/2 font-bold border text-center border-black p-2 bg-label shadow-md shadow-zinc-600"
           >
             日報入力
           </button>

@@ -1,12 +1,14 @@
 // ■01当月明細
-import React from "react";
+import React, { useMemo } from "react";
 import { useScreenNavigation } from "../../../utils/useScreenNavigation";
 import { handleOpenWindow } from "../../../constants/functions";
-import { blockTab } from "../../../utils/InputHandlers";
+import type { ScreenNavigationProps } from "../../../types";
 
-const CurrentMonthDetails = ({ onSwitchScreen }: any) => {
-  const containerRef = useScreenNavigation<HTMLDivElement>(onSwitchScreen);
-  const balanceMonths = [
+const CurrentMonthDetails: React.FC<ScreenNavigationProps> = ({ onSwitchScreen }) => {
+  const containerRef = useScreenNavigation<HTMLDivElement>(() => {}, false);
+
+  // Memoize static data to prevent re-creation on every render
+  const balanceMonths = useMemo(() => [
     "2025年05月",
     "2025年04月",
     "2025年03月",
@@ -14,9 +16,9 @@ const CurrentMonthDetails = ({ onSwitchScreen }: any) => {
     "2025年01月",
     "2024年12月",
     "2024年11月以前",
-  ];
+  ], []);
 
-  const gasFeeItems = [
+  const gasFeeItems = useMemo(() => [
     "基本料金",
     "従量料金",
     "売上値引",
@@ -24,48 +26,50 @@ const CurrentMonthDetails = ({ onSwitchScreen }: any) => {
     "サービス割引",
     "消費税",
     "ガス料金",
-  ];
+  ], []);
 
+  // Updated styles using Tailwind theme colors
   const inputStyle =
-    "bg-[#ebcec0] border border-black h-8  text-right mt-1 ml-2 placeholder-black::placeholder";
+    "bg-input border border-black h-8 text-right mt-1 ml-2 placeholder-black";
   const labelStyle =
-    "bg-[#80bad7] my-1 h-8 flex items-center justify-center font-semibold text-sm";
+    "bg-label my-1 h-8 flex items-center justify-center font-semibold text-sm";
   const titleStyle =
-    "font-semibold w-full text-sm p-1 text-center border bg-[#80bad7] my-1";
+    "font-semibold w-full text-sm p-1 text-center border bg-label my-1";
 
-  const buttonLabelStyle = `my-1 h-8 flex items-center justify-center font-semibold text-sm bg-[#4770a5] w-full cursor-pointer hover:bg-white shadow-md shadow-zinc-600 transition-all duration-200 active:shadow-none active:translate-y-px `;
+  const buttonLabelStyle =
+    "my-1 h-8 flex items-center justify-center font-semibold text-sm bg-button-primary w-full cursor-pointer hover:bg-white shadow-md shadow-zinc-600 transition-all duration-200 active:shadow-none active:translate-y-px";
 
   const verticalLabelStyle =
-    "flex items-center justify-center text-sm font-semibold bg-[#80bad7] my-1";
+    "flex items-center justify-center text-sm font-semibold bg-label my-1";
 
   return (
     <>
       <div
-        className={`font-semibold h-8 text-lg p-1 flex justify-center items-center mx-4 mt-4 text-center border bg-[#80bad7] `}
+        className="font-semibold h-8 text-lg p-1 flex justify-center items-center mx-4 mt-4 text-center border bg-label"
       >
         ＜当月明細＞
       </div>
       <div className="px-4 flex lg:flex-row flex-col gap-4 text-black font-sans w-full">
-        <div className="flex flex-col items-center flex-shrink-0 w-[10%] ">
+        <div className="flex flex-col items-center flex-shrink-0 w-[10%]">
           <div className={titleStyle}>＜判定＞</div>
-          <div className="p-1 border border-black bg-[#80bad7] w-full">
+          <div className="p-1 border border-black bg-label w-full">
             <div className="p-0.5 border border-black flex flex-col justify-between items-center bg-white h-full">
-              <div className="w-full aspect-square rounded-full bg-red-300 border border-gray-400"></div>
-              <div className="w-full aspect-square rounded-full bg-yellow-200 border border-gray-400"></div>
-              <div className="w-full aspect-square rounded-full bg-cyan-300 border border-gray-400"></div>
+              <div className="w-full aspect-square rounded-full bg-red-300 border border-gray-400" aria-label="赤ステータス"></div>
+              <div className="w-full aspect-square rounded-full bg-yellow-200 border border-gray-400" aria-label="黄ステータス"></div>
+              <div className="w-full aspect-square rounded-full bg-cyan-300 border border-gray-400" aria-label="青ステータス"></div>
             </div>
           </div>
         </div>
 
         <div className="flex-grow w-[50%]">
           <div className="flex items-center mb-1 text-sm">
-            <div className="font-semibold bg-[#80bad7] text-center w-[60%] p-1 mr-1">
+            <div className="font-semibold bg-label text-center w-[60%] p-1 mr-1">
               ＜６ヶ月残高推移＞
             </div>
-            <div className="font-semibold text-center w-[20%] bg-[#80bad7] m-1 p-1">
+            <div className="font-semibold text-center w-[20%] bg-label m-1 p-1">
               滞留状況
             </div>
-            <div className="font-semibold text-center w-[20%] bg-[#80bad7] p-1">
+            <div className="font-semibold text-center w-[20%] bg-label p-1">
               自振対象
             </div>
           </div>
@@ -78,16 +82,19 @@ const CurrentMonthDetails = ({ onSwitchScreen }: any) => {
                     type="text"
                     className={`${inputStyle} w-[30%]`}
                     disabled
+                    aria-label={`${month}の残高`}
                   />
                   <input
                     type="text"
                     className={`${inputStyle} w-[20%] rounded`}
                     disabled
+                    aria-label={`${month}の滞留状況`}
                   />
                   <input
                     type="text"
                     className={`${inputStyle} w-[20%] rounded`}
                     disabled
+                    aria-label={`${month}の自振対象`}
                   />
                 </div>
               ))}
@@ -147,6 +154,7 @@ const CurrentMonthDetails = ({ onSwitchScreen }: any) => {
                 <button
                   onClick={handleOpenWindow}
                   className={`${buttonLabelStyle} !w-[75%]`}
+                  aria-label="警報器リース詳細を開く"
                 >
                   警報器リース
                 </button>
@@ -155,12 +163,14 @@ const CurrentMonthDetails = ({ onSwitchScreen }: any) => {
                   type="text"
                   className={`${inputStyle} w-[25%]`}
                   disabled
+                  aria-label="警報器リース金額"
                 />
               </div>
               <div className="flex">
                 <button
                   onClick={handleOpenWindow}
                   className={`${buttonLabelStyle} !w-[75%]`}
+                  aria-label="設備使用料詳細を開く"
                 >
                   設備使用料
                 </button>
@@ -169,6 +179,7 @@ const CurrentMonthDetails = ({ onSwitchScreen }: any) => {
                   type="text"
                   className={`${inputStyle} w-[25%]`}
                   disabled
+                  aria-label="設備使用料金額"
                 />
               </div>
             </div>
@@ -204,4 +215,5 @@ const CurrentMonthDetails = ({ onSwitchScreen }: any) => {
   );
 };
 
-export default CurrentMonthDetails;
+// Wrap with React.memo to prevent unnecessary re-renders
+export default React.memo(CurrentMonthDetails);

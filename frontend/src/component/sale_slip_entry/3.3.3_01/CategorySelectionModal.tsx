@@ -1,70 +1,67 @@
-import { useRef, useEffect } from "react";
+import React, { useCallback, useMemo, useRef, useEffect } from "react";
 import StatusBar from "../StatusBar";
+import { useKeyboardShortcuts } from "../../../hooks/useKeyboardShortcuts";
 
-type Props = {
+interface CategorySelectionModalProps {
   onClose: () => void;
   onCategorySelect: (categoryName: string) => void;
-};
+}
 
-export default function CategorySelectionModal({
+const CategorySelectionModal: React.FC<CategorySelectionModalProps> = ({
   onClose,
   onCategorySelect,
-}: Props) {
-  const btnClass =
-    "flex-1 text-center bg-[#EEEEEE] border border-black py-2 rounded shadow-md shadow-zinc-600 mx-1 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:black";
-
-  const handleButtonClick = (name: string) => {
-    onCategorySelect(name);
-  };
-
+}) => {
   const firstButtonRef = useRef<HTMLButtonElement>(null);
 
+  // Memoize button class string
+  const btnClass = useMemo(
+    () =>
+      "flex-1 text-center bg-bg-gray border border-black py-2 rounded shadow-md shadow-zinc-600 mx-1 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:black",
+    []
+  );
+
+  // Memoize button click handler
+  const handleButtonClick = useCallback(
+    (name: string) => {
+      onCategorySelect(name);
+    },
+    [onCategorySelect]
+  );
+
+  // Define keyboard shortcuts using custom hook
+  const shortcuts = useMemo(
+    () => [
+      { key: "1", handler: () => handleButtonClick("1.売上"), ctrlKey: true },
+      { key: "1", handler: () => handleButtonClick("1.売上"), altKey: true },
+      { key: "2", handler: () => handleButtonClick("2.直送売上"), ctrlKey: true },
+      { key: "2", handler: () => handleButtonClick("2.直送売上"), altKey: true },
+      { key: "3", handler: () => handleButtonClick("3.売上値引"), ctrlKey: true },
+      { key: "3", handler: () => handleButtonClick("3.売上値引"), altKey: true },
+      { key: "4", handler: () => handleButtonClick("4.返品"), ctrlKey: true },
+      { key: "4", handler: () => handleButtonClick("4.返品"), altKey: true },
+      { key: "5", handler: () => handleButtonClick("5.経費"), ctrlKey: true },
+      { key: "5", handler: () => handleButtonClick("5.経費"), altKey: true },
+      { key: "6", handler: () => handleButtonClick("6.資産"), ctrlKey: true },
+      { key: "6", handler: () => handleButtonClick("6.資産"), altKey: true },
+      { key: "7", handler: () => handleButtonClick("7.消費税"), ctrlKey: true },
+      { key: "7", handler: () => handleButtonClick("7.消費税"), altKey: true },
+      { key: "c", handler: onClose, ctrlKey: true },
+      { key: "C", handler: onClose, ctrlKey: true },
+      { key: "c", handler: onClose, altKey: true },
+      { key: "C", handler: onClose, altKey: true },
+    ],
+    [handleButtonClick, onClose]
+  );
+
+  // Use keyboard shortcuts hook
+  useKeyboardShortcuts({ shortcuts });
+
+  // Auto-focus first button
   useEffect(() => {
     if (firstButtonRef.current) {
       firstButtonRef.current.focus();
     }
   }, []);
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.ctrlKey || event.metaKey || event.altKey) {
-        event.preventDefault();
-
-        switch (event.key) {
-          case "1":
-            handleButtonClick("1.売上");
-            break;
-          case "2":
-            handleButtonClick("2.直送売上");
-            break;
-          case "3":
-            handleButtonClick("3.売上値引");
-            break;
-          case "4":
-            handleButtonClick("4.返品");
-            break;
-          case "5":
-            handleButtonClick("5.経費");
-            break;
-          case "6":
-            handleButtonClick("6.資産");
-            break;
-          case "7":
-            handleButtonClick("7.消費税");
-            break;
-          case "c":
-          case "C":
-            onClose();
-            break;
-          default:
-            break;
-        }
-      }
-    };
-    document.addEventListener("keydown", handleKeyDown);
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [onCategorySelect, onClose]);
 
   return (
     // Overlay
@@ -82,24 +79,28 @@ export default function CategorySelectionModal({
               ref={firstButtonRef}
               className={btnClass}
               onClick={() => handleButtonClick("1.売上")}
+              aria-label="売上を選択"
             >
               売上(1)
             </button>
             <button
               className={btnClass}
               onClick={() => handleButtonClick("2.直送売上")}
+              aria-label="直送売上を選択"
             >
               直送売上(2)
             </button>
             <button
               className={btnClass}
               onClick={() => handleButtonClick("3.売上値引")}
+              aria-label="売上値引を選択"
             >
               売上値引(3)
             </button>
             <button
               className={btnClass}
               onClick={() => handleButtonClick("4.返品")}
+              aria-label="返品を選択"
             >
               返品(4)
             </button>
@@ -109,18 +110,21 @@ export default function CategorySelectionModal({
             <button
               className={btnClass}
               onClick={() => handleButtonClick("5.経費")}
+              aria-label="経費を選択"
             >
               経費(5)
             </button>
             <button
               className={btnClass}
               onClick={() => handleButtonClick("6.資産")}
+              aria-label="資産を選択"
             >
               資産(6)
             </button>
             <button
               className={btnClass}
               onClick={() => handleButtonClick("7.消費税")}
+              aria-label="消費税を選択"
             >
               消費税(7)
             </button>
@@ -132,7 +136,8 @@ export default function CategorySelectionModal({
         <div className="flex justify-center items-center mt-8 font-bold text-black">
           <button
             onClick={onClose}
-            className="bg-[#EEEEEE] border border-black px-12 py-2 rounded shadow-md shadow-zinc-600"
+            className="bg-bg-gray border border-black px-12 py-2 rounded shadow-md shadow-zinc-600"
+            aria-label="モーダルを閉じる"
           >
             閉じる(C)
           </button>
@@ -140,4 +145,7 @@ export default function CategorySelectionModal({
       </div>
     </div>
   );
-}
+};
+
+// Memoize component to prevent unnecessary re-renders
+export default React.memo(CategorySelectionModal);

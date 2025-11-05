@@ -46,7 +46,8 @@ export default function SalesSlipEntryRegistration({
   return (
     <div
       tabIndex={0}
-      role="registmodal"
+      role="region"
+      aria-label="売上伝票登録"
       className="w-full border border-black rounded-md overflow-hidden shadow-sm mb-4"
     >
       {/* Header */}

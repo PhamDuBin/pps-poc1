@@ -180,7 +180,7 @@ const PrintingDesignation = forwardRef<any>((props, ref) => {
               印刷順
             </div>
             <Select
-              className="w-[200px] [&>.ant-select-selector]:!bg-[#ebcec0]"
+              className="w-[200px] [&>.ant-select-selector]:!bg-input"
               value={selectedOrder}
               onChange={setSelectedOrder}
               options={createOptions(printingOrderOptions)}
@@ -213,7 +213,7 @@ const PrintingDesignation = forwardRef<any>((props, ref) => {
               自振顧客明細
             </div>
             <Select
-              className="w-[200px] [&>.ant-select-selector]:!bg-[#ebcec0]"
+              className="w-[200px] [&>.ant-select-selector]:!bg-input"
               value={selectedDetail}
               onChange={setSelectedDetail}
               options={createOptions(detailOptions)}
@@ -246,7 +246,7 @@ const PrintingDesignation = forwardRef<any>((props, ref) => {
               鑑部税表現
             </div>
             <Select
-              className="w-[200px] [&>.ant-select-selector]:!bg-[#ebcec0]"
+              className="w-[200px] [&>.ant-select-selector]:!bg-input"
               value={selectedTaxType}
               onChange={setSelectedTaxType}
               options={createOptions(taxTypeOptions)}
@@ -259,7 +259,7 @@ const PrintingDesignation = forwardRef<any>((props, ref) => {
               明細順
             </div>
             <Select
-              className="w-[300px] [&>.ant-select-selector]:!bg-[#ebcec0]"
+              className="w-[300px] [&>.ant-select-selector]:!bg-input"
               value={selectedDetailOrder}
               onChange={setSelectedDetailOrder}
               options={createOptions(detailOrderOptions)}
@@ -274,7 +274,7 @@ const PrintingDesignation = forwardRef<any>((props, ref) => {
             税取りまとめ
           </div>
           <Select
-            className="w-[200px] [&>.ant-select-selector]:!bg-[#ebcec0]"
+            className="w-[200px] [&>.ant-select-selector]:!bg-input"
             value={selectedTaxCollect}
             onChange={setSelectedTaxCollect}
             options={createOptions(taxCollectOptions)}
@@ -303,7 +303,7 @@ const PrintingDesignation = forwardRef<any>((props, ref) => {
               伝票メモ
             </div>
             <Select
-              className="w-[200px] [&>.ant-select-selector]:!bg-[#ebcec0]"
+              className="w-[200px] [&>.ant-select-selector]:!bg-input"
               value={selectedMemo}
               onChange={setSelectedMemo}
               options={createOptions(memoOptions)}
@@ -330,7 +330,7 @@ const PrintingDesignation = forwardRef<any>((props, ref) => {
               印刷担当
             </div>
             <Select
-              className="w-[200px] [&>.ant-select-selector]:!bg-[#ebcec0]"
+              className="w-[200px] [&>.ant-select-selector]:!bg-input"
               value={printManager}
               onChange={setPrintManager}
               options={createOptions(["営業", "集金"])}
@@ -364,7 +364,7 @@ const PrintingDesignation = forwardRef<any>((props, ref) => {
               領収書の担当
             </div>
             <Select
-              className="w-[200px] [&>.ant-select-selector]:!bg-[#ebcec0]"
+              className="w-[200px] [&>.ant-select-selector]:!bg-input"
               value={receiptOfficer}
               onChange={setReceiptOfficer}
               options={createOptions(["印刷する", "印刷しない"])}
@@ -377,7 +377,7 @@ const PrintingDesignation = forwardRef<any>((props, ref) => {
               原料費調整通知
             </div>
             <Select
-              className="w-[200px] [&>.ant-select-selector]:!bg-[#ebcec0]"
+              className="w-[200px] [&>.ant-select-selector]:!bg-input"
               value={adjustmentNotice}
               onChange={setAdjustmentNotice}
               options={createOptions(["印刷する", "印刷しない"])}

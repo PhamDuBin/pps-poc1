@@ -385,7 +385,7 @@ const SalesSlipEntry = forwardRef(
           {/* 行追加 */}
           <div className="flex justify-center items-center my-6 font-bold text-[16px] text-black">
             <button
-              className="bg-[#EEEEEE] border border-black px-12 py-2 rounded shadow-md shadow-zinc-600"
+              className="bg-bg-gray border border-black px-12 py-2 rounded shadow-md shadow-zinc-600"
               onClick={() => setIsOpenCategorySelection(true)}
             >
               行追加

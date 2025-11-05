@@ -73,7 +73,7 @@ const MeterReadingInforScreen = ({ onSwitchScreen }: any) => {
 
   return (
     <div ref={containerRef} className="p-4 text-black w-full text-sm">
-      <div className=" text-center font-bold bg-[#80bad7] p-2 mb-4 h-8 text-lg flex justify-center items-center">
+      <div className=" text-center font-bold bg-label p-2 mb-4 h-8 text-lg flex justify-center items-center">
         ＜検針情報＞
       </div>
 
@@ -81,7 +81,7 @@ const MeterReadingInforScreen = ({ onSwitchScreen }: any) => {
         <div className="flex items-center gap-4">
           {headerFields.map((field) => (
             <div key={field.label} className="flex items-center gap-2">
-              <span className="font-semibold bg-[#80bad7] px-3 py-1.5 border border-black w-[150px] flex justify-center">
+              <span className="font-semibold bg-label px-3 py-1.5 border border-black w-[150px] flex justify-center">
                 {field.label}
               </span>
               <span className="font-semibold">{field.value}</span>
@@ -90,7 +90,7 @@ const MeterReadingInforScreen = ({ onSwitchScreen }: any) => {
         </div>
         <button
           onClick={handleOpenWindow}
-          className="bg-[#4770a5] px-4 py-1.5 cursor-pointer hover:bg-white shadow-md shadow-zinc-600 transition-all duration-200 active:shadow-none active:translate-y-px font-semibold"
+          className="bg-button-primary px-4 py-1.5 cursor-pointer hover:bg-white shadow-md shadow-zinc-600 transition-all duration-200 active:shadow-none active:translate-y-px font-semibold"
         >
           顧客別ガス使用量
         </button>
@@ -103,7 +103,7 @@ const MeterReadingInforScreen = ({ onSwitchScreen }: any) => {
               <div
                 key={header}
                 className={`
-                                    p-2 text-center font-semibold bg-[#80bad7] border border-r border-b-2 border-black
+                                    p-2 text-center font-semibold bg-label border border-r border-b-2 border-black
                                     ${colWidths[index]}
                                     ${
                                       index < 5
@@ -123,7 +123,7 @@ const MeterReadingInforScreen = ({ onSwitchScreen }: any) => {
                 <div
                   key={cellIndex}
                   className={`
-                                        p-1 text-right border-b border-r border-black bg-[#ebcec0]
+                                        p-1 text-right border-b border-r border-black bg-input
                                         ${colWidths[cellIndex]}
                                         ${
                                           cellIndex < 5

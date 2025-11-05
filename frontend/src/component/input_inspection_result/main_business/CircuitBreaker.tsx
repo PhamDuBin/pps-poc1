@@ -1,6 +1,6 @@
 import { useState } from "react";
 import ModalF1 from "../../modal/Modal_F1";
-import { labelColor, inputColor } from "../../../constants/colors";
+import { labelColor } from "../../../constants/colors";
 import { rows, symbols } from "../../../constants/input_inspection_result";
 const CircuitBreaker = () => {
   const [modalF1Open, setModalF1Open] = useState(false);
@@ -67,10 +67,10 @@ const CircuitBreaker = () => {
                         >
                           {row.label}
                         </th>
-                        <td className="border border-black text-center bg-[#ebcec0]">
+                        <td className="border border-black text-center bg-input">
                           {row.model}
                         </td>
-                        <td className="border border-black text-center bg-[#ebcec0]">
+                        <td className="border border-black text-center bg-input">
                           {row.count}
                         </td>
 

@@ -31,7 +31,7 @@ import {
   transactionTypeOption,
 } from "../../../constants/customer_ledger";
 
-const inputBaseClass = `${hoverInputColor} ${focusInputColor} focus:!bg-[#ebcec0] border border-black h-6`;
+const inputBaseClass = `${hoverInputColor} ${focusInputColor} focus:!bg-input border border-black h-6`;
 
 const BasicInformation = forwardRef<any, { showData: boolean }>(
   (props, ref) => {

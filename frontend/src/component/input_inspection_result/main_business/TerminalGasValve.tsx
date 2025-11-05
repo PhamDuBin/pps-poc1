@@ -1,6 +1,6 @@
 import ModalF1 from "../../modal/Modal_F1";
 import { useState } from "react";
-import { labelColor, inputColor } from "../../../constants/colors";
+import { labelColor } from "../../../constants/colors";
 import { symbols } from "../../../constants/input_inspection_result";
 const TerminalGasValve = () => {
   const [modalF1Open, setModalF1Open] = useState(false);
@@ -78,25 +78,25 @@ const TerminalGasValve = () => {
                 const rowHasCheck = states[row].some((s) => s === 3);
                 return (
                   <tr key={row} className={` h-6`}>
-                    <td className="border border-black text-center bg-[#ebcec0]">
+                    <td className="border border-black text-center bg-input">
                       {row + 1}
                     </td>
-                    <td className="border border-black text-center bg-[#ebcec0]">
+                    <td className="border border-black text-center bg-input">
                       コンロ
                     </td>
-                    <td className="border border-black text-center bg-[#ebcec0]">
+                    <td className="border border-black text-center bg-input">
                       メーカー名
                     </td>
-                    <td className="border border-black text-center bg-[#ebcec0]">
+                    <td className="border border-black text-center bg-input">
                       XXX001
                     </td>
-                    <td className="border border-black text-center bg-[#ebcec0]">
+                    <td className="border border-black text-center bg-input">
                       2020/03
                     </td>
-                    <td className="border border-black text-center bg-[#ebcec0]">
+                    <td className="border border-black text-center bg-input">
                       1
                     </td>
-                    <td className="border border-black text-center bg-[#ebcec0]">
+                    <td className="border border-black text-center bg-input">
                       3
                     </td>
                     <td

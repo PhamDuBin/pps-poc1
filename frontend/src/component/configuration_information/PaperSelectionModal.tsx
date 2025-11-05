@@ -203,7 +203,7 @@ const PaperSelectionModal = ({
                   label === "閉じる" || label === "実行" ? onClose : undefined
                 }
                 type={label === "実行" ? "primary" : "default"}
-                className="bg-[#EEEEEE] border border-black font-bold text-lg text-black px-8 py-2 shadow-md"
+                className="bg-bg-gray border border-black font-bold text-lg text-black px-8 py-2 shadow-md"
               >
                 {label}
               </Button>

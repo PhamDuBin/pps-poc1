@@ -1,6 +1,6 @@
 import { useState } from "react";
 import ModalF1 from "../../modal/Modal_F1";
-import { labelColor, inputColor } from "../../../constants/colors";
+import { labelColor } from "../../../constants/colors";
 import { handleNumericSelectKeyDown } from "../../../utils/InputHandlers";
 import {
   optionsMeter,
@@ -92,22 +92,22 @@ const Meter = () => {
                 return (
                   <tr key={idx} className="h-6">
                     <td
-                      className={`border border-black text-center bg-[#ebcec0]`}
+                      className={`border border-black text-center bg-input`}
                     >
                       {row.type}
                     </td>
                     <td
-                      className={`border border-black text-center bg-[#ebcec0]`}
+                      className={`border border-black text-center bg-input`}
                     >
                       {row.manufacturer}
                     </td>
                     <td
-                      className={`border border-black text-center bg-[#ebcec0]`}
+                      className={`border border-black text-center bg-input`}
                     >
                       {row.model}
                     </td>
                     <td
-                      className={`border border-black text-center bg-[#ebcec0]`}
+                      className={`border border-black text-center bg-input`}
                     >
                       {row.製造番号}
                     </td>

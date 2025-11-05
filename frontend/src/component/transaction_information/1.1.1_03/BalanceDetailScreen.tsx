@@ -13,28 +13,28 @@ const BalanceDetailScreen = ({ onSwitchScreen }: any) => {
   const containerRef = useScreenNavigation<HTMLDivElement>(onSwitchScreen);
 
   const buttonStyle =
-    "px-4 py-1.5 rounded-sm font-semibold w-[150px] bg-[#4770a5] cursor-pointer hover:bg-white shadow-md shadow-zinc-600 transition-all duration-200 active:shadow-none active:translate-y-px";
+    "px-4 py-1.5 rounded-sm font-semibold w-[150px] bg-button-primary cursor-pointer hover:bg-white shadow-md shadow-zinc-600 transition-all duration-200 active:shadow-none active:translate-y-px";
 
   const detailsRowCount = 15;
   const detailsCellStyle =
-    " bg-[#ebcec0] border-b border-r border-black p-2 h-9";
+    " bg-input border-b border-r border-black p-2 h-9";
   const detailsHeaderCellStyle =
-    "bg-[#80bad7] border-b text-center p-2 font-semibold text-sm border-r border-black";
+    "bg-label border-b text-center p-2 font-semibold text-sm border-r border-black";
 
   const categoryLabelStyle =
-    "bg-[#80bad7] border border-black  px-4 py-2 text-center font-semibold text-sm w-full";
+    "bg-label border border-black  px-4 py-2 text-center font-semibold text-sm w-full";
   const categoryOperatorStyle =
     "flex items-center justify-center text-2xl font-semibold px-2";
 
   return (
     <div ref={containerRef} className="p-4 text-black w-full text-sm">
-      <div className="text-center h-8 text-lg flex justify-center items-center font-bold bg-[#80bad7] p-2 mb-1">
+      <div className="text-center h-8 text-lg flex justify-center items-center font-bold bg-label p-2 mb-1">
         ＜残高内訳＞
       </div>
 
       <div className="flex justify-between items-center mb-2">
         <div className="flex items-center gap-6">
-          <span className="font-semibold p-2 bg-[#80bad7] w-[150px] flex justify-center">
+          <span className="font-semibold p-2 bg-label w-[150px] flex justify-center">
             表示種類
           </span>
           <div className="flex items-center gap-4">
@@ -77,7 +77,7 @@ const BalanceDetailScreen = ({ onSwitchScreen }: any) => {
                 </div>
               ))}
             </div>
-            <div className="grid grid-cols-[1fr_1.2fr_3fr_1.5fr_1.5fr_1.5fr_1.2fr] bg-[#80bad7]">
+            <div className="grid grid-cols-[1fr_1.2fr_3fr_1.5fr_1.5fr_1.5fr_1.2fr] bg-label">
               {Array.from({
                 length: detailsRowCount * detailsHeaders.length,
               }).map((_, index) => (
@@ -88,7 +88,7 @@ const BalanceDetailScreen = ({ onSwitchScreen }: any) => {
             </div>
           </div>
           <div className="flex justify-end items-center mt-4 gap-2">
-            <div className={`${buttonStyle} bg-[#80bad7] flex justify-center`}>
+            <div className={`${buttonStyle} bg-label flex justify-center`}>
               残高合計
             </div>
             <input
@@ -105,7 +105,7 @@ const BalanceDetailScreen = ({ onSwitchScreen }: any) => {
               {categoryHeaders.map((h) => (
                 <div
                   key={h}
-                  className="bg-[#80bad7] p-2 border-b-2 border-r border-black"
+                  className="bg-label p-2 border-b-2 border-r border-black"
                 >
                   {h}
                 </div>
@@ -115,7 +115,7 @@ const BalanceDetailScreen = ({ onSwitchScreen }: any) => {
               {categoryItemNames.map((item, index) => (
                 <div
                   key={index}
-                  className="grid grid-cols-[2.5fr_1fr_1fr_1fr_1fr_1.2fr] border-b bg-[#ebcec0] border-black"
+                  className="grid grid-cols-[2.5fr_1fr_1fr_1fr_1fr_1.2fr] border-b bg-input border-black"
                 >
                   <div className="border-r border-black p-1 text-center">
                     {item}
@@ -127,7 +127,7 @@ const BalanceDetailScreen = ({ onSwitchScreen }: any) => {
                   <div className="border-r border-black p-1 text-right">0</div>
                 </div>
               ))}
-              <div className="grid grid-cols-[2.5fr_1fr_1fr_1fr_1fr_1.2fr] bg-[#80bad7] font-bold">
+              <div className="grid grid-cols-[2.5fr_1fr_1fr_1fr_1fr_1.2fr] bg-label font-bold">
                 <div className="border-r border-black p-2 text-center">
                   合計
                 </div>
@@ -161,7 +161,7 @@ const BalanceDetailScreen = ({ onSwitchScreen }: any) => {
                 type="text"
                 placeholder="0"
                 readOnly
-                className="bg-[#ebcec0] border border-black  px-4  text-right font-semibold w-full"
+                className="bg-input border border-black  px-4  text-right font-semibold w-full"
               />
             </div>
           </div>

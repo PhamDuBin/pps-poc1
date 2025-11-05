@@ -1,6 +1,6 @@
 import ModalF1 from "../../modal/Modal_F1";
 import { useState } from "react";
-import { labelColor, inputColor } from "../../../constants/colors";
+import { labelColor } from "../../../constants/colors";
 import { symbols } from "../../../constants/input_inspection_result";
 const SurveyDate = () => {
   const [modalF1Open, setModalF1Open] = useState(false);
@@ -93,16 +93,16 @@ const SurveyDate = () => {
                   const rowHasCheck = states[row].some((s) => s === 3);
                   return (
                     <tr key={row} className={` h-6`}>
-                      <td className="border border-black text-center bg-[#ebcec0]">
+                      <td className="border border-black text-center bg-input">
                         {row + 1}
                       </td>
-                      <td className="border border-black text-center bg-[#ebcec0]">
+                      <td className="border border-black text-center bg-input">
                         ◯◯◯コンロ
                       </td>
-                      <td className="border border-black text-center bg-[#ebcec0]">
+                      <td className="border border-black text-center bg-input">
                         メーカー01
                       </td>
-                      <td className="border border-black text-center bg-[#ebcec0]">
+                      <td className="border border-black text-center bg-input">
                         BGC001
                       </td>
                       <td

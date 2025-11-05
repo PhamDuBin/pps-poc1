@@ -117,7 +117,7 @@ const FamilyInfo = forwardRef<any, { showData: boolean }>((props, ref) => {
             picker="month"
             value={formValues.residenceDate}
             onChange={(date) => handleValueChange("residenceDate", date)}
-            className={`h-6 w-32 !bg-[#ebcec0]`}
+            className={`h-6 w-32 !bg-input`}
             format="YYYY/MM"
             disabled={isFormDisabled}
           />

@@ -181,7 +181,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
                 <input
                   type="text"
                   placeholder="000"
-                  className="w-20 border border-black p-1 text-center placeholder-gray-400 bg-[#ebcec0]"
+                  className="w-20 border border-black p-1 text-center placeholder-gray-400 bg-input"
                   style={{ width: `${size}px` }}
                   value={(Array.isArray(value) && value[index]) || ""}
                   onChange={(e) =>
@@ -211,7 +211,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
           <div className="flex items-center space-x-1">
             <input
               type="text"
-              className="border border-black p-1 placeholder-gray-400 w-20 bg-[#ebcec0]"
+              className="border border-black p-1 placeholder-gray-400 w-20 bg-input"
               onChange={(e) => {
                 setId1(extractHalfWidthDigits(e.target.value));
                 handleValueChange(extractHalfWidthDigits(e.target.value), 0);
@@ -225,7 +225,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
             <span> - </span>
             <input
               type="text"
-              className="border w-20 border-gray-400 p-1 bg-[#ebcec0]"
+              className="border w-20 border-gray-400 p-1 bg-input"
               value={(Array.isArray(value) && value[1]) || ""}
               onChange={(e) => {
                 setId2(extractHalfWidthDigits(e.target.value));
@@ -250,7 +250,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
           <div className="flex gap-1">
             <input
               type="text"
-              className="border w-20 border-gray-400 p-1 placeholder-gray-400 bg-[#ebcec0]"
+              className="border w-20 border-gray-400 p-1 placeholder-gray-400 bg-input"
               value={(Array.isArray(value) && value[0]) || ""}
               onChange={(e) => {
                 setId1(extractHalfWidthDigits(e.target.value));
@@ -265,7 +265,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
             <span> - </span>
             <input
               type="text"
-              className="border w-20 border-gray-400 p-1 placeholder-gray-400 bg-[#ebcec0]"
+              className="border w-20 border-gray-400 p-1 placeholder-gray-400 bg-input"
               value={(Array.isArray(value) && value[1]) || ""}
               onChange={(e) => {
                 setId2(extractHalfWidthDigits(e.target.value));
@@ -290,7 +290,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
           <>
             <input
               type="text"
-              className="border border-black p-1 w-44 mr-1 bg-[#ebcec0]"
+              className="border border-black p-1 w-44 mr-1 bg-input"
               value={(typeof value === "string" && value) || ""}
               onChange={(e) => {
                 setId1(extractHalfWidthDigits(e.target.value));
@@ -347,8 +347,8 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
   };
 
   return (
-    <div className="h-screen p-3 bg-[#d8dadc] border-2 border-gray-400 font-sans">
-      <div className="text-center h-8 text-sm bg-[#80bad7] py-1 font-semibold border border-black">
+    <div className="h-screen p-3 bg-bg-alt border-2 border-gray-400 font-sans">
+      <div className="text-center h-8 text-sm bg-label py-1 font-semibold border border-black">
         {showDepart || showCustomer ? "顧客情報" : "顧客検索"}
       </div>
       <div className="mb-2 items-center flex-col relative">
@@ -356,14 +356,14 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
         <div className="text-sm flex items-center flex-row py-2">
           {!showDepart ? (
             <>
-              <label className="bg-[#80bad7] p-1 font-bold w-24 text-center mr-2">
+              <label className="bg-label p-1 font-bold w-24 text-center mr-2">
                 事務所
               </label>
               <input
                 ref={firstInputRef}
                 type="text"
                 placeholder="0000"
-                className="w-20 p-1 border border-gray-500 bg-[#ebcec0]"
+                className="w-20 p-1 border border-gray-500 bg-input"
                 onChange={(e) =>
                   setPostcode1(extractHalfWidthDigits(e.target.value))
                 }
@@ -376,7 +376,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
               <input
                 type="text"
                 placeholder="000"
-                className="w-20 p-1 border border-gray-500 bg-[#ebcec0]"
+                className="w-20 p-1 border border-gray-500 bg-input"
                 onChange={(e) =>
                   setPostcode2(extractHalfWidthDigits(e.target.value))
                 }
@@ -421,7 +421,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
             <>
               <select
                 ref={customerCodeSelectRef}
-                className="bg-[#80bad7] p-1 font-bold w-24 text-center mr-2"
+                className="bg-label p-1 font-bold w-24 text-center mr-2"
                 value={selectedFieldId}
                 onChange={(e) => setSelectedFieldId(e.target.value as FieldId)}
               >
@@ -460,13 +460,13 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
 
               <div className="flex gap-10 mt-2 text-center">
                 <div className="flex w-[35%] gap-4 ">
-                  <label className="w-20 font-bold bg-[#80bad7] p-1">
+                  <label className="w-20 font-bold bg-label p-1">
                     電話番号
                   </label>
                   <div className="p-1">03-1234-9999</div>
                 </div>
                 <div className="flex w-[35%] gap-4 ">
-                  <label className="w-20 font-bold bg-[#80bad7] p-1">
+                  <label className="w-20 font-bold bg-label p-1">
                     地図番号
                   </label>
                   <div className="p-1">X0123:Y0315</div>
@@ -474,19 +474,19 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
               </div>
               <div className="flex justify-between mt-2 text-center">
                 <div className="flex w-[30%] gap-4 ">
-                  <label className="w-20 font-bold bg-[#80bad7] p-1">
+                  <label className="w-20 font-bold bg-label p-1">
                     入力済
                   </label>
                   <div className="p-1">0枚</div>
                 </div>
                 <div className="flex w-[30%] gap-4 ">
-                  <label className="w-20 font-bold bg-[#80bad7] p-1">
+                  <label className="w-20 font-bold bg-label p-1">
                     開閉
                   </label>
                   <div className="p-1">新規開栓</div>
                 </div>
                 <div className="flex w-[30%] gap-4 ">
-                  <label className="w-20 font-bold bg-[#80bad7] p-1">
+                  <label className="w-20 font-bold bg-label p-1">
                     集金方法
                   </label>
                   <div className="p-1">自振</div>
@@ -494,19 +494,19 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
               </div>
               <div className="flex justify-between mt-2 text-center">
                 <div className="flex w-[30%] gap-4 ">
-                  <label className="w-20 font-bold bg-[#80bad7] p-1">
+                  <label className="w-20 font-bold bg-label p-1">
                     締日
                   </label>
                   <div className="p-1">31</div>
                 </div>
                 <div className="flex w-[30%] gap-4 ">
-                  <label className="w-20 font-bold bg-[#80bad7] p-1">
+                  <label className="w-20 font-bold bg-label p-1">
                     支払サイト
                   </label>
                   <div className="p-1">14</div>
                 </div>
                 <div className="flex w-[30%] gap-4 ">
-                  <label className="w-20 font-bold bg-[#80bad7] p-1">
+                  <label className="w-20 font-bold bg-label p-1">
                     集金日
                   </label>
                   <div className="p-1">0日</div>
@@ -550,17 +550,17 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
         {!selectedRow ? (
           <>
             <div>
-              <div className="text-center h-8 text-sm bg-[#80bad7] border border-black py-1 font-semibold">
+              <div className="text-center h-8 text-sm bg-label border border-black py-1 font-semibold">
                 担当者検索
               </div>
               <div className="flex items-center justify-between">
                 <div>
                   <div className="text-sm flex items-center flex-row py-2">
                     <>
-                      <label className="bg-[#80bad7] p-1 font-bold w-24 text-center  mr-2">
+                      <label className="bg-label p-1 font-bold w-24 text-center  mr-2">
                         検索種類
                       </label>
-                      <label className="bg-[#80bad7] w-64 p-1 font-bold text-center">
+                      <label className="bg-label w-64 p-1 font-bold text-center">
                         カナ
                       </label>
                     </>
@@ -568,7 +568,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
                   <div className="text-sm flex items-center flex-row py-2 w-full">
                     <>
                       <form className="">
-                        <select className=" h-7 mr-2 bg-[#ebcec0] border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-24  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        <select className=" h-7 mr-2 bg-input border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-24  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                           <option value="0">カナ</option>
                           <option value="1">コード</option>
                         </select>
@@ -576,7 +576,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
                       <input
                         ref={kanaInputRef}
                         type="text"
-                        className="w-64 p-1 border border-gray-500 bg-[#ebcec0]"
+                        className="w-64 p-1 border border-gray-500 bg-input"
                         value={kanaInput}
                         onChange={(e) =>
                           setKanaInput(convertToFullWidth(e.target.value))
@@ -602,16 +602,16 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
                 <div>
                   <div className="text-sm flex items-center flex-row py-2 w-full">
                     <>
-                      <label className="bg-[#80bad7] p-1 font-bold w-24 text-center mr-2">
+                      <label className="bg-label p-1 font-bold w-24 text-center mr-2">
                         表示順
                       </label>
                       <form className="">
-                        <select className=" mr-2 bg-[#ebcec0] border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-24  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        <select className=" mr-2 bg-input border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-24  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                           <option value="0">コード順</option>
                           <option value="1">五十音順</option>
                         </select>
                       </form>
-                      <label className="bg-[#80bad7] p-1 font-bold w-24 text-center mr-2">
+                      <label className="bg-label p-1 font-bold w-24 text-center mr-2">
                         検索種類
                       </label>
                       <div className="flex items-center w-24 justify-center">
@@ -669,7 +669,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
               <div className="mt-4">
                 <div className="h-48 overflow-y-auto border border-[#5D5D5D]">
                   <table className="w-full border-collapse">
-                    <thead className="bg-[#80bad7] sticky top-0 z-10">
+                    <thead className="bg-label sticky top-0 z-10">
                       <tr>
                         {tableHeaders.map((header, colIndex) => (
                           <th
@@ -736,7 +736,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
           </>
         ) : (
           <>
-            <div className="text-center h-8 text-sm bg-[#80bad7] border border-black py-1 font-semibold">
+            <div className="text-center h-8 text-sm bg-label border border-black py-1 font-semibold">
               担当者情報
             </div>
             <div className="flex justify-between mt-2">

@@ -10,7 +10,7 @@ interface RightPanelProps {
 const RightPanel = forwardRef<HTMLDivElement, RightPanelProps>(
   ({ onButtonClick, activeButton, buttons, onFirstButtonFocus }, ref) => {
     return (
-      <div ref={ref} className="w-2/12 border bg-[#d8dadc] border-black h-full">
+      <div ref={ref} className="w-2/12 border bg-bg-alt border-black h-full">
         <div className="mx-3 font-bold text-base text-black flex flex-col gap-2 overflow-auto h-full">
           {buttons.map((label, index) => {
             const specialLabels = [
@@ -32,7 +32,7 @@ const RightPanel = forwardRef<HTMLDivElement, RightPanelProps>(
                 onFocus={index === 0 ? onFirstButtonFocus : undefined}
                 tabIndex={isSpecial ? -1 : 0}
                 className={`mb-3 h-10 border border-black shadow-md hover:bg-white shadow-zinc-600 ${
-                  activeButton === label ? "bg-[#4d7a90]" : "bg-[#80bad7]"
+                  activeButton === label ? "bg-[#4d7a90]" : "bg-label"
                 }`}
               >
                 {label}

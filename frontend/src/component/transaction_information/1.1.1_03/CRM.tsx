@@ -26,7 +26,7 @@ const CRM = ({ onSwitchScreen }: any) => {
   const containerRef = useScreenNavigation<HTMLDivElement>(onSwitchScreen);
   return (
     <div ref={containerRef} className="p-4 text-black w-full text-sm">
-      <div className="text-center font-bold bg-[#80bad7] p-2 mb-2 h-8 text-lg flex justify-center items-center">
+      <div className="text-center font-bold bg-label p-2 mb-2 h-8 text-lg flex justify-center items-center">
         ＜CRM＞
       </div>
       <div
@@ -34,7 +34,7 @@ const CRM = ({ onSwitchScreen }: any) => {
         style={{ height: "280px" }}
       >
         <div className="relative" style={{ width: "max-content" }}>
-          <div className="flex sticky top-0 bg-[#80bad7] z-10">
+          <div className="flex sticky top-0 bg-label z-10">
             {tableHeaders.map((header) => (
               <div
                 key={header}
@@ -56,7 +56,7 @@ const CRM = ({ onSwitchScreen }: any) => {
               {tableHeaders.map((_, cellIndex) => (
                 <div
                   key={cellIndex}
-                  className="p-2 border-b border-r border-black bg-[#ebcec0]"
+                  className="p-2 border-b border-r border-black bg-input"
                   style={{
                     minWidth:
                       tableHeaders[cellIndex] === "内容" ||
@@ -75,28 +75,28 @@ const CRM = ({ onSwitchScreen }: any) => {
 
       <div className="flex justify-between mt-4 w-full">
         <div className="flex items-center w-[45%]">
-          <span className="flex mr-2 justify-center text-center items-center font-semibold bg-[#80bad7] border border-gray-400 h-20 w-[20%]">
+          <span className="flex mr-2 justify-center text-center items-center font-semibold bg-label border border-gray-400 h-20 w-[20%]">
             内容
           </span>
           <textarea
             placeholder="400"
-            className=" bg-[#ebcec0] border border-black p-2 rounded-sm w-[80%] h-20 resize-none"
+            className=" bg-input border border-black p-2 rounded-sm w-[80%] h-20 resize-none"
           ></textarea>
         </div>
 
         <div className="flex items-center w-[45%]">
-          <span className="flex mx-2 justify-center text-center items-center font-semibold bg-[#80bad7] border border-black h-20 w-[20%]">
+          <span className="flex mx-2 justify-center text-center items-center font-semibold bg-label border border-black h-20 w-[20%]">
             コメント
           </span>
           <textarea
             placeholder="100"
-            className="border bg-[#ebcec0] border-black p-2 rounded-sm w-[80%] h-20 resize-none"
+            className="border bg-input border-black p-2 rounded-sm w-[80%] h-20 resize-none"
           ></textarea>
         </div>
         <div className="flex justify-end w-[10%]">
           <button
             onClick={handleOpenWindow}
-            className=" px-6 py-1.5 rounded-sm shadow-zinc-600 font-semibold h-full bg-[#4770a5] cursor-pointer hover:bg-white shadow-md transition-all duration-200 active:shadow-none active:translate-y-px "
+            className=" px-6 py-1.5 rounded-sm shadow-zinc-600 font-semibold h-full bg-button-primary cursor-pointer hover:bg-white shadow-md transition-all duration-200 active:shadow-none active:translate-y-px "
           >
             CRM分析
           </button>

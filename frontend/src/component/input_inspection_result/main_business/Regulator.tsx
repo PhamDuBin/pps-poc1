@@ -1,6 +1,6 @@
 import { useState } from "react";
 import ModalF1 from "../../modal/Modal_F1";
-import { labelColor, inputColor } from "../../../constants/colors";
+import { labelColor } from "../../../constants/colors";
 import {
   symbols,
   rowsRegulator,
@@ -56,25 +56,25 @@ const Regulator = () => {
 
                 return (
                   <tr key={idx} className="h-6">
-                    <td className="border border-black text-center bg-[#ebcec0]">
+                    <td className="border border-black text-center bg-input">
                       {row.no}
                     </td>
-                    <td className="border border-black text-center bg-[#ebcec0]">
+                    <td className="border border-black text-center bg-input">
                       {row.type}
                     </td>
-                    <td className="border border-black text-center bg-[#ebcec0]">
+                    <td className="border border-black text-center bg-input">
                       {row.maker}
                     </td>
-                    <td className="border border-black text-center bg-[#ebcec0]">
+                    <td className="border border-black text-center bg-input">
                       {row.model}
                     </td>
-                    <td className="border border-black text-center bg-[#ebcec0]">
+                    <td className="border border-black text-center bg-input">
                       {row.capacity}
                     </td>
-                    <td className="border border-black text-center bg-[#ebcec0]">
+                    <td className="border border-black text-center bg-input">
                       {row.manufacture}
                     </td>
-                    <td className="border border-black text-center bg-[#ebcec0]">
+                    <td className="border border-black text-center bg-input">
                       {row.valid}
                     </td>
 
