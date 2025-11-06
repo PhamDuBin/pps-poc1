@@ -17,6 +17,9 @@ interface CodeInputSelectProps {
   disabled?: boolean;
   inputClassName?: string;
   selectClassName?: string;
+  onArrowUp?: () => void;
+  onArrowDown?: () => void;
+  autoSelectOnFocus?: boolean;
 }
 
 const CodeInputSelect = forwardRef<InputRef, CodeInputSelectProps>(
@@ -29,6 +32,9 @@ const CodeInputSelect = forwardRef<InputRef, CodeInputSelectProps>(
       disabled,
       inputClassName,
       selectClassName,
+      onArrowUp,
+      onArrowDown,
+      autoSelectOnFocus = false,
     },
     ref
   ) => {
@@ -48,8 +54,28 @@ const CodeInputSelect = forwardRef<InputRef, CodeInputSelectProps>(
           onChange(resetValue);
           break;
 
+        case "ArrowUp":
+          if (onArrowUp) {
+            e.preventDefault();
+            onArrowUp();
+          }
+          break;
+
+        case "ArrowDown":
+          if (onArrowDown) {
+            e.preventDefault();
+            onArrowDown();
+          }
+          break;
+
         default:
           break;
+      }
+    };
+
+    const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+      if (autoSelectOnFocus) {
+        e.target.select();
       }
     };
 
@@ -72,6 +98,7 @@ const CodeInputSelect = forwardRef<InputRef, CodeInputSelectProps>(
           value={value}
           onChange={(e) => onChange(e)}
           onKeyDown={handleKeyDown}
+          onFocus={handleFocus}
           disabled={disabled}
           className={`w-[70px] text-center h-6 ${inputClassName || ""}`}
         />
@@ -91,6 +118,19 @@ const CodeInputSelect = forwardRef<InputRef, CodeInputSelectProps>(
             if (e.code === "Space") {
               e.preventDefault();
               e.stopPropagation();
+            }
+            // Handle ArrowUp/ArrowDown only when dropdown is closed
+            // When dropdown is open, allow normal navigation through options
+            if (!isOpen) {
+              if (e.key === "ArrowUp" && onArrowUp) {
+                e.preventDefault();
+                e.stopPropagation();
+                onArrowUp();
+              } else if (e.key === "ArrowDown" && onArrowDown) {
+                e.preventDefault();
+                e.stopPropagation();
+                onArrowDown();
+              }
             }
           }}
         />

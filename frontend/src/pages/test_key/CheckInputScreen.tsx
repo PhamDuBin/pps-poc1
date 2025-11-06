@@ -7,6 +7,8 @@ import React, {
 } from "react";
 import { Card, CardBody, Radio, RadioGroup } from "@nextui-org/react";
 import BackButton from "../../component/BackButton";
+import CodeInputSelect from "../../component/CodeInputSelect";
+import type { InputRef } from "antd";
 
 import {
   handleNavigationKey,
@@ -66,9 +68,13 @@ const useKeyboardNavigation = (
     const codeInputs = Array.from(
       form.querySelectorAll<HTMLInputElement>(".code-input")
     );
-    const afterRadioInput = form.querySelector<HTMLInputElement>(".after-radio");
-    const afterRadio1Input = form.querySelector<HTMLInputElement>(".after-radio1");
-    const textareaAfterRadio2 = form.querySelector<HTMLTextAreaElement>(".textarea-after-radio2");
+    const afterRadioInput =
+      form.querySelector<HTMLInputElement>(".after-radio");
+    const afterRadio1Input =
+      form.querySelector<HTMLInputElement>(".after-radio1");
+    const textareaAfterRadio2 = form.querySelector<HTMLTextAreaElement>(
+      ".textarea-after-radio2"
+    );
 
     const listeners: Listener[] = [];
     const addListener = (
@@ -101,22 +107,27 @@ const useKeyboardNavigation = (
 
         // Skip handleNavigationKey for special inputs that have custom navigation logic
         const hasCustomForwardNav =
-          input.classList.contains('input-to-radio') ||
-          input.classList.contains('input-to-checkbox') ||
-          input.classList.contains('text3-input') ||
-          input.hasAttribute('data-group') && input.getAttribute('data-group') === 'text5';
+          input.classList.contains("input-to-radio") ||
+          input.classList.contains("input-to-checkbox") ||
+          input.classList.contains("text3-input") ||
+          (input.hasAttribute("data-group") &&
+            input.getAttribute("data-group") === "text5");
 
         const hasCustomBackNav =
-          input.classList.contains('after-radio') ||
-          input.classList.contains('after-radio1') ||
-          input.classList.contains('textarea-after-radio2') ||
-          input.classList.contains('input-to-radio') ||
-          input.classList.contains('input-to-checkbox') ||
-          input.classList.contains('text3-input') ||
-          input.hasAttribute('data-group') && input.getAttribute('data-group') === 'text5';
+          input.classList.contains("after-radio") ||
+          input.classList.contains("after-radio1") ||
+          input.classList.contains("textarea-after-radio2") ||
+          input.classList.contains("input-to-radio") ||
+          input.classList.contains("input-to-checkbox") ||
+          input.classList.contains("text3-input") ||
+          (input.hasAttribute("data-group") &&
+            input.getAttribute("data-group") === "text5");
 
         // Skip forward navigation for inputs that jump to radio/checkbox groups
-        if (hasCustomForwardNav && ["Tab", "Enter", "ArrowDown"].includes(kbEvent.key)) {
+        if (
+          hasCustomForwardNav &&
+          ["Tab", "Enter", "ArrowDown"].includes(kbEvent.key)
+        ) {
           // Let the custom handler deal with this
           return;
         }
@@ -137,13 +148,23 @@ const useKeyboardNavigation = (
       addListener(inputToMainRadio, "keydown", (e: Event) => {
         const kbEvent = e as KeyboardEvent;
 
-        // Handle Shift+Tab to go back to last customer code input
+        // Handle Shift+Tab to go back to last enabled customer code input
         if (kbEvent.key === "Tab" && kbEvent.shiftKey) {
           kbEvent.preventDefault();
-          // Find all customer code inputs and focus on the last one
-          const customerCodeInputs = form.querySelectorAll<HTMLInputElement>(".input-customer-digit");
-          if (customerCodeInputs.length > 0) {
-            customerCodeInputs[customerCodeInputs.length - 1].focus();
+          // Find all customer code inputs
+          const customerCodeInputs = Array.from(
+            form.querySelectorAll<HTMLInputElement>(".input-customer-digit")
+          );
+          // Find the last enabled input (not disabled)
+          let targetInput = customerCodeInputs[0]; // Default to first
+          for (let i = customerCodeInputs.length - 1; i >= 0; i--) {
+            if (!customerCodeInputs[i].disabled) {
+              targetInput = customerCodeInputs[i];
+              break;
+            }
+          }
+          if (targetInput) {
+            targetInput.focus();
           }
           return;
         }
@@ -160,7 +181,8 @@ const useKeyboardNavigation = (
         if (kbEvent.key === "Tab" && kbEvent.shiftKey) {
           kbEvent.preventDefault();
           // Find the .input-to-radio element and focus it
-          const prevInput = form.querySelector<HTMLInputElement>(".input-to-radio");
+          const prevInput =
+            form.querySelector<HTMLInputElement>(".input-to-radio");
           if (prevInput) {
             prevInput.focus();
           }
@@ -188,7 +210,7 @@ const useKeyboardNavigation = (
             // Ensure the radio is actually checked
             nextRadio.checked = true;
             // Trigger change event
-            const event = new Event('change', { bubbles: true });
+            const event = new Event("change", { bubbles: true });
             nextRadio.dispatchEvent(event);
           }
         } else {
@@ -229,7 +251,7 @@ const useKeyboardNavigation = (
             // Ensure the radio is actually checked
             nextRadio.checked = true;
             // Trigger change event
-            const event = new Event('change', { bubbles: true });
+            const event = new Event("change", { bubbles: true });
             nextRadio.dispatchEvent(event);
           }
         } else {
@@ -273,7 +295,7 @@ const useKeyboardNavigation = (
             // Ensure the radio is actually checked
             nextRadio.checked = true;
             // Trigger change event
-            const event = new Event('change', { bubbles: true });
+            const event = new Event("change", { bubbles: true });
             nextRadio.dispatchEvent(event);
           }
         } else {
@@ -385,7 +407,9 @@ const useKeyboardNavigation = (
             codeInputs[index - 1].focus();
           } else {
             // First code input: go back to text5 input
-            const text5Input = form.querySelector<HTMLInputElement>('[data-group="text5"]');
+            const text5Input = form.querySelector<HTMLInputElement>(
+              '[data-group="text5"]'
+            );
             if (text5Input) {
               text5Input.focus();
             }
@@ -402,7 +426,9 @@ const useKeyboardNavigation = (
             nextCodeInput.focus();
           } else {
             // Last code input: go to text6
-            const text6Input = form.querySelector<HTMLInputElement>('[data-group="text6"]');
+            const text6Input = form.querySelector<HTMLInputElement>(
+              '[data-group="text6"]'
+            );
             if (text6Input) {
               text6Input.focus();
             }
@@ -412,13 +438,16 @@ const useKeyboardNavigation = (
       addListener(input, "keydown", handler);
     });
 
-    // Handle Shift+Tab for after-radio input (代表者名) - this has .input-navigable
+    // Handle Shift+Tab and ArrowUp for after-radio input (代表者名) - this has .input-navigable
     // The handleNavigationKey will handle it, but we need special logic for going back to radio
     if (afterRadioInput && mainRadios.length > 0) {
       addListener(afterRadioInput, "keydown", (e: Event) => {
         const kbEvent = e as KeyboardEvent;
-        // Only handle Shift+Tab specially to go back to radio group
-        if (kbEvent.key === "Tab" && kbEvent.shiftKey) {
+        // Handle Shift+Tab and ArrowUp to go back to radio group
+        if (
+          (kbEvent.key === "Tab" && kbEvent.shiftKey) ||
+          kbEvent.key === "ArrowUp"
+        ) {
           kbEvent.preventDefault();
           const lastRadio = mainRadios[mainRadios.length - 1];
           if (lastRadio) {
@@ -428,12 +457,15 @@ const useKeyboardNavigation = (
       });
     }
 
-    // Handle Shift+Tab for after-radio1 input (Text4) - this has .input-navigable
+    // Handle Shift+Tab and ArrowUp for after-radio1 input (Text4) - this has .input-navigable
     if (afterRadio1Input && radioGroup1.length > 0) {
       addListener(afterRadio1Input, "keydown", (e: Event) => {
         const kbEvent = e as KeyboardEvent;
-        // Only handle Shift+Tab specially to go back to radio group
-        if (kbEvent.key === "Tab" && kbEvent.shiftKey) {
+        // Handle Shift+Tab and ArrowUp to go back to radio group
+        if (
+          (kbEvent.key === "Tab" && kbEvent.shiftKey) ||
+          kbEvent.key === "ArrowUp"
+        ) {
           kbEvent.preventDefault();
           const lastRadio = radioGroup1[radioGroup1.length - 1];
           if (lastRadio) {
@@ -572,6 +604,8 @@ const handleHalfWidthKatakanaInput = (e: ChangeEvent<HTMLInputElement>) => {
 
 export default function CheckInputScreen() {
   const formRef = useRef<HTMLDivElement>(null);
+  const code1InputRef = useRef<InputRef>(null);
+  const code2InputRef = useRef<InputRef>(null);
   useKeyboardNavigation(formRef);
 
   //focus on first input field when page loads
@@ -615,6 +649,12 @@ export default function CheckInputScreen() {
   const [customerCode, setCustomerCode] = useState<string[]>(["", "", "", ""]);
   const [zeroSuppress, setZeroSuppress] = useState<string>("");
 
+  // Check if all customer code fields are filled
+  const isAllCustomerCodeFilled = customerCode.every(
+    (code) => code && code.length > 0
+  );
+  const shouldDisableFields = !isAllCustomerCodeFilled;
+
   const codeOptions: CodeOption[] = [
     { code: "0", label: "Zero" },
     { code: "1", label: "One" },
@@ -656,33 +696,44 @@ export default function CheckInputScreen() {
   return (
     <div
       ref={formRef}
-      className={`px-6 pb-6 pt-12 bg-[#f0f0f0] min-h-screen ${fontSizeClass}`}
+      className={`px-6 pb-6 pt-12 bg-[#f0f0f0] min-h-screen ${fontSizeClass} check-input-screen`}
     >
+      <style>{`
+        .check-input-screen input:focus,
+        .check-input-screen textarea:focus,
+        .check-input-screen select:focus {
+          background-color: #ffffcc !important;
+          outline: 2px solid #4a90e2;
+        }
+      `}</style>
       <BackButton />
       <div className="flex flex-row justify-between items-center mb-2">
         <h1>テストフィールド1</h1>
         <div className="flex items-center gap-3">
           <button
+            disabled={shouldDisableFields}
             onClick={() => setFontSizeClass("text-xs")}
             className={`${btnBaseStyle} ${
               fontSizeClass === "text-xs" ? btnActiveStyle : btnInactiveStyle
-            }`}
+            } disabled:opacity-50 disabled:cursor-not-allowed`}
           >
             Small
           </button>
           <button
+            disabled={shouldDisableFields}
             onClick={() => setFontSizeClass("text-base")}
             className={`${btnBaseStyle} ${
               fontSizeClass === "text-base" ? btnActiveStyle : btnInactiveStyle
-            }`}
+            } disabled:opacity-50 disabled:cursor-not-allowed`}
           >
             Medium
           </button>
           <button
+            disabled={shouldDisableFields}
             onClick={() => setFontSizeClass("text-2xl")}
             className={`${btnBaseStyle} ${
               fontSizeClass === "text-2xl" ? btnActiveStyle : btnInactiveStyle
-            }`}
+            } disabled:opacity-50 disabled:cursor-not-allowed`}
           >
             Large
           </button>
@@ -699,6 +750,7 @@ export default function CheckInputScreen() {
                   key={i}
                   value={customerCode[i]}
                   maxLength={4}
+                  disabled={i > 0 && !customerCode[i - 1]}
                   onChange={(e) => {
                     const value = e.target.value.replace(/[^0-9]/g, "");
                     const newCode = [...customerCode];
@@ -713,7 +765,45 @@ export default function CheckInputScreen() {
                       setCustomerCode(newCode);
                     }
                   }}
-                  className="w-20 h-8 border-2 border-gray-300 rounded-lg shadow-md p-2 focus:border-gray-300 focus:shadow-lg focus:outline-none transition-all input-customer-digit input-navigable"
+                  onKeyDown={(e) => {
+                    // For first input (i=0), if empty and Tab/Enter/ArrowDown, go to 氏名
+                    if (i === 0 && !customerCode[i]) {
+                      if (
+                        ["Tab", "Enter", "ArrowDown"].includes(e.key) &&
+                        !e.shiftKey
+                      ) {
+                        e.preventDefault();
+                        // Jump to 氏名 input
+                        const nameInput =
+                          formRef.current?.querySelector<HTMLInputElement>(
+                            ".input-to-radio"
+                          );
+                        if (nameInput) {
+                          nameInput.focus();
+                        }
+                        return;
+                      }
+                    }
+
+                    // Skip navigation for disabled inputs
+                    if (i > 0 && !customerCode[i - 1]) {
+                      if (
+                        ["Tab", "Enter", "ArrowDown"].includes(e.key) &&
+                        !e.shiftKey
+                      ) {
+                        e.preventDefault();
+                        // Jump to 氏名 input
+                        const nameInput =
+                          formRef.current?.querySelector<HTMLInputElement>(
+                            ".input-to-radio"
+                          );
+                        if (nameInput) {
+                          nameInput.focus();
+                        }
+                      }
+                    }
+                  }}
+                  className="w-20 h-8 border-2 border-gray-300 rounded-lg shadow-md p-2 focus:border-gray-300 focus:shadow-lg focus:outline-none transition-all input-customer-digit input-navigable disabled:bg-gray-200 disabled:cursor-not-allowed"
                 />
               ))}
             </div>
@@ -722,7 +812,10 @@ export default function CheckInputScreen() {
               <label className="flex justify-center min-w-[100px] font-black bg-gray-300 py-0.5 px-10 whitespace-nowrap overflow-hidden text-ellipsis">
                 氏名
               </label>
-              <input className="input-free-text input-to-radio input-navigable w-60 h-8 border-2 border-gray-300 rounded-lg shadow-md p-2" />
+              <input
+                disabled={shouldDisableFields}
+                className="input-free-text input-to-radio input-navigable w-60 h-8 border-2 border-gray-300 rounded-lg shadow-md p-2 disabled:bg-gray-200 disabled:cursor-not-allowed"
+              />
               <span className="flex justify-center min-w-[100px] font-black bg-gray-300 py-0.5 px-8 whitespace-nowrap overflow-hidden text-ellipsis">
                 顧客種別
               </span>
@@ -734,6 +827,7 @@ export default function CheckInputScreen() {
                 onChange={(e: ChangeEvent<HTMLInputElement>) =>
                   setRadioValue(e.target.value)
                 }
+                isDisabled={shouldDisableFields}
               >
                 <div className="flex gap-4">
                   {["法人以外", "法人"].map((v) => (
@@ -750,7 +844,10 @@ export default function CheckInputScreen() {
               <span className="flex justify-center min-w-[100px] font-black bg-gray-300 py-0.5 px-8 whitespace-nowrap overflow-hidden text-ellipsis">
                 代表者名
               </span>
-              <input className="input-free-text after-radio input-navigable w-60 h-8 border-2 border-gray-300 rounded-lg shadow-md p-2" />
+              <input
+                disabled={shouldDisableFields}
+                className="input-free-text after-radio input-navigable w-60 h-8 border-2 border-gray-300 rounded-lg shadow-md p-2 disabled:bg-gray-200 disabled:cursor-not-allowed"
+              />
             </div>
           </div>
         </CardBody>
@@ -768,19 +865,22 @@ export default function CheckInputScreen() {
               <div className="grid grid-cols-4 items-center gap-2 p-4">
                 <label className={`${className_label}`}>Text1</label>
                 <input
-                  className={`col-span-2 ${className_input_text} input-navigable`}
+                  disabled={shouldDisableFields}
+                  className={`col-span-2 ${className_input_text} input-navigable disabled:bg-gray-200 disabled:cursor-not-allowed`}
                 />
                 <span></span>
 
                 <label className={`${className_label}`}>Text2</label>
                 <input
-                  className={`col-span-2 ${className_input_text} input-navigable`}
+                  disabled={shouldDisableFields}
+                  className={`col-span-2 ${className_input_text} input-navigable disabled:bg-gray-200 disabled:cursor-not-allowed`}
                 />
                 <span></span>
 
                 <label className={`${className_label}`}>Text3</label>
                 <input
-                  className={`col-span-2 ${className_input_text} input-navigable text3-input`}
+                  disabled={shouldDisableFields}
+                  className={`col-span-2 ${className_input_text} input-navigable text3-input disabled:bg-gray-200 disabled:cursor-not-allowed`}
                 />
                 <span></span>
 
@@ -794,6 +894,7 @@ export default function CheckInputScreen() {
                   onChange={(e: ChangeEvent<HTMLInputElement>) =>
                     setRadio1Value(e.target.value)
                   }
+                  isDisabled={shouldDisableFields}
                 >
                   <div className="flex gap-4">
                     {["A", "B"].map((v) => (
@@ -811,122 +912,100 @@ export default function CheckInputScreen() {
 
                 <label className={`${className_label}`}>Text4</label>
                 <input
-                  className={`col-span-1 ${className_input_text} input-navigable after-radio1`}
+                  disabled={shouldDisableFields}
+                  className={`col-span-1 ${className_input_text} input-navigable after-radio1 disabled:bg-gray-200 disabled:cursor-not-allowed`}
                 />
 
                 <label className={`${className_label}`}>Text5</label>
                 <input
+                  disabled={shouldDisableFields}
                   data-group="text5"
                   onKeyDown={(e: ReactKeyboardEvent<HTMLInputElement>) => {
                     // Handle Shift+Tab to go back to TEXT4 (after-radio1)
                     if (e.key === "Tab" && e.shiftKey) {
                       e.preventDefault();
-                      const text4Input = formRef.current?.querySelector<HTMLInputElement>('.after-radio1');
+                      const text4Input =
+                        formRef.current?.querySelector<HTMLInputElement>(
+                          ".after-radio1"
+                        );
                       if (text4Input) {
                         text4Input.focus();
                       }
                       return;
                     }
 
-                    if (
-                      ["Tab", "Enter", "ArrowDown"].includes(
-                        e.key
-                      )
-                    ) {
+                    if (["Tab", "Enter", "ArrowDown"].includes(e.key)) {
                       e.preventDefault();
                       const currentInput = e.currentTarget;
                       currentInput.blur();
 
                       setTimeout(() => {
-                        formRef.current
-                          ?.querySelector<HTMLElement>('[data-group="code1"]')
-                          ?.focus();
+                        code1InputRef.current?.focus();
                       }, 10);
                     }
                   }}
-                  className={`col-span-1 ${className_input_text} input-navigable`}
+                  className={`col-span-1 ${className_input_text} input-navigable disabled:bg-gray-200 disabled:cursor-not-allowed`}
                 />
 
                 <label className={`${className_label}`}>Code1</label>
-                <div className="flex flex-row">
-                  <input
-                    value={code1}
-                    onChange={(e) => {
-                      const value = e.target.value.replace(/[^0-9]/g, "");
-                      setCode1(value);
-                    }}
-                    onKeyDown={(e) => {
-                      if (e.key === "Escape") {
-                        e.preventDefault();
-                        setCode1("0");
-                        return;
-                      }
-                      handleCodeKeyDown(e, code1, setCode1);
-                    }}
-                    className="w-8 border border-gray-300 rounded code-input"
-                    data-group="code1"
-                  />
-
-                  <select
-                    className="ml-2 h-8 border border-gray-300 rounded code-select"
-                    value={
-                      codeOptions.some((o) => o.code === code1) ? code1 : ""
+                <CodeInputSelect
+                  ref={code1InputRef}
+                  options={codeOptions}
+                  value={code1}
+                  onChange={setCode1}
+                  resetValue="0"
+                  disabled={shouldDisableFields}
+                  autoSelectOnFocus={true}
+                  onArrowUp={() => {
+                    const text5Input =
+                      formRef.current?.querySelector<HTMLInputElement>(
+                        '[data-group="text5"]'
+                      );
+                    if (text5Input) {
+                      text5Input.focus();
                     }
-                    onChange={(e: ChangeEvent<HTMLSelectElement>) =>
-                      setCode1(e.target.value)
-                    }
-                    data-group="code1"
-                  >
-                    {codeOptions.map((item) => (
-                      <option key={item.code} value={item.code}>
-                        {item.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+                  }}
+                  onArrowDown={() => code2InputRef.current?.focus()}
+                  inputClassName="code-input"
+                  selectClassName="code-select"
+                />
 
                 <label className={`${className_label}`}>Code2</label>
-                <div className="flex flex-row">
-                  <input
-                    value={code2}
-                    onChange={(e) => {
-                      const value = e.target.value.replace(/[^0-9]/g, "");
-                      setCode2(value);
-                    }}
-                    onKeyDown={(e) => {
-                      if (e.key === "Escape") {
-                        e.preventDefault();
-                        setCode2("0");
-                        return;
-                      }
-                      handleCodeKeyDown(e, code2, setCode2);
-                    }}
-                    className="w-8 border border-gray-300 rounded code-input"
-                    data-group="code2"
-                  />
-
-                  <select
-                    className="ml-2 h-8 border border-gray-300 rounded code-select"
-                    value={
-                      codeOptions.some((o) => o.code === code2) ? code2 : ""
+                <CodeInputSelect
+                  ref={code2InputRef}
+                  options={codeOptions}
+                  value={code2}
+                  onChange={setCode2}
+                  resetValue="0"
+                  disabled={shouldDisableFields}
+                  autoSelectOnFocus={true}
+                  onArrowUp={() => code1InputRef.current?.focus()}
+                  onArrowDown={() => {
+                    const text6Input =
+                      formRef.current?.querySelector<HTMLInputElement>(
+                        '[data-group="text6"]'
+                      );
+                    if (text6Input) {
+                      text6Input.focus();
                     }
-                    onChange={(e: ChangeEvent<HTMLSelectElement>) =>
-                      setCode2(e.target.value)
-                    }
-                    data-group="code2"
-                  >
-                    {codeOptions.map((item) => (
-                      <option key={item.code} value={item.code}>
-                        {item.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+                  }}
+                  inputClassName=" code-input"
+                  selectClassName="code-select"
+                />
 
                 <label className={`${className_label}`}>Text6</label>
                 <input
+                  disabled={shouldDisableFields}
                   data-group="text6"
-                  className={`col-span-1 ${className_input_text} input-navigable input-to-checkbox`}
+                  onKeyDown={(e) => {
+                    // Handle ArrowUp to go back to Code2
+                    if (e.key === "ArrowUp") {
+                      e.preventDefault();
+                      code2InputRef.current?.focus();
+                      return;
+                    }
+                  }}
+                  className={`col-span-1 ${className_input_text} input-navigable input-to-checkbox disabled:bg-gray-200 disabled:cursor-not-allowed`}
                 />
                 <span></span>
                 <span></span>
@@ -936,8 +1015,9 @@ export default function CheckInputScreen() {
                   {["sun", "mon", "tue", "wed", "thu", "fri"].map((day) => (
                     <label key={day} className="flex items-center gap-2">
                       <input
+                        disabled={shouldDisableFields}
                         type="checkbox"
-                        className="w-6 h-6 accent-blue-600 checkbox-group-item"
+                        className="w-6 h-6 accent-blue-600 checkbox-group-item disabled:cursor-not-allowed"
                         tabIndex={0}
                       />
                       <span className="whitespace-nowrap">{day}</span>
@@ -954,6 +1034,7 @@ export default function CheckInputScreen() {
                   onChange={(e: ChangeEvent<HTMLInputElement>) =>
                     setRadio2Value(e.target.value)
                   }
+                  isDisabled={shouldDisableFields}
                 >
                   <div className="flex gap-4">
                     {["A", "B", "C", "D"].map((v) => (
@@ -974,7 +1055,8 @@ export default function CheckInputScreen() {
                 <span></span>
               </div>
               <textarea
-                className={`input-free-text textarea-after-radio2 p-3 w-full border-2 input-navigable border-gray-300 rounded-lg shadow-md`}
+                disabled={shouldDisableFields}
+                className={`input-free-text textarea-after-radio2 p-3 w-full border-2 input-navigable border-gray-300 rounded-lg shadow-md disabled:bg-gray-200 disabled:cursor-not-allowed`}
                 rows={2}
               />
             </CardBody>
@@ -988,7 +1070,8 @@ export default function CheckInputScreen() {
               <div className="grid grid-cols-4 items-center gap-2 px-4">
                 <label className={`${className_label}`}>全角＆半角混合</label>
                 <input
-                  className={`col-span-2 ${className_input_text} input-navigable`}
+                  disabled={shouldDisableFields}
+                  className={`col-span-2 ${className_input_text} input-navigable disabled:bg-gray-200 disabled:cursor-not-allowed`}
                 />
                 <span></span>
 
@@ -996,7 +1079,8 @@ export default function CheckInputScreen() {
                   半角カナ
                 </label>
                 <input
-                  className={`col-span-2 ${className_input_text} input-navigable`}
+                  disabled={shouldDisableFields}
+                  className={`col-span-2 ${className_input_text} input-navigable disabled:bg-gray-200 disabled:cursor-not-allowed`}
                   onChange={handleHalfWidthKatakanaInput}
                   onInput={handleHalfWidthKatakanaInput}
                 />
@@ -1006,7 +1090,8 @@ export default function CheckInputScreen() {
                   半角数字
                 </label>
                 <input
-                  className={`col-span-2 ${className_input_text} input-navigable`}
+                  disabled={shouldDisableFields}
+                  className={`col-span-2 ${className_input_text} input-navigable disabled:bg-gray-200 disabled:cursor-not-allowed`}
                   onKeyDown={(e) => handleFormatting(e, extractHalfWidthDigits)}
                 />
                 <span></span>
@@ -1015,7 +1100,8 @@ export default function CheckInputScreen() {
                   半角英数字
                 </label>
                 <input
-                  className={`col-span-2 ${className_input_text} input-navigable`}
+                  disabled={shouldDisableFields}
+                  className={`col-span-2 ${className_input_text} input-navigable disabled:bg-gray-200 disabled:cursor-not-allowed`}
                   onKeyDown={(e) =>
                     handleFormatting(e, convertToHalfWidthAndRemoveKana)
                   }
@@ -1026,15 +1112,17 @@ export default function CheckInputScreen() {
                   全角
                 </label>
                 <input
-                  className={`col-span-2 ${className_input_text} input-navigable`}
+                  disabled={shouldDisableFields}
+                  className={`col-span-2 ${className_input_text} input-navigable disabled:bg-gray-200 disabled:cursor-not-allowed`}
                   onKeyDown={(e) => handleFormatting(e, convertToFullWidth)}
                 />
                 <span></span>
 
                 <label className="flex justify-center min-w-[100px] font-black bg-gray-300 py-0.5 px-8 whitespace-nowrap overflow-hidden text-ellipsis">
-                  ゼロサプレス
+                  ゼロパディング
                 </label>
                 <input
+                  disabled={shouldDisableFields}
                   value={zeroSuppress}
                   onChange={(e) => {
                     const value = e.target.value.replace(/[^0-9]/g, "");
@@ -1043,14 +1131,13 @@ export default function CheckInputScreen() {
                   onBlur={(e) => {
                     const value = e.target.value;
                     if (value) {
-                      // Remove leading and trailing zeros
-                      const trimmed = value
-                        .replace(/^0+/, "")
-                        .replace(/0+$/, "");
-                      setZeroSuppress(trimmed || "0");
+                      // Add two zeros at the beginning if not already present
+                      if (!value.startsWith("00")) {
+                        setZeroSuppress("00" + value);
+                      }
                     }
                   }}
-                  className={`col-span-2 ${className_input_text} input-navigable`}
+                  className={`col-span-2 ${className_input_text} input-navigable disabled:bg-gray-200 disabled:cursor-not-allowed`}
                 />
                 <span></span>
 
@@ -1061,7 +1148,8 @@ export default function CheckInputScreen() {
                 <span></span>
                 <span></span>
                 <textarea
-                  className={`input-navigable col-span-4 border-2 border-gray-300 rounded-lg shadow-md`}
+                  disabled={shouldDisableFields}
+                  className={`input-navigable col-span-4 border-2 border-gray-300 rounded-lg shadow-md disabled:bg-gray-200 disabled:cursor-not-allowed`}
                   rows={3}
                 />
 
@@ -1069,7 +1157,8 @@ export default function CheckInputScreen() {
                   排除確認
                 </label>
                 <input
-                  className={`col-span-2 ${className_input_text} input-navigable`}
+                  disabled={shouldDisableFields}
+                  className={`col-span-2 ${className_input_text} input-navigable disabled:bg-gray-200 disabled:cursor-not-allowed`}
                   onKeyDown={(e) => handleFormatting(e, removeAllWhitespace)}
                 />
               </div>

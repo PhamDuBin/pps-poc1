@@ -35,6 +35,15 @@ const SalesSlipEntry = forwardRef(
     const [focusIndex, setFocusIndex] = useState<number | null>(null);
     const [rowEdit, setRowEdit] = useState<any>(null);
     const [saleSlips, setSaleSlips] = useState<any>([]);
+    const [selectedTanto, setSelectedTanto] = useState("営業タロウ");
+    const [showTantoDropdown, setShowTantoDropdown] = useState(false);
+
+    const tantoOptions = [
+      "営業タロウ",
+      "営業ジロウ",
+      "営業サブロウ",
+      "営業シロウ",
+    ];
 
     const [activeSlipIndex, setActiveSlipIndex] = useState<number | null>(null);
     const [tooltipPos, setTooltipPos] = useState<{
@@ -232,7 +241,15 @@ const SalesSlipEntry = forwardRef(
     };
 
     return (
-      <div className=" w-full h-full flex flex-col items-center px-4 pt-4 2xl:text-[16px] text-[11px]">
+      <div className=" w-full h-full flex flex-col items-center px-4 pt-4 2xl:text-[16px] text-[11px] sale-slip-entry">
+        <style>{`
+          .sale-slip-entry input:focus,
+          .sale-slip-entry textarea:focus,
+          .sale-slip-entry select:focus {
+            background-color: #ffffcc !important;
+            outline: 2px solid #4a90e2;
+          }
+        `}</style>
         {/* Header */}
         <div className="w-full">
           <div className="bg-[#D9D9D9] text-center font-bold py-2">
@@ -308,15 +325,33 @@ const SalesSlipEntry = forwardRef(
               <div className="relative mx-1 w-1/2">
                 <input
                   type="text"
-                  placeholder="営業タロウ"
-                  className="w-full border border-black px-2 py-1 pr-8 cursor-pointer placeholder-black"
+                  value={selectedTanto}
+                  readOnly
+                  className="w-full border border-black px-2 py-1 pr-8 cursor-pointer"
+                  onClick={() => setShowTantoDropdown(!showTantoDropdown)}
                 />
                 <button
                   className="absolute right-0 top-1/2 -translate-y-1/2 h-full flex items-center px-2 text-gray-500 cursor-pointer"
-                  onClick={onOpenLeftPanelForSearch}
+                  onClick={() => setShowTantoDropdown(!showTantoDropdown)}
                 >
                   ▼
                 </button>
+                {showTantoDropdown && (
+                  <div className="absolute top-full left-0 w-full bg-white border border-black shadow-lg z-50 max-h-40 overflow-y-auto">
+                    {tantoOptions.map((option, index) => (
+                      <div
+                        key={index}
+                        className="px-2 py-1 hover:bg-blue-200 cursor-pointer"
+                        onClick={() => {
+                          setSelectedTanto(option);
+                          setShowTantoDropdown(false);
+                        }}
+                      >
+                        {option}
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
           </div>

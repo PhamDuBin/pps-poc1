@@ -210,6 +210,7 @@ const AdvanceSearchModal: React.FC<AdvanceSearchModalProps> = ({
   const [tableData, setTableData] = useState<TableRowData[]>([]);
   const tbodyRef = useRef<HTMLTableSectionElement>(null);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const radioGroupRef = useRef<HTMLDivElement>(null);
 
   const handleSearch = () => {
     const mockData = Array.from({ length: 12 }).map((_, index) => ({
@@ -266,6 +267,53 @@ const AdvanceSearchModal: React.FC<AdvanceSearchModalProps> = ({
     }
   };
 
+  // Add radio navigation logic similar to check-input page
+  useEffect(() => {
+    if (!radioGroupRef.current) return;
+
+    const radios = Array.from(
+      radioGroupRef.current.querySelectorAll<HTMLInputElement>('input[type="radio"]')
+    );
+
+    const handleRadioKeyDown = (e: KeyboardEvent, index: number) => {
+      if (
+        ["ArrowDown", "ArrowUp", "ArrowRight", "ArrowLeft"].includes(e.key)
+      ) {
+        e.preventDefault();
+        let nextIndex = index;
+
+        if (e.key === "ArrowDown" || e.key === "ArrowRight") {
+          nextIndex = (index + 1) % radios.length;
+        } else if (e.key === "ArrowUp" || e.key === "ArrowLeft") {
+          nextIndex = (index - 1 + radios.length) % radios.length;
+        }
+
+        const nextRadio = radios[nextIndex];
+        if (nextRadio) {
+          nextRadio.focus();
+          nextRadio.click();
+          nextRadio.checked = true;
+          const event = new Event('change', { bubbles: true });
+          nextRadio.dispatchEvent(event);
+        }
+      }
+    };
+
+    const listeners: Array<{ element: HTMLInputElement; handler: (e: KeyboardEvent) => void }> = [];
+
+    radios.forEach((radio, index) => {
+      const handler = (e: KeyboardEvent) => handleRadioKeyDown(e, index);
+      radio.addEventListener("keydown", handler);
+      listeners.push({ element: radio, handler });
+    });
+
+    return () => {
+      listeners.forEach(({ element, handler }) => {
+        element.removeEventListener("keydown", handler);
+      });
+    };
+  }, [searchMode]);
+
   return (
     <div className="p-4 bg-white text-black w-full text-sm">
       <div className="bg-label border border-black p-2 text-center font-bold mb-2">
@@ -279,7 +327,7 @@ const AdvanceSearchModal: React.FC<AdvanceSearchModalProps> = ({
           <span>0000-000 全指定</span>
         </div>
 
-        <div className="flex items-center space-x-4">
+        <div ref={radioGroupRef} className="flex items-center space-x-4">
           {[
             { id: "overall", label: "全体検索" },
             { id: "collective", label: "集合検索" },

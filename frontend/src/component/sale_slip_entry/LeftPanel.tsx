@@ -40,6 +40,23 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
   const [selected, setSelected] = useState("1");
   const [selectedRow, setSelectedRow] = useState(false);
   const [kanaInput, setKanaInput] = useState("");
+  const [showJimushoDropdown, setShowJimushoDropdown] = useState(false);
+  const [showCustomerDropdown, setShowCustomerDropdown] = useState(false);
+
+  // Dummy data for dropdowns
+  const jimushoOptions = [
+    { code1: "0001", code2: "001", name: "東京23区担当営業所" },
+    { code1: "0002", code2: "002", name: "横浜担当営業所" },
+    { code1: "0003", code2: "003", name: "大阪担当営業所" },
+    { code1: "0004", code2: "004", name: "名古屋担当営業所" },
+  ];
+
+  const customerOptions = [
+    { code1: "000000", code2: "000", name: "山田　太郎" },
+    { code1: "000001", code2: "001", name: "佐藤　花子" },
+    { code1: "000002", code2: "002", name: "鈴木　一郎" },
+    { code1: "000003", code2: "003", name: "田中　次郎" },
+  ];
 
   const handleSearch = (...ids: string[]) => {
     if (ids.some((id) => id)) {
@@ -175,13 +192,14 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
     switch (currentField.type) {
       case "multi":
         return (
-          <div className="flex items-center space-x-1">
+          <div className="flex items-center space-x-1 relative">
             {currentField.partSizes?.map((size, index) => (
               <React.Fragment key={index}>
                 <input
                   type="text"
                   placeholder="000"
-                  className="w-20 border border-black p-1 text-center placeholder-gray-400 bg-input"
+                  disabled={index > 0 && !(Array.isArray(value) && value[index - 1])}
+                  className="w-20 border border-black p-1 text-center placeholder-gray-400 bg-input disabled:bg-gray-200 disabled:cursor-not-allowed"
                   style={{ width: `${size}px` }}
                   value={(Array.isArray(value) && value[index]) || ""}
                   onChange={(e) =>
@@ -199,11 +217,34 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
               </React.Fragment>
             ))}
             <button
-              onClick={() => setShowAdvanceSearch(true)}
+              onClick={() => setShowCustomerDropdown(!showCustomerDropdown)}
               className=" w-[20px] h-[20px] mt-1 flex items-center justify-center px-1 bg-white border border-gray-500 cursor-pointer"
             >
               ▼
             </button>
+            {showCustomerDropdown && (
+              <div className="absolute top-full left-0 w-[300px] bg-white border border-black shadow-lg z-50 max-h-40 overflow-y-auto mt-1">
+                {customerOptions.map((option, index) => (
+                  <div
+                    key={index}
+                    className="px-2 py-1 hover:bg-blue-200 cursor-pointer flex justify-between"
+                    onClick={() => {
+                      const newValue = currentField.partSizes?.length === 3
+                        ? [option.code1, option.code2, ""]
+                        : [option.code1, option.code2];
+                      setFormValues((prev) => ({ ...prev, [selectedFieldId]: newValue }));
+                      setId1(option.code1);
+                      setId2(option.code2);
+                      setShowCustomerDropdown(false);
+                      handleSearch(option.code1, option.code2);
+                    }}
+                  >
+                    <span>{option.code1}-{option.code2}</span>
+                    <span>{option.name}</span>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         );
       case "dropdown":
@@ -225,7 +266,8 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
             <span> - </span>
             <input
               type="text"
-              className="border w-20 border-gray-400 p-1 bg-input"
+              disabled={!id1}
+              className="border w-20 border-gray-400 p-1 bg-input disabled:bg-gray-200 disabled:cursor-not-allowed"
               value={(Array.isArray(value) && value[1]) || ""}
               onChange={(e) => {
                 setId2(extractHalfWidthDigits(e.target.value));
@@ -265,7 +307,8 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
             <span> - </span>
             <input
               type="text"
-              className="border w-20 border-gray-400 p-1 placeholder-gray-400 bg-input"
+              disabled={!id1}
+              className="border w-20 border-gray-400 p-1 placeholder-gray-400 bg-input disabled:bg-gray-200 disabled:cursor-not-allowed"
               value={(Array.isArray(value) && value[1]) || ""}
               onChange={(e) => {
                 setId2(extractHalfWidthDigits(e.target.value));
@@ -347,7 +390,15 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
   };
 
   return (
-    <div className="h-screen p-3 bg-bg-alt border-2 border-gray-400 font-sans">
+    <div className="h-screen p-3 bg-bg-alt border-2 border-gray-400 font-sans sale-slip-left-panel">
+      <style>{`
+        .sale-slip-left-panel input:focus,
+        .sale-slip-left-panel textarea:focus,
+        .sale-slip-left-panel select:focus {
+          background-color: #ffffcc !important;
+          outline: 2px solid #4a90e2;
+        }
+      `}</style>
       <div className="text-center h-8 text-sm bg-label py-1 font-semibold border border-black">
         {showDepart || showCustomer ? "顧客情報" : "顧客検索"}
       </div>
@@ -359,38 +410,62 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
               <label className="bg-label p-1 font-bold w-24 text-center mr-2">
                 事務所
               </label>
-              <input
-                ref={firstInputRef}
-                type="text"
-                placeholder="0000"
-                className="w-20 p-1 border border-gray-500 bg-input"
-                onChange={(e) =>
-                  setPostcode1(extractHalfWidthDigits(e.target.value))
-                }
-                onKeyDown={(e) => {
-                  handleJimushoKeyDown(e);
-                  allowDecimalInput(e);
-                }}
-              />
-              <span className="mx-1">-</span>
-              <input
-                type="text"
-                placeholder="000"
-                className="w-20 p-1 border border-gray-500 bg-input"
-                onChange={(e) =>
-                  setPostcode2(extractHalfWidthDigits(e.target.value))
-                }
-                onKeyDown={(e) => {
-                  handleJimushoKeyDown(e);
-                  allowDecimalInput(e);
-                }}
-              />
-              <button
-                onClick={() => setShowAdvanceSearch(true)}
-                className="mx-1 w-[20px] h-[20px] flex items-center justify-center px-1 bg-white border border-gray-500 cursor-pointer"
-              >
-                ▼
-              </button>
+              <div className="relative flex items-center">
+                <input
+                  ref={firstInputRef}
+                  type="text"
+                  placeholder="0000"
+                  value={postcode1}
+                  className="w-20 p-1 border border-gray-500 bg-input"
+                  onChange={(e) =>
+                    setPostcode1(extractHalfWidthDigits(e.target.value))
+                  }
+                  onKeyDown={(e) => {
+                    handleJimushoKeyDown(e);
+                    allowDecimalInput(e);
+                  }}
+                />
+                <span className="mx-1">-</span>
+                <input
+                  type="text"
+                  placeholder="000"
+                  value={postcode2}
+                  disabled={!postcode1}
+                  className="w-20 p-1 border border-gray-500 bg-input disabled:bg-gray-200 disabled:cursor-not-allowed"
+                  onChange={(e) =>
+                    setPostcode2(extractHalfWidthDigits(e.target.value))
+                  }
+                  onKeyDown={(e) => {
+                    handleJimushoKeyDown(e);
+                    allowDecimalInput(e);
+                  }}
+                />
+                <button
+                  onClick={() => setShowJimushoDropdown(!showJimushoDropdown)}
+                  className="mx-1 w-[20px] h-[20px] flex items-center justify-center px-1 bg-white border border-gray-500 cursor-pointer"
+                >
+                  ▼
+                </button>
+                {showJimushoDropdown && (
+                  <div className="absolute top-full left-0 w-[300px] bg-white border border-black shadow-lg z-50 max-h-40 overflow-y-auto mt-1">
+                    {jimushoOptions.map((option, index) => (
+                      <div
+                        key={index}
+                        className="px-2 py-1 hover:bg-blue-200 cursor-pointer flex justify-between"
+                        onClick={() => {
+                          setPostcode1(option.code1);
+                          setPostcode2(option.code2);
+                          setShowJimushoDropdown(false);
+                          handleSearchDepartment(option.code1, option.code2);
+                        }}
+                      >
+                        <span>{option.code1}-{option.code2}</span>
+                        <span>{option.name}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
             </>
           ) : (
             <>

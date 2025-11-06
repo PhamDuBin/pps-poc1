@@ -9,7 +9,7 @@ const RightPanel: React.FC<RightPanelProps> = ({
   onButtonClick,
   activeButton,
 }) => {
-  const buttons = ["行追加", "請求年月変更", "入金処理"];
+  const buttons = ["行追加 (F1)", "請求年月変更 (F2)", "入金処理 (F3)"];
 
   return (
     <div className="w-2/12 border bg-bg-alt border-black h-full pt-5">

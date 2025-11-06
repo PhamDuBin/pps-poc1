@@ -231,6 +231,15 @@ const ProductSearchModal: React.FC<ProductSearchModalProps> = ({
             break;
         }
       }
+
+      // Handle F5 and F6 keys for specific buttons
+      if (event.key === "F5") {
+        event.preventDefault();
+        openNewWindow();
+      } else if (event.key === "F6") {
+        event.preventDefault();
+        openNewWindow();
+      }
     };
 
     if (isOpen) {

@@ -55,6 +55,16 @@ const SaleSlipEntryScreen = () => {
       const activeElement = document.activeElement as HTMLElement;
       const currentIndex = focusableElements.indexOf(activeElement);
 
+      // Prevent Enter key from navigating to next element
+      if (e.key === "Enter") {
+        e.preventDefault();
+        // Trigger click event on the current element if it's a button
+        if (activeElement.tagName === "BUTTON") {
+          activeElement.click();
+        }
+        return;
+      }
+
       if (currentIndex !== -1) {
         handleNavigationKey(e, currentIndex, focusableElements);
       }
@@ -77,10 +87,18 @@ const SaleSlipEntryScreen = () => {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (/^F\d{1,2}$/.test(e.key)) {
-        if (![""].includes(e.key)) {
-          e.preventDefault();
-          return;
+        e.preventDefault();
+
+        // Handle F1, F2, F3 for specific buttons
+        if (e.key === "F1") {
+          handleButtonClick("行追加");
+        } else if (e.key === "F2") {
+          handleButtonClick("請求年月変更");
+        } else if (e.key === "F3") {
+          handleButtonClick("入金処理");
         }
+
+        return;
       }
     };
 
