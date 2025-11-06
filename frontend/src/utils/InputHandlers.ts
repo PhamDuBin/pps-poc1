@@ -38,7 +38,15 @@ export const handleNavigationKey = (
     }
   }
 
-  if (["Tab", "ArrowDown", "ArrowRight"].includes(key)) {
+  // Handle Shift+Tab to go back to previous element
+  if (key === "Tab" && e.shiftKey) {
+    e.preventDefault();
+    const prevIndex = index - 1;
+    if (prevIndex >= 0) inputs[prevIndex].focus();
+    return;
+  }
+
+  if (["Tab", "Enter", "ArrowDown"].includes(key)) {
     e.preventDefault();
     if (
       input instanceof HTMLInputElement ||
@@ -65,7 +73,7 @@ export const handleNavigationKey = (
       const nextIndex = index + 1;
       if (nextIndex < inputs.length) inputs[nextIndex].focus();
     }
-  } else if (["ArrowUp", "ArrowLeft"].includes(key)) {
+  } else if (key === "ArrowUp") {
     e.preventDefault();
     const prevIndex = index - 1;
     if (prevIndex >= 0) inputs[prevIndex].focus();
@@ -156,7 +164,7 @@ export const handleInputToRadio = (
   e: KeyboardEvent,
   radios: HTMLInputElement[]
 ): void => {
-  const keys = ["Tab", "Enter", "ArrowDown", "ArrowRight"];
+  const keys = ["Tab", "Enter", "ArrowDown"];
   if (keys.includes(e.key)) {
     e.preventDefault();
     const firstRadio = radios[0];

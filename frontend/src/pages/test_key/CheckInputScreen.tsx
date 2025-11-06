@@ -9,11 +9,9 @@ import { Card, CardBody, Radio, RadioGroup } from "@nextui-org/react";
 import BackButton from "../../component/BackButton";
 
 import {
-  handleDigitInput,
   handleNavigationKey,
   handleInputToRadio,
   handleRadioNavigation,
-  toHalfWidth,
   extractHalfWidthDigits,
   convertToHalfWidthAndRemoveKana,
   convertToFullWidth,
@@ -42,9 +40,6 @@ const useKeyboardNavigation = (
     const navigableInputs = Array.from(
       form.querySelectorAll<HTMLElement>(".input-navigable")
     );
-    const digitInputs = Array.from(
-      form.querySelectorAll<HTMLInputElement>(".input-customer-digit")
-    );
     const mainRadios = Array.from(
       form.querySelectorAll<HTMLInputElement>(
         ".radio-group .radio-customer-type"
@@ -71,6 +66,9 @@ const useKeyboardNavigation = (
     const codeInputs = Array.from(
       form.querySelectorAll<HTMLInputElement>(".code-input")
     );
+    const afterRadioInput = form.querySelector<HTMLInputElement>(".after-radio");
+    const afterRadio1Input = form.querySelector<HTMLInputElement>(".after-radio1");
+    const textareaAfterRadio2 = form.querySelector<HTMLTextAreaElement>(".textarea-after-radio2");
 
     const listeners: Listener[] = [];
     const addListener = (
@@ -83,45 +81,228 @@ const useKeyboardNavigation = (
     };
 
     navigableInputs.forEach((input, index) => {
-      if (input.tagName !== "TEXTAREA") {
-        addListener(input, "keydown", (e: Event) =>
-          handleNavigationKey(e as KeyboardEvent, index, navigableInputs)
-        );
-      }
+      addListener(input, "keydown", (e: Event) => {
+        const kbEvent = e as KeyboardEvent;
+        const target = kbEvent.target as HTMLInputElement | HTMLTextAreaElement;
+
+        // Handle ESC key to clear input/textarea value
+        if (kbEvent.key === "Escape") {
+          kbEvent.preventDefault();
+          if (target.tagName === "INPUT" || target.tagName === "TEXTAREA") {
+            target.value = "";
+          }
+          return;
+        }
+
+        // For TEXTAREA, only handle ESC, not navigation keys
+        if (input.tagName === "TEXTAREA") {
+          return;
+        }
+
+        // Skip handleNavigationKey for special inputs that have custom navigation logic
+        const hasCustomForwardNav =
+          input.classList.contains('input-to-radio') ||
+          input.classList.contains('input-to-checkbox') ||
+          input.classList.contains('text3-input') ||
+          input.hasAttribute('data-group') && input.getAttribute('data-group') === 'text5';
+
+        const hasCustomBackNav =
+          input.classList.contains('after-radio') ||
+          input.classList.contains('after-radio1') ||
+          input.classList.contains('textarea-after-radio2') ||
+          input.classList.contains('input-to-radio') ||
+          input.classList.contains('input-to-checkbox') ||
+          input.classList.contains('text3-input') ||
+          input.hasAttribute('data-group') && input.getAttribute('data-group') === 'text5';
+
+        // Skip forward navigation for inputs that jump to radio/checkbox groups
+        if (hasCustomForwardNav && ["Tab", "Enter", "ArrowDown"].includes(kbEvent.key)) {
+          // Let the custom handler deal with this
+          return;
+        }
+
+        // Skip backward navigation for inputs with custom Shift+Tab logic
+        if (hasCustomBackNav && kbEvent.key === "Tab" && kbEvent.shiftKey) {
+          // Let the custom handler deal with this
+          return;
+        }
+
+        handleNavigationKey(kbEvent, index, navigableInputs);
+      });
     });
 
-    digitInputs.forEach((input, index) => {
-      addListener(input, "input", (e: Event) =>
-        handleDigitInput(e, index, navigableInputs)
-      );
-    });
+    // Remove digit input auto-advance since customer code now allows 4 digits
 
     if (inputToMainRadio) {
-      addListener(inputToMainRadio, "keydown", (e: Event) =>
-        handleInputToRadio(e as KeyboardEvent, mainRadios)
-      );
+      addListener(inputToMainRadio, "keydown", (e: Event) => {
+        const kbEvent = e as KeyboardEvent;
+
+        // Handle Shift+Tab to go back to last customer code input
+        if (kbEvent.key === "Tab" && kbEvent.shiftKey) {
+          kbEvent.preventDefault();
+          // Find all customer code inputs and focus on the last one
+          const customerCodeInputs = form.querySelectorAll<HTMLInputElement>(".input-customer-digit");
+          if (customerCodeInputs.length > 0) {
+            customerCodeInputs[customerCodeInputs.length - 1].focus();
+          }
+          return;
+        }
+
+        // Handle forward navigation (Tab, Enter, ArrowDown)
+        handleInputToRadio(kbEvent, mainRadios);
+      });
     }
     mainRadios.forEach((radio, index) => {
-      addListener(radio, "keydown", (e: Event) =>
-        handleRadioNavigation(e as KeyboardEvent, index, mainRadios)
-      );
+      addListener(radio, "keydown", (e: Event) => {
+        const kbEvent = e as KeyboardEvent;
+
+        // Handle Shift+Tab to go back to previous navigable input
+        if (kbEvent.key === "Tab" && kbEvent.shiftKey) {
+          kbEvent.preventDefault();
+          // Find the .input-to-radio element and focus it
+          const prevInput = form.querySelector<HTMLInputElement>(".input-to-radio");
+          if (prevInput) {
+            prevInput.focus();
+          }
+          return;
+        }
+
+        if (
+          ["ArrowDown", "ArrowUp", "ArrowRight", "ArrowLeft"].includes(
+            kbEvent.key
+          )
+        ) {
+          kbEvent.preventDefault();
+          let nextIndex = index;
+
+          if (kbEvent.key === "ArrowDown" || kbEvent.key === "ArrowRight") {
+            nextIndex = (index + 1) % mainRadios.length;
+          } else if (kbEvent.key === "ArrowUp" || kbEvent.key === "ArrowLeft") {
+            nextIndex = (index - 1 + mainRadios.length) % mainRadios.length;
+          }
+
+          const nextRadio = mainRadios[nextIndex];
+          if (nextRadio) {
+            nextRadio.focus();
+            nextRadio.click();
+            // Ensure the radio is actually checked
+            nextRadio.checked = true;
+            // Trigger change event
+            const event = new Event('change', { bubbles: true });
+            nextRadio.dispatchEvent(event);
+          }
+        } else {
+          handleRadioNavigation(kbEvent, index, mainRadios);
+        }
+      });
     });
 
     radioGroup1.forEach((radio, index) => {
-      addListener(radio, "keydown", (e: Event) =>
-        handleRadioNavigation(e as KeyboardEvent, index, radioGroup1)
-      );
+      addListener(radio, "keydown", (e: Event) => {
+        const kbEvent = e as KeyboardEvent;
+
+        // Handle Shift+Tab to go back to previous navigable input
+        if (kbEvent.key === "Tab" && kbEvent.shiftKey) {
+          kbEvent.preventDefault();
+          text3Input?.focus();
+          return;
+        }
+
+        if (
+          ["ArrowDown", "ArrowUp", "ArrowRight", "ArrowLeft"].includes(
+            kbEvent.key
+          )
+        ) {
+          kbEvent.preventDefault();
+          let nextIndex = index;
+
+          if (kbEvent.key === "ArrowDown" || kbEvent.key === "ArrowRight") {
+            nextIndex = (index + 1) % radioGroup1.length;
+          } else if (kbEvent.key === "ArrowUp" || kbEvent.key === "ArrowLeft") {
+            nextIndex = (index - 1 + radioGroup1.length) % radioGroup1.length;
+          }
+
+          const nextRadio = radioGroup1[nextIndex];
+          if (nextRadio) {
+            nextRadio.focus();
+            nextRadio.click();
+            // Ensure the radio is actually checked
+            nextRadio.checked = true;
+            // Trigger change event
+            const event = new Event('change', { bubbles: true });
+            nextRadio.dispatchEvent(event);
+          }
+        } else {
+          handleRadioNavigation(kbEvent, index, radioGroup1);
+        }
+      });
     });
 
     radioGroup2.forEach((radio, index) => {
-      addListener(radio, "keydown", (e: Event) =>
-        handleRadioNavigation(e as KeyboardEvent, index, radioGroup2)
-      );
+      addListener(radio, "keydown", (e: Event) => {
+        const kbEvent = e as KeyboardEvent;
+
+        // Handle Shift+Tab to go back to previous element (last checkbox)
+        if (kbEvent.key === "Tab" && kbEvent.shiftKey) {
+          kbEvent.preventDefault();
+          const lastCheckbox = checkboxes[checkboxes.length - 1];
+          if (lastCheckbox) {
+            lastCheckbox.focus();
+          }
+          return;
+        }
+
+        if (
+          ["ArrowDown", "ArrowUp", "ArrowRight", "ArrowLeft"].includes(
+            kbEvent.key
+          )
+        ) {
+          kbEvent.preventDefault();
+          let nextIndex = index;
+
+          if (kbEvent.key === "ArrowDown" || kbEvent.key === "ArrowRight") {
+            nextIndex = (index + 1) % radioGroup2.length;
+          } else if (kbEvent.key === "ArrowUp" || kbEvent.key === "ArrowLeft") {
+            nextIndex = (index - 1 + radioGroup2.length) % radioGroup2.length;
+          }
+
+          const nextRadio = radioGroup2[nextIndex];
+          if (nextRadio) {
+            nextRadio.focus();
+            nextRadio.click();
+            // Ensure the radio is actually checked
+            nextRadio.checked = true;
+            // Trigger change event
+            const event = new Event('change', { bubbles: true });
+            nextRadio.dispatchEvent(event);
+          }
+        } else {
+          handleRadioNavigation(kbEvent, index, radioGroup2);
+        }
+      });
     });
 
     checkboxes.forEach((checkbox, index) => {
       const handler = (e: Event) => {
         const kbEvent = e as KeyboardEvent;
+
+        // Handle ESC key to uncheck checkbox
+        if (kbEvent.key === "Escape") {
+          kbEvent.preventDefault();
+          checkbox.checked = false;
+          return;
+        }
+
+        // Handle Shift+Tab to ALWAYS go back to TEXT6 (input-to-checkbox)
+        if (kbEvent.key === "Tab" && kbEvent.shiftKey) {
+          kbEvent.preventDefault();
+          // Always go back to the input before checkboxes, regardless of which checkbox
+          if (inputToCheckbox) {
+            inputToCheckbox.focus();
+          }
+          return;
+        }
+
         const keyMap: { [key: string]: number } = {
           ArrowRight: 1,
           ArrowDown: 1,
@@ -135,8 +316,11 @@ const useKeyboardNavigation = (
             checkboxes[nextIndex].focus();
         } else if (kbEvent.key === "Enter" || kbEvent.key === "Tab") {
           kbEvent.preventDefault();
-          radioGroup2[0]?.focus();
-          radioGroup2[0]?.click();
+          // Move forward to first radio in group 2
+          if (radioGroup2.length > 0) {
+            radioGroup2[0].focus();
+            radioGroup2[0].click();
+          }
         } else if (kbEvent.key.toLowerCase() === "c") {
           kbEvent.preventDefault();
           checkbox.checked = !checkbox.checked;
@@ -148,7 +332,19 @@ const useKeyboardNavigation = (
     if (text3Input && radioGroup1.length > 0) {
       addListener(text3Input, "keydown", (e: Event) => {
         const kbEvent = e as KeyboardEvent;
-        if (["Tab", "Enter", "ArrowDown", "ArrowRight"].includes(kbEvent.key)) {
+
+        // Handle Shift+Tab to go back using normal navigation
+        if (kbEvent.key === "Tab" && kbEvent.shiftKey) {
+          // Let handleNavigationKey handle this - find text3 in navigableInputs
+          const text3Index = navigableInputs.indexOf(text3Input);
+          if (text3Index > 0) {
+            kbEvent.preventDefault();
+            navigableInputs[text3Index - 1].focus();
+          }
+          return;
+        }
+
+        if (["Tab", "Enter", "ArrowDown"].includes(kbEvent.key)) {
           kbEvent.preventDefault();
           radioGroup1[0]?.focus();
           radioGroup1[0]?.click();
@@ -159,7 +355,18 @@ const useKeyboardNavigation = (
     if (inputToCheckbox && checkboxes.length > 0) {
       addListener(inputToCheckbox, "keydown", (e: Event) => {
         const kbEvent = e as KeyboardEvent;
-        if (["Tab", "Enter", "ArrowDown", "ArrowRight"].includes(kbEvent.key)) {
+
+        // Handle Shift+Tab to go back to CODE2
+        if (kbEvent.key === "Tab" && kbEvent.shiftKey) {
+          kbEvent.preventDefault();
+          const lastCodeInput = codeInputs[codeInputs.length - 1];
+          if (lastCodeInput) {
+            lastCodeInput.focus();
+          }
+          return;
+        }
+
+        if (["Tab", "Enter", "ArrowDown"].includes(kbEvent.key)) {
           kbEvent.preventDefault();
           checkboxes[0]?.focus();
         }
@@ -169,20 +376,87 @@ const useKeyboardNavigation = (
     codeInputs.forEach((input, index) => {
       const handler = (e: Event) => {
         const kbEvent = e as KeyboardEvent;
+
+        // Handle Shift+Tab to go back to previous code input or text5
+        if (kbEvent.key === "Tab" && kbEvent.shiftKey) {
+          kbEvent.preventDefault();
+          if (index > 0) {
+            // Go to previous code input
+            codeInputs[index - 1].focus();
+          } else {
+            // First code input: go back to text5 input
+            const text5Input = form.querySelector<HTMLInputElement>('[data-group="text5"]');
+            if (text5Input) {
+              text5Input.focus();
+            }
+          }
+          return;
+        }
+
+        // Handle Tab/Enter to go forward
         if (kbEvent.key === "Enter" || kbEvent.key === "Tab") {
           kbEvent.preventDefault();
           const nextCodeInput = codeInputs[index + 1];
           if (nextCodeInput) {
+            // Go to next code input
             nextCodeInput.focus();
           } else {
-            form
-              .querySelector<HTMLInputElement>('[data-group="text6"]')
-              ?.focus();
+            // Last code input: go to text6
+            const text6Input = form.querySelector<HTMLInputElement>('[data-group="text6"]');
+            if (text6Input) {
+              text6Input.focus();
+            }
           }
         }
       };
       addListener(input, "keydown", handler);
     });
+
+    // Handle Shift+Tab for after-radio input (代表者名) - this has .input-navigable
+    // The handleNavigationKey will handle it, but we need special logic for going back to radio
+    if (afterRadioInput && mainRadios.length > 0) {
+      addListener(afterRadioInput, "keydown", (e: Event) => {
+        const kbEvent = e as KeyboardEvent;
+        // Only handle Shift+Tab specially to go back to radio group
+        if (kbEvent.key === "Tab" && kbEvent.shiftKey) {
+          kbEvent.preventDefault();
+          const lastRadio = mainRadios[mainRadios.length - 1];
+          if (lastRadio) {
+            lastRadio.focus();
+          }
+        }
+      });
+    }
+
+    // Handle Shift+Tab for after-radio1 input (Text4) - this has .input-navigable
+    if (afterRadio1Input && radioGroup1.length > 0) {
+      addListener(afterRadio1Input, "keydown", (e: Event) => {
+        const kbEvent = e as KeyboardEvent;
+        // Only handle Shift+Tab specially to go back to radio group
+        if (kbEvent.key === "Tab" && kbEvent.shiftKey) {
+          kbEvent.preventDefault();
+          const lastRadio = radioGroup1[radioGroup1.length - 1];
+          if (lastRadio) {
+            lastRadio.focus();
+          }
+        }
+      });
+    }
+
+    // Handle Shift+Tab for textarea after radio2 - this has .input-navigable
+    if (textareaAfterRadio2 && radioGroup2.length > 0) {
+      addListener(textareaAfterRadio2, "keydown", (e: Event) => {
+        const kbEvent = e as KeyboardEvent;
+        // Only handle Shift+Tab specially to go back to radio group
+        if (kbEvent.key === "Tab" && kbEvent.shiftKey) {
+          kbEvent.preventDefault();
+          const lastRadio = radioGroup2[radioGroup2.length - 1];
+          if (lastRadio) {
+            lastRadio.focus();
+          }
+        }
+      });
+    }
 
     return () => {
       listeners.forEach(({ element, event, handler }) =>
@@ -190,6 +464,110 @@ const useKeyboardNavigation = (
       );
     };
   }, [formRef]);
+};
+
+// Function to handle half-width katakana input only
+const handleHalfWidthKatakanaInput = (e: ChangeEvent<HTMLInputElement>) => {
+  const input = e.target;
+  let value = input.value;
+
+  // First convert full-width katakana to half-width
+  // Full-width katakana range: \u30A0-\u30FF
+  value = value.replace(/[\u30A0-\u30FF]/g, (char) => {
+    const kanaMap: { [key: string]: string } = {
+      ア: "ｱ",
+      イ: "ｲ",
+      ウ: "ｳ",
+      エ: "ｴ",
+      オ: "ｵ",
+      カ: "ｶ",
+      キ: "ｷ",
+      ク: "ｸ",
+      ケ: "ｹ",
+      コ: "ｺ",
+      サ: "ｻ",
+      シ: "ｼ",
+      ス: "ｽ",
+      セ: "ｾ",
+      ソ: "ｿ",
+      タ: "ﾀ",
+      チ: "ﾁ",
+      ツ: "ﾂ",
+      テ: "ﾃ",
+      ト: "ﾄ",
+      ナ: "ﾅ",
+      ニ: "ﾆ",
+      ヌ: "ﾇ",
+      ネ: "ﾈ",
+      ノ: "ﾉ",
+      ハ: "ﾊ",
+      ヒ: "ﾋ",
+      フ: "ﾌ",
+      ヘ: "ﾍ",
+      ホ: "ﾎ",
+      マ: "ﾏ",
+      ミ: "ﾐ",
+      ム: "ﾑ",
+      メ: "ﾒ",
+      モ: "ﾓ",
+      ヤ: "ﾔ",
+      ユ: "ﾕ",
+      ヨ: "ﾖ",
+      ラ: "ﾗ",
+      リ: "ﾘ",
+      ル: "ﾙ",
+      レ: "ﾚ",
+      ロ: "ﾛ",
+      ワ: "ﾜ",
+      ヲ: "ｦ",
+      ン: "ﾝ",
+      ガ: "ｶﾞ",
+      ギ: "ｷﾞ",
+      グ: "ｸﾞ",
+      ゲ: "ｹﾞ",
+      ゴ: "ｺﾞ",
+      ザ: "ｻﾞ",
+      ジ: "ｼﾞ",
+      ズ: "ｽﾞ",
+      ゼ: "ｾﾞ",
+      ゾ: "ｿﾞ",
+      ダ: "ﾀﾞ",
+      ヂ: "ﾁﾞ",
+      ヅ: "ﾂﾞ",
+      デ: "ﾃﾞ",
+      ド: "ﾄﾞ",
+      バ: "ﾊﾞ",
+      ビ: "ﾋﾞ",
+      ブ: "ﾌﾞ",
+      ベ: "ﾍﾞ",
+      ボ: "ﾎﾞ",
+      パ: "ﾊﾟ",
+      ピ: "ﾋﾟ",
+      プ: "ﾌﾟ",
+      ペ: "ﾍﾟ",
+      ポ: "ﾎﾟ",
+      ャ: "ｬ",
+      ュ: "ｭ",
+      ョ: "ｮ",
+      ッ: "ｯ",
+      ヮ: "ﾜ",
+      ヰ: "ｲ",
+      ヱ: "ｴ",
+      ヵ: "ｶ",
+      ヶ: "ｹ",
+      ー: "ｰ",
+      "・": "･",
+      "゛": "ﾞ",
+      "゜": "ﾟ",
+    };
+    return kanaMap[char] || "";
+  });
+
+  // Only keep half-width katakana characters (ｱ-ﾝ and dakuten marks)
+  // Half-width katakana range: \uFF61-\uFF9F
+  value = value.replace(/[^\uFF61-\uFF9F]/g, "");
+
+  input.value = value;
 };
 
 export default function CheckInputScreen() {
@@ -203,12 +581,39 @@ export default function CheckInputScreen() {
     firstInput?.focus();
   }, []);
 
+  // Block browser shortcuts (Ctrl+Z, F-keys)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Block Ctrl+Z
+      if (e.ctrlKey && e.key === "z") {
+        e.preventDefault();
+        return;
+      }
+
+      // Block F-keys (F1-F12)
+      if (e.key.startsWith("F") && e.key.length <= 3) {
+        const fNumber = parseInt(e.key.substring(1));
+        if (!isNaN(fNumber) && fNumber >= 1 && fNumber <= 12) {
+          e.preventDefault();
+          return;
+        }
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+
   const [radioValue, setRadioValue] = useState<string>("");
   const [radio1Value, setRadio1Value] = useState<string>("");
   const [radio2Value, setRadio2Value] = useState<string>("");
   const [code1, setCode1] = useState<string>("0");
   const [code2, setCode2] = useState<string>("0");
   const [fontSizeClass, setFontSizeClass] = useState<string>("text-base");
+  const [customerCode, setCustomerCode] = useState<string[]>(["", "", "", ""]);
+  const [zeroSuppress, setZeroSuppress] = useState<string>("");
 
   const codeOptions: CodeOption[] = [
     { code: "0", label: "Zero" },
@@ -244,16 +649,14 @@ export default function CheckInputScreen() {
   const btnActiveStyle = "bg-blue-600 text-white scale-110";
   const btnInactiveStyle = "bg-white text-blue-600 hover:bg-blue-100";
   const className_label =
-    "flex justify-center min-w-[100px] font-black bg-gray-300 py-0.5 px-3 whitespace-nowrap";
-  const className_input_customer =
-    "w-8 h-8 border-2 border-gray-300 rounded-lg shadow-md p-2 focus:border-gray-300 focus:shadow-lg focus:outline-none transition-all";
+    "flex justify-center min-w-[100px] font-black bg-gray-300 py-0.5 px-3 whitespace-nowrap overflow-hidden text-ellipsis";
   const className_input_text =
     "h-8 border-2 border-gray-300 rounded-lg shadow-md p-2 focus:border-gray-300 focus:shadow-lg focus:outline-none transition-all";
 
   return (
     <div
       ref={formRef}
-      className={`p-6 bg-[#f0f0f0] min-h-screen ${fontSizeClass}`}
+      className={`px-6 pb-6 pt-12 bg-[#f0f0f0] min-h-screen ${fontSizeClass}`}
     >
       <BackButton />
       <div className="flex flex-row justify-between items-center mb-2">
@@ -294,17 +697,33 @@ export default function CheckInputScreen() {
               {[...Array(4)].map((_, i) => (
                 <input
                   key={i}
-                  className={`${className_input_customer} input-customer-digit input-navigable`}
+                  value={customerCode[i]}
+                  maxLength={4}
+                  onChange={(e) => {
+                    const value = e.target.value.replace(/[^0-9]/g, "");
+                    const newCode = [...customerCode];
+                    newCode[i] = value;
+                    setCustomerCode(newCode);
+                  }}
+                  onBlur={(e) => {
+                    const value = e.target.value;
+                    if (value && value.length > 0) {
+                      const newCode = [...customerCode];
+                      newCode[i] = value.padStart(4, "0");
+                      setCustomerCode(newCode);
+                    }
+                  }}
+                  className="w-20 h-8 border-2 border-gray-300 rounded-lg shadow-md p-2 focus:border-gray-300 focus:shadow-lg focus:outline-none transition-all input-customer-digit input-navigable"
                 />
               ))}
             </div>
 
             <div className="flex items-center gap-5 p-2">
-              <label className="flex justify-center min-w-[100px] font-black bg-gray-300 py-0.5 px-10">
+              <label className="flex justify-center min-w-[100px] font-black bg-gray-300 py-0.5 px-10 whitespace-nowrap overflow-hidden text-ellipsis">
                 氏名
               </label>
               <input className="input-free-text input-to-radio input-navigable w-60 h-8 border-2 border-gray-300 rounded-lg shadow-md p-2" />
-              <span className="flex justify-center min-w-[100px] font-black bg-gray-300 py-0.5 px-8">
+              <span className="flex justify-center min-w-[100px] font-black bg-gray-300 py-0.5 px-8 whitespace-nowrap overflow-hidden text-ellipsis">
                 顧客種別
               </span>
               <RadioGroup
@@ -323,12 +742,12 @@ export default function CheckInputScreen() {
                       value={v}
                       className="flex flex-row font-bold radio-customer-type"
                     >
-                      <p className="ml-4">{v}</p>
+                      <p className="ml-4 whitespace-nowrap">{v}</p>
                     </Radio>
                   ))}
                 </div>
               </RadioGroup>
-              <span className="flex justify-center min-w-[100px] font-black bg-gray-300 py-0.5 px-8">
+              <span className="flex justify-center min-w-[100px] font-black bg-gray-300 py-0.5 px-8 whitespace-nowrap overflow-hidden text-ellipsis">
                 代表者名
               </span>
               <input className="input-free-text after-radio input-navigable w-60 h-8 border-2 border-gray-300 rounded-lg shadow-md p-2" />
@@ -337,275 +756,326 @@ export default function CheckInputScreen() {
         </CardBody>
       </Card>
 
-      <div className="grid grid-cols-2 gap-6 mt-4">
-        <h1>キーアクションテスト</h1>
-        <h1>入力制御テスト</h1>
-      </div>
-
-      <div className="grid grid-cols-2 gap-6">
-        <Card className="border border-gray-400 bg-white shadow-md">
-          <CardBody className="space-y-3 w-full">
-            <div className="grid grid-cols-4 items-center gap-2 p-4">
-              <label className={`${className_label}`}>Text1</label>
-              <input
-                className={`col-span-2 ${className_input_text} input-navigable`}
-              />
-              <span></span>
-
-              <label className={`${className_label}`}>Text2</label>
-              <input
-                className={`col-span-2 ${className_input_text} input-navigable`}
-              />
-              <span></span>
-
-              <label className={`${className_label}`}>Text3</label>
-              <input
-                className={`col-span-2 ${className_input_text} input-navigable text3-input`}
-              />
-              <span></span>
-
-              <label className={`${className_label}`}>Radio1</label>
-
-              <RadioGroup
-                name="radio1"
-                orientation="horizontal"
-                className="flex items-start col-span-2 gap-6 radio1-group"
-                value={radio1Value}
-                onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                  setRadio1Value(e.target.value)
-                }
-              >
-                <div className="flex gap-4">
-                  {["A", "B"].map((v) => (
-                    <Radio
-                      key={v}
-                      value={v}
-                      className="flex flex-row font-bold radio-customer-type"
-                    >
-                      <p className="ml-4">Item {v}</p>
-                    </Radio>
-                  ))}
-                </div>
-              </RadioGroup>
-              <span></span>
-
-              <label className={`${className_label}`}>Text4</label>
-              <input
-                className={`col-span-1 ${className_input_text} input-navigable after-radio1`}
-              />
-
-              <label className={`${className_label}`}>Text5</label>
-              <input
-                data-group="text5"
-                onKeyDown={(e: ReactKeyboardEvent<HTMLInputElement>) => {
-                  if (
-                    ["Tab", "Enter", "ArrowDown", "ArrowRight"].includes(e.key)
-                  ) {
-                    e.preventDefault();
-                    const currentInput = e.currentTarget;
-                    currentInput.blur();
-
-                    setTimeout(() => {
-                      formRef.current
-                        ?.querySelector<HTMLElement>('[data-group="code1"]')
-                        ?.focus();
-                    }, 10);
-                  }
-                }}
-                className={`col-span-1 ${className_input_text} input-navigable`}
-              />
-
-              <label className={`${className_label}`}>Code1</label>
-              <div className="flex flex-row">
+      <div
+        className={`gap-6 mt-4 ${
+          fontSizeClass === "text-2xl" ? "flex flex-col" : "grid grid-cols-2"
+        }`}
+      >
+        <div className="flex flex-col">
+          <h1 className="overflow-hidden mb-2">キーアクションテスト</h1>
+          <Card className="border border-gray-400 bg-white shadow-md">
+            <CardBody className="space-y-3 w-full">
+              <div className="grid grid-cols-4 items-center gap-2 p-4">
+                <label className={`${className_label}`}>Text1</label>
                 <input
-                  value={code1}
-                  onChange={(e) => setCode1(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Escape") {
-                      e.preventDefault();
-                      setCode1("0");
-                      return;
-                    }
-                    handleCodeKeyDown(e, code1, setCode1);
-                  }}
-                  className="w-8 border border-gray-300 rounded code-input"
-                  data-group="code1"
+                  className={`col-span-2 ${className_input_text} input-navigable`}
+                />
+                <span></span>
+
+                <label className={`${className_label}`}>Text2</label>
+                <input
+                  className={`col-span-2 ${className_input_text} input-navigable`}
+                />
+                <span></span>
+
+                <label className={`${className_label}`}>Text3</label>
+                <input
+                  className={`col-span-2 ${className_input_text} input-navigable text3-input`}
+                />
+                <span></span>
+
+                <label className={`${className_label}`}>Radio1</label>
+
+                <RadioGroup
+                  name="radio1"
+                  orientation="horizontal"
+                  className="flex items-start col-span-2 gap-6 radio1-group"
+                  value={radio1Value}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                    setRadio1Value(e.target.value)
+                  }
+                >
+                  <div className="flex gap-4">
+                    {["A", "B"].map((v) => (
+                      <Radio
+                        key={v}
+                        value={v}
+                        className="flex flex-row font-bold radio-customer-type"
+                      >
+                        <p className="ml-4 whitespace-nowrap">Item {v}</p>
+                      </Radio>
+                    ))}
+                  </div>
+                </RadioGroup>
+                <span></span>
+
+                <label className={`${className_label}`}>Text4</label>
+                <input
+                  className={`col-span-1 ${className_input_text} input-navigable after-radio1`}
                 />
 
-                <select
-                  className="ml-2 h-8 border border-gray-300 rounded code-select"
-                  value={codeOptions.some((o) => o.code === code1) ? code1 : ""}
-                  onChange={(e: ChangeEvent<HTMLSelectElement>) =>
-                    setCode1(e.target.value)
-                  }
-                  data-group="code1"
-                >
-                  {codeOptions.map((item) => (
-                    <option key={item.code} value={item.code}>
-                      {item.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <label className={`${className_label}`}>Code2</label>
-              <div className="flex flex-row">
+                <label className={`${className_label}`}>Text5</label>
                 <input
-                  value={code2}
-                  onChange={(e) => setCode2(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Escape") {
+                  data-group="text5"
+                  onKeyDown={(e: ReactKeyboardEvent<HTMLInputElement>) => {
+                    // Handle Shift+Tab to go back to TEXT4 (after-radio1)
+                    if (e.key === "Tab" && e.shiftKey) {
                       e.preventDefault();
-                      setCode2("0");
+                      const text4Input = formRef.current?.querySelector<HTMLInputElement>('.after-radio1');
+                      if (text4Input) {
+                        text4Input.focus();
+                      }
                       return;
                     }
-                    handleCodeKeyDown(e, code2, setCode2);
+
+                    if (
+                      ["Tab", "Enter", "ArrowDown"].includes(
+                        e.key
+                      )
+                    ) {
+                      e.preventDefault();
+                      const currentInput = e.currentTarget;
+                      currentInput.blur();
+
+                      setTimeout(() => {
+                        formRef.current
+                          ?.querySelector<HTMLElement>('[data-group="code1"]')
+                          ?.focus();
+                      }, 10);
+                    }
                   }}
-                  className="w-8 border border-gray-300 rounded code-input"
-                  data-group="code2"
+                  className={`col-span-1 ${className_input_text} input-navigable`}
                 />
 
-                <select
-                  className="ml-2 h-8 border border-gray-300 rounded code-select"
-                  value={codeOptions.some((o) => o.code === code2) ? code2 : ""}
-                  onChange={(e: ChangeEvent<HTMLSelectElement>) =>
-                    setCode2(e.target.value)
-                  }
-                  data-group="code2"
-                >
-                  {codeOptions.map((item) => (
-                    <option key={item.code} value={item.code}>
-                      {item.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
+                <label className={`${className_label}`}>Code1</label>
+                <div className="flex flex-row">
+                  <input
+                    value={code1}
+                    onChange={(e) => {
+                      const value = e.target.value.replace(/[^0-9]/g, "");
+                      setCode1(value);
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === "Escape") {
+                        e.preventDefault();
+                        setCode1("0");
+                        return;
+                      }
+                      handleCodeKeyDown(e, code1, setCode1);
+                    }}
+                    className="w-8 border border-gray-300 rounded code-input"
+                    data-group="code1"
+                  />
 
-              <label className={`${className_label}`}>Text6</label>
-              <input
-                data-group="text6"
-                className={`col-span-1 ${className_input_text} input-navigable input-to-checkbox`}
-              />
-              <span></span>
-              <span></span>
+                  <select
+                    className="ml-2 h-8 border border-gray-300 rounded code-select"
+                    value={
+                      codeOptions.some((o) => o.code === code1) ? code1 : ""
+                    }
+                    onChange={(e: ChangeEvent<HTMLSelectElement>) =>
+                      setCode1(e.target.value)
+                    }
+                    data-group="code1"
+                  >
+                    {codeOptions.map((item) => (
+                      <option key={item.code} value={item.code}>
+                        {item.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
 
-              <label className={`${className_label}`}>Check Box</label>
-              <div className="col-span-3 flex gap-4 flex-row">
-                {["sun", "mon", "tue", "wed", "thu", "fri"].map((day) => (
-                  <label key={day} className="flex items-center gap-2">
-                    <input
-                      type="checkbox"
-                      className="w-6 h-6 accent-blue-600 checkbox-group-item"
-                      tabIndex={0}
-                    />
-                    <span>{day}</span>
-                  </label>
-                ))}
-              </div>
+                <label className={`${className_label}`}>Code2</label>
+                <div className="flex flex-row">
+                  <input
+                    value={code2}
+                    onChange={(e) => {
+                      const value = e.target.value.replace(/[^0-9]/g, "");
+                      setCode2(value);
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === "Escape") {
+                        e.preventDefault();
+                        setCode2("0");
+                        return;
+                      }
+                      handleCodeKeyDown(e, code2, setCode2);
+                    }}
+                    className="w-8 border border-gray-300 rounded code-input"
+                    data-group="code2"
+                  />
 
-              <label className={`${className_label}`}>Radio2</label>
-              <RadioGroup
-                name="radio2"
-                orientation="horizontal"
-                className="col-span-3 flex gap-4 radio2-group"
-                value={radio2Value}
-                onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                  setRadio2Value(e.target.value)
-                }
-              >
-                <div className="flex gap-4">
-                  {["A", "B", "C", "D"].map((v) => (
-                    <Radio
-                      key={v}
-                      value={v}
-                      className="flex flex-row font-bold radio-customer-type"
-                    >
-                      <p className="ml-4">Item {v}</p>
-                    </Radio>
+                  <select
+                    className="ml-2 h-8 border border-gray-300 rounded code-select"
+                    value={
+                      codeOptions.some((o) => o.code === code2) ? code2 : ""
+                    }
+                    onChange={(e: ChangeEvent<HTMLSelectElement>) =>
+                      setCode2(e.target.value)
+                    }
+                    data-group="code2"
+                  >
+                    {codeOptions.map((item) => (
+                      <option key={item.code} value={item.code}>
+                        {item.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <label className={`${className_label}`}>Text6</label>
+                <input
+                  data-group="text6"
+                  className={`col-span-1 ${className_input_text} input-navigable input-to-checkbox`}
+                />
+                <span></span>
+                <span></span>
+
+                <label className={`${className_label}`}>Check Box</label>
+                <div className="col-span-3 flex gap-4 flex-row">
+                  {["sun", "mon", "tue", "wed", "thu", "fri"].map((day) => (
+                    <label key={day} className="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        className="w-6 h-6 accent-blue-600 checkbox-group-item"
+                        tabIndex={0}
+                      />
+                      <span className="whitespace-nowrap">{day}</span>
+                    </label>
                   ))}
                 </div>
-              </RadioGroup>
 
-              <label className={`${className_label}`}>TextArea</label>
-              <span></span>
-              <span></span>
-              <span></span>
-            </div>
-            <textarea
-              className={`input-free-text textarea-after-radio2 p-3 w-full border-2 input-navigable border-gray-300 rounded-lg shadow-md`}
-              rows={2}
-            />
-          </CardBody>
-        </Card>
+                <label className={`${className_label}`}>Radio2</label>
+                <RadioGroup
+                  name="radio2"
+                  orientation="horizontal"
+                  className="col-span-3 flex gap-4 radio2-group"
+                  value={radio2Value}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                    setRadio2Value(e.target.value)
+                  }
+                >
+                  <div className="flex gap-4">
+                    {["A", "B", "C", "D"].map((v) => (
+                      <Radio
+                        key={v}
+                        value={v}
+                        className="flex flex-row font-bold radio-customer-type"
+                      >
+                        <p className="ml-4 whitespace-nowrap">Item {v}</p>
+                      </Radio>
+                    ))}
+                  </div>
+                </RadioGroup>
 
-        <Card className="border border-gray-400 bg-white shadow-md">
-          <CardBody className="space-y-3 mt-3">
-            <div className="grid grid-cols-4 items-center gap-2 px-4">
-              <label className={`${className_label}`}>全角＆半角混合</label>
-              <input
-                className={`col-span-2 ${className_input_text} input-navigable`}
-              />
-              <span></span>
-
-              <label className="flex justify-center min-w-[100px] font-black bg-gray-300 py-0.5 px-8">
-                半角カナ
-              </label>
-              <input
-                className={`col-span-2 ${className_input_text} input-navigable`}
-                onKeyDown={(e) => handleFormatting(e, toHalfWidth)}
-              />
-              <span></span>
-
-              <label className="flex justify-center min-w-[100px] font-black bg-gray-300 py-0.5 px-8">
-                半角数字
-              </label>
-              <input
-                className={`col-span-2 ${className_input_text} input-navigable`}
-                onKeyDown={(e) => handleFormatting(e, extractHalfWidthDigits)}
-              />
-              <span></span>
-
-              <label className="flex justify-center min-w-[100px] font-black bg-gray-300 py-0.5 px-8">
-                半角英数字
-              </label>
-              <input
-                className={`col-span-2 ${className_input_text} input-navigable`}
-                onKeyDown={(e) =>
-                  handleFormatting(e, convertToHalfWidthAndRemoveKana)
-                }
-              />
-              <span></span>
-
-              <label className="flex justify-center min-w-[100px] font-black bg-gray-300 py-0.5 px-8">
-                全角
-              </label>
-              <input
-                className={`col-span-2 ${className_input_text} input-navigable`}
-                onKeyDown={(e) => handleFormatting(e, convertToFullWidth)}
-              />
-              <span></span>
-
-              <label className="flex justify-center min-w-[100px] font-black bg-gray-300 py-0.5 px-8">
-                E/Tab排除
-              </label>
-              <span></span>
-              <span></span>
-              <span></span>
+                <label className={`${className_label}`}>TextArea</label>
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
               <textarea
-                className={`input-navigable col-span-4 border-2 border-gray-300 rounded-lg shadow-md`}
-                rows={3}
+                className={`input-free-text textarea-after-radio2 p-3 w-full border-2 input-navigable border-gray-300 rounded-lg shadow-md`}
+                rows={2}
               />
+            </CardBody>
+          </Card>
+        </div>
 
-              <label className="flex justify-center min-w-[100px] font-black bg-gray-300 py-0.5 px-8">
-                排除確認
-              </label>
-              <input
-                className={`col-span-2 ${className_input_text} input-navigable`}
-                onKeyDown={(e) => handleFormatting(e, removeAllWhitespace)}
-              />
-            </div>
-          </CardBody>
-        </Card>
+        <div className="flex flex-col">
+          <h1 className="overflow-hidden mb-2">入力制御テスト</h1>
+          <Card className="border border-gray-400 bg-white shadow-md">
+            <CardBody className="space-y-3 mt-3">
+              <div className="grid grid-cols-4 items-center gap-2 px-4">
+                <label className={`${className_label}`}>全角＆半角混合</label>
+                <input
+                  className={`col-span-2 ${className_input_text} input-navigable`}
+                />
+                <span></span>
+
+                <label className="flex justify-center min-w-[100px] font-black bg-gray-300 py-0.5 px-8 whitespace-nowrap overflow-hidden text-ellipsis">
+                  半角カナ
+                </label>
+                <input
+                  className={`col-span-2 ${className_input_text} input-navigable`}
+                  onChange={handleHalfWidthKatakanaInput}
+                  onInput={handleHalfWidthKatakanaInput}
+                />
+                <span></span>
+
+                <label className="flex justify-center min-w-[100px] font-black bg-gray-300 py-0.5 px-8 whitespace-nowrap overflow-hidden text-ellipsis">
+                  半角数字
+                </label>
+                <input
+                  className={`col-span-2 ${className_input_text} input-navigable`}
+                  onKeyDown={(e) => handleFormatting(e, extractHalfWidthDigits)}
+                />
+                <span></span>
+
+                <label className="flex justify-center min-w-[100px] font-black bg-gray-300 py-0.5 px-8 whitespace-nowrap overflow-hidden text-ellipsis">
+                  半角英数字
+                </label>
+                <input
+                  className={`col-span-2 ${className_input_text} input-navigable`}
+                  onKeyDown={(e) =>
+                    handleFormatting(e, convertToHalfWidthAndRemoveKana)
+                  }
+                />
+                <span></span>
+
+                <label className="flex justify-center min-w-[100px] font-black bg-gray-300 py-0.5 px-8 whitespace-nowrap overflow-hidden text-ellipsis">
+                  全角
+                </label>
+                <input
+                  className={`col-span-2 ${className_input_text} input-navigable`}
+                  onKeyDown={(e) => handleFormatting(e, convertToFullWidth)}
+                />
+                <span></span>
+
+                <label className="flex justify-center min-w-[100px] font-black bg-gray-300 py-0.5 px-8 whitespace-nowrap overflow-hidden text-ellipsis">
+                  ゼロサプレス
+                </label>
+                <input
+                  value={zeroSuppress}
+                  onChange={(e) => {
+                    const value = e.target.value.replace(/[^0-9]/g, "");
+                    setZeroSuppress(value);
+                  }}
+                  onBlur={(e) => {
+                    const value = e.target.value;
+                    if (value) {
+                      // Remove leading and trailing zeros
+                      const trimmed = value
+                        .replace(/^0+/, "")
+                        .replace(/0+$/, "");
+                      setZeroSuppress(trimmed || "0");
+                    }
+                  }}
+                  className={`col-span-2 ${className_input_text} input-navigable`}
+                />
+                <span></span>
+
+                <label className="flex justify-center min-w-[100px] font-black bg-gray-300 py-0.5 px-8 whitespace-nowrap overflow-hidden text-ellipsis">
+                  E/Tab排除
+                </label>
+                <span></span>
+                <span></span>
+                <span></span>
+                <textarea
+                  className={`input-navigable col-span-4 border-2 border-gray-300 rounded-lg shadow-md`}
+                  rows={3}
+                />
+
+                <label className="flex justify-center min-w-[100px] font-black bg-gray-300 py-0.5 px-8 whitespace-nowrap overflow-hidden text-ellipsis">
+                  排除確認
+                </label>
+                <input
+                  className={`col-span-2 ${className_input_text} input-navigable`}
+                  onKeyDown={(e) => handleFormatting(e, removeAllWhitespace)}
+                />
+              </div>
+            </CardBody>
+          </Card>
+        </div>
       </div>
     </div>
   );
