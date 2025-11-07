@@ -115,6 +115,14 @@ export const useKeyboardNavigation = (
         }
 
         // ... (rest of the function)
+        // Skip navigation for custom inputs with special Tab/Enter handling
+        if (
+          input.classList.contains("halfwidth-kana-input") ||
+          input.classList.contains("halfwidth-alphanum-input")
+        ) {
+          return;
+        }
+
         const hasCustomForwardNav =
           input.classList.contains("input-to-radio") ||
           input.classList.contains("input-to-checkbox") ||

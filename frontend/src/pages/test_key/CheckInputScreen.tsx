@@ -111,19 +111,131 @@ export default function CheckInputScreen() {
   };
 
   const processHalfWidthKatakana = (str: string) => {
-    // First convert full-width katakana to half-width
-    let result = str.replace(/[\u30A1-\u30FF]/g, (char) => {
-      // Get the full-width character code
-      const code = char.charCodeAt(0);
+    // Mapping table for fullwidth katakana to halfwidth katakana
+    const kanaMap: { [key: string]: string } = {
+      ァ: "ｧ",
+      ア: "ｱ",
+      ィ: "ｨ",
+      イ: "ｲ",
+      ゥ: "ｩ",
+      ウ: "ｳ",
+      ェ: "ｪ",
+      エ: "ｴ",
+      ォ: "ｫ",
+      オ: "ｵ",
+      カ: "ｶ",
+      ガ: "ｶﾞ",
+      キ: "ｷ",
+      ギ: "ｷﾞ",
+      ク: "ｸ",
+      グ: "ｸﾞ",
+      ケ: "ｹ",
+      ゲ: "ｹﾞ",
+      コ: "ｺ",
+      ゴ: "ｺﾞ",
+      サ: "ｻ",
+      ザ: "ｻﾞ",
+      シ: "ｼ",
+      ジ: "ｼﾞ",
+      ス: "ｽ",
+      ズ: "ｽﾞ",
+      セ: "ｾ",
+      ゼ: "ｾﾞ",
+      ソ: "ｿ",
+      ゾ: "ｿﾞ",
+      タ: "ﾀ",
+      ダ: "ﾀﾞ",
+      チ: "ﾁ",
+      ヂ: "ﾁﾞ",
+      ッ: "ｯ",
+      ツ: "ﾂ",
+      ヅ: "ﾂﾞ",
+      テ: "ﾃ",
+      デ: "ﾃﾞ",
+      ト: "ﾄ",
+      ド: "ﾄﾞ",
+      ナ: "ﾅ",
+      ニ: "ﾆ",
+      ヌ: "ﾇ",
+      ネ: "ﾈ",
+      ノ: "ﾉ",
+      ハ: "ﾊ",
+      バ: "ﾊﾞ",
+      パ: "ﾊﾟ",
+      ヒ: "ﾋ",
+      ビ: "ﾋﾞ",
+      ピ: "ﾋﾟ",
+      フ: "ﾌ",
+      ブ: "ﾌﾞ",
+      プ: "ﾌﾟ",
+      ヘ: "ﾍ",
+      ベ: "ﾍﾞ",
+      ペ: "ﾍﾟ",
+      ホ: "ﾎ",
+      ボ: "ﾎﾞ",
+      ポ: "ﾎﾟ",
+      マ: "ﾏ",
+      ミ: "ﾐ",
+      ム: "ﾑ",
+      メ: "ﾒ",
+      モ: "ﾓ",
+      ャ: "ｬ",
+      ヤ: "ﾔ",
+      ュ: "ｭ",
+      ユ: "ﾕ",
+      ョ: "ｮ",
+      ヨ: "ﾖ",
+      ラ: "ﾗ",
+      リ: "ﾘ",
+      ル: "ﾙ",
+      レ: "ﾚ",
+      ロ: "ﾛ",
+      ヮ: "ﾜ",
+      ワ: "ﾜ",
+      ヰ: "ｲ",
+      ヱ: "ｴ",
+      ヲ: "ｦ",
+      ン: "ﾝ",
+      ヴ: "ｳﾞ",
+      ヵ: "ｶ",
+      ヶ: "ｹ",
+      "゛": "ﾞ",
+      "゜": "ﾟ",
+      ー: "ｰ",
+      "、": "､",
+      "。": "｡",
+      "「": "｢",
+      "」": "｣",
+      "・": "･",
+    };
 
-      // Calculate corresponding half-width code
-      // Full-width ア(30A2) -> Half-width ｱ(FF71)
-      const offset = code - 0x30a1;
-      return String.fromCharCode(0xff71 + offset);
+    // Convert fullwidth katakana to halfwidth using the map
+    let result = str
+      .split("")
+      .map((char) => kanaMap[char] || char)
+      .join("");
+
+    // Remove non-halfwidth-katakana characters (kanji, hiragana, numbers, alphabet)
+    return result.replace(/[^\uFF61-\uFF9F]/g, "");
+  };
+  const [previousValue, setPreviousValue] = useState<string>("");
+  const [hasConvertedKana, setHasConvertedKana] = useState(false);
+  const [hasConvertedAlphaNum, setHasConvertedAlphaNum] = useState(false);
+  const [isComposingJP, setIsComposingJP] = useState(false);
+  const [isComposingAlphaNum, setIsComposingAlphaNum] = useState(false);
+
+  const processHalfWidthAlphaNumeric = (str: string) => {
+    // Convert fullwidth to halfwidth
+    let result = str.replace(/[０-９]/g, (char) => {
+      return String.fromCharCode(char.charCodeAt(0) - 0xfee0);
     });
 
-    // Remove non-katakana characters (kanji, hiragana, numbers, alphabet)
-    return result.replace(/[^\uFF66-\uFF9F]/g, "");
+    result = result.replace(/[Ａ-Ｚａ-ｚ]/g, (char) => {
+      return String.fromCharCode(char.charCodeAt(0) - 0xfee0);
+    });
+
+    // Keep only halfwidth alphanumeric (0-9, A-Z, a-z)
+    return result.replace(/[^0-9A-Za-z]/g, "");
   };
 
   const btnBaseStyle =
@@ -543,16 +655,163 @@ export default function CheckInputScreen() {
                 </label>
                 <input
                   disabled={shouldDisableFields}
-                  className={`col-span-2 ${className_input_text} input-navigable disabled:bg-gray-200 disabled:cursor-not-allowed`}
-                  // *** MODIFIED START: Chỉ sử dụng onBlur ***
+                  className={`col-span-2 ${className_input_text} input-navigable halfwidth-kana-input disabled:bg-gray-200 disabled:cursor-not-allowed`}
+                  onCompositionStart={() => {
+                    setIsComposingJP(true);
+                  }}
+                  onCompositionEnd={(e) => {
+                    setIsComposingJP(false);
+                    // Không tự động format khi composition end
+                  }}
+                  onKeyDown={(e: ReactKeyboardEvent<HTMLInputElement>) => {
+                    const input = e.currentTarget;
+
+                    // ① Nếu IME đang mở candidate → bỏ qua ENTER/TAB/ARROWS
+                    if (
+                      isComposingJP ||
+                      e.nativeEvent.isComposing ||
+                      e.keyCode === 229
+                    ) {
+                      e.preventDefault();
+                      return;
+                    }
+
+                    // Xử lý Tab
+                    if (e.key === "Tab") {
+                      e.preventDefault();
+                      e.stopPropagation();
+
+                      const currentValue = input.value;
+                      const formattedValue = processHalfWidthKatakana(currentValue);
+
+                      // Kiểm tra nếu text cần xử lý (khác sau khi format)
+                      const needsProcessing = currentValue !== formattedValue;
+
+                      // ② CHƯA convert VÀ CẦN xử lý → convert và giữ focus
+                      if (!hasConvertedKana && needsProcessing) {
+                        input.value = formattedValue;
+                        setPreviousValue(formattedValue);
+                        setHasConvertedKana(true);
+                        return;
+                      }
+
+                      // ③ ĐÃ convert HOẶC không cần xử lý → nhảy field
+                      const navigableInputs = Array.from(
+                        formRef.current?.querySelectorAll<HTMLElement>(
+                          ".input-navigable"
+                        ) || []
+                      );
+                      const currentIndex = navigableInputs.indexOf(input);
+
+                      if (e.shiftKey) {
+                        // Shift+Tab: về field trước
+                        if (currentIndex > 0) {
+                          navigableInputs[currentIndex - 1].focus();
+                        }
+                      } else {
+                        // Tab: sang field sau
+                        if (
+                          currentIndex !== -1 &&
+                          currentIndex + 1 < navigableInputs.length
+                        ) {
+                          navigableInputs[currentIndex + 1].focus();
+                        }
+                      }
+
+                      // reset flag
+                      setHasConvertedKana(false);
+                      return;
+                    }
+
+                    // Xử lý Enter và ArrowDown
+                    if (e.key === "Enter" || e.key === "ArrowDown") {
+                      e.preventDefault();
+                      e.stopPropagation();
+
+                      const currentValue = input.value;
+                      const formattedValue = processHalfWidthKatakana(currentValue);
+
+                      // Kiểm tra nếu text cần xử lý
+                      const needsProcessing = currentValue !== formattedValue;
+
+                      // ② CHƯA convert VÀ CẦN xử lý → convert và giữ focus
+                      if (!hasConvertedKana && needsProcessing) {
+                        input.value = formattedValue;
+                        setPreviousValue(formattedValue);
+                        setHasConvertedKana(true);
+                        return;
+                      }
+
+                      // ③ ĐÃ convert HOẶC không cần xử lý → nhảy field tiếp theo
+                      const navigableInputs = Array.from(
+                        formRef.current?.querySelectorAll<HTMLElement>(
+                          ".input-navigable"
+                        ) || []
+                      );
+                      const currentIndex = navigableInputs.indexOf(input);
+
+                      if (
+                        currentIndex !== -1 &&
+                        currentIndex + 1 < navigableInputs.length
+                      ) {
+                        navigableInputs[currentIndex + 1].focus();
+                      }
+
+                      // reset flag
+                      setHasConvertedKana(false);
+                      return;
+                    }
+
+                    // Xử lý ArrowUp
+                    if (e.key === "ArrowUp") {
+                      e.preventDefault();
+                      e.stopPropagation();
+
+                      const currentValue = input.value;
+                      const formattedValue = processHalfWidthKatakana(currentValue);
+
+                      // Kiểm tra nếu text cần xử lý
+                      const needsProcessing = currentValue !== formattedValue;
+
+                      // ② CHƯA convert VÀ CẦN xử lý → convert và giữ focus
+                      if (!hasConvertedKana && needsProcessing) {
+                        input.value = formattedValue;
+                        setPreviousValue(formattedValue);
+                        setHasConvertedKana(true);
+                        return;
+                      }
+
+                      // ③ ĐÃ convert HOẶC không cần xử lý → nhảy field trước đó
+                      const navigableInputs = Array.from(
+                        formRef.current?.querySelectorAll<HTMLElement>(
+                          ".input-navigable"
+                        ) || []
+                      );
+                      const currentIndex = navigableInputs.indexOf(input);
+
+                      if (currentIndex > 0) {
+                        navigableInputs[currentIndex - 1].focus();
+                      }
+
+                      // reset flag
+                      setHasConvertedKana(false);
+                      return;
+                    }
+                  }}
                   onBlur={(e) => {
-                    // Xử lý khi người dùng rời khỏi ô input
-                    e.currentTarget.value = handleHalfWidthKatakanaFormat(
+                    const formattedValue = processHalfWidthKatakana(
                       e.currentTarget.value
                     );
+                    e.currentTarget.value = formattedValue;
+                    setPreviousValue(formattedValue);
+                    setHasConvertedKana(false);
                   }}
-                  // *** MODIFIED END: Xóa onKeyDown và onCompositionEnd ***
+                  onChange={() => {
+                    // reset để Enter lần đầu convert
+                    setHasConvertedKana(false);
+                  }}
                 />
+
                 <span></span>
 
                 <label className="flex justify-center min-w-[100px] font-black bg-gray-300 py-0.5 px-8 whitespace-nowrap overflow-hidden text-ellipsis">
@@ -583,22 +842,149 @@ export default function CheckInputScreen() {
                 </label>
                 <input
                   disabled={shouldDisableFields}
-                  className={`col-span-2 ${className_input_text} input-navigable disabled:bg-gray-200 disabled:cursor-not-allowed`}
-                  onKeyDown={(e) => {
-                    if (e.nativeEvent.isComposing) {
-                      if (e.key === "Enter") {
-                        e.preventDefault();
-                        return;
-                      }
-                    } else {
-                      handleFormatting(e, convertToHalfWidthAndRemoveKana);
-                    }
+                  className={`col-span-2 ${className_input_text} input-navigable halfwidth-alphanum-input disabled:bg-gray-200 disabled:cursor-not-allowed`}
+                  onCompositionStart={() => {
+                    setIsComposingAlphaNum(true);
                   }}
                   onCompositionEnd={(e) => {
-                    const target = e.target as HTMLInputElement;
-                    target.value = convertToHalfWidthAndRemoveKana(
-                      target.value
+                    setIsComposingAlphaNum(false);
+                  }}
+                  onKeyDown={(e: ReactKeyboardEvent<HTMLInputElement>) => {
+                    const input = e.currentTarget;
+
+                    // ① Nếu IME đang mở → bỏ qua
+                    if (
+                      isComposingAlphaNum ||
+                      e.nativeEvent.isComposing ||
+                      e.keyCode === 229
+                    ) {
+                      e.preventDefault();
+                      return;
+                    }
+
+                    // Xử lý Tab
+                    if (e.key === "Tab") {
+                      e.preventDefault();
+                      e.stopPropagation();
+
+                      const currentValue = input.value;
+                      const formattedValue = processHalfWidthAlphaNumeric(currentValue);
+
+                      // Kiểm tra nếu text cần xử lý
+                      const needsProcessing = currentValue !== formattedValue;
+
+                      // ② CHƯA convert VÀ CẦN xử lý → convert và giữ focus
+                      if (!hasConvertedAlphaNum && needsProcessing) {
+                        input.value = formattedValue;
+                        setHasConvertedAlphaNum(true);
+                        return;
+                      }
+
+                      // ③ ĐÃ convert HOẶC không cần xử lý → nhảy field
+                      const navigableInputs = Array.from(
+                        formRef.current?.querySelectorAll<HTMLElement>(
+                          ".input-navigable"
+                        ) || []
+                      );
+                      const currentIndex = navigableInputs.indexOf(input);
+
+                      if (e.shiftKey) {
+                        if (currentIndex > 0) {
+                          navigableInputs[currentIndex - 1].focus();
+                        }
+                      } else {
+                        if (
+                          currentIndex !== -1 &&
+                          currentIndex + 1 < navigableInputs.length
+                        ) {
+                          navigableInputs[currentIndex + 1].focus();
+                        }
+                      }
+
+                      setHasConvertedAlphaNum(false);
+                      return;
+                    }
+
+                    // Xử lý Enter và ArrowDown
+                    if (e.key === "Enter" || e.key === "ArrowDown") {
+                      e.preventDefault();
+                      e.stopPropagation();
+
+                      const currentValue = input.value;
+                      const formattedValue = processHalfWidthAlphaNumeric(currentValue);
+
+                      // Kiểm tra nếu text cần xử lý
+                      const needsProcessing = currentValue !== formattedValue;
+
+                      // ② CHƯA convert VÀ CẦN xử lý → convert và giữ focus
+                      if (!hasConvertedAlphaNum && needsProcessing) {
+                        input.value = formattedValue;
+                        setHasConvertedAlphaNum(true);
+                        return;
+                      }
+
+                      // ③ ĐÃ convert HOẶC không cần xử lý → nhảy field tiếp theo
+                      const navigableInputs = Array.from(
+                        formRef.current?.querySelectorAll<HTMLElement>(
+                          ".input-navigable"
+                        ) || []
+                      );
+                      const currentIndex = navigableInputs.indexOf(input);
+
+                      if (
+                        currentIndex !== -1 &&
+                        currentIndex + 1 < navigableInputs.length
+                      ) {
+                        navigableInputs[currentIndex + 1].focus();
+                      }
+
+                      setHasConvertedAlphaNum(false);
+                      return;
+                    }
+
+                    // Xử lý ArrowUp
+                    if (e.key === "ArrowUp") {
+                      e.preventDefault();
+                      e.stopPropagation();
+
+                      const currentValue = input.value;
+                      const formattedValue = processHalfWidthAlphaNumeric(currentValue);
+
+                      // Kiểm tra nếu text cần xử lý
+                      const needsProcessing = currentValue !== formattedValue;
+
+                      // ② CHƯA convert VÀ CẦN xử lý → convert và giữ focus
+                      if (!hasConvertedAlphaNum && needsProcessing) {
+                        input.value = formattedValue;
+                        setHasConvertedAlphaNum(true);
+                        return;
+                      }
+
+                      // ③ ĐÃ convert HOẶC không cần xử lý → nhảy field trước đó
+                      const navigableInputs = Array.from(
+                        formRef.current?.querySelectorAll<HTMLElement>(
+                          ".input-navigable"
+                        ) || []
+                      );
+                      const currentIndex = navigableInputs.indexOf(input);
+
+                      if (currentIndex > 0) {
+                        navigableInputs[currentIndex - 1].focus();
+                      }
+
+                      setHasConvertedAlphaNum(false);
+                      return;
+                    }
+                  }}
+                  onBlur={(e) => {
+                    const formattedValue = processHalfWidthAlphaNumeric(
+                      e.currentTarget.value
                     );
+                    e.currentTarget.value = formattedValue;
+                    setHasConvertedAlphaNum(false);
+                  }}
+                  onChange={() => {
+                    setHasConvertedAlphaNum(false);
                   }}
                 />
                 <span></span>
@@ -613,7 +999,7 @@ export default function CheckInputScreen() {
                 />
                 <span></span>
 
-                <label className="flex justify-center min-w-[100px] font-black bg-gray-300 py-0.5 px-8 whitespace-nowrap overflow-hidden text-ellipsis">
+                {/* <label className="flex justify-center min-w-[100px] font-black bg-gray-300 py-0.5 px-8 whitespace-nowrap overflow-hidden text-ellipsis">
                   ゼロパディング
                 </label>
                 <input
@@ -633,7 +1019,7 @@ export default function CheckInputScreen() {
                     }
                   }}
                   className={`col-span-2 ${className_input_text} input-navigable disabled:bg-gray-200 disabled:cursor-not-allowed`}
-                />
+                /> */}
                 <span></span>
 
                 <label className="flex justify-center min-w-[100px] font-black bg-gray-300 py-0.5 px-8 whitespace-nowrap overflow-hidden text-ellipsis">
