@@ -16,6 +16,7 @@ import {
   convertToFullWidth,
   removeAllWhitespace,
   handleFormatting,
+  toHalfWidth, // *** MODIFIED: Thêm import 'toHalfWidth' ***
 } from "../../utils/InputHandlers";
 
 import { useKeyboardNavigation } from "../../hooks/useCheckInputNavigation";
@@ -84,6 +85,46 @@ export default function CheckInputScreen() {
     { code: "3", label: "Three" },
     { code: "", label: "Invalid" },
   ];
+  const isHalfWidthKatakana = (str: string) => {
+    return /^[\uFF61-\uFF9F]*$/.test(str);
+  };
+
+  const handleHalfWidthKatakanaFormat = (value: string) => {
+    // Step 1: Chuyển đổi tất cả (bao gồm Katakana full-width) sang half-width
+    const halfWidthStr = toHalfWidth(value);
+
+    // Step 2: Xóa tất cả các ký tự KHÔNG PHẢI là Katakana half-width.
+    // Điều này sẽ xóa Kanji, Hiragana, và cả chữ/số half-width (được tạo ở bước 1).
+    // Dải Unicode \uFF61-\uFF9F là của Katakana half-width.
+    return halfWidthStr.replace(/[^\uFF61-\uFF9F]/g, "");
+  };
+
+  const convertToHalfWidthKatakana = (str: string) => {
+    // First convert full-width katakana to half-width
+    let result = str.replace(/[\u30A1-\u30F6]/g, (char) => {
+      const code = char.charCodeAt(0);
+      return String.fromCharCode(code - 0x60);
+    });
+
+    // Then keep only half-width katakana characters
+    return result.replace(/[^\uFF61-\uFF9F]/g, "");
+  };
+
+  const processHalfWidthKatakana = (str: string) => {
+    // First convert full-width katakana to half-width
+    let result = str.replace(/[\u30A1-\u30FF]/g, (char) => {
+      // Get the full-width character code
+      const code = char.charCodeAt(0);
+
+      // Calculate corresponding half-width code
+      // Full-width ア(30A2) -> Half-width ｱ(FF71)
+      const offset = code - 0x30a1;
+      return String.fromCharCode(0xff71 + offset);
+    });
+
+    // Remove non-katakana characters (kanji, hiragana, numbers, alphabet)
+    return result.replace(/[^\uFF66-\uFF9F]/g, "");
+  };
 
   const btnBaseStyle =
     "font-semibold py-1 px-4 rounded-lg transition-all duration-200 shadow-md";
@@ -153,20 +194,38 @@ export default function CheckInputScreen() {
                   maxLength={4}
                   disabled={i > 0 && !customerCode[i - 1]}
                   onChange={(e) => {
-                    const value = e.target.value.replace(/[^0-9]/g, "");
+                    // *** MODIFIED START: Cho phép cả số half-width và full-width ***
+                    const value = e.target.value.replace(/[^0-9０-９]/g, "");
+                    // *** MODIFIED END ***
+
                     const newCode = [...customerCode];
                     newCode[i] = value;
                     setCustomerCode(newCode);
                   }}
                   onBlur={(e) => {
-                    const value = e.target.value;
-                    if (value && value.length > 0) {
+                    // *** MODIFIED START: Chuyển sang half-width TRƯỚC khi padding ***
+                    // 1. Lấy giá trị và chuyển tất cả sang half-width
+                    const halfWidthValue = extractHalfWidthDigits(
+                      e.target.value
+                    );
+
+                    // 2. Thực hiện padding nếu có giá trị
+                    if (halfWidthValue && halfWidthValue.length > 0) {
                       const newCode = [...customerCode];
-                      newCode[i] = value.padStart(4, "0");
+                      newCode[i] = halfWidthValue.padStart(4, "0");
+                      setCustomerCode(newCode);
+                    } else {
+                      // Nếu người dùng xóa trống, hãy đảm bảo nó rỗng
+                      const newCode = [...customerCode];
+                      newCode[i] = "";
                       setCustomerCode(newCode);
                     }
+                    // *** MODIFIED END ***
                   }}
                   onKeyDown={(e) => {
+                    if (e.nativeEvent.isComposing) {
+                      return;
+                    }
                     // For first input (i=0), if empty and Tab/Enter/ArrowDown, go to 氏名
                     if (i === 0 && !customerCode[i]) {
                       if (
@@ -322,6 +381,9 @@ export default function CheckInputScreen() {
                   disabled={shouldDisableFields}
                   data-group="text5"
                   onKeyDown={(e: ReactKeyboardEvent<HTMLInputElement>) => {
+                    if (e.nativeEvent.isComposing) {
+                      return;
+                    }
                     // Handle Shift+Tab to go back to TEXT4 (after-radio1)
                     if (e.key === "Tab" && e.shiftKey) {
                       e.preventDefault();
@@ -444,7 +506,7 @@ export default function CheckInputScreen() {
                         value={v}
                         className="flex flex-row font-bold radio-customer-type"
                       >
-                        <p className="ml-4 whitespace-nowrap">Item {v}</p>
+                        <p className="ml-4 whitespace-nowVrap">Item {v}</p>
                       </Radio>
                     ))}
                   </div>
@@ -482,8 +544,14 @@ export default function CheckInputScreen() {
                 <input
                   disabled={shouldDisableFields}
                   className={`col-span-2 ${className_input_text} input-navigable disabled:bg-gray-200 disabled:cursor-not-allowed`}
-                  onChange={handleHalfWidthKatakanaInput}
-                  onInput={handleHalfWidthKatakanaInput}
+                  // *** MODIFIED START: Chỉ sử dụng onBlur ***
+                  onBlur={(e) => {
+                    // Xử lý khi người dùng rời khỏi ô input
+                    e.currentTarget.value = handleHalfWidthKatakanaFormat(
+                      e.currentTarget.value
+                    );
+                  }}
+                  // *** MODIFIED END: Xóa onKeyDown và onCompositionEnd ***
                 />
                 <span></span>
 
@@ -493,7 +561,20 @@ export default function CheckInputScreen() {
                 <input
                   disabled={shouldDisableFields}
                   className={`col-span-2 ${className_input_text} input-navigable disabled:bg-gray-200 disabled:cursor-not-allowed`}
-                  onKeyDown={(e) => handleFormatting(e, extractHalfWidthDigits)}
+                  onKeyDown={(e) => {
+                    if (e.nativeEvent.isComposing) {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        return;
+                      }
+                    } else {
+                      handleFormatting(e, extractHalfWidthDigits);
+                    }
+                  }}
+                  onCompositionEnd={(e) => {
+                    const target = e.target as HTMLInputElement;
+                    target.value = extractHalfWidthDigits(target.value);
+                  }}
                 />
                 <span></span>
 
@@ -503,9 +584,22 @@ export default function CheckInputScreen() {
                 <input
                   disabled={shouldDisableFields}
                   className={`col-span-2 ${className_input_text} input-navigable disabled:bg-gray-200 disabled:cursor-not-allowed`}
-                  onKeyDown={(e) =>
-                    handleFormatting(e, convertToHalfWidthAndRemoveKana)
-                  }
+                  onKeyDown={(e) => {
+                    if (e.nativeEvent.isComposing) {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        return;
+                      }
+                    } else {
+                      handleFormatting(e, convertToHalfWidthAndRemoveKana);
+                    }
+                  }}
+                  onCompositionEnd={(e) => {
+                    const target = e.target as HTMLInputElement;
+                    target.value = convertToHalfWidthAndRemoveKana(
+                      target.value
+                    );
+                  }}
                 />
                 <span></span>
 

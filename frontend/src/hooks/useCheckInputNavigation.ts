@@ -21,33 +21,27 @@ export const useKeyboardNavigation = (
     const navigableInputs = Array.from(
       form.querySelectorAll<HTMLElement>(".input-navigable")
     );
-    // *** MODIFIED START: Updated query selector ***
     const mainRadios = Array.from(
       form.querySelectorAll<HTMLInputElement>(
         ".radio-group input[type='radio']"
       )
     );
-    // *** MODIFIED END ***
     const inputToMainRadio =
       form.querySelector<HTMLInputElement>(".input-to-radio");
     const checkboxes = Array.from(
       form.querySelectorAll<HTMLInputElement>(".checkbox-group-item")
     );
-    // *** MODIFIED START: Updated query selector ***
     const radioGroup2 = Array.from(
       form.querySelectorAll<HTMLInputElement>(
         ".radio2-group input[type='radio']"
       )
     );
-    // *** MODIFIED END ***
     const text3Input = form.querySelector<HTMLInputElement>(".text3-input");
-    // *** MODIFIED START: Updated query selector ***
     const radioGroup1 = Array.from(
       form.querySelectorAll<HTMLInputElement>(
         ".radio1-group input[type='radio']"
       )
     );
-    // *** MODIFIED END ***
     const inputToCheckbox =
       form.querySelector<HTMLInputElement>(".input-to-checkbox");
     const codeInputs = Array.from(
@@ -83,7 +77,6 @@ export const useKeyboardNavigation = (
     ) => {
       if (!radios || radios.length === 0) return;
 
-      // This line will now work correctly as 'radios' is an array of actual inputs
       const selectedRadio = radios.find((radio) => radio.checked);
 
       if (selectedRadio) {
@@ -92,7 +85,6 @@ export const useKeyboardNavigation = (
         // Fallback to the first radio
         radios[0].focus();
         if (clickIfNoneSelected) {
-          // This ensures the value is set when tabbing in for the first time
           radios[0].click();
         }
       }
@@ -101,6 +93,11 @@ export const useKeyboardNavigation = (
     navigableInputs.forEach((input, index) => {
       addListener(input, "keydown", (e: Event) => {
         const kbEvent = e as KeyboardEvent;
+        // *** MODIFIED START: Thêm kiểm tra IME ***
+        if (kbEvent.isComposing || kbEvent.keyCode === 229) {
+          return;
+        }
+        // *** MODIFIED END ***
         const target = kbEvent.target as HTMLInputElement | HTMLTextAreaElement;
 
         // Handle ESC key to clear input/textarea value
@@ -117,7 +114,7 @@ export const useKeyboardNavigation = (
           return;
         }
 
-        // Skip handleNavigationKey for special inputs that have custom navigation logic
+        // ... (rest of the function)
         const hasCustomForwardNav =
           input.classList.contains("input-to-radio") ||
           input.classList.contains("input-to-checkbox") ||
@@ -135,18 +132,14 @@ export const useKeyboardNavigation = (
           (input.hasAttribute("data-group") &&
             input.getAttribute("data-group") === "text5");
 
-        // Skip forward navigation for inputs that jump to radio/checkbox groups
         if (
           hasCustomForwardNav &&
           ["Tab", "Enter", "ArrowDown"].includes(kbEvent.key)
         ) {
-          // Let the custom handler deal with this
           return;
         }
 
-        // Skip backward navigation for inputs with custom Shift+Tab logic
         if (hasCustomBackNav && kbEvent.key === "Tab" && kbEvent.shiftKey) {
-          // Let the custom handler deal with this
           return;
         }
 
@@ -159,6 +152,11 @@ export const useKeyboardNavigation = (
     if (inputToMainRadio) {
       addListener(inputToMainRadio, "keydown", (e: Event) => {
         const kbEvent = e as KeyboardEvent;
+        // *** MODIFIED START: Thêm kiểm tra IME ***
+        if (kbEvent.isComposing || kbEvent.keyCode === 229) {
+          return;
+        }
+        // *** MODIFIED END ***
 
         // Handle Shift+Tab to go back to last enabled customer code input
         if (kbEvent.key === "Tab" && kbEvent.shiftKey) {
@@ -193,9 +191,10 @@ export const useKeyboardNavigation = (
     mainRadios.forEach((radio, index) => {
       addListener(radio, "keydown", (e: Event) => {
         const kbEvent = e as KeyboardEvent;
+        // Radio không cần check IME vì không nhập text
         kbEvent.stopPropagation(); // Stop NextUI's built-in handler
 
-        // Handle Shift+Tab and ArrowUp to go back to previous
+        // ... (rest of the function)
         if (
           (kbEvent.key === "Tab" && kbEvent.shiftKey) ||
           kbEvent.key === "ArrowUp"
@@ -209,7 +208,6 @@ export const useKeyboardNavigation = (
           return;
         }
 
-        // Arrow Left/Right: navigate within group
         if (["ArrowRight", "ArrowLeft"].includes(kbEvent.key)) {
           kbEvent.preventDefault();
           let nextIndex = index;
@@ -224,23 +222,19 @@ export const useKeyboardNavigation = (
           if (nextRadio) {
             nextRadio.focus();
             nextRadio.click();
-            // Ensure the radio is actually checked
             nextRadio.checked = true;
-            // Trigger change event
             const event = new Event("change", { bubbles: true });
             nextRadio.dispatchEvent(event);
           }
           return;
         }
 
-        // Handle Tab, Enter, and ArrowDown (Move to next element)
         if (
           kbEvent.key === "ArrowDown" ||
           kbEvent.key === "Tab" ||
           kbEvent.key === "Enter"
         ) {
           kbEvent.preventDefault();
-          // Explicitly go to next element (after-radio)
           const nextInput =
             form.querySelector<HTMLInputElement>(".after-radio");
           if (nextInput) {
@@ -254,9 +248,10 @@ export const useKeyboardNavigation = (
     radioGroup1.forEach((radio, index) => {
       addListener(radio, "keydown", (e: Event) => {
         const kbEvent = e as KeyboardEvent;
+        // Radio không cần check IME
         kbEvent.stopPropagation(); // Stop NextUI's built-in handler
 
-        // Handle Shift+Tab and ArrowUp to go back to previous
+        // ... (rest of the function)
         if (
           (kbEvent.key === "Tab" && kbEvent.shiftKey) ||
           kbEvent.key === "ArrowUp"
@@ -266,7 +261,6 @@ export const useKeyboardNavigation = (
           return;
         }
 
-        // Handle Arrow Left/Right (Intra-group navigation)
         if (["ArrowRight", "ArrowLeft"].includes(kbEvent.key)) {
           kbEvent.preventDefault();
           let nextIndex = index;
@@ -281,23 +275,19 @@ export const useKeyboardNavigation = (
           if (nextRadio) {
             nextRadio.focus();
             nextRadio.click();
-            // Ensure the radio is actually checked
             nextRadio.checked = true;
-            // Trigger change event
             const event = new Event("change", { bubbles: true });
             nextRadio.dispatchEvent(event);
           }
           return;
         }
 
-        // Handle Tab, Enter, and ArrowDown (Move to next element)
         if (
           kbEvent.key === "ArrowDown" ||
           kbEvent.key === "Tab" ||
           kbEvent.key === "Enter"
         ) {
           kbEvent.preventDefault();
-          // Explicitly go to next element (after-radio1)
           const nextInput =
             form.querySelector<HTMLInputElement>(".after-radio1");
           if (nextInput) {
@@ -311,9 +301,10 @@ export const useKeyboardNavigation = (
     radioGroup2.forEach((radio, index) => {
       addListener(radio, "keydown", (e: Event) => {
         const kbEvent = e as KeyboardEvent;
+        // Radio không cần check IME
         kbEvent.stopPropagation(); // Stop NextUI's built-in handler
 
-        // Handle Shift+Tab and ArrowUp to go back to previous
+        // ... (rest of the function)
         if (
           (kbEvent.key === "Tab" && kbEvent.shiftKey) ||
           kbEvent.key === "ArrowUp"
@@ -326,7 +317,6 @@ export const useKeyboardNavigation = (
           return;
         }
 
-        // Handle Arrow Left/Right (Intra-group navigation)
         if (["ArrowRight", "ArrowLeft"].includes(kbEvent.key)) {
           kbEvent.preventDefault();
           let nextIndex = index;
@@ -341,23 +331,19 @@ export const useKeyboardNavigation = (
           if (nextRadio) {
             nextRadio.focus();
             nextRadio.click();
-            // Ensure the radio is actually checked
             nextRadio.checked = true;
-            // Trigger change event
             const event = new Event("change", { bubbles: true });
             nextRadio.dispatchEvent(event);
           }
           return;
         }
 
-        // Handle Tab, Enter, and ArrowDown (Move to next element)
         if (
           kbEvent.key === "ArrowDown" ||
           kbEvent.key === "Tab" ||
           kbEvent.key === "Enter"
         ) {
           kbEvent.preventDefault();
-          // Explicitly go to next element (textarea-after-radio2)
           const nextInput = form.querySelector<HTMLTextAreaElement>(
             ".textarea-after-radio2"
           );
@@ -369,33 +355,30 @@ export const useKeyboardNavigation = (
       });
     });
 
-    // Checkboxes navigation (Adding stopPropagation for consistency)
     checkboxes.forEach((checkbox, index) => {
       const handler = (e: Event) => {
         const kbEvent = e as KeyboardEvent;
+        // Checkbox không cần check IME
         kbEvent.stopPropagation(); // Stop any potential built-in checkbox group handlers
 
-        // Handle ESC key to uncheck checkbox
+        // ... (rest of the function)
         if (kbEvent.key === "Escape") {
           kbEvent.preventDefault();
           checkbox.checked = false;
           return;
         }
 
-        // Handle Shift+Tab and ArrowUp to ALWAYS go back to TEXT6 (input-to-checkbox)
         if (
           (kbEvent.key === "Tab" && kbEvent.shiftKey) ||
           kbEvent.key === "ArrowUp"
         ) {
           kbEvent.preventDefault();
-          // Always go back to the input before checkboxes
           if (inputToCheckbox) {
             inputToCheckbox.focus();
           }
           return;
         }
 
-        // Handle Arrow Left/Right (Intra-group navigation)
         const keyMapLR: { [key: string]: number } = {
           ArrowRight: 1,
           ArrowLeft: -1,
@@ -405,22 +388,19 @@ export const useKeyboardNavigation = (
           const nextIndex = index + keyMapLR[kbEvent.key];
           if (nextIndex >= 0 && nextIndex < checkboxes.length)
             checkboxes[nextIndex].focus();
-          return; // Prevent falling through
+          return;
         }
 
-        // Handle Tab, Enter, and ArrowDown (Move to next group)
         if (
           kbEvent.key === "Enter" ||
           kbEvent.key === "Tab" ||
           kbEvent.key === "ArrowDown"
         ) {
           kbEvent.preventDefault();
-          // Move forward to first radio in group 2
           navigateToRadioGroup(radioGroup2, true);
-          return; // Prevent falling through
+          return;
         }
 
-        // Handle 'c' key to check/uncheck
         if (kbEvent.key.toLowerCase() === "c") {
           kbEvent.preventDefault();
           checkbox.checked = !checkbox.checked;
@@ -432,10 +412,14 @@ export const useKeyboardNavigation = (
     if (text3Input && radioGroup1.length > 0) {
       addListener(text3Input, "keydown", (e: Event) => {
         const kbEvent = e as KeyboardEvent;
+        // *** MODIFIED START: Thêm kiểm tra IME ***
+        if (kbEvent.isComposing || kbEvent.keyCode === 229) {
+          return;
+        }
+        // *** MODIFIED END ***
 
         // Handle Shift+Tab to go back using normal navigation
         if (kbEvent.key === "Tab" && kbEvent.shiftKey) {
-          // Let handleNavigationKey handle this - find text3 in navigableInputs
           const text3Index = navigableInputs.indexOf(text3Input);
           if (text3Index > 0) {
             kbEvent.preventDefault();
@@ -454,6 +438,11 @@ export const useKeyboardNavigation = (
     if (inputToCheckbox && checkboxes.length > 0) {
       addListener(inputToCheckbox, "keydown", (e: Event) => {
         const kbEvent = e as KeyboardEvent;
+        // *** MODIFIED START: Thêm kiểm tra IME ***
+        if (kbEvent.isComposing || kbEvent.keyCode === 229) {
+          return;
+        }
+        // *** MODIFIED END ***
 
         // Handle Shift+Tab to go back to CODE2
         if (kbEvent.key === "Tab" && kbEvent.shiftKey) {
@@ -475,15 +464,18 @@ export const useKeyboardNavigation = (
     codeInputs.forEach((input, index) => {
       const handler = (e: Event) => {
         const kbEvent = e as KeyboardEvent;
+        // *** MODIFIED START: Thêm kiểm tra IME ***
+        if (kbEvent.isComposing || kbEvent.keyCode === 229) {
+          return;
+        }
+        // *** MODIFIED END ***
 
         // Handle Shift+Tab to go back to previous code input or text5
         if (kbEvent.key === "Tab" && kbEvent.shiftKey) {
           kbEvent.preventDefault();
           if (index > 0) {
-            // Go to previous code input
             codeInputs[index - 1].focus();
           } else {
-            // First code input: go back to text5 input
             const text5Input = form.querySelector<HTMLInputElement>(
               '[data-group="text5"]'
             );
@@ -499,10 +491,8 @@ export const useKeyboardNavigation = (
           kbEvent.preventDefault();
           const nextCodeInput = codeInputs[index + 1];
           if (nextCodeInput) {
-            // Go to next code input
             nextCodeInput.focus();
           } else {
-            // Last code input: go to text6
             const text6Input = form.querySelector<HTMLInputElement>(
               '[data-group="text6"]'
             );
@@ -518,13 +508,18 @@ export const useKeyboardNavigation = (
     if (afterRadioInput && mainRadios.length > 0) {
       addListener(afterRadioInput, "keydown", (e: Event) => {
         const kbEvent = e as KeyboardEvent;
+        // *** MODIFIED START: Thêm kiểm tra IME ***
+        if (kbEvent.isComposing || kbEvent.keyCode === 229) {
+          return;
+        }
+        // *** MODIFIED END ***
+
         // Handle Shift+Tab and ArrowUp to go back to radio group
         if (
           (kbEvent.key === "Tab" && kbEvent.shiftKey) ||
           kbEvent.key === "ArrowUp"
         ) {
           kbEvent.preventDefault();
-          // Find selected radio or default to first (don't click)
           navigateToRadioGroup(mainRadios, false);
         }
       });
@@ -533,13 +528,18 @@ export const useKeyboardNavigation = (
     if (afterRadio1Input && radioGroup1.length > 0) {
       addListener(afterRadio1Input, "keydown", (e: Event) => {
         const kbEvent = e as KeyboardEvent;
+        // *** MODIFIED START: Thêm kiểm tra IME ***
+        if (kbEvent.isComposing || kbEvent.keyCode === 229) {
+          return;
+        }
+        // *** MODIFIED END ***
+
         // Handle Shift+Tab and ArrowUp to go back to radio group
         if (
           (kbEvent.key === "Tab" && kbEvent.shiftKey) ||
           kbEvent.key === "ArrowUp"
         ) {
           kbEvent.preventDefault();
-          // Find selected radio or default to first (don't click)
           navigateToRadioGroup(radioGroup1, false);
         }
       });
@@ -548,10 +548,15 @@ export const useKeyboardNavigation = (
     if (textareaAfterRadio2 && radioGroup2.length > 0) {
       addListener(textareaAfterRadio2, "keydown", (e: Event) => {
         const kbEvent = e as KeyboardEvent;
+        // *** MODIFIED START: Thêm kiểm tra IME ***
+        if (kbEvent.isComposing || kbEvent.keyCode === 229) {
+          return;
+        }
+        // *** MODIFIED END ***
+
         // Only handle Shift+Tab specially to go back to radio group
         if (kbEvent.key === "Tab" && kbEvent.shiftKey) {
           kbEvent.preventDefault();
-          // Find selected radio or default to first (don't click)
           navigateToRadioGroup(radioGroup2, false);
         }
       });

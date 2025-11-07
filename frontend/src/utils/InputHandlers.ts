@@ -53,7 +53,7 @@ export const handleNavigationKey = (
       input instanceof HTMLTextAreaElement
     ) {
       const el = input;
-      if ((e as any).isComposing) return;
+      if ((e as any).isComposing || e.keyCode === 229) return;
 
       let isComposing = false;
       const handler = () => {
@@ -365,6 +365,12 @@ export const handleFormatting = (
   formatter: (str: string) => string
 ): void => {
   if (["Tab", "Enter", "ArrowDown", "ArrowUp"].includes(e.key)) {
+    // *** MODIFIED START: Thêm kiểm tra IME ***
+    if (e.nativeEvent.isComposing || e.nativeEvent.keyCode === 229) {
+      return;
+    }
+    // *** MODIFIED END ***
+
     e.preventDefault();
     const input = e.currentTarget;
     input.value = formatter(input.value);
