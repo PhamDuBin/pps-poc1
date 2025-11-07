@@ -6,6 +6,7 @@ import {
   convertToFullWidth,
 } from "../../../../utils/InputHandlers";
 import { handleOpenWindow } from "../../../../constants/functions";
+import { Select } from "antd";
 
 interface SaleDetailEntry5Props {
   onChange: (field: string, value: string) => void;
@@ -35,13 +36,8 @@ const SaleDetailEntry5: React.FC<SaleDetailEntry5Props> = ({
               placeholder="0.00"
               className="w-20 h-full placeholder-black-200 border border-black"
               value={formData.purchasePrice ?? ""}
-              onChange={(e) =>
-                onChange(
-                  "purchasePrice",
-                  extractHalfWidthDigits(e.target.value)
-                )
-              }
-              onKeyDown={allowDecimalInput}
+              onChange={(e) => onChange("purchasePrice", e.target.value)}
+              onInput={allowDecimalInput}
             />
           </div>
         </div>
@@ -72,28 +68,27 @@ const SaleDetailEntry5: React.FC<SaleDetailEntry5Props> = ({
                 placeholder="01234567.00"
                 className="h-full px-1 w-[120px] placeholder-black-200 border border-black"
                 value={formData.salesPrice ?? ""}
-                onChange={(e) =>
-                  onChange("salesPrice", extractHalfWidthDigits(e.target.value))
-                }
-                onKeyDown={allowDecimalInput}
+                onChange={(e) => onChange("salesPrice", e.target.value)}
+                onInput={allowDecimalInput}
               />
             </div>
           </div>
 
           <div className=" text-center h-[64px] relative">
             <div className="bg-label h-1/2">仕入単価区分</div>
-            <select
-              className="border border-black w-full h-1/2"
+            <Select
               value={
                 formData.purchasePriceType !== undefined
                   ? String(formData.purchasePriceType)
                   : "0"
               }
-              onChange={(e) => onChange("purchasePriceType", e.target.value)}
-            >
-              <option value="0">0 確定単価</option>
-              <option value="1">1 仮単価</option>
-            </select>
+              onChange={(value) => onChange("purchasePriceType", value)}
+              options={[
+                { value: "0", label: "0 確定単価" },
+                { value: "1", label: "1 仮単価" }
+              ]}
+              className="border border-black w-full h-1/2 [&>.ant-select-selector]:!bg-white"
+            />
           </div>
 
           <div className=" text-center h-[64px] relative">
@@ -126,21 +121,18 @@ const SaleDetailEntry5: React.FC<SaleDetailEntry5Props> = ({
             <div className="bg-label h-1/2">経費分類No.</div>
             <div className="flex gap-2">
               <div className="flex w-1/4 relative text-center">
-                <select
-                  className=" text-center border w-full border-black"
+                <Select
                   value={formData.expenseNo ?? "0"}
-                  onChange={(e) => onChange("expenseNo", e.target.value)}
-                >
-                  <option value="0">0</option>
-                  {Array.from({ length: 10 }, (_, i) => {
-                    const value = (i + 1).toString();
-                    return (
-                      <option key={value} value={value}>
-                        {value}
-                      </option>
-                    );
-                  })}
-                </select>
+                  onChange={(value) => onChange("expenseNo", value)}
+                  options={[
+                    { value: "0", label: "0" },
+                    ...Array.from({ length: 10 }, (_, i) => {
+                      const value = (i + 1).toString();
+                      return { value, label: value };
+                    })
+                  ]}
+                  className="text-center border w-full border-black [&>.ant-select-selector]:!bg-white"
+                />
               </div>
               <input
                 type="text"
@@ -153,18 +145,19 @@ const SaleDetailEntry5: React.FC<SaleDetailEntry5Props> = ({
 
           <div className=" text-center h-[64px] relative">
             <div className="bg-label h-1/2">当月外</div>
-            <select
-              className="border border-black w-full h-1/2"
+            <Select
               value={
                 formData.outsideMonth !== undefined
                   ? String(formData.outsideMonth)
                   : "0"
               }
-              onChange={(e) => onChange("outsideMonth", e.target.value)}
-            >
-              <option value="0">0 空欄</option>
-              <option value="1">1 当月外</option>
-            </select>
+              onChange={(value) => onChange("outsideMonth", value)}
+              options={[
+                { value: "0", label: "0 空欄" },
+                { value: "1", label: "1 当月外" }
+              ]}
+              className="border border-black w-full h-1/2 [&>.ant-select-selector]:!bg-white"
+            />
           </div>
 
           <div className=" text-center h-[64px] col-span-2 relative">

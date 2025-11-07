@@ -16,6 +16,7 @@ import {
   colWidths,
   fieldDefinitionsLeftPanel,
 } from "../../constants/sale_slip_entry";
+import { Select } from "antd";
 
 type LeftPanelProps = {
   showAdvanceSearch: boolean;
@@ -77,8 +78,11 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
   const firstInputRef = useRef<HTMLInputElement>(null);
   const customerCodeSelectRef = useRef<HTMLSelectElement>(null);
   const kanaInputRef = useRef<HTMLInputElement>(null);
+  const searchButtonRef = useRef<HTMLButtonElement>(null);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const tableBodyRef = useRef<HTMLTableSectionElement>(null);
+  const radio1Ref = useRef<HTMLInputElement>(null);
+  const radio2Ref = useRef<HTMLInputElement>(null);
 
   const handleTableKeyDown = (e: React.KeyboardEvent) => {
     if (activeIndex === null) return;
@@ -94,6 +98,38 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
     } else if (e.key === "Enter") {
       e.preventDefault();
       setSelectedRow(true);
+    }
+  };
+
+  const handleRadioKeyDown = (
+    e: React.KeyboardEvent<HTMLInputElement>,
+    currentValue: string
+  ) => {
+    const radios = [
+      { ref: radio1Ref, value: "0" },
+      { ref: radio2Ref, value: "1" },
+    ];
+    const currentIndex = radios.findIndex((r) => r.value === currentValue);
+
+    if (
+      ["ArrowDown", "ArrowUp", "ArrowRight", "ArrowLeft"].includes(e.key)
+    ) {
+      e.preventDefault();
+      e.stopPropagation();
+      let nextIndex = currentIndex;
+
+      if (e.key === "ArrowDown" || e.key === "ArrowRight") {
+        nextIndex = (currentIndex + 1) % radios.length;
+      } else if (e.key === "ArrowUp" || e.key === "ArrowLeft") {
+        nextIndex = (currentIndex - 1 + radios.length) % radios.length;
+      }
+
+      const nextRadio = radios[nextIndex];
+      if (nextRadio.ref.current) {
+        nextRadio.ref.current.focus();
+        nextRadio.ref.current.click();
+        setSelected(nextRadio.value);
+      }
     }
   };
 
@@ -217,7 +253,13 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
               </React.Fragment>
             ))}
             <button
-              onClick={() => setShowCustomerDropdown(!showCustomerDropdown)}
+              onClick={() => {
+                setShowCustomerDropdown(!showCustomerDropdown);
+                // If closing dropdown, trigger search like Enter key
+                if (showCustomerDropdown) {
+                  handleSearch(id1, id2, id3);
+                }
+              }}
               className=" w-[20px] h-[20px] mt-1 flex items-center justify-center px-1 bg-white border border-gray-500 cursor-pointer"
             >
               ▼
@@ -280,7 +322,11 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
               }}
             />
             <button
-              onClick={() => setShowAdvanceSearch(true)}
+              onClick={() => {
+                // Trigger search with current values when dropdown button clicked
+                handleSearch(id1, id2);
+                setShowAdvanceSearch(true);
+              }}
               className=" w-[20px] h-[20px] mt-1 flex items-center justify-center px-1 bg-white border border-gray-500 cursor-pointer"
             >
               ▼
@@ -321,7 +367,11 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
               }}
             />
             <button
-              onClick={() => setShowAdvanceSearch(true)}
+              onClick={() => {
+                // Trigger search with current values when dropdown button clicked
+                handleSearch(id1, id2);
+                setShowAdvanceSearch(true);
+              }}
               className=" w-[20px] h-[20px] mt-1 flex items-center justify-center px-1 bg-white border border-gray-500 cursor-pointer"
             >
               ▼
@@ -345,7 +395,11 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
               }}
             />
             <button
-              onClick={() => setShowAdvanceSearch(true)}
+              onClick={() => {
+                // Trigger search with current value when dropdown button clicked
+                handleSearch(id1);
+                setShowAdvanceSearch(true);
+              }}
               className=" w-[20px] h-[20px] mt-1 flex items-center justify-center px-1 bg-white border border-gray-500 cursor-pointer"
             >
               ▼
@@ -477,7 +531,13 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
                   <span>東京23区担当営業所</span>
                 </div>
                 <button
-                  onClick={() => setShowDepart(false)}
+                  onClick={() => {
+                    setShowDepart(false);
+                    // Focus back to first input after re-search
+                    setTimeout(() => {
+                      firstInputRef.current?.focus();
+                    }, 0);
+                  }}
                   className=" border border-black rounded p-1 shadow-md shadow-zinc-600"
                 >
                   <span className="w-[25%] m-2">再検索</span>
@@ -526,6 +586,10 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
                       ...prev,
                       customerCode: ["", ""],
                     }));
+                    // Focus back to customer code select after re-search
+                    setTimeout(() => {
+                      customerCodeSelectRef.current?.focus();
+                    }, 0);
                   }}
                   className=" border border-black rounded p-1 shadow-md shadow-zinc-600"
                 >
@@ -643,10 +707,15 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
                   <div className="text-sm flex items-center flex-row py-2 w-full">
                     <>
                       <form className="">
-                        <select className=" h-7 mr-2 bg-input border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-24  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                          <option value="0">カナ</option>
-                          <option value="1">コード</option>
-                        </select>
+                        <Select
+                          value="0"
+                          onChange={() => {}}
+                          options={[
+                            { value: "0", label: "カナ" },
+                            { value: "1", label: "コード" }
+                          ]}
+                          className="h-7 mr-2 bg-input border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-24 [&>.ant-select-selector]:!bg-input"
+                        />
                       </form>
                       <input
                         ref={kanaInputRef}
@@ -657,8 +726,14 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
                           setKanaInput(convertToFullWidth(e.target.value))
                         }
                         onKeyDown={(e) => {
-                          handleKanaKeyDown(e);
-                          handleFormatting(e, convertToFullWidth);
+                          if (e.key === 'Enter') {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            searchButtonRef.current?.focus();
+                          } else {
+                            handleKanaKeyDown(e);
+                            handleFormatting(e, convertToFullWidth);
+                          }
                         }}
                       />
                     </>
@@ -666,6 +741,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
                 </div>
                 <div>
                   <button
+                    ref={searchButtonRef}
                     onClick={() => setShowTable(true)}
                     className="bg-white border text-center border-black p-2 w-32 rounded-md shadow-md shadow-zinc-600"
                   >
@@ -681,22 +757,35 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
                         表示順
                       </label>
                       <form className="">
-                        <select className=" mr-2 bg-input border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-24  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                          <option value="0">コード順</option>
-                          <option value="1">五十音順</option>
-                        </select>
+                        <Select
+                          value="0"
+                          onChange={() => {}}
+                          options={[
+                            { value: "0", label: "コード順" },
+                            { value: "1", label: "五十音順" }
+                          ]}
+                          className="mr-2 bg-input border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-24 [&>.ant-select-selector]:!bg-input"
+                        />
                       </form>
                       <label className="bg-label p-1 font-bold w-24 text-center mr-2">
                         検索種類
                       </label>
                       <div className="flex items-center w-24 justify-center">
                         <input
+                          ref={radio1Ref}
                           id="exceptRetiredEmployees"
                           type="radio"
                           value="0"
                           name="default-radio"
                           checked={selected === "0"}
-                          onChange={(e) => setSelected(e.target.value)}
+                          onChange={(e) => {
+                            setSelected(e.target.value);
+                            // Maintain focus on the radio after change
+                            setTimeout(() => {
+                              radio1Ref.current?.focus();
+                            }, 0);
+                          }}
+                          onKeyDown={(e) => handleRadioKeyDown(e, "0")}
                           className="w-4 h-4 mr-1"
                         />
                         <label htmlFor="exceptRetiredEmployees">
@@ -706,12 +795,20 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
 
                       <div className="flex items-center w-24 justify-center">
                         <input
+                          ref={radio2Ref}
                           id="all"
                           type="radio"
                           value="1"
                           name="default-radio"
                           checked={selected === "1"}
-                          onChange={(e) => setSelected(e.target.value)}
+                          onChange={(e) => {
+                            setSelected(e.target.value);
+                            // Maintain focus on the radio after change
+                            setTimeout(() => {
+                              radio2Ref.current?.focus();
+                            }, 0);
+                          }}
+                          onKeyDown={(e) => handleRadioKeyDown(e, "1")}
                           className="w-4 h-4 mr-1"
                         />
                         <label htmlFor="all">全て</label>

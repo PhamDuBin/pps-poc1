@@ -20,7 +20,8 @@
       "Bash(netstat:*)",
       "Bash(findstr:*)",
       "Bash(dir \"C:\\Users\\Hoangpd\\Downloads\\*.xlsx\" /b)",
-      "Bash(python:*)"
+      "Bash(python:*)",
+      "Bash(test:*)"
     ],
     "deny": [],
     "ask": []

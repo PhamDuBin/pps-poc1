@@ -23,6 +23,8 @@ const AdvancedSearchForm: React.FC<{
   const currentField = fieldDefinitions.find((f) => f.id === selectedFieldId);
 
   const selectRef = useRef<HTMLSelectElement>(null);
+  const searchButtonRef = useRef<HTMLButtonElement>(null);
+
   useEffect(() => {
     if (selectRef.current) {
       selectRef.current.focus();
@@ -109,6 +111,13 @@ const AdvancedSearchForm: React.FC<{
               className="p-1 w-full h-full bg-white rounded-b-sm"
               value={(typeof value === "string" && value) || ""}
               onChange={(e) => handleValueChange(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  searchButtonRef.current?.focus();
+                }
+              }}
             />
           </div>
         );
@@ -139,6 +148,7 @@ const AdvancedSearchForm: React.FC<{
 
       <div className="flex flex-col gap-1 h-[64px]">
         <button
+          ref={searchButtonRef}
           onClick={handleSearchClick}
           className="bg-gray-300 border border-gray-500 rounded px-8 font-bold hover:bg-[#E5F7E5] h-[30px] shadow-md shadow-zinc-600"
         >
@@ -165,6 +175,12 @@ const ProductSearchModal: React.FC<ProductSearchModalProps> = ({
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const tableBodyRef = useRef<HTMLTableSectionElement>(null);
 
+  // Refs for radio buttons
+  const stockRadio1Ref = useRef<HTMLInputElement>(null);
+  const stockRadio2Ref = useRef<HTMLInputElement>(null);
+  const warehouseRadio1Ref = useRef<HTMLInputElement>(null);
+  const warehouseRadio2Ref = useRef<HTMLInputElement>(null);
+
   const handleSearch = () => {
     setHasSearched(true);
     setActiveIndex(0);
@@ -173,6 +189,103 @@ const ProductSearchModal: React.FC<ProductSearchModalProps> = ({
   const handleReset = () => {
     setHasSearched(false);
     setActiveIndex(null);
+  };
+
+  // Keyboard navigation for stock radio group
+  const handleStockRadioKeyDown = (
+    e: React.KeyboardEvent<HTMLInputElement>,
+    currentValue: number
+  ) => {
+    const radios = [
+      { ref: stockRadio1Ref, value: 0 },
+      { ref: stockRadio2Ref, value: 1 },
+    ];
+    const currentIndex = radios.findIndex((r) => r.value === currentValue);
+
+    // Shift+Tab: allow default behavior to go back to previous element
+    // Don't click the radio - just navigate
+    if (e.key === "Tab" && e.shiftKey) {
+      return; // Let browser handle Shift+Tab naturally
+    }
+
+    // Tab or Enter: move to warehouse radio group
+    if (e.key === "Tab" || e.key === "Enter") {
+      e.preventDefault();
+      e.stopPropagation();
+      // Focus the currently checked radio in warehouse group
+      if (warehouseRadio2Ref.current?.checked) {
+        warehouseRadio2Ref.current?.focus();
+      } else {
+        warehouseRadio1Ref.current?.focus();
+      }
+      return;
+    }
+
+    if (["ArrowDown", "ArrowUp", "ArrowRight", "ArrowLeft"].includes(e.key)) {
+      e.preventDefault();
+      e.stopPropagation();
+      let nextIndex = currentIndex;
+
+      if (e.key === "ArrowDown" || e.key === "ArrowRight") {
+        nextIndex = (currentIndex + 1) % radios.length;
+      } else if (e.key === "ArrowUp" || e.key === "ArrowLeft") {
+        nextIndex = (currentIndex - 1 + radios.length) % radios.length;
+      }
+
+      const nextRadio = radios[nextIndex];
+      if (nextRadio.ref.current) {
+        nextRadio.ref.current.focus();
+        nextRadio.ref.current.click();
+      }
+    }
+  };
+
+  // Keyboard navigation for warehouse radio group
+  const handleWarehouseRadioKeyDown = (
+    e: React.KeyboardEvent<HTMLInputElement>,
+    currentValue: number
+  ) => {
+    const radios = [
+      { ref: warehouseRadio1Ref, value: 0 },
+      { ref: warehouseRadio2Ref, value: 1 },
+    ];
+    const currentIndex = radios.findIndex((r) => r.value === currentValue);
+
+    // Shift+Tab: go back to stock radio group (currently checked radio in that group)
+    if (e.key === "Tab" && e.shiftKey) {
+      e.preventDefault();
+      e.stopPropagation();
+      // Focus the currently checked radio in stock group
+      if (stockRadio2Ref.current?.checked) {
+        stockRadio2Ref.current?.focus();
+      } else {
+        stockRadio1Ref.current?.focus();
+      }
+      return;
+    }
+
+    // Tab or Enter: allow default behavior to continue to next element
+    if (e.key === "Tab" || e.key === "Enter") {
+      return; // Let browser handle Tab/Enter naturally
+    }
+
+    if (["ArrowDown", "ArrowUp", "ArrowRight", "ArrowLeft"].includes(e.key)) {
+      e.preventDefault();
+      e.stopPropagation();
+      let nextIndex = currentIndex;
+
+      if (e.key === "ArrowDown" || e.key === "ArrowRight") {
+        nextIndex = (currentIndex + 1) % radios.length;
+      } else if (e.key === "ArrowUp" || e.key === "ArrowLeft") {
+        nextIndex = (currentIndex - 1 + radios.length) % radios.length;
+      }
+
+      const nextRadio = radios[nextIndex];
+      if (nextRadio.ref.current) {
+        nextRadio.ref.current.focus();
+        nextRadio.ref.current.click();
+      }
+    }
   };
 
   useEffect(() => {
@@ -297,14 +410,23 @@ const ProductSearchModal: React.FC<ProductSearchModalProps> = ({
             </label>
             <div className="flex gap-4">
               <label className="flex items-center">
-                <input type="radio" name="stock" className="mr-1" /> 表示する
+                <input
+                  ref={stockRadio1Ref}
+                  type="radio"
+                  name="stock"
+                  className="mr-1"
+                  onKeyDown={(e) => handleStockRadioKeyDown(e, 0)}
+                />
+                表示する
               </label>
               <label className="flex items-center">
                 <input
+                  ref={stockRadio2Ref}
                   type="radio"
                   name="stock"
                   className="mr-1"
                   defaultChecked
+                  onKeyDown={(e) => handleStockRadioKeyDown(e, 1)}
                 />
                 表示しない
               </label>
@@ -317,15 +439,23 @@ const ProductSearchModal: React.FC<ProductSearchModalProps> = ({
             <div className="flex gap-4">
               <label className="flex items-center">
                 <input
+                  ref={warehouseRadio1Ref}
                   type="radio"
                   name="warehouse"
                   className="mr-1"
                   defaultChecked
+                  onKeyDown={(e) => handleWarehouseRadioKeyDown(e, 0)}
                 />
                 自倉庫
               </label>
               <label className="flex items-center">
-                <input type="radio" name="warehouse" className="mr-1" />
+                <input
+                  ref={warehouseRadio2Ref}
+                  type="radio"
+                  name="warehouse"
+                  className="mr-1"
+                  onKeyDown={(e) => handleWarehouseRadioKeyDown(e, 1)}
+                />
                 全倉庫
               </label>
             </div>

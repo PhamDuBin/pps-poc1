@@ -5,6 +5,7 @@ import {
   allowDecimalInput,
   convertToFullWidth,
 } from "../../../../utils/InputHandlers";
+import { Select } from "antd";
 
 interface SaleDetailEntry3Props {
   onChange: (field: string, value: string) => void;
@@ -106,35 +107,37 @@ const SaleDetailEntry3: React.FC<SaleDetailEntry3Props> = ({
           {/* Outside the Month */}
           <div className="text-center h-[64px] relative">
             <div className="bg-label h-1/2">当月外</div>
-            <select
-              className="border border-black w-full h-1/2"
+            <Select
               value={
                 formData.outsideMonth !== undefined
                   ? String(formData.outsideMonth)
                   : "0"
               }
-              onChange={(e) => onChange("outsideMonth", e.target.value)}
-            >
-              <option value="0">0 空欄</option>
-              <option value="1">1 当月外</option>
-            </select>
+              onChange={(value) => onChange("outsideMonth", value)}
+              options={[
+                { value: "0", label: "0 空欄" },
+                { value: "1", label: "1 当月外" }
+              ]}
+              className="border border-black w-full h-1/2 [&>.ant-select-selector]:!bg-white"
+            />
           </div>
 
           {/* Self Swing Target */}
           <div className="text-center h-[64px] relative">
             <div className="bg-label h-1/2">売上消費税対象</div>
-            <select
-              className="border border-black w-full h-1/2"
+            <Select
               value={
                 formData.selfTransferTarget !== undefined
                   ? String(formData.selfTransferTarget)
                   : "0"
               }
-              onChange={(e) => onChange("selfTransferTarget", e.target.value)}
-            >
-              <option value="0">0 対象</option>
-              <option value="1">1 対象外</option>
-            </select>
+              onChange={(value) => onChange("selfTransferTarget", value)}
+              options={[
+                { value: "0", label: "0 対象" },
+                { value: "1", label: "1 対象外" }
+              ]}
+              className="border border-black w-full h-1/2 [&>.ant-select-selector]:!bg-white"
+            />
           </div>
 
           {/* Note */}

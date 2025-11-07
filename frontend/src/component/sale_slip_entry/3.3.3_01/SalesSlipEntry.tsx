@@ -14,8 +14,8 @@ import ProductSearchModal from "./ProductSearchModal";
 import SaleDetailModal from "./SaleDetail/SaleDetailModal";
 import { createPortal } from "react-dom";
 import { allowDecimalInput } from "../../../utils/InputHandlers";
-import { DatePicker } from "antd";
-import dayjs, { Dayjs } from "dayjs";
+import JapaneseCalendar, { JapaneseCalendarHandle } from "../../JapaneseCalendar";
+import JapaneseMonthPicker, { JapaneseMonthPickerHandle } from "../../JapaneseMonthPicker";
 
 type SalesSlipEntryProps = {
   onOpenLeftPanelForSearch: () => void;
@@ -37,6 +37,7 @@ const SalesSlipEntry = forwardRef(
     const [saleSlips, setSaleSlips] = useState<any>([]);
     const [selectedTanto, setSelectedTanto] = useState("営業タロウ");
     const [showTantoDropdown, setShowTantoDropdown] = useState(false);
+    const [tantoHighlightedIndex, setTantoHighlightedIndex] = useState(0);
 
     const tantoOptions = [
       "営業タロウ",
@@ -44,6 +45,9 @@ const SalesSlipEntry = forwardRef(
       "営業サブロウ",
       "営業シロウ",
     ];
+
+    const tantoInputRef = useRef<HTMLInputElement>(null);
+    const tantoDropdownRef = useRef<HTMLDivElement>(null);
 
     const [activeSlipIndex, setActiveSlipIndex] = useState<number | null>(null);
     const [tooltipPos, setTooltipPos] = useState<{
@@ -53,16 +57,16 @@ const SalesSlipEntry = forwardRef(
     const slipRefs = useRef<(HTMLDivElement | null)[]>([]);
     const tooltipRef = useRef<HTMLDivElement | null>(null);
 
-    const [keiriDate, setKeiriDate] = useState<Dayjs>(dayjs());
+    const [keiriDate, setKeiriDate] = useState<Date>(new Date());
 
-    const [uriageDate, setUriageDate] = useState<Dayjs>(dayjs());
+    const [uriageDate, setUriageDate] = useState<Date>(new Date());
 
-    const uriageDateInputRef = useRef<HTMLInputElement>(null);
-    const billingDatePickerRef = useRef<any>(null);
+    const uriageDateCalendarRef = useRef<JapaneseCalendarHandle>(null);
+    const billingDatePickerRef = useRef<JapaneseMonthPickerHandle>(null);
 
     useImperativeHandle(ref, () => ({
-      focusUriageDateInput: () => {
-        uriageDateInputRef.current?.focus();
+      focusUriageDateCalendar: () => {
+        uriageDateCalendarRef.current?.focus();
       },
       openCategorySelection: () => {
         setIsOpenCategorySelection(true);
@@ -74,6 +78,22 @@ const SalesSlipEntry = forwardRef(
         setIsOpenDepositProcess((prev) => !prev);
       },
     }));
+
+    // Auto-scroll highlighted item in tanto dropdown
+    useEffect(() => {
+      if (showTantoDropdown && tantoDropdownRef.current) {
+        const highlightedItem = tantoDropdownRef.current.children[
+          tantoHighlightedIndex
+        ] as HTMLElement;
+        if (highlightedItem) {
+          highlightedItem.scrollIntoView({
+            block: "nearest",
+            behavior: "smooth",
+          });
+        }
+      }
+    }, [tantoHighlightedIndex, showTantoDropdown]);
+
     const handleClickSlip = (index: number) => {
       if (activeSlipIndex === index) {
         setActiveSlipIndex(null);
@@ -270,12 +290,13 @@ const SalesSlipEntry = forwardRef(
                 売上日
               </label>
               <div className="relative mx-1 w-1/2">
-                <DatePicker
+                <JapaneseCalendar
+                  ref={uriageDateCalendarRef}
                   value={uriageDate}
-                  onChange={(date) => setUriageDate(date ?? dayjs())}
-                  format="YYYY/MM/DD"
+                  onChange={(date) => setUriageDate(date)}
+                  format="yyyy/MM/dd"
                   placeholder="YYYY/MM/DD"
-                  className="w-full border border-black px-2 py-1 h-[26px] rounded-none "
+                  className="w-full border border-black px-2 py-1 h-[26px] rounded-none"
                 />
               </div>
             </div>
@@ -307,12 +328,11 @@ const SalesSlipEntry = forwardRef(
                 請求年月
               </label>
               <div className="relative ml-1 w-1/2">
-                <DatePicker
+                <JapaneseMonthPicker
                   ref={billingDatePickerRef}
-                  picker="month"
                   value={keiriDate}
                   onChange={(date) => setKeiriDate(date)}
-                  format="YYYY/MM"
+                  format="yyyy/MM"
                   placeholder="YYYY/MM"
                   className="w-full border border-black px-2 py-1 h-[26px] rounded-none"
                 />
@@ -324,27 +344,68 @@ const SalesSlipEntry = forwardRef(
               </label>
               <div className="relative mx-1 w-1/2">
                 <input
+                  ref={tantoInputRef}
                   type="text"
                   value={selectedTanto}
                   readOnly
                   className="w-full border border-black px-2 py-1 pr-8 cursor-pointer"
-                  onClick={() => setShowTantoDropdown(!showTantoDropdown)}
+                  onClick={() => {
+                    setShowTantoDropdown(!showTantoDropdown);
+                    setTantoHighlightedIndex(tantoOptions.indexOf(selectedTanto));
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === " " || e.key === "Enter") {
+                      e.preventDefault();
+                      if (!showTantoDropdown) {
+                        setShowTantoDropdown(true);
+                        setTantoHighlightedIndex(tantoOptions.indexOf(selectedTanto));
+                      } else {
+                        setSelectedTanto(tantoOptions[tantoHighlightedIndex]);
+                        setShowTantoDropdown(false);
+                        tantoInputRef.current?.focus();
+                      }
+                    } else if (e.key === "ArrowDown" && showTantoDropdown) {
+                      e.preventDefault();
+                      setTantoHighlightedIndex((prev) =>
+                        prev < tantoOptions.length - 1 ? prev + 1 : prev
+                      );
+                    } else if (e.key === "ArrowUp" && showTantoDropdown) {
+                      e.preventDefault();
+                      setTantoHighlightedIndex((prev) => (prev > 0 ? prev - 1 : prev));
+                    } else if (e.key === "Escape" && showTantoDropdown) {
+                      e.preventDefault();
+                      setShowTantoDropdown(false);
+                      tantoInputRef.current?.focus();
+                    }
+                  }}
                 />
                 <button
                   className="absolute right-0 top-1/2 -translate-y-1/2 h-full flex items-center px-2 text-gray-500 cursor-pointer"
-                  onClick={() => setShowTantoDropdown(!showTantoDropdown)}
+                  onClick={() => {
+                    setShowTantoDropdown(!showTantoDropdown);
+                    setTantoHighlightedIndex(tantoOptions.indexOf(selectedTanto));
+                  }}
+                  tabIndex={-1}
                 >
                   ▼
                 </button>
                 {showTantoDropdown && (
-                  <div className="absolute top-full left-0 w-full bg-white border border-black shadow-lg z-50 max-h-40 overflow-y-auto">
+                  <div
+                    ref={tantoDropdownRef}
+                    className="absolute top-full left-0 w-full bg-white border border-black shadow-lg z-50 max-h-40 overflow-y-auto"
+                  >
                     {tantoOptions.map((option, index) => (
                       <div
                         key={index}
-                        className="px-2 py-1 hover:bg-blue-200 cursor-pointer"
+                        className={`px-2 py-1 cursor-pointer ${
+                          index === tantoHighlightedIndex
+                            ? "bg-blue-400 text-white"
+                            : "hover:bg-blue-200"
+                        }`}
                         onClick={() => {
                           setSelectedTanto(option);
                           setShowTantoDropdown(false);
+                          tantoInputRef.current?.focus();
                         }}
                       >
                         {option}

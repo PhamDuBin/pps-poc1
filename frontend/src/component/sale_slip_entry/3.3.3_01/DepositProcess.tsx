@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-import { CustomDatePicker } from "../../../context/CustomDatePicker";
-import { format, parse, isValid } from "date-fns";
+import JapaneseCalendar from "../../JapaneseCalendar";
 import {
   shukinOptions,
   nyukinOptions,
 } from "../../../constants/sale_slip_entry";
+import { Select } from "antd";
 type Props = {
   isDeposited: boolean;
   onClose: () => void;
@@ -16,12 +16,7 @@ export default function DepositProcess({
   onClose,
   onSave,
 }: Props) {
-  const [keiriDate, setKeiriDate] = useState<Date | undefined>(new Date());
-  const [inputValue, setInputValue] = useState(
-    format(new Date(), "yyyy/MM/dd")
-  );
-
-  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [keiriDate, setKeiriDate] = useState<Date>(new Date());
   const [shukin, setShukin] = useState("集金");
   const [nyukin, setNyukin] = useState("現金");
 
@@ -32,27 +27,6 @@ export default function DepositProcess({
       firstInputRef.current.focus();
     }
   }, []);
-
-  // 3. useEffect để đồng bộ từ Date -> sang String (khi chọn từ lịch)
-  useEffect(() => {
-    if (keiriDate && isValid(keiriDate)) {
-      setInputValue(format(keiriDate, "yyyy/MM/dd"));
-    }
-  }, [keiriDate]);
-
-  // 4. Hàm xử lý khi nhập tay vào input
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // Cập nhật giá trị hiển thị ngay lập tức
-    setInputValue(e.target.value);
-
-    // Cố gắng chuyển chuỗi thành ngày
-    const parsedDate = parse(e.target.value, "yyyy/MM/dd", new Date());
-
-    // Nếu chuỗi hợp lệ, cập nhật lại state Date
-    if (isValid(parsedDate)) {
-      setKeiriDate(parsedDate);
-    }
-  };
   return (
     <div className="flex flex-col w-full border border-black">
       {/* --- Top Fields --- */}
@@ -63,28 +37,13 @@ export default function DepositProcess({
             経理入金日
           </label>
           <div className="relative ml-1 w-1/2">
-            {/* THAY ĐỔI 1: Cho phép nhập tay và xử lý định dạng */}
-            <input
-              type="text"
-              value={inputValue}
-              onChange={handleInputChange} // Gọi hàm xử lý nhập tay
+            <JapaneseCalendar
+              value={keiriDate}
+              onChange={(date) => setKeiriDate(date)}
+              format="yyyy/MM/dd"
               placeholder="yyyy/MM/dd"
-              className="w-full border border-black px-2 py-1 pr-8"
+              className="w-full border border-black px-2 py-1"
             />
-            <button
-              className="absolute right-0 top-1/2 -translate-y-1/2 h-full flex items-center px-2 text-gray-500 cursor-pointer"
-              onClick={() => setShowDatePicker(!showDatePicker)}
-            >
-              ▼
-            </button>
-
-            {showDatePicker && (
-              <CustomDatePicker
-                selectedDate={keiriDate}
-                onDateChange={setKeiriDate}
-                onClose={() => setShowDatePicker(false)}
-              />
-            )}
           </div>
         </div>
 
@@ -93,23 +52,15 @@ export default function DepositProcess({
           <label className="w-1/2 bg-[#D9D9D9] px-2 py-1 text-center">
             集金方法
           </label>
-          {/* THAY ĐỔI 2: Dùng trực tiếp thẻ select */}
-          <select
+          <Select
             value={shukin}
-            onChange={(e) => setShukin(e.target.value)}
-            className="ml-1 w-1/2 border border-black text-black px-1 py-1 appearance-none bg-no-repeat bg-right"
-            style={{
-              backgroundImage: `url('data:image/svg+xml;utf8,<svg class="w-3 h-3 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7"></path></svg>')`,
-              backgroundPosition: "right 0.5rem center",
-              backgroundSize: "0.75rem",
-            }}
-          >
-            {shukinOptions.map((opt) => (
-              <option key={opt.code} value={opt.value}>
-                {opt.code}:{opt.value}
-              </option>
-            ))}
-          </select>
+            onChange={(value) => setShukin(value)}
+            options={shukinOptions.map((opt) => ({
+              value: opt.value,
+              label: `${opt.code}:${opt.value}`
+            }))}
+            className="ml-1 w-1/2 border border-black text-black px-1 py-1 [&>.ant-select-selector]:!bg-white"
+          />
         </div>
 
         {/* 入金種別 */}
@@ -117,23 +68,15 @@ export default function DepositProcess({
           <label className="w-1/2 bg-[#D9D9D9] px-2 py-1 text-center">
             入金種別
           </label>
-          {/* THAY ĐỔI 3: Dùng trực tiếp thẻ select */}
-          <select
+          <Select
             value={nyukin}
-            onChange={(e) => setNyukin(e.target.value)}
-            className="ml-1 w-1/2 border border-black px-2 py-1 appearance-none bg-no-repeat bg-right"
-            style={{
-              backgroundImage: `url('data:image/svg+xml;utf8,<svg class="w-3 h-3 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7"></path></svg>')`,
-              backgroundPosition: "right 0.5rem center",
-              backgroundSize: "0.75rem",
-            }}
-          >
-            {nyukinOptions.map((opt) => (
-              <option key={opt.code} value={opt.value}>
-                {opt.code}:{opt.value}
-              </option>
-            ))}
-          </select>
+            onChange={(value) => setNyukin(value)}
+            options={nyukinOptions.map((opt) => ({
+              value: opt.value,
+              label: `${opt.code}:${opt.value}`
+            }))}
+            className="ml-1 w-1/2 border border-black px-2 py-1 [&>.ant-select-selector]:!bg-white"
+          />
         </div>
       </div>
 

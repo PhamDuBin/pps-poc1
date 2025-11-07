@@ -6,6 +6,7 @@ import {
   convertToFullWidth,
 } from "../../../../utils/InputHandlers";
 import { handleOpenWindow } from "../../../../constants/functions";
+import { Select } from "antd";
 interface SaleDetailEntry6Props {
   onChange: (field: string, value: string) => void;
   formData: any;
@@ -36,10 +37,8 @@ const SaleDetailEntry6: React.FC<SaleDetailEntry6Props> = ({
               placeholder="0.00"
               className="w-20 h-full placeholder-black-200 border border-black"
               value={formData.quantity ?? ""}
-              onChange={(e) =>
-                onChange("quantity", extractHalfWidthDigits(e.target.value))
-              }
-              onKeyDown={allowDecimalInput}
+              onChange={(e) => onChange("quantity", e.target.value)}
+              onInput={allowDecimalInput}
             />
           </div>
         </div>
@@ -73,13 +72,8 @@ const SaleDetailEntry6: React.FC<SaleDetailEntry6Props> = ({
                 placeholder="01234567.00"
                 className="h-full px-1 w-[120px] placeholder-black-200 border border-black"
                 value={formData.purchasePrice ?? ""}
-                onChange={(e) =>
-                  onChange(
-                    "purchasePrice",
-                    extractHalfWidthDigits(e.target.value)
-                  )
-                }
-                onKeyDown={allowDecimalInput}
+                onChange={(e) => onChange("purchasePrice", e.target.value)}
+                onInput={allowDecimalInput}
               />
             </div>
           </div>
@@ -87,18 +81,19 @@ const SaleDetailEntry6: React.FC<SaleDetailEntry6Props> = ({
           {/* 仕入単価区分 */}
           <div className="text-center h-[64px] relative">
             <div className="bg-label h-1/2">仕入単価区分</div>
-            <select
-              className="border border-black w-full h-1/2"
+            <Select
               value={
                 formData.purchasePriceType !== undefined
                   ? String(formData.purchasePriceType)
                   : "0"
               }
-              onChange={(e) => onChange("purchasePriceType", e.target.value)}
-            >
-              <option value="0">0 確定単価</option>
-              <option value="1">1 仮単価</option>
-            </select>
+              onChange={(value) => onChange("purchasePriceType", value)}
+              options={[
+                { value: "0", label: "0 確定単価" },
+                { value: "1", label: "1 仮単価" }
+              ]}
+              className="border border-black w-full h-1/2 [&>.ant-select-selector]:!bg-white"
+            />
           </div>
 
           {/* 仕入金額 */}
@@ -132,18 +127,19 @@ const SaleDetailEntry6: React.FC<SaleDetailEntry6Props> = ({
           {/* 当月外 */}
           <div className="text-center h-[64px] relative">
             <div className="bg-label h-1/2">当月外</div>
-            <select
-              className="border border-black w-full h-1/2"
+            <Select
               value={
                 formData.outsideMonth !== undefined
                   ? String(formData.outsideMonth)
                   : "0"
               }
-              onChange={(e) => onChange("outsideMonth", e.target.value)}
-            >
-              <option value="0">0 空欄</option>
-              <option value="1">1 当月外</option>
-            </select>
+              onChange={(value) => onChange("outsideMonth", value)}
+              options={[
+                { value: "0", label: "0 空欄" },
+                { value: "1", label: "1 当月外" }
+              ]}
+              className="border border-black w-full h-1/2 [&>.ant-select-selector]:!bg-white"
+            />
           </div>
 
           {/* 備考 */}

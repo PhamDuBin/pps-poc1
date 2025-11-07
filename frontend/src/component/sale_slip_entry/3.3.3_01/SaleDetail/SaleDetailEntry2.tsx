@@ -6,6 +6,7 @@ import {
   convertToFullWidth,
 } from "../../../../utils/InputHandlers";
 import { handleOpenWindow } from "../../../../constants/functions";
+import { Select } from "antd";
 
 interface SaleDetailEntry2Props {
   onChange: (field: string, value: string) => void;
@@ -71,28 +72,27 @@ const SaleDetailEntry2: React.FC<SaleDetailEntry2Props> = ({
                 placeholder="0.00"
                 className="h-full px-1 w-[120px] placeholder-black-200 border border-black"
                 value={formData.salesPrice || ""}
-                onChange={(e) =>
-                  onChange("salesPrice", extractHalfWidthDigits(e.target.value))
-                }
-                onKeyDown={allowDecimalInput}
+                onChange={(e) => onChange("salesPrice", e.target.value)}
+                onInput={allowDecimalInput}
               />
             </div>
           </div>
 
           <div className=" text-center h-[64px] relative">
             <div className="bg-label h-1/2">売上単価区分</div>
-            <select
-              className="border border-black w-full h-1/2"
+            <Select
               value={
                 formData.salesPriceType !== undefined
                   ? String(formData.salesPriceType)
                   : "0"
               }
-              onChange={(e) => onChange("salesPriceType", e.target.value)}
-            >
-              <option value="0">0 確定単価</option>
-              <option value="1">1 仮単価</option>
-            </select>
+              onChange={(value) => onChange("salesPriceType", value)}
+              options={[
+                { value: "0", label: "0 確定単価" },
+                { value: "1", label: "1 仮単価" }
+              ]}
+              className="border border-black w-full h-1/2 [&>.ant-select-selector]:!bg-white"
+            />
           </div>
 
           <div className=" text-center h-[64px] relative">
@@ -130,30 +130,26 @@ const SaleDetailEntry2: React.FC<SaleDetailEntry2Props> = ({
               placeholder="01234567.00"
               className="w-[120px] h-1/2 border px-1 border-black placeholder-black-200 "
               value={formData.purchasePrice || ""}
-              onChange={(e) =>
-                onChange(
-                  "purchasePrice",
-                  extractHalfWidthDigits(e.target.value)
-                )
-              }
-              onKeyDown={allowDecimalInput}
+              onChange={(e) => onChange("purchasePrice", e.target.value)}
+              onInput={allowDecimalInput}
             />
           </div>
 
           <div className=" text-center h-[64px] relative">
             <div className="bg-label h-1/2">仕入単価区分</div>
-            <select
-              className="border border-black w-full h-1/2"
+            <Select
               value={
                 formData.purchasePriceType !== undefined
                   ? String(formData.purchasePriceType)
                   : "0"
               }
-              onChange={(e) => onChange("purchasePriceType", e.target.value)}
-            >
-              <option value="0">0 確定単価</option>
-              <option value="1">1 仮単価</option>
-            </select>
+              onChange={(value) => onChange("purchasePriceType", value)}
+              options={[
+                { value: "0", label: "0 確定単価" },
+                { value: "1", label: "1 仮単価" }
+              ]}
+              className="border border-black w-full h-1/2 [&>.ant-select-selector]:!bg-white"
+            />
           </div>
 
           <div className=" text-center h-[64px] relative">
@@ -175,39 +171,37 @@ const SaleDetailEntry2: React.FC<SaleDetailEntry2Props> = ({
 
           <div className=" text-center h-[64px] relative">
             <div className="bg-label h-1/2">自振対象</div>
-            <select
-              className="border border-black w-full h-1/2"
+            <Select
               value={
                 formData.selfTransferTarget !== undefined
                   ? String(formData.selfTransferTarget)
                   : "0"
               }
-              onChange={(e) => onChange("selfTransferTarget", e.target.value)}
-            >
-              <option value="0">0 対象</option>
-              <option value="1">1 対象外</option>
-            </select>
+              onChange={(value) => onChange("selfTransferTarget", value)}
+              options={[
+                { value: "0", label: "0 対象" },
+                { value: "1", label: "1 対象外" }
+              ]}
+              className="border border-black w-full h-1/2 [&>.ant-select-selector]:!bg-white"
+            />
           </div>
 
           <div className=" text-center h-[64px] col-span-3 ">
             <div className="bg-label h-1/2">仕入先</div>
             <div className="flex">
               <div className="flex w-3/5 relative">
-                <select
-                  className="border w-full border-black"
-                  value={formData.supplierCode || "0"}
-                  onChange={(e) => onChange("supplierCode", e.target.value)}
-                >
-                  <option value="0000000000">0000000000</option>
-                  {Array.from({ length: 10 }, (_, i) => {
-                    const value = (i + 1).toString().padStart(10, "0");
-                    return (
-                      <option key={value} value={value}>
-                        {value}
-                      </option>
-                    );
-                  })}
-                </select>
+                <Select
+                  value={formData.supplierCode || "0000000000"}
+                  onChange={(value) => onChange("supplierCode", value)}
+                  options={[
+                    { value: "0000000000", label: "0000000000" },
+                    ...Array.from({ length: 10 }, (_, i) => {
+                      const value = (i + 1).toString().padStart(10, "0");
+                      return { value, label: value };
+                    })
+                  ]}
+                  className="border w-full border-black [&>.ant-select-selector]:!bg-white"
+                />
               </div>
               <input
                 type="text"
@@ -226,18 +220,19 @@ const SaleDetailEntry2: React.FC<SaleDetailEntry2Props> = ({
 
           <div className=" text-center h-[64px] relative">
             <div className="bg-label h-1/2">当月外</div>
-            <select
-              className="border border-black w-full h-1/2"
+            <Select
               value={
                 formData.outsideMonth !== undefined
                   ? String(formData.outsideMonth)
                   : "0"
               }
-              onChange={(e) => onChange("outsideMonth", e.target.value)}
-            >
-              <option value="0">0 空欄</option>
-              <option value="1">1 当月外</option>
-            </select>
+              onChange={(value) => onChange("outsideMonth", value)}
+              options={[
+                { value: "0", label: "0 空欄" },
+                { value: "1", label: "1 当月外" }
+              ]}
+              className="border border-black w-full h-1/2 [&>.ant-select-selector]:!bg-white"
+            />
           </div>
 
           <div className=" text-center h-[64px] col-span-2 relative">
