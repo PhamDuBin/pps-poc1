@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import RightPanel from "../../component/transaction_information/RightPanel";
 import LeftPanel from "../../component/transaction_information/LeftPanel";
 import CheckSaleByCategoryScreen from "../../component/transaction_information/1.1.1_03/CheckSaleByCategoryScreen";
@@ -14,15 +14,14 @@ export const handleNavigationKey = (
   currentIndex: number,
   focusableElements: HTMLElement[]
 ) => {
-  // ArrowDown and ArrowUp act like Tab and Shift+Tab
-  if (["ArrowUp", "ArrowDown"].includes(e.key)) {
+  if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key)) {
     e.preventDefault();
     let nextIndex = currentIndex;
     const total = focusableElements.length;
 
-    if (e.key === "ArrowDown") {
+    if (e.key === "ArrowDown" || e.key === "ArrowRight") {
       nextIndex = (currentIndex + 1) % total;
-    } else if (e.key === "ArrowUp") {
+    } else if (e.key === "ArrowUp" || e.key === "ArrowLeft") {
       nextIndex = (currentIndex - 1 + total) % total;
     }
 
@@ -59,21 +58,18 @@ const TrancInfoScreen = () => {
     setActiveScreen(buttonName);
   };
 
-  const handleSwitchScreen = useCallback(
-    (direction: "next" | "prev") => {
-      if (!activeScreen) {
-        setActiveScreen(screens[0]);
-        return;
-      }
+  const handleSwitchScreen = (direction: "next" | "prev") => {
+    if (!activeScreen) {
+      setActiveScreen(screens[0]);
+      return;
+    }
 
-      const idx = screens.indexOf(activeScreen);
-      let newIndex = direction === "next" ? idx + 1 : idx - 1;
-      if (newIndex < 0) newIndex = screens.length - 1;
-      if (newIndex >= screens.length) newIndex = 0;
-      setActiveScreen(screens[newIndex]);
-    },
-    [activeScreen, screens] // dependencies
-  );
+    const idx = screens.indexOf(activeScreen);
+    let newIndex = direction === "next" ? idx + 1 : idx - 1;
+    if (newIndex < 0) newIndex = screens.length - 1;
+    if (newIndex >= screens.length) newIndex = 0;
+    setActiveScreen(screens[newIndex]);
+  };
 
   const handleFirstButtonFocus = () => {
     setIsNavActive(true);
@@ -133,16 +129,6 @@ const TrancInfoScreen = () => {
         ) {
           e.preventDefault();
           setShowLeftPanel(false);
-          // Focus vào element đầu tiên của main screen
-          setTimeout(() => {
-            const firstFocusable = mainScreenRef.current?.querySelector(
-              'button:not([disabled]), input:not([disabled]), [role="radio"]'
-            ) as HTMLElement;
-            if (firstFocusable) {
-              firstFocusable.focus();
-              setIsNavActive(true);
-            }
-          }, 0);
           return;
         }
         const focusableElements = Array.from(
@@ -159,13 +145,6 @@ const TrancInfoScreen = () => {
       if (isNavActive && e.key === "Tab") {
         e.preventDefault();
         handleSwitchScreen(e.shiftKey ? "prev" : "next");
-        // Focus vào element đầu tiên của screen mới sau khi switch
-        setTimeout(() => {
-          const firstFocusable = mainScreenRef.current?.querySelector(
-            'button:not([disabled]), input:not([disabled]), [role="radio"]'
-          ) as HTMLElement;
-          firstFocusable?.focus();
-        }, 0);
       }
       const isInsideMainScreen = mainScreenRef.current?.contains(activeElement);
       if (
@@ -180,7 +159,7 @@ const TrancInfoScreen = () => {
     return () => {
       document.removeEventListener("keydown", handleGlobalKeyDown);
     };
-  }, [activeScreen, isNavActive, handleSwitchScreen, handleNavigationKey]);
+  }, [activeScreen, isNavActive]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {

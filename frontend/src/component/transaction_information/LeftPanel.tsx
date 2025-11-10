@@ -15,13 +15,6 @@ type LeftPanelProps = {
   firstInputRef: React.Ref<HTMLInputElement>;
 };
 
-const padLeft = (value: string, maxLength: number): string => {
-  if (value.length > 0 && value.length < maxLength) {
-    return value.padStart(maxLength, "0");
-  }
-  return value;
-};
-
 const LeftPanel: React.FC<LeftPanelProps> = ({
   showAdvanceSearch,
   setShowAdvanceSearch,
@@ -46,7 +39,6 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
 
   const customerId1Ref = useRef<HTMLInputElement>(null);
   const advancedSearchButtonRef = useRef<HTMLButtonElement>(null);
-  const resetDepartRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     if (showDepart) {
@@ -143,6 +135,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
       setShowCustomer(false);
     }
   };
+
   const handlePostcodeKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       handleSearchDepartment();
@@ -158,14 +151,14 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
     }
   };
 
-  const postcode2Ref = useRef<HTMLInputElement>(null);
-  const id2Ref = useRef<HTMLInputElement>(null);
+  // NEW: Function to reset department search
   const handleResetDepartmentSearch = () => {
     setPostcode1("");
     setPostcode2("");
     setShowDepart(false);
   };
 
+  // NEW: Function to reset customer search
   const handleResetCustomerSearch = () => {
     setId1("");
     setId2("");
@@ -210,53 +203,34 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
                 ref={firstInputRef}
                 type="text"
                 placeholder="0000"
-                value={postcode1}
-                maxLength={4}
+                value={postcode1} // MODIFIED: Bind value
                 className="w-[30%] bg-input px-1 py-0.5 border border-black"
                 onChange={(e) =>
                   setPostcode1(extractHalfWidthDigits(e.target.value))
                 }
-                onBlur={() => setPostcode1(padLeft(postcode1, 4))} // Thêm onBlur
                 onKeyDown={(e) => {
-                  if (e.nativeEvent.isComposing) return;
-                  allowDecimalInput(e);
                   handlePostcodeKeyDown(e);
-                  if (e.key === "Escape") {
-                    e.preventDefault();
-                    setPostcode1("");
-                    return;
-                  }
+                  allowDecimalInput(e);
                 }}
               />
               <span className="mx-1">-</span>
               <input
-                ref={postcode2Ref}
                 type="text"
                 placeholder="000"
-                maxLength={3}
-                disabled={!postcode1}
-                value={postcode2}
-                className="w-[30%] bg-input px-1 py-0.5 border border-gray-500 disabled:bg-gray-200 disabled:cursor-not-allowed"
+                value={postcode2} // MODIFIED: Bind value
+                className="w-[30%] bg-input px-1 py-0.5 border border-black "
                 onChange={(e) =>
                   setPostcode2(extractHalfWidthDigits(e.target.value))
                 }
-                onBlur={() => setPostcode2(padLeft(postcode2, 3))} // Thêm onBlur
                 onKeyDown={(e) => {
-                  if (e.nativeEvent.isComposing) return;
-
-                  allowDecimalInput(e);
-
-                  if (e.key === "Escape") {
-                    e.preventDefault();
-                    setPostcode2("");
-                    return;
-                  }
                   handlePostcodeKeyDown(e);
+                  allowDecimalInput(e);
                 }}
               />
-
               <button
-                onClick={handleSearchDepartment}
+                onClick={() => {
+                  setShowAdvanceSearch(true);
+                }}
                 className="mx-1 w-[20px] h-[20px] inset-y-0 right-0 flex items-center px-1 bg-gray-200 border border-black cursor-pointer"
               >
                 ▼
@@ -268,15 +242,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
                 {postcode1} - {postcode2}
               </span>
               <button
-                ref={resetDepartRef}
-                onClick={() => {
-                  handleResetDepartmentSearch();
-                  setTimeout(() => {
-                    const f =
-                      firstInputRef as React.RefObject<HTMLInputElement> | null;
-                    f?.current?.focus();
-                  }, 100);
-                }}
+                onClick={handleResetDepartmentSearch} // MODIFIED: Added onClick
                 className=" border border-black rounded"
               >
                 <span className="w-[25%] m-2">再検索</span>
@@ -303,50 +269,31 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
               <input
                 ref={customerId1Ref}
                 type="text"
-                placeholder="0000"
-                value={id1}
-                maxLength={4}
+                placeholder="000000"
+                value={id1} // MODIFIED: Bind value
                 className="w-[30%] bg-input px-1 py-0.5 border border-gray-500"
                 onChange={(e) => setId1(extractHalfWidthDigits(e.target.value))}
-                onBlur={() => setId1(padLeft(id1, 4))} // Thêm onBlur
                 onKeyDown={(e) => {
-                  if (e.nativeEvent.isComposing) return;
-
-                  allowDecimalInput(e);
-
-                  if (e.key === "Escape") {
-                    e.preventDefault();
-                    setId1("");
-                    return;
-                  }
                   handleCustomerIdKeyDown(e);
+                  allowDecimalInput(e);
                 }}
               />
               <span className="mx-1">-</span>
               <input
-                ref={id2Ref}
                 type="text"
                 placeholder="000"
-                value={id2}
-                maxLength={3}
-                disabled={!id1}
-                className="w-[30%] bg-input px-1 py-0.5 border border-gray-500 disabled:bg-gray-200 disabled:cursor-not-allowed"
+                value={id2} // MODIFIED: Bind value
+                className="w-[30%] bg-input px-1 py-0.5 border border-gray-500"
                 onChange={(e) => setId2(extractHalfWidthDigits(e.target.value))}
-                onBlur={() => setId2(padLeft(id2, 3))} // Thêm onBlur
                 onKeyDown={(e) => {
-                  if (e.nativeEvent.isComposing) return;
-                  allowDecimalInput(e);
-
-                  if (e.key === "Escape") {
-                    e.preventDefault();
-                    setId2("");
-                    return;
-                  }
                   handleCustomerIdKeyDown(e);
+                  allowDecimalInput(e);
                 }}
               />
               <button
-                onClick={handleSearchCustomer}
+                onClick={() => {
+                  setShowAdvanceSearch(true);
+                }}
                 className="mx-1 w-[20px] h-[20px] inset-y-0 right-0 flex items-center px-1 bg-gray-200 border border-black cursor-pointer"
               >
                 ▼
@@ -358,12 +305,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
                 {id1} - {id2}
               </span>
               <button
-                onClick={() => {
-                  handleResetCustomerSearch();
-                  setTimeout(() => {
-                    customerId1Ref.current?.focus();
-                  }, 100);
-                }}
+                onClick={handleResetCustomerSearch}
                 className="border border-black rounded"
               >
                 <span className="w-[25%] m-2">再検索</span>
