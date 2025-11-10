@@ -14,14 +14,15 @@ export const handleNavigationKey = (
   currentIndex: number,
   focusableElements: HTMLElement[]
 ) => {
-  if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key)) {
+  // ArrowDown and ArrowUp act like Tab and Shift+Tab
+  if (["ArrowUp", "ArrowDown"].includes(e.key)) {
     e.preventDefault();
     let nextIndex = currentIndex;
     const total = focusableElements.length;
 
-    if (e.key === "ArrowDown" || e.key === "ArrowRight") {
+    if (e.key === "ArrowDown") {
       nextIndex = (currentIndex + 1) % total;
-    } else if (e.key === "ArrowUp" || e.key === "ArrowLeft") {
+    } else if (e.key === "ArrowUp") {
       nextIndex = (currentIndex - 1 + total) % total;
     }
 
@@ -129,6 +130,14 @@ const TrancInfoScreen = () => {
         ) {
           e.preventDefault();
           setShowLeftPanel(false);
+          // Focus vào element đầu tiên của main screen
+          setTimeout(() => {
+            const firstFocusable = mainScreenRef.current?.querySelector('button:not([disabled]), input:not([disabled]), [role="radio"]') as HTMLElement;
+            if (firstFocusable) {
+              firstFocusable.focus();
+              setIsNavActive(true);
+            }
+          }, 0);
           return;
         }
         const focusableElements = Array.from(
@@ -145,6 +154,11 @@ const TrancInfoScreen = () => {
       if (isNavActive && e.key === "Tab") {
         e.preventDefault();
         handleSwitchScreen(e.shiftKey ? "prev" : "next");
+        // Focus vào element đầu tiên của screen mới sau khi switch
+        setTimeout(() => {
+          const firstFocusable = mainScreenRef.current?.querySelector('button:not([disabled]), input:not([disabled]), [role="radio"]') as HTMLElement;
+          firstFocusable?.focus();
+        }, 0);
       }
       const isInsideMainScreen = mainScreenRef.current?.contains(activeElement);
       if (

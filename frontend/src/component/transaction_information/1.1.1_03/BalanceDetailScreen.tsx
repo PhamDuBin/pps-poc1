@@ -1,5 +1,5 @@
 // ■04残高内訳_明細
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useScreenNavigation } from "../../../utils/useScreenNavigation";
 import {
   detailsHeaders,
@@ -11,6 +11,47 @@ import { handleOpenWindow } from "../../../constants/functions";
 const BalanceDetailScreen = ({ onSwitchScreen }: any) => {
   const [view, setView] = useState("category");
   const containerRef = useScreenNavigation<HTMLDivElement>(onSwitchScreen);
+  const detailsRadioRef = useRef<HTMLInputElement>(null);
+  const categoryRadioRef = useRef<HTMLInputElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+
+  // Handle radio navigation
+  useEffect(() => {
+    const handleRadioKeyDown = (e: KeyboardEvent, currentValue: string) => {
+      if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
+        e.preventDefault();
+        e.stopPropagation();
+        // Toggle between values
+        const newValue = currentValue === "details" ? "category" : "details";
+        setView(newValue);
+        // Focus and click the other radio to select it
+        const targetRadio = newValue === "details" ? detailsRadioRef.current : categoryRadioRef.current;
+        if (targetRadio) {
+          targetRadio.focus();
+          targetRadio.click();
+        }
+      } else if (e.key === "ArrowDown" || e.key === "Enter") {
+        e.preventDefault();
+        e.stopPropagation();
+        // Move to button
+        buttonRef.current?.focus();
+      }
+    };
+
+    const detailsRadio = detailsRadioRef.current;
+    const categoryRadio = categoryRadioRef.current;
+
+    const detailsHandler = (e: KeyboardEvent) => handleRadioKeyDown(e, "details");
+    const categoryHandler = (e: KeyboardEvent) => handleRadioKeyDown(e, "category");
+
+    detailsRadio?.addEventListener("keydown", detailsHandler);
+    categoryRadio?.addEventListener("keydown", categoryHandler);
+
+    return () => {
+      detailsRadio?.removeEventListener("keydown", detailsHandler);
+      categoryRadio?.removeEventListener("keydown", categoryHandler);
+    };
+  }, []);
 
   const buttonStyle =
     "px-4 py-1.5 rounded-sm font-semibold w-[150px] bg-button-primary cursor-pointer hover:bg-white shadow-md shadow-zinc-600 transition-all duration-200 active:shadow-none active:translate-y-px";
@@ -40,6 +81,7 @@ const BalanceDetailScreen = ({ onSwitchScreen }: any) => {
           <div className="flex items-center gap-4">
             <label className="flex items-center gap-2 cursor-pointer">
               <input
+                ref={detailsRadioRef}
                 type="radio"
                 name="displayType"
                 value="details"
@@ -51,6 +93,7 @@ const BalanceDetailScreen = ({ onSwitchScreen }: any) => {
             </label>
             <label className="flex items-center gap-2 cursor-pointer">
               <input
+                ref={categoryRadioRef}
                 type="radio"
                 name="displayType"
                 value="category"
@@ -62,7 +105,7 @@ const BalanceDetailScreen = ({ onSwitchScreen }: any) => {
             </label>
           </div>
         </div>
-        <button onClick={handleOpenWindow} className={buttonStyle}>
+        <button ref={buttonRef} onClick={handleOpenWindow} className={buttonStyle}>
           全明細
         </button>
       </div>

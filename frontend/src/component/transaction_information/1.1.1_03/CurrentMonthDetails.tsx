@@ -4,29 +4,37 @@ import { useScreenNavigation } from "../../../utils/useScreenNavigation";
 import { handleOpenWindow } from "../../../constants/functions";
 import type { ScreenNavigationProps } from "../../../types";
 
-const CurrentMonthDetails: React.FC<ScreenNavigationProps> = ({ onSwitchScreen }) => {
-  const containerRef = useScreenNavigation<HTMLDivElement>(() => {}, false);
+const CurrentMonthDetails: React.FC<ScreenNavigationProps> = ({
+  onSwitchScreen,
+}) => {
+  const containerRef = useScreenNavigation<HTMLDivElement>(() => {}, true);
 
   // Memoize static data to prevent re-creation on every render
-  const balanceMonths = useMemo(() => [
-    "2025年05月",
-    "2025年04月",
-    "2025年03月",
-    "2025年02月",
-    "2025年01月",
-    "2024年12月",
-    "2024年11月以前",
-  ], []);
+  const balanceMonths = useMemo(
+    () => [
+      "2025年05月",
+      "2025年04月",
+      "2025年03月",
+      "2025年02月",
+      "2025年01月",
+      "2024年12月",
+      "2024年11月以前",
+    ],
+    []
+  );
 
-  const gasFeeItems = useMemo(() => [
-    "基本料金",
-    "従量料金",
-    "売上値引",
-    "調整金額",
-    "サービス割引",
-    "消費税",
-    "ガス料金",
-  ], []);
+  const gasFeeItems = useMemo(
+    () => [
+      "基本料金",
+      "従量料金",
+      "売上値引",
+      "調整金額",
+      "サービス割引",
+      "消費税",
+      "ガス料金",
+    ],
+    []
+  );
 
   // Updated styles using Tailwind theme colors
   const inputStyle =
@@ -44,9 +52,7 @@ const CurrentMonthDetails: React.FC<ScreenNavigationProps> = ({ onSwitchScreen }
 
   return (
     <>
-      <div
-        className="font-semibold h-8 text-lg p-1 flex justify-center items-center mx-4 mt-4 text-center border bg-label"
-      >
+      <div className="font-semibold h-8 text-lg p-1 flex justify-center items-center mx-4 mt-4 text-center border bg-label">
         ＜当月明細＞
       </div>
       <div className="px-4 flex lg:flex-row flex-col gap-4 text-black font-sans w-full">
@@ -54,9 +60,18 @@ const CurrentMonthDetails: React.FC<ScreenNavigationProps> = ({ onSwitchScreen }
           <div className={titleStyle}>＜判定＞</div>
           <div className="p-1 border border-black bg-label w-full">
             <div className="p-0.5 border border-black flex flex-col justify-between items-center bg-white h-full">
-              <div className="w-full aspect-square rounded-full bg-red-300 border border-gray-400" aria-label="赤ステータス"></div>
-              <div className="w-full aspect-square rounded-full bg-yellow-200 border border-gray-400" aria-label="黄ステータス"></div>
-              <div className="w-full aspect-square rounded-full bg-cyan-300 border border-gray-400" aria-label="青ステータス"></div>
+              <div
+                className="w-full aspect-square rounded-full bg-red-300 border border-gray-400"
+                aria-label="赤ステータス"
+              ></div>
+              <div
+                className="w-full aspect-square rounded-full bg-yellow-200 border border-gray-400"
+                aria-label="黄ステータス"
+              ></div>
+              <div
+                className="w-full aspect-square rounded-full bg-cyan-300 border border-gray-400"
+                aria-label="青ステータス"
+              ></div>
             </div>
           </div>
         </div>

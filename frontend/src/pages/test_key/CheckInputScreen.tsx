@@ -682,7 +682,8 @@ export default function CheckInputScreen() {
                       e.stopPropagation();
 
                       const currentValue = input.value;
-                      const formattedValue = processHalfWidthKatakana(currentValue);
+                      const formattedValue =
+                        processHalfWidthKatakana(currentValue);
 
                       // Kiểm tra nếu text cần xử lý (khác sau khi format)
                       const needsProcessing = currentValue !== formattedValue;
@@ -729,7 +730,8 @@ export default function CheckInputScreen() {
                       e.stopPropagation();
 
                       const currentValue = input.value;
-                      const formattedValue = processHalfWidthKatakana(currentValue);
+                      const formattedValue =
+                        processHalfWidthKatakana(currentValue);
 
                       // Kiểm tra nếu text cần xử lý
                       const needsProcessing = currentValue !== formattedValue;
@@ -768,7 +770,8 @@ export default function CheckInputScreen() {
                       e.stopPropagation();
 
                       const currentValue = input.value;
-                      const formattedValue = processHalfWidthKatakana(currentValue);
+                      const formattedValue =
+                        processHalfWidthKatakana(currentValue);
 
                       // Kiểm tra nếu text cần xử lý
                       const needsProcessing = currentValue !== formattedValue;
@@ -868,7 +871,8 @@ export default function CheckInputScreen() {
                       e.stopPropagation();
 
                       const currentValue = input.value;
-                      const formattedValue = processHalfWidthAlphaNumeric(currentValue);
+                      const formattedValue =
+                        processHalfWidthAlphaNumeric(currentValue);
 
                       // Kiểm tra nếu text cần xử lý
                       const needsProcessing = currentValue !== formattedValue;
@@ -911,7 +915,8 @@ export default function CheckInputScreen() {
                       e.stopPropagation();
 
                       const currentValue = input.value;
-                      const formattedValue = processHalfWidthAlphaNumeric(currentValue);
+                      const formattedValue =
+                        processHalfWidthAlphaNumeric(currentValue);
 
                       // Kiểm tra nếu text cần xử lý
                       const needsProcessing = currentValue !== formattedValue;
@@ -948,7 +953,8 @@ export default function CheckInputScreen() {
                       e.stopPropagation();
 
                       const currentValue = input.value;
-                      const formattedValue = processHalfWidthAlphaNumeric(currentValue);
+                      const formattedValue =
+                        processHalfWidthAlphaNumeric(currentValue);
 
                       // Kiểm tra nếu text cần xử lý
                       const needsProcessing = currentValue !== formattedValue;
@@ -1020,7 +1026,6 @@ export default function CheckInputScreen() {
                   }}
                   className={`col-span-2 ${className_input_text} input-navigable disabled:bg-gray-200 disabled:cursor-not-allowed`}
                 /> */}
-                <span></span>
 
                 <label className="flex justify-center min-w-[100px] font-black bg-gray-300 py-0.5 px-8 whitespace-nowrap overflow-hidden text-ellipsis">
                   E/Tab排除
