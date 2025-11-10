@@ -132,7 +132,9 @@ const TrancInfoScreen = () => {
           setShowLeftPanel(false);
           // Focus vào element đầu tiên của main screen
           setTimeout(() => {
-            const firstFocusable = mainScreenRef.current?.querySelector('button:not([disabled]), input:not([disabled]), [role="radio"]') as HTMLElement;
+            const firstFocusable = mainScreenRef.current?.querySelector(
+              'button:not([disabled]), input:not([disabled]), [role="radio"]'
+            ) as HTMLElement;
             if (firstFocusable) {
               firstFocusable.focus();
               setIsNavActive(true);
@@ -156,7 +158,9 @@ const TrancInfoScreen = () => {
         handleSwitchScreen(e.shiftKey ? "prev" : "next");
         // Focus vào element đầu tiên của screen mới sau khi switch
         setTimeout(() => {
-          const firstFocusable = mainScreenRef.current?.querySelector('button:not([disabled]), input:not([disabled]), [role="radio"]') as HTMLElement;
+          const firstFocusable = mainScreenRef.current?.querySelector(
+            'button:not([disabled]), input:not([disabled]), [role="radio"]'
+          ) as HTMLElement;
           firstFocusable?.focus();
         }, 0);
       }
@@ -173,7 +177,7 @@ const TrancInfoScreen = () => {
     return () => {
       document.removeEventListener("keydown", handleGlobalKeyDown);
     };
-  }, [activeScreen, isNavActive]);
+  }, [activeScreen, isNavActive, handleSwitchScreen]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
