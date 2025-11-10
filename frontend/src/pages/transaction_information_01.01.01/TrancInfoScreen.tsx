@@ -180,7 +180,7 @@ const TrancInfoScreen = () => {
     return () => {
       document.removeEventListener("keydown", handleGlobalKeyDown);
     };
-  }, [activeScreen, isNavActive, handleSwitchScreen]);
+  }, [activeScreen, isNavActive, handleSwitchScreen, handleNavigationKey]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
