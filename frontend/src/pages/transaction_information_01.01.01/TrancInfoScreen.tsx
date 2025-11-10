@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import RightPanel from "../../component/transaction_information/RightPanel";
 import LeftPanel from "../../component/transaction_information/LeftPanel";
 import CheckSaleByCategoryScreen from "../../component/transaction_information/1.1.1_03/CheckSaleByCategoryScreen";
@@ -58,18 +58,21 @@ const TrancInfoScreen = () => {
     setActiveScreen(buttonName);
   };
 
-  const handleSwitchScreen = (direction: "next" | "prev") => {
-    if (!activeScreen) {
-      setActiveScreen(screens[0]);
-      return;
-    }
+  const handleSwitchScreen = useCallback(
+    (direction: "next" | "prev") => {
+      if (!activeScreen) {
+        setActiveScreen(screens[0]);
+        return;
+      }
 
-    const idx = screens.indexOf(activeScreen);
-    let newIndex = direction === "next" ? idx + 1 : idx - 1;
-    if (newIndex < 0) newIndex = screens.length - 1;
-    if (newIndex >= screens.length) newIndex = 0;
-    setActiveScreen(screens[newIndex]);
-  };
+      const idx = screens.indexOf(activeScreen);
+      let newIndex = direction === "next" ? idx + 1 : idx - 1;
+      if (newIndex < 0) newIndex = screens.length - 1;
+      if (newIndex >= screens.length) newIndex = 0;
+      setActiveScreen(screens[newIndex]);
+    },
+    [activeScreen, screens, setActiveScreen]
+  );
 
   const handleFirstButtonFocus = () => {
     setIsNavActive(true);

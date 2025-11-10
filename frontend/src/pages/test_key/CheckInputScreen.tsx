@@ -188,7 +188,6 @@ export default function CheckInputScreen() {
     // Remove non-halfwidth-katakana characters (kanji, hiragana, numbers, alphabet)
     return result.replace(/[^\uFF61-\uFF9F]/g, "");
   };
-  const [previousValue, setPreviousValue] = useState<string>("");
   const [hasConvertedKana, setHasConvertedKana] = useState(false);
   const [hasConvertedAlphaNum, setHasConvertedAlphaNum] = useState(false);
   const [isComposingJP, setIsComposingJP] = useState(false);
@@ -661,7 +660,6 @@ export default function CheckInputScreen() {
                       // ② CHƯA convert VÀ CẦN xử lý → convert và giữ focus
                       if (!hasConvertedKana && needsProcessing) {
                         input.value = formattedValue;
-                        setPreviousValue(formattedValue);
                         setHasConvertedKana(true);
                         return;
                       }
@@ -709,7 +707,6 @@ export default function CheckInputScreen() {
                       // ② CHƯA convert VÀ CẦN xử lý → convert và giữ focus
                       if (!hasConvertedKana && needsProcessing) {
                         input.value = formattedValue;
-                        setPreviousValue(formattedValue);
                         setHasConvertedKana(true);
                         return;
                       }
@@ -749,7 +746,6 @@ export default function CheckInputScreen() {
                       // ② CHƯA convert VÀ CẦN xử lý → convert và giữ focus
                       if (!hasConvertedKana && needsProcessing) {
                         input.value = formattedValue;
-                        setPreviousValue(formattedValue);
                         setHasConvertedKana(true);
                         return;
                       }
@@ -776,7 +772,6 @@ export default function CheckInputScreen() {
                       e.currentTarget.value
                     );
                     e.currentTarget.value = formattedValue;
-                    setPreviousValue(formattedValue);
                     setHasConvertedKana(false);
                   }}
                   onChange={() => {
