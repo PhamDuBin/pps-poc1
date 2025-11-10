@@ -1,9 +1,5 @@
 import { useEffect } from "react";
-import {
-  handleNavigationKey,
-  handleInputToRadio,
-  handleRadioNavigation,
-} from "../utils/InputHandlers";
+import { handleNavigationKey } from "../utils/InputHandlers";
 
 interface Listener {
   element: EventTarget;

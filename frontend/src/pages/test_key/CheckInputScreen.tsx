@@ -12,18 +12,13 @@ import type { InputRef } from "antd";
 
 import {
   extractHalfWidthDigits,
-  convertToHalfWidthAndRemoveKana,
   convertToFullWidth,
   removeAllWhitespace,
   handleFormatting,
-  toHalfWidth, // *** MODIFIED: Thêm import 'toHalfWidth' ***
 } from "../../utils/InputHandlers";
 
 import { useKeyboardNavigation } from "../../hooks/useCheckInputNavigation";
-import {
-  handleHalfWidthKatakanaInput,
-  type CodeOption,
-} from "../../utils/CheckInputHelpers";
+import { type CodeOption } from "../../utils/CheckInputHelpers";
 
 export default function CheckInputScreen() {
   const formRef = useRef<HTMLDivElement>(null);
@@ -70,7 +65,6 @@ export default function CheckInputScreen() {
   const [code2, setCode2] = useState<string>("0");
   const [fontSizeClass, setFontSizeClass] = useState<string>("text-base");
   const [customerCode, setCustomerCode] = useState<string[]>(["", "", "", ""]);
-  const [zeroSuppress, setZeroSuppress] = useState<string>("");
 
   // Check if all customer code fields are filled
   const isAllCustomerCodeFilled = customerCode.every(
@@ -85,30 +79,6 @@ export default function CheckInputScreen() {
     { code: "3", label: "Three" },
     { code: "", label: "Invalid" },
   ];
-  const isHalfWidthKatakana = (str: string) => {
-    return /^[\uFF61-\uFF9F]*$/.test(str);
-  };
-
-  const handleHalfWidthKatakanaFormat = (value: string) => {
-    // Step 1: Chuyển đổi tất cả (bao gồm Katakana full-width) sang half-width
-    const halfWidthStr = toHalfWidth(value);
-
-    // Step 2: Xóa tất cả các ký tự KHÔNG PHẢI là Katakana half-width.
-    // Điều này sẽ xóa Kanji, Hiragana, và cả chữ/số half-width (được tạo ở bước 1).
-    // Dải Unicode \uFF61-\uFF9F là của Katakana half-width.
-    return halfWidthStr.replace(/[^\uFF61-\uFF9F]/g, "");
-  };
-
-  const convertToHalfWidthKatakana = (str: string) => {
-    // First convert full-width katakana to half-width
-    let result = str.replace(/[\u30A1-\u30F6]/g, (char) => {
-      const code = char.charCodeAt(0);
-      return String.fromCharCode(code - 0x60);
-    });
-
-    // Then keep only half-width katakana characters
-    return result.replace(/[^\uFF61-\uFF9F]/g, "");
-  };
 
   const processHalfWidthKatakana = (str: string) => {
     // Mapping table for fullwidth katakana to halfwidth katakana

@@ -10,7 +10,6 @@ export default function CheckKeyScreen(): JSX.Element {
   const [modalF1Open, setModalF1Open] = useState<boolean>(false);
   const [modalF2Open, setModalF2Open] = useState<boolean>(false);
   const [showSearchModal, setShowSearchModal] = useState<boolean>(false);
-  const [isMagnifier, setIsMagnifier] = useState<boolean>(false);
 
   useEffect(() => {
     const isMac = navigator.platform.toUpperCase().includes("MAC");
@@ -56,11 +55,6 @@ export default function CheckKeyScreen(): JSX.Element {
       // Cmd/Ctrl + Alt + Z → toggle magnifier
       if (e.code === "KeyZ" && e.altKey && (isMac ? e.metaKey : e.ctrlKey)) {
         e.preventDefault();
-        setIsMagnifier((prev) => {
-          const newCursor = !prev ? "zoom-in" : "default";
-          document.body.style.cursor = newCursor;
-          return !prev;
-        });
       }
 
       // Cmd/Ctrl + Alt + F → search modal

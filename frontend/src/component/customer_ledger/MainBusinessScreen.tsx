@@ -213,7 +213,7 @@ const MainBusinessScreen = () => {
     return () => {
       container.removeEventListener("keydown", handleKeyDown);
     };
-  }, [activeSection, sections, shortcuts]);
+  }, [activeSection, sections, shortcuts, handleScrollAndFocus]);
 
   const label = `h-8 border border-gray-300 font-bold rounded-md flex text-center justify-center items-center px-2 ml-7 mr-2 ${labelColor}`;
   const button = `flex text-center justify-center items-center ${labelColor} border border-black xl:text-base text-xs font-bold shadow-md shadow-zinc-600 hover:bg-white`;
