@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import RightPanel from "../../component/transaction_information/RightPanel";
 import LeftPanel from "../../component/transaction_information/LeftPanel";
 import CheckSaleByCategoryScreen from "../../component/transaction_information/1.1.1_03/CheckSaleByCategoryScreen";
@@ -30,19 +36,22 @@ export const handleNavigationKey = (
 };
 
 const TrancInfoScreen = () => {
-  const screens = [
-    "当月明細",
-    "当月売上状況",
-    "大分類別売上",
-    "残高内訳",
-    "検針情報",
-    "年間明細",
-    "CRM",
-    "ポイント",
-    "印刷依頼情報",
-    "自振照会",
-    "大分類残高",
-  ];
+  const screens = useMemo(
+    () => [
+      "当月明細",
+      "当月売上状況",
+      "大分類別売上",
+      "残高内訳",
+      "検針情報",
+      "年間明細",
+      "CRM",
+      "ポイント",
+      "印刷依頼情報",
+      "自振照会",
+      "大分類残高",
+    ],
+    []
+  );
   const [showLeftPanel, setShowLeftPanel] = useState(true);
   const [activeScreen, setActiveScreen] = useState<string>(screens[0]);
   const [showAdvanceSearch, setShowAdvanceSearch] = useState(false);
