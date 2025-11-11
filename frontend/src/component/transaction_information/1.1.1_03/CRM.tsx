@@ -25,7 +25,15 @@ const CRM = ({ onSwitchScreen }: any) => {
   const rowCount = 10;
   const containerRef = useScreenNavigation<HTMLDivElement>(onSwitchScreen);
   return (
-    <div ref={containerRef} className="p-4 text-black w-full text-sm">
+    <div ref={containerRef} className="p-4 text-black w-full text-sm crm-screen">
+      <style>{`
+        .crm-screen input:focus,
+        .crm-screen textarea:focus,
+        .crm-screen select:focus {
+          background-color: #ffffcc !important;
+          outline: 2px solid #4a90e2;
+        }
+      `}</style>
       <div className="text-center font-bold bg-label p-2 mb-2 h-8 text-lg flex justify-center items-center">
         ＜CRM＞
       </div>

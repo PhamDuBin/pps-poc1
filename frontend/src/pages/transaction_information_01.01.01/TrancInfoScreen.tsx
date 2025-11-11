@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import RightPanel from "../../component/transaction_information/RightPanel";
 import LeftPanel from "../../component/transaction_information/LeftPanel";
 import CheckSaleByCategoryScreen from "../../component/transaction_information/1.1.1_03/CheckSaleByCategoryScreen";
@@ -20,38 +14,36 @@ export const handleNavigationKey = (
   currentIndex: number,
   focusableElements: HTMLElement[]
 ) => {
-  if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key)) {
+  // ArrowDown and ArrowUp act like Tab and Shift+Tab
+  if (["ArrowUp", "ArrowDown"].includes(e.key)) {
     e.preventDefault();
     let nextIndex = currentIndex;
     const total = focusableElements.length;
 
-    if (e.key === "ArrowDown" || e.key === "ArrowRight") {
+    if (e.key === "ArrowDown") {
       nextIndex = (currentIndex + 1) % total;
-    } else if (e.key === "ArrowUp" || e.key === "ArrowLeft") {
+    } else if (e.key === "ArrowUp") {
       nextIndex = (currentIndex - 1 + total) % total;
     }
 
     focusableElements[nextIndex]?.focus();
   }
 };
+const screens = [
+  "当月明細",
+  "当月売上状況",
+  "大分類別売上",
+  "残高内訳",
+  "検針情報",
+  "年間明細",
+  "CRM",
+  "ポイント",
+  "印刷依頼情報",
+  "自振照会",
+  "大分類残高",
+];
 
 const TrancInfoScreen = () => {
-  const screens = useMemo(
-    () => [
-      "当月明細",
-      "当月売上状況",
-      "大分類別売上",
-      "残高内訳",
-      "検針情報",
-      "年間明細",
-      "CRM",
-      "ポイント",
-      "印刷依頼情報",
-      "自振照会",
-      "大分類残高",
-    ],
-    []
-  );
   const [showLeftPanel, setShowLeftPanel] = useState(true);
   const [activeScreen, setActiveScreen] = useState<string>(screens[0]);
   const [showAdvanceSearch, setShowAdvanceSearch] = useState(false);
@@ -76,11 +68,13 @@ const TrancInfoScreen = () => {
 
       const idx = screens.indexOf(activeScreen);
       let newIndex = direction === "next" ? idx + 1 : idx - 1;
+
       if (newIndex < 0) newIndex = screens.length - 1;
       if (newIndex >= screens.length) newIndex = 0;
+
       setActiveScreen(screens[newIndex]);
     },
-    [activeScreen, screens, setActiveScreen]
+    [activeScreen]
   );
 
   const handleFirstButtonFocus = () => {
@@ -141,6 +135,16 @@ const TrancInfoScreen = () => {
         ) {
           e.preventDefault();
           setShowLeftPanel(false);
+          // Focus vào element đầu tiên của main screen
+          setTimeout(() => {
+            const firstFocusable = mainScreenRef.current?.querySelector(
+              'button:not([disabled]), input:not([disabled]), [role="radio"]'
+            ) as HTMLElement;
+            if (firstFocusable) {
+              firstFocusable.focus();
+              setIsNavActive(true);
+            }
+          }, 0);
           return;
         }
         const focusableElements = Array.from(
@@ -157,6 +161,13 @@ const TrancInfoScreen = () => {
       if (isNavActive && e.key === "Tab") {
         e.preventDefault();
         handleSwitchScreen(e.shiftKey ? "prev" : "next");
+        // Focus vào element đầu tiên của screen mới sau khi switch
+        setTimeout(() => {
+          const firstFocusable = mainScreenRef.current?.querySelector(
+            'button:not([disabled]), input:not([disabled]), [role="radio"]'
+          ) as HTMLElement;
+          firstFocusable?.focus();
+        }, 0);
       }
       const isInsideMainScreen = mainScreenRef.current?.contains(activeElement);
       if (

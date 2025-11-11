@@ -7,7 +7,7 @@ import type { ScreenNavigationProps } from "../../../types";
 const CurrentMonthDetails: React.FC<ScreenNavigationProps> = ({
   onSwitchScreen,
 }) => {
-  const containerRef = useScreenNavigation<HTMLDivElement>(() => {}, false);
+  const containerRef = useScreenNavigation<HTMLDivElement>(() => {}, true);
 
   // Memoize static data to prevent re-creation on every render
   const balanceMonths = useMemo(

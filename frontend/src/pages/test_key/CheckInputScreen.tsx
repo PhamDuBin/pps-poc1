@@ -79,7 +79,6 @@ export default function CheckInputScreen() {
     { code: "3", label: "Three" },
     { code: "", label: "Invalid" },
   ];
-
   const processHalfWidthKatakana = (str: string) => {
     // Mapping table for fullwidth katakana to halfwidth katakana
     const kanaMap: { [key: string]: string } = {
@@ -660,6 +659,7 @@ export default function CheckInputScreen() {
                       // ② CHƯA convert VÀ CẦN xử lý → convert và giữ focus
                       if (!hasConvertedKana && needsProcessing) {
                         input.value = formattedValue;
+
                         setHasConvertedKana(true);
                         return;
                       }
@@ -707,6 +707,7 @@ export default function CheckInputScreen() {
                       // ② CHƯA convert VÀ CẦN xử lý → convert và giữ focus
                       if (!hasConvertedKana && needsProcessing) {
                         input.value = formattedValue;
+
                         setHasConvertedKana(true);
                         return;
                       }
@@ -746,6 +747,7 @@ export default function CheckInputScreen() {
                       // ② CHƯA convert VÀ CẦN xử lý → convert và giữ focus
                       if (!hasConvertedKana && needsProcessing) {
                         input.value = formattedValue;
+
                         setHasConvertedKana(true);
                         return;
                       }
@@ -772,6 +774,7 @@ export default function CheckInputScreen() {
                       e.currentTarget.value
                     );
                     e.currentTarget.value = formattedValue;
+
                     setHasConvertedKana(false);
                   }}
                   onChange={() => {

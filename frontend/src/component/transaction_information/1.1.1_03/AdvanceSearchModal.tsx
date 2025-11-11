@@ -14,7 +14,9 @@ type FormValues = { [key in FieldId]?: string | string[] };
 const AdvancedSearchForm: React.FC<{
   onSearch: () => void;
   onReset: () => void;
-}> = ({ onSearch, onReset }) => {
+  selectRef: React.RefObject<HTMLSelectElement | null>;
+  searchButtonRef: React.RefObject<HTMLButtonElement | null>;
+}> = ({ onSearch, onReset, selectRef, searchButtonRef }) => {
   const [selectedFieldId, setSelectedFieldId] = useState<FieldId>(
     fieldDefinitions[0].id
   );
@@ -22,16 +24,6 @@ const AdvancedSearchForm: React.FC<{
   const currentField = fieldDefinitions.find((f) => f.id === selectedFieldId);
 
   const firstInputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    if (firstInputRef.current) {
-      const timer = setTimeout(() => {
-        firstInputRef.current?.focus();
-      }, 150);
-
-      return () => clearTimeout(timer);
-    }
-  }, []);
 
   const handleValueChange = (value: string, index: number | null = null) => {
     if (!currentField) return;
@@ -141,6 +133,12 @@ const AdvancedSearchForm: React.FC<{
             className="border border-black p-1 w-full"
             value={(typeof value === "string" && value) || ""}
             onChange={(e) => handleValueChange(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && typeof value === "string" && value) {
+                e.preventDefault();
+                searchButtonRef.current?.focus();
+              }
+            }}
           />
         );
     }
@@ -158,6 +156,7 @@ const AdvancedSearchForm: React.FC<{
           検索種類 / 検索順
         </label>
         <select
+          ref={selectRef}
           className="border border-black p-1 mt-1 h-[30px]"
           value={selectedFieldId}
           onChange={(e) => setSelectedFieldId(e.target.value as FieldId)}
@@ -179,6 +178,7 @@ const AdvancedSearchForm: React.FC<{
 
       <div className="flex flex-col space-y-1">
         <button
+          ref={searchButtonRef}
           onClick={onSearch}
           className="bg-label border border-black px-4 py-1 h-[26px] flex items-center justify-center shadow-md shadow-zinc-600"
         >
@@ -211,6 +211,9 @@ const AdvanceSearchModal: React.FC<AdvanceSearchModalProps> = ({
   const tbodyRef = useRef<HTMLTableSectionElement>(null);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const radioGroupRef = useRef<HTMLDivElement>(null);
+  const selectRef = useRef<HTMLSelectElement>(null);
+  const searchButtonRef = useRef<HTMLButtonElement>(null);
+  const modalRef = useRef<HTMLDivElement>(null);
 
   const handleSearch = () => {
     const mockData = Array.from({ length: 12 }).map((_, index) => ({
@@ -227,6 +230,20 @@ const AdvanceSearchModal: React.FC<AdvanceSearchModalProps> = ({
     setTableData([]);
     setActiveIndex(null);
   };
+
+  // Focus on first radio button when modal opens
+  useEffect(() => {
+    if (radioGroupRef.current) {
+      const firstRadio = radioGroupRef.current.querySelector<HTMLInputElement>(
+        'input[type="radio"]'
+      );
+      if (firstRadio) {
+        setTimeout(() => {
+          firstRadio.focus();
+        }, 150);
+      }
+    }
+  }, []);
 
   useEffect(() => {
     if (activeIndex !== null && tbodyRef.current) {
@@ -267,24 +284,31 @@ const AdvanceSearchModal: React.FC<AdvanceSearchModalProps> = ({
     }
   };
 
-  // Add radio navigation logic similar to check-input page
+  // Add radio navigation logic
   useEffect(() => {
     if (!radioGroupRef.current) return;
 
     const radios = Array.from(
-      radioGroupRef.current.querySelectorAll<HTMLInputElement>('input[type="radio"]')
+      radioGroupRef.current.querySelectorAll<HTMLInputElement>(
+        'input[type="radio"]'
+      )
     );
 
     const handleRadioKeyDown = (e: KeyboardEvent, index: number) => {
-      if (
-        ["ArrowDown", "ArrowUp", "ArrowRight", "ArrowLeft"].includes(e.key)
-      ) {
+      // Block ArrowUp
+      if (e.key === "ArrowUp") {
+        e.preventDefault();
+        return;
+      }
+
+      // Left/Right: cycle through radio buttons
+      if (["ArrowRight", "ArrowLeft"].includes(e.key)) {
         e.preventDefault();
         let nextIndex = index;
 
-        if (e.key === "ArrowDown" || e.key === "ArrowRight") {
+        if (e.key === "ArrowRight") {
           nextIndex = (index + 1) % radios.length;
-        } else if (e.key === "ArrowUp" || e.key === "ArrowLeft") {
+        } else if (e.key === "ArrowLeft") {
           nextIndex = (index - 1 + radios.length) % radios.length;
         }
 
@@ -293,13 +317,22 @@ const AdvanceSearchModal: React.FC<AdvanceSearchModalProps> = ({
           nextRadio.focus();
           nextRadio.click();
           nextRadio.checked = true;
-          const event = new Event('change', { bubbles: true });
+          const event = new Event("change", { bubbles: true });
           nextRadio.dispatchEvent(event);
         }
       }
+
+      // Enter/Tab/ArrowDown: move to select field
+      if (["Enter", "Tab", "ArrowDown"].includes(e.key) && !e.shiftKey) {
+        e.preventDefault();
+        selectRef.current?.focus();
+      }
     };
 
-    const listeners: Array<{ element: HTMLInputElement; handler: (e: KeyboardEvent) => void }> = [];
+    const listeners: Array<{
+      element: HTMLInputElement;
+      handler: (e: KeyboardEvent) => void;
+    }> = [];
 
     radios.forEach((radio, index) => {
       const handler = (e: KeyboardEvent) => handleRadioKeyDown(e, index);
@@ -314,8 +347,69 @@ const AdvanceSearchModal: React.FC<AdvanceSearchModalProps> = ({
     };
   }, [searchMode]);
 
+  // Focus trap: prevent focus from leaving modal
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!modalRef.current) return;
+
+      // Get all focusable elements within modal
+      const focusableElements = modalRef.current.querySelectorAll<HTMLElement>(
+        'input:not([disabled]), button:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      );
+
+      const focusableArray = Array.from(focusableElements);
+      const firstElement = focusableArray[0];
+      const lastElement = focusableArray[focusableArray.length - 1];
+
+      // Handle Tab key
+      if (e.key === "Tab") {
+        if (e.shiftKey) {
+          // Shift + Tab: if on first element, go to last
+          if (document.activeElement === firstElement) {
+            e.preventDefault();
+            lastElement?.focus();
+          }
+        } else {
+          // Tab: if on last element, go to first
+          if (document.activeElement === lastElement) {
+            e.preventDefault();
+            firstElement?.focus();
+          }
+        }
+      }
+
+      // Block all arrow key navigation when not handled by specific handlers
+      // This prevents focus from escaping the modal
+      if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key)) {
+        const activeElement = document.activeElement;
+
+        // Allow arrow keys only within modal
+        if (activeElement && !modalRef.current.contains(activeElement)) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown, true);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown, true);
+    };
+  }, []);
+
   return (
-    <div className="p-4 bg-white text-black w-full text-sm">
+    <div
+      ref={modalRef}
+      className="p-4 bg-white text-black w-full text-sm advance-search-modal"
+    >
+      <style>{`
+        .advance-search-modal input:focus,
+        .advance-search-modal textarea:focus,
+        .advance-search-modal select:focus {
+          background-color: #ffffcc !important;
+          outline: 2px solid #4a90e2;
+        }
+      `}</style>
       <div className="bg-label border border-black p-2 text-center font-bold mb-2">
         顧客検索
       </div>
@@ -351,7 +445,12 @@ const AdvanceSearchModal: React.FC<AdvanceSearchModalProps> = ({
       </div>
 
       {/* Form */}
-      <AdvancedSearchForm onSearch={handleSearch} onReset={handleReset} />
+      <AdvancedSearchForm
+        onSearch={handleSearch}
+        onReset={handleReset}
+        selectRef={selectRef}
+        searchButtonRef={searchButtonRef}
+      />
 
       {/* Table */}
       <div
