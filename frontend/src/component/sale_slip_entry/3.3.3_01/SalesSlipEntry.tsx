@@ -12,10 +12,15 @@ import CategorySelectionModal from "./CategorySelectionModal";
 import SalesSlipEntryRegistration from "./SalesSlipEntryRegistration";
 import ProductSearchModal from "./ProductSearchModal";
 import SaleDetailModal from "./SaleDetail/SaleDetailModal";
+import CustomSelect from "../../../components/CustomSelect";
 import { createPortal } from "react-dom";
 import { allowDecimalInput } from "../../../utils/InputHandlers";
-import JapaneseCalendar, { JapaneseCalendarHandle } from "../../JapaneseCalendar";
-import JapaneseMonthPicker, { JapaneseMonthPickerHandle } from "../../JapaneseMonthPicker";
+import JapaneseCalendar, {
+  JapaneseCalendarHandle,
+} from "../../JapaneseCalendar";
+import JapaneseMonthPicker, {
+  JapaneseMonthPickerHandle,
+} from "../../JapaneseMonthPicker";
 
 type SalesSlipEntryProps = {
   onOpenLeftPanelForSearch: () => void;
@@ -36,8 +41,6 @@ const SalesSlipEntry = forwardRef(
     const [rowEdit, setRowEdit] = useState<any>(null);
     const [saleSlips, setSaleSlips] = useState<any>([]);
     const [selectedTanto, setSelectedTanto] = useState("営業タロウ");
-    const [showTantoDropdown, setShowTantoDropdown] = useState(false);
-    const [tantoHighlightedIndex, setTantoHighlightedIndex] = useState(0);
 
     const tantoOptions = [
       "営業タロウ",
@@ -45,9 +48,6 @@ const SalesSlipEntry = forwardRef(
       "営業サブロウ",
       "営業シロウ",
     ];
-
-    const tantoInputRef = useRef<HTMLInputElement>(null);
-    const tantoDropdownRef = useRef<HTMLDivElement>(null);
 
     const [activeSlipIndex, setActiveSlipIndex] = useState<number | null>(null);
     const [tooltipPos, setTooltipPos] = useState<{
@@ -79,20 +79,6 @@ const SalesSlipEntry = forwardRef(
       },
     }));
 
-    // Auto-scroll highlighted item in tanto dropdown
-    useEffect(() => {
-      if (showTantoDropdown && tantoDropdownRef.current) {
-        const highlightedItem = tantoDropdownRef.current.children[
-          tantoHighlightedIndex
-        ] as HTMLElement;
-        if (highlightedItem) {
-          highlightedItem.scrollIntoView({
-            block: "nearest",
-            behavior: "smooth",
-          });
-        }
-      }
-    }, [tantoHighlightedIndex, showTantoDropdown]);
 
     const handleClickSlip = (index: number) => {
       if (activeSlipIndex === index) {
@@ -342,77 +328,16 @@ const SalesSlipEntry = forwardRef(
               <label className="w-1/2 bg-[#D9D9D9] px-2 py-1 text-center">
                 担当者
               </label>
-              <div className="relative mx-1 w-1/2">
-                <input
-                  ref={tantoInputRef}
-                  type="text"
+              <div className="mx-1 w-1/2">
+                <CustomSelect
                   value={selectedTanto}
-                  readOnly
-                  className="w-full border border-black px-2 py-1 pr-8 cursor-pointer"
-                  onClick={() => {
-                    setShowTantoDropdown(!showTantoDropdown);
-                    setTantoHighlightedIndex(tantoOptions.indexOf(selectedTanto));
-                  }}
-                  onKeyDown={(e) => {
-                    if (e.key === " " || e.key === "Enter") {
-                      e.preventDefault();
-                      if (!showTantoDropdown) {
-                        setShowTantoDropdown(true);
-                        setTantoHighlightedIndex(tantoOptions.indexOf(selectedTanto));
-                      } else {
-                        setSelectedTanto(tantoOptions[tantoHighlightedIndex]);
-                        setShowTantoDropdown(false);
-                        tantoInputRef.current?.focus();
-                      }
-                    } else if (e.key === "ArrowDown" && showTantoDropdown) {
-                      e.preventDefault();
-                      setTantoHighlightedIndex((prev) =>
-                        prev < tantoOptions.length - 1 ? prev + 1 : prev
-                      );
-                    } else if (e.key === "ArrowUp" && showTantoDropdown) {
-                      e.preventDefault();
-                      setTantoHighlightedIndex((prev) => (prev > 0 ? prev - 1 : prev));
-                    } else if (e.key === "Escape" && showTantoDropdown) {
-                      e.preventDefault();
-                      setShowTantoDropdown(false);
-                      tantoInputRef.current?.focus();
-                    }
-                  }}
+                  onChange={(value) => setSelectedTanto(value)}
+                  options={tantoOptions.map((opt) => ({
+                    value: opt,
+                    label: opt,
+                  }))}
+                  className="w-full border border-black px-2 py-1 bg-white"
                 />
-                <button
-                  className="absolute right-0 top-1/2 -translate-y-1/2 h-full flex items-center px-2 text-gray-500 cursor-pointer"
-                  onClick={() => {
-                    setShowTantoDropdown(!showTantoDropdown);
-                    setTantoHighlightedIndex(tantoOptions.indexOf(selectedTanto));
-                  }}
-                  tabIndex={-1}
-                >
-                  ▼
-                </button>
-                {showTantoDropdown && (
-                  <div
-                    ref={tantoDropdownRef}
-                    className="absolute top-full left-0 w-full bg-white border border-black shadow-lg z-50 max-h-40 overflow-y-auto"
-                  >
-                    {tantoOptions.map((option, index) => (
-                      <div
-                        key={index}
-                        className={`px-2 py-1 cursor-pointer ${
-                          index === tantoHighlightedIndex
-                            ? "bg-blue-400 text-white"
-                            : "hover:bg-blue-200"
-                        }`}
-                        onClick={() => {
-                          setSelectedTanto(option);
-                          setShowTantoDropdown(false);
-                          tantoInputRef.current?.focus();
-                        }}
-                      >
-                        {option}
-                      </div>
-                    ))}
-                  </div>
-                )}
               </div>
             </div>
           </div>

@@ -246,6 +246,24 @@ const SaleDetailModal: React.FC<SaleDetailModalProps> = ({
     const handleGlobalKeyDown = (event: KeyboardEvent) => {
       if (!isOpen) return;
 
+      const target = event.target as HTMLElement;
+
+      // Allow Space, Enter, and Arrow keys to work with CustomSelect (has tabIndex)
+      // CustomSelect is a div with tabIndex, so check if it's focusable
+      if (target.hasAttribute('tabindex') && target.getAttribute('tabindex') !== '-1') {
+        // Don't block Space, Enter, or Arrow keys for focusable elements
+        if (event.key === " " || event.key === "Enter" ||
+            event.key === "ArrowUp" || event.key === "ArrowDown" ||
+            event.key === "ArrowLeft" || event.key === "ArrowRight") {
+          return; // Let the element handle it
+        }
+      }
+
+      // Allow native select to work
+      if (target.tagName === "SELECT") {
+        return;
+      }
+
       // Alt + R
       if (event.altKey && event.code === "KeyR") {
         event.preventDefault();

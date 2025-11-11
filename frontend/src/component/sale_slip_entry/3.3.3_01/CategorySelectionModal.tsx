@@ -12,6 +12,7 @@ const CategorySelectionModal: React.FC<CategorySelectionModalProps> = ({
   onCategorySelect,
 }) => {
   const firstButtonRef = useRef<HTMLButtonElement>(null);
+  const modalRef = useRef<HTMLDivElement>(null);
 
   // Memoize button class string
   const btnClass = useMemo(
@@ -33,10 +34,26 @@ const CategorySelectionModal: React.FC<CategorySelectionModalProps> = ({
     () => [
       { key: "1", handler: () => handleButtonClick("1.売上"), ctrlKey: true },
       { key: "1", handler: () => handleButtonClick("1.売上"), altKey: true },
-      { key: "2", handler: () => handleButtonClick("2.直送売上"), ctrlKey: true },
-      { key: "2", handler: () => handleButtonClick("2.直送売上"), altKey: true },
-      { key: "3", handler: () => handleButtonClick("3.売上値引"), ctrlKey: true },
-      { key: "3", handler: () => handleButtonClick("3.売上値引"), altKey: true },
+      {
+        key: "2",
+        handler: () => handleButtonClick("2.直送売上"),
+        ctrlKey: true,
+      },
+      {
+        key: "2",
+        handler: () => handleButtonClick("2.直送売上"),
+        altKey: true,
+      },
+      {
+        key: "3",
+        handler: () => handleButtonClick("3.売上値引"),
+        ctrlKey: true,
+      },
+      {
+        key: "3",
+        handler: () => handleButtonClick("3.売上値引"),
+        altKey: true,
+      },
       { key: "4", handler: () => handleButtonClick("4.返品"), ctrlKey: true },
       { key: "4", handler: () => handleButtonClick("4.返品"), altKey: true },
       { key: "5", handler: () => handleButtonClick("5.経費"), ctrlKey: true },
@@ -67,7 +84,10 @@ const CategorySelectionModal: React.FC<CategorySelectionModalProps> = ({
     // Overlay
     <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
       {/* Modal content */}
-      <div className="bg-white w-full max-w-3xl rounded-lg shadow-lg border border-black p-6">
+      <div
+        ref={modalRef}
+        className="bg-white w-full max-w-3xl rounded-lg shadow-lg border border-black p-6"
+      >
         <div className="w-full flex justify-center items-center">
           <StatusBar currentStep={1} />
         </div>

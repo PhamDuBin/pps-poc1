@@ -213,7 +213,6 @@ const AdvanceSearchModal: React.FC<AdvanceSearchModalProps> = ({
   const radioGroupRef = useRef<HTMLDivElement>(null);
   const selectRef = useRef<HTMLSelectElement>(null);
   const searchButtonRef = useRef<HTMLButtonElement>(null);
-  const modalRef = useRef<HTMLDivElement>(null);
 
   const handleSearch = () => {
     const mockData = Array.from({ length: 12 }).map((_, index) => ({
@@ -347,61 +346,8 @@ const AdvanceSearchModal: React.FC<AdvanceSearchModalProps> = ({
     };
   }, [searchMode]);
 
-  // Focus trap: prevent focus from leaving modal
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (!modalRef.current) return;
-
-      // Get all focusable elements within modal
-      const focusableElements = modalRef.current.querySelectorAll<HTMLElement>(
-        'input:not([disabled]), button:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
-      );
-
-      const focusableArray = Array.from(focusableElements);
-      const firstElement = focusableArray[0];
-      const lastElement = focusableArray[focusableArray.length - 1];
-
-      // Handle Tab key
-      if (e.key === "Tab") {
-        if (e.shiftKey) {
-          // Shift + Tab: if on first element, go to last
-          if (document.activeElement === firstElement) {
-            e.preventDefault();
-            lastElement?.focus();
-          }
-        } else {
-          // Tab: if on last element, go to first
-          if (document.activeElement === lastElement) {
-            e.preventDefault();
-            firstElement?.focus();
-          }
-        }
-      }
-
-      // Block all arrow key navigation when not handled by specific handlers
-      // This prevents focus from escaping the modal
-      if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key)) {
-        const activeElement = document.activeElement;
-
-        // Allow arrow keys only within modal
-        if (activeElement && !modalRef.current.contains(activeElement)) {
-          e.preventDefault();
-          e.stopPropagation();
-        }
-      }
-    };
-
-    document.addEventListener("keydown", handleKeyDown, true);
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown, true);
-    };
-  }, []);
-
   return (
-    <div
-      ref={modalRef}
-      className="p-4 bg-white text-black w-full text-sm advance-search-modal"
-    >
+    <div className="p-4 bg-white text-black w-full text-sm advance-search-modal">
       <style>{`
         .advance-search-modal input:focus,
         .advance-search-modal textarea:focus,

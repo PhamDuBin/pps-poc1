@@ -50,27 +50,54 @@ const SaleSlipEntryScreen = () => {
     const handleContainerKeyDown = (e: KeyboardEvent) => {
       const activeElement = document.activeElement as HTMLElement;
 
+      // Check if active element is inside AdvanceSearchModal - if so, let modal handle all navigation
+      const advanceSearchModal = document.querySelector('.advance-search-modal');
+      if (advanceSearchModal && advanceSearchModal.contains(activeElement)) {
+        // Let the AdvanceSearchModal handle all its own navigation
+        return;
+      }
+
       // Check if there's a calendar popup open by looking for the data attribute
-      const calendarPopup = document.querySelector('[data-calendar-popup="true"]');
+      const calendarPopup = document.querySelector(
+        '[data-calendar-popup="true"]'
+      );
 
       // If calendar popup exists and arrow keys are pressed, don't handle navigation
-      if (calendarPopup && ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+      if (
+        calendarPopup &&
+        ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key)
+      ) {
         // Let the calendar handle the event completely
         return;
       }
 
       // Check if Ant Design Select dropdown is open
-      const antSelectDropdown = document.querySelector('.ant-select-dropdown:not(.ant-select-dropdown-hidden)');
+      const antSelectDropdown = document.querySelector(
+        ".ant-select-dropdown:not(.ant-select-dropdown-hidden)"
+      );
 
       // If Select dropdown is open, let Select handle arrow/enter/space keys
-      if (antSelectDropdown && ['ArrowUp', 'ArrowDown', 'Enter', ' '].includes(e.key)) {
+      if (
+        antSelectDropdown &&
+        ["ArrowUp", "ArrowDown", "Enter", " "].includes(e.key)
+      ) {
         // Let the Select dropdown handle the event
+        return;
+      }
+
+      // Check if CustomSelect dropdown is open (aria-expanded="true")
+      const customSelectOpen = activeElement.closest('.custom-select[aria-expanded="true"]');
+      if (
+        customSelectOpen &&
+        ["ArrowUp", "ArrowDown", "Enter", " "].includes(e.key)
+      ) {
+        // Let the CustomSelect handle the event
         return;
       }
 
       const focusableElements = Array.from(
         container.querySelectorAll(
-          'input, button, [role="registmodal"], select, textarea, .ant-select'
+          'input, button, [role="registmodal"], select, textarea, .ant-select, .custom-select'
         )
       ) as HTMLElement[];
 
@@ -91,7 +118,7 @@ const SaleSlipEntryScreen = () => {
         // Check if we're in a text input/textarea where cursor movement should work
         const isTextInput =
           (activeElement.tagName === "INPUT" &&
-           (activeElement as HTMLInputElement).type === "text") ||
+            (activeElement as HTMLInputElement).type === "text") ||
           activeElement.tagName === "TEXTAREA";
 
         if (!isTextInput) {
@@ -133,12 +160,15 @@ const SaleSlipEntryScreen = () => {
   useEffect(() => {
     const handleSelectKeyDown = (e: KeyboardEvent) => {
       const target = e.target as HTMLElement;
-      const isAntSelect = target.classList.contains('ant-select') ||
-                         target.closest('.ant-select');
+      const isAntSelect =
+        target.classList.contains("ant-select") ||
+        target.closest(".ant-select");
 
-      if (isAntSelect && ['ArrowUp', 'ArrowDown'].includes(e.key)) {
+      if (isAntSelect && ["ArrowUp", "ArrowDown"].includes(e.key)) {
         // Check if dropdown is open
-        const dropdown = document.querySelector('.ant-select-dropdown:not(.ant-select-dropdown-hidden)');
+        const dropdown = document.querySelector(
+          ".ant-select-dropdown:not(.ant-select-dropdown-hidden)"
+        );
         if (!dropdown) {
           // Dropdown is closed - prevent arrow keys from opening it
           e.stopPropagation();
@@ -146,9 +176,9 @@ const SaleSlipEntryScreen = () => {
       }
     };
 
-    document.addEventListener('keydown', handleSelectKeyDown, true); // Use capture phase
+    document.addEventListener("keydown", handleSelectKeyDown, true); // Use capture phase
     return () => {
-      document.removeEventListener('keydown', handleSelectKeyDown, true);
+      document.removeEventListener("keydown", handleSelectKeyDown, true);
     };
   }, []);
 
@@ -179,10 +209,7 @@ const SaleSlipEntryScreen = () => {
   }, []);
 
   return (
-    <div
-      ref={containerRef}
-      className="w-full bg-bg-alt h-screen flex flex-row"
-    >
+    <div ref={containerRef} className="w-full bg-bg-alt h-screen flex flex-row">
       {!showLeftPanel && (
         <div className="relative flex items-center h-full w-2 bg-[#e6cfcf]"></div>
       )}
@@ -209,16 +236,13 @@ const SaleSlipEntryScreen = () => {
             ${showAdvanceSearch ? "z-0 hidden pointer-events-none" : "z-30"}`}
           onClick={() => {
             setShowLeftPanel(false);
-            // Maintain focus on toggle button after closing
             setTimeout(() => {
               toggleButtonRef.current?.focus();
             }, 0);
           }}
           onKeyDown={(e) => {
             if (e.key === "Enter" || e.key === " ") {
-              e.preventDefault();
               setShowLeftPanel(false);
-              // Maintain focus on toggle button after closing
               setTimeout(() => {
                 toggleButtonRef.current?.focus();
               }, 0);

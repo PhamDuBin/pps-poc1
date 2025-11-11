@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import JapaneseCalendar from "../../JapaneseCalendar";
+import CustomSelect from "../../../components/CustomSelect";
 import {
   shukinOptions,
   nyukinOptions,
 } from "../../../constants/sale_slip_entry";
-import { Select } from "antd";
+
 type Props = {
   isDeposited: boolean;
   onClose: () => void;
@@ -52,15 +53,17 @@ export default function DepositProcess({
           <label className="w-1/2 bg-[#D9D9D9] px-2 py-1 text-center">
             集金方法
           </label>
-          <Select
-            value={shukin}
-            onChange={(value) => setShukin(value)}
-            options={shukinOptions.map((opt) => ({
-              value: opt.value,
-              label: `${opt.code}:${opt.value}`
-            }))}
-            className="ml-1 w-1/2 border border-black text-black px-1 py-1 [&>.ant-select-selector]:!bg-white"
-          />
+          <div className="ml-1 w-1/2">
+            <CustomSelect
+              value={shukin}
+              onChange={(value) => setShukin(value)}
+              options={shukinOptions.map((opt) => ({
+                value: opt.value,
+                label: `${opt.code}:${opt.value}`,
+              }))}
+              className="border border-black text-black px-2 py-1 bg-white"
+            />
+          </div>
         </div>
 
         {/* 入金種別 */}
@@ -68,15 +71,17 @@ export default function DepositProcess({
           <label className="w-1/2 bg-[#D9D9D9] px-2 py-1 text-center">
             入金種別
           </label>
-          <Select
-            value={nyukin}
-            onChange={(value) => setNyukin(value)}
-            options={nyukinOptions.map((opt) => ({
-              value: opt.value,
-              label: `${opt.code}:${opt.value}`
-            }))}
-            className="ml-1 w-1/2 border border-black px-2 py-1 [&>.ant-select-selector]:!bg-white"
-          />
+          <div className="ml-1 w-1/2">
+            <CustomSelect
+              value={nyukin}
+              onChange={(value) => setNyukin(value)}
+              options={nyukinOptions.map((opt) => ({
+                value: opt.value,
+                label: `${opt.code}:${opt.value}`,
+              }))}
+              className="border border-black text-black px-2 py-1 bg-white"
+            />
+          </div>
         </div>
       </div>
 

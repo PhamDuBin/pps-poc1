@@ -6,7 +6,8 @@ import {
   convertToFullWidth,
 } from "../../../../utils/InputHandlers";
 import { handleOpenWindow } from "../../../../constants/functions";
-import { Select } from "antd";
+import CustomSelect from "../../../../components/CustomSelect";
+
 interface SaleDetailEntry6Props {
   onChange: (field: string, value: string) => void;
   formData: any;
@@ -81,7 +82,7 @@ const SaleDetailEntry6: React.FC<SaleDetailEntry6Props> = ({
           {/* 仕入単価区分 */}
           <div className="text-center h-[64px] relative">
             <div className="bg-label h-1/2">仕入単価区分</div>
-            <Select
+            <CustomSelect
               value={
                 formData.purchasePriceType !== undefined
                   ? String(formData.purchasePriceType)
@@ -90,9 +91,9 @@ const SaleDetailEntry6: React.FC<SaleDetailEntry6Props> = ({
               onChange={(value) => onChange("purchasePriceType", value)}
               options={[
                 { value: "0", label: "0 確定単価" },
-                { value: "1", label: "1 仮単価" }
+                { value: "1", label: "1 仮単価" },
               ]}
-              className="border border-black w-full h-1/2 [&>.ant-select-selector]:!bg-white"
+              className="border border-black w-full h-1/2 bg-white px-2"
             />
           </div>
 
@@ -127,7 +128,7 @@ const SaleDetailEntry6: React.FC<SaleDetailEntry6Props> = ({
           {/* 当月外 */}
           <div className="text-center h-[64px] relative">
             <div className="bg-label h-1/2">当月外</div>
-            <Select
+            <CustomSelect
               value={
                 formData.outsideMonth !== undefined
                   ? String(formData.outsideMonth)
@@ -136,9 +137,9 @@ const SaleDetailEntry6: React.FC<SaleDetailEntry6Props> = ({
               onChange={(value) => onChange("outsideMonth", value)}
               options={[
                 { value: "0", label: "0 空欄" },
-                { value: "1", label: "1 当月外" }
+                { value: "1", label: "1 当月外" },
               ]}
-              className="border border-black w-full h-1/2 [&>.ant-select-selector]:!bg-white"
+              className="border border-black w-full h-1/2 bg-white px-2"
             />
           </div>
 

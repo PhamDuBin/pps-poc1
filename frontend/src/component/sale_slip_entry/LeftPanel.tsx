@@ -3,6 +3,7 @@ import React, { useRef } from "react";
 //■左カラム顧客検索＆情報表示ランチャー
 import { useEffect, useState } from "react";
 import AdvanceSearchModal from "../transaction_information/1.1.1_03/AdvanceSearchModal";
+import CustomSelect from "../../components/CustomSelect";
 import {
   extractHalfWidthDigits,
   convertToFullWidth,
@@ -16,7 +17,6 @@ import {
   colWidths,
   fieldDefinitionsLeftPanel,
 } from "../../constants/sale_slip_entry";
-import { Select } from "antd";
 
 type LeftPanelProps = {
   showAdvanceSearch: boolean;
@@ -43,6 +43,8 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
   const [kanaInput, setKanaInput] = useState("");
   const [showJimushoDropdown, setShowJimushoDropdown] = useState(false);
   const [showCustomerDropdown, setShowCustomerDropdown] = useState(false);
+  const [kanaSelectValue, setKanaSelectValue] = useState("0");
+  const [displayOrderValue, setDisplayOrderValue] = useState("0");
 
   // Dummy data for dropdowns
   const jimushoOptions = [
@@ -70,11 +72,15 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
   const handleSearchDepartment = (postcode1: string, postcode2: string) => {
     if (postcode1 && postcode2) {
       setShowDepart(true);
+      setTimeout(() => {
+        resetBtn.current?.focus();
+      }, 0);
     } else {
       setShowDepart(false);
     }
   };
 
+  const resetBtn = useRef<HTMLButtonElement>(null);
   const firstInputRef = useRef<HTMLInputElement>(null);
   const customerCodeSelectRef = useRef<HTMLSelectElement>(null);
   const kanaInputRef = useRef<HTMLInputElement>(null);
@@ -83,6 +89,8 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
   const tableBodyRef = useRef<HTMLTableSectionElement>(null);
   const radio1Ref = useRef<HTMLInputElement>(null);
   const radio2Ref = useRef<HTMLInputElement>(null);
+  const advancedSearchButtonRef = useRef<HTMLButtonElement>(null);
+  const kanaSelectRef = useRef<HTMLSelectElement>(null);
 
   const handleTableKeyDown = (e: React.KeyboardEvent) => {
     if (activeIndex === null) return;
@@ -111,16 +119,15 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
     ];
     const currentIndex = radios.findIndex((r) => r.value === currentValue);
 
-    if (
-      ["ArrowDown", "ArrowUp", "ArrowRight", "ArrowLeft"].includes(e.key)
-    ) {
+    // Left/Right: toggle between radios
+    if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
       e.preventDefault();
       e.stopPropagation();
       let nextIndex = currentIndex;
 
-      if (e.key === "ArrowDown" || e.key === "ArrowRight") {
+      if (e.key === "ArrowRight") {
         nextIndex = (currentIndex + 1) % radios.length;
-      } else if (e.key === "ArrowUp" || e.key === "ArrowLeft") {
+      } else if (e.key === "ArrowLeft") {
         nextIndex = (currentIndex - 1 + radios.length) % radios.length;
       }
 
@@ -131,6 +138,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
         setSelected(nextRadio.value);
       }
     }
+    // Up/Down/Tab/Enter: allow default navigation behavior (change element)
   };
 
   useEffect(() => {
@@ -229,34 +237,54 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
       case "multi":
         return (
           <div className="flex items-center space-x-1 relative">
-            {currentField.partSizes?.map((size, index) => (
-              <React.Fragment key={index}>
-                <input
-                  type="text"
-                  placeholder="000"
-                  disabled={index > 0 && !(Array.isArray(value) && value[index - 1])}
-                  className="w-20 border border-black p-1 text-center placeholder-gray-400 bg-input disabled:bg-gray-200 disabled:cursor-not-allowed"
-                  style={{ width: `${size}px` }}
-                  value={(Array.isArray(value) && value[index]) || ""}
-                  onChange={(e) =>
-                    handleValueChange(
-                      extractHalfWidthDigits(e.target.value),
-                      index
-                    )
-                  }
-                  onKeyDown={(e) => {
-                    handleCustomerCodeKeyDown(e);
-                    handleFormatting(e, extractHalfWidthDigits);
-                  }}
-                />
-                {index < currentField.partSizes.length - 1 && <span>-</span>}
-              </React.Fragment>
-            ))}
+            {currentField.partSizes?.map((size, index) => {
+              // Placeholder khác nhau cho từng input
+              const placeholders = ["000000", "000", "000"];
+              const placeholder = placeholders[index] || "000";
+              const maxLength = placeholder.length;
+              return (
+                <React.Fragment key={index}>
+                  <input
+                    type="text"
+                    placeholder={placeholder}
+                    maxLength={maxLength}
+                    disabled={
+                      index > 0 && !(Array.isArray(value) && value[index - 1])
+                    }
+                    className="w-20 border border-black p-1 text-center placeholder-gray-400 bg-input disabled:bg-gray-200 disabled:cursor-not-allowed"
+                    style={{ width: `${size}px` }}
+                    value={(Array.isArray(value) && value[index]) || ""}
+                    onChange={(e) =>
+                      handleValueChange(
+                        extractHalfWidthDigits(e.target.value),
+                        index
+                      )
+                    }
+                    onBlur={(e) => {
+                      // Auto padding với số 0 khi blur
+                      const currentValue = e.target.value;
+                      if (currentValue && currentValue.length > 0) {
+                        const paddedValue = currentValue.padStart(
+                          maxLength,
+                          "0"
+                        );
+                        handleValueChange(paddedValue, index);
+                      }
+                    }}
+                    onKeyDown={(e) => {
+                      handleCustomerCodeKeyDown(e);
+                      handleFormatting(e, extractHalfWidthDigits);
+                    }}
+                  />
+                  {index < currentField.partSizes.length - 1 && <span>-</span>}
+                </React.Fragment>
+              );
+            })}
             <button
-              onClick={() => {
-                setShowCustomerDropdown(!showCustomerDropdown);
-                // If closing dropdown, trigger search like Enter key
-                if (showCustomerDropdown) {
+              onClick={() => handleSearch(id1, id2, id3)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
                   handleSearch(id1, id2, id3);
                 }
               }}
@@ -271,17 +299,23 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
                     key={index}
                     className="px-2 py-1 hover:bg-blue-200 cursor-pointer flex justify-between"
                     onClick={() => {
-                      const newValue = currentField.partSizes?.length === 3
-                        ? [option.code1, option.code2, ""]
-                        : [option.code1, option.code2];
-                      setFormValues((prev) => ({ ...prev, [selectedFieldId]: newValue }));
+                      const newValue =
+                        currentField.partSizes?.length === 3
+                          ? [option.code1, option.code2, ""]
+                          : [option.code1, option.code2];
+                      setFormValues((prev) => ({
+                        ...prev,
+                        [selectedFieldId]: newValue,
+                      }));
                       setId1(option.code1);
                       setId2(option.code2);
                       setShowCustomerDropdown(false);
                       handleSearch(option.code1, option.code2);
                     }}
                   >
-                    <span>{option.code1}-{option.code2}</span>
+                    <span>
+                      {option.code1}-{option.code2}
+                    </span>
                     <span>{option.name}</span>
                   </div>
                 ))}
@@ -294,10 +328,19 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
           <div className="flex items-center space-x-1">
             <input
               type="text"
+              maxLength={6}
               className="border border-black p-1 placeholder-gray-400 w-20 bg-input"
               onChange={(e) => {
                 setId1(extractHalfWidthDigits(e.target.value));
                 handleValueChange(extractHalfWidthDigits(e.target.value), 0);
+              }}
+              onBlur={(e) => {
+                const currentValue = e.target.value;
+                if (currentValue && currentValue.length > 0) {
+                  const paddedValue = currentValue.padStart(6, "0");
+                  setId1(paddedValue);
+                  handleValueChange(paddedValue, 0);
+                }
               }}
               placeholder="000000"
               onKeyDown={(e) => {
@@ -308,12 +351,21 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
             <span> - </span>
             <input
               type="text"
+              maxLength={6}
               disabled={!id1}
               className="border w-20 border-gray-400 p-1 bg-input disabled:bg-gray-200 disabled:cursor-not-allowed"
               value={(Array.isArray(value) && value[1]) || ""}
               onChange={(e) => {
                 setId2(extractHalfWidthDigits(e.target.value));
                 handleValueChange(extractHalfWidthDigits(e.target.value), 1);
+              }}
+              onBlur={(e) => {
+                const currentValue = e.target.value;
+                if (currentValue && currentValue.length > 0) {
+                  const paddedValue = currentValue.padStart(6, "0");
+                  setId2(paddedValue);
+                  handleValueChange(paddedValue, 1);
+                }
               }}
               placeholder="000000"
               onKeyDown={(e) => {
@@ -322,10 +374,12 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
               }}
             />
             <button
-              onClick={() => {
-                // Trigger search with current values when dropdown button clicked
-                handleSearch(id1, id2);
-                setShowAdvanceSearch(true);
+              onClick={() => handleSearch(id1, id2)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  handleSearch(id1, id2);
+                }
               }}
               className=" w-[20px] h-[20px] mt-1 flex items-center justify-center px-1 bg-white border border-gray-500 cursor-pointer"
             >
@@ -338,11 +392,20 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
           <div className="flex gap-1">
             <input
               type="text"
+              maxLength={6}
               className="border w-20 border-gray-400 p-1 placeholder-gray-400 bg-input"
               value={(Array.isArray(value) && value[0]) || ""}
               onChange={(e) => {
                 setId1(extractHalfWidthDigits(e.target.value));
                 handleValueChange(extractHalfWidthDigits(e.target.value), 0);
+              }}
+              onBlur={(e) => {
+                const currentValue = e.target.value;
+                if (currentValue && currentValue.length > 0) {
+                  const paddedValue = currentValue.padStart(6, "0");
+                  setId1(paddedValue);
+                  handleValueChange(paddedValue, 0);
+                }
               }}
               placeholder="000000"
               onKeyDown={(e) => {
@@ -353,12 +416,21 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
             <span> - </span>
             <input
               type="text"
+              maxLength={6}
               disabled={!id1}
               className="border w-20 border-gray-400 p-1 placeholder-gray-400 bg-input disabled:bg-gray-200 disabled:cursor-not-allowed"
               value={(Array.isArray(value) && value[1]) || ""}
               onChange={(e) => {
                 setId2(extractHalfWidthDigits(e.target.value));
                 handleValueChange(extractHalfWidthDigits(e.target.value), 1);
+              }}
+              onBlur={(e) => {
+                const currentValue = e.target.value;
+                if (currentValue && currentValue.length > 0) {
+                  const paddedValue = currentValue.padStart(6, "0");
+                  setId2(paddedValue);
+                  handleValueChange(paddedValue, 1);
+                }
               }}
               placeholder="000000"
               onKeyDown={(e) => {
@@ -367,10 +439,12 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
               }}
             />
             <button
-              onClick={() => {
-                // Trigger search with current values when dropdown button clicked
-                handleSearch(id1, id2);
-                setShowAdvanceSearch(true);
+              onClick={() => handleSearch(id1, id2)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  handleSearch(id1, id2);
+                }
               }}
               className=" w-[20px] h-[20px] mt-1 flex items-center justify-center px-1 bg-white border border-gray-500 cursor-pointer"
             >
@@ -395,10 +469,12 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
               }}
             />
             <button
-              onClick={() => {
-                // Trigger search with current value when dropdown button clicked
-                handleSearch(id1);
-                setShowAdvanceSearch(true);
+              onClick={() => handleSearch(id1)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  handleSearch(id1);
+                }
               }}
               className=" w-[20px] h-[20px] mt-1 flex items-center justify-center px-1 bg-white border border-gray-500 cursor-pointer"
             >
@@ -416,9 +492,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
     }
     return value || "";
   };
-  const handleJimushoKeyDown = (
-    event: React.KeyboardEvent<HTMLInputElement>
-  ) => {
+  const handleJimushoKeyDown = (event: React.KeyboardEvent<HTMLElement>) => {
     if (event.key === "Enter") {
       event.preventDefault();
       handleSearchDepartment(postcode1, postcode2);
@@ -469,11 +543,18 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
                   ref={firstInputRef}
                   type="text"
                   placeholder="0000"
+                  maxLength={4}
                   value={postcode1}
                   className="w-20 p-1 border border-gray-500 bg-input"
                   onChange={(e) =>
                     setPostcode1(extractHalfWidthDigits(e.target.value))
                   }
+                  onBlur={(e) => {
+                    const currentValue = e.target.value;
+                    if (currentValue && currentValue.length > 0) {
+                      setPostcode1(currentValue.padStart(4, "0"));
+                    }
+                  }}
                   onKeyDown={(e) => {
                     handleJimushoKeyDown(e);
                     allowDecimalInput(e);
@@ -483,19 +564,32 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
                 <input
                   type="text"
                   placeholder="000"
+                  maxLength={3}
                   value={postcode2}
                   disabled={!postcode1}
                   className="w-20 p-1 border border-gray-500 bg-input disabled:bg-gray-200 disabled:cursor-not-allowed"
                   onChange={(e) =>
                     setPostcode2(extractHalfWidthDigits(e.target.value))
                   }
+                  onBlur={(e) => {
+                    const currentValue = e.target.value;
+                    if (currentValue && currentValue.length > 0) {
+                      setPostcode2(currentValue.padStart(3, "0"));
+                    }
+                  }}
                   onKeyDown={(e) => {
                     handleJimushoKeyDown(e);
                     allowDecimalInput(e);
                   }}
                 />
                 <button
-                  onClick={() => setShowJimushoDropdown(!showJimushoDropdown)}
+                  onKeyDown={(e) => {
+                    handleJimushoKeyDown(e);
+                  }}
+                  onClick={() => {
+                    handleSearchDepartment(postcode1, postcode2);
+                    customerCodeSelectRef.current?.focus();
+                  }}
                   className="mx-1 w-[20px] h-[20px] flex items-center justify-center px-1 bg-white border border-gray-500 cursor-pointer"
                 >
                   ▼
@@ -513,7 +607,9 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
                           handleSearchDepartment(option.code1, option.code2);
                         }}
                       >
-                        <span>{option.code1}-{option.code2}</span>
+                        <span>
+                          {option.code1}-{option.code2}
+                        </span>
                         <span>{option.name}</span>
                       </div>
                     ))}
@@ -531,6 +627,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
                   <span>東京23区担当営業所</span>
                 </div>
                 <button
+                  ref={resetBtn}
                   onClick={() => {
                     setShowDepart(false);
                     // Focus back to first input after re-search
@@ -554,18 +651,17 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
         >
           {!showCustomer ? (
             <>
-              <select
-                ref={customerCodeSelectRef}
-                className="bg-label p-1 font-bold w-24 text-center mr-2"
-                value={selectedFieldId}
-                onChange={(e) => setSelectedFieldId(e.target.value as FieldId)}
-              >
-                {fieldDefinitionsLeftPanel.map((field) => (
-                  <option key={field.id} value={field.id}>
-                    {field.label}
-                  </option>
-                ))}
-              </select>
+              <div className="mr-2">
+                <CustomSelect
+                  value={selectedFieldId}
+                  onChange={(value) => setSelectedFieldId(value as FieldId)}
+                  options={fieldDefinitionsLeftPanel.map((field) => ({
+                    value: field.id,
+                    label: field.label,
+                  }))}
+                  className="bg-label p-1 font-bold w-24 text-center"
+                />
+              </div>
 
               <div className="flex">{renderDynamicInput()}</div>
             </>
@@ -613,15 +709,11 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
               </div>
               <div className="flex justify-between mt-2 text-center">
                 <div className="flex w-[30%] gap-4 ">
-                  <label className="w-20 font-bold bg-label p-1">
-                    入力済
-                  </label>
+                  <label className="w-20 font-bold bg-label p-1">入力済</label>
                   <div className="p-1">0枚</div>
                 </div>
                 <div className="flex w-[30%] gap-4 ">
-                  <label className="w-20 font-bold bg-label p-1">
-                    開閉
-                  </label>
+                  <label className="w-20 font-bold bg-label p-1">開閉</label>
                   <div className="p-1">新規開栓</div>
                 </div>
                 <div className="flex w-[30%] gap-4 ">
@@ -633,9 +725,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
               </div>
               <div className="flex justify-between mt-2 text-center">
                 <div className="flex w-[30%] gap-4 ">
-                  <label className="w-20 font-bold bg-label p-1">
-                    締日
-                  </label>
+                  <label className="w-20 font-bold bg-label p-1">締日</label>
                   <div className="p-1">31</div>
                 </div>
                 <div className="flex w-[30%] gap-4 ">
@@ -645,9 +735,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
                   <div className="p-1">14</div>
                 </div>
                 <div className="flex w-[30%] gap-4 ">
-                  <label className="w-20 font-bold bg-label p-1">
-                    集金日
-                  </label>
+                  <label className="w-20 font-bold bg-label p-1">集金日</label>
                   <div className="p-1">0日</div>
                 </div>
               </div>
@@ -657,7 +745,21 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
         {!showDepart && !showCustomer ? (
           <div className="absolute top-4 right-0">
             <button
+              ref={advancedSearchButtonRef}
               onClick={() => setShowAdvanceSearch(true)}
+              onKeyDown={(e) => {
+                if (
+                  e.key === "ArrowDown" ||
+                  e.key === "ArrowRight" ||
+                  e.key === "Tab"
+                ) {
+                  e.preventDefault();
+                  // Focus to kana select using ref
+                  if (kanaSelectRef.current) {
+                    kanaSelectRef.current.focus();
+                  }
+                }
+              }}
               className="border text-center w-32 bg-white border-black p-2 rounded-md shadow-md shadow-zinc-600"
             >
               詳細検索（S）
@@ -666,7 +768,21 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
         ) : (
           <div className="flex justify-center my-4">
             <button
+              ref={advancedSearchButtonRef}
               onClick={() => setShowAdvanceSearch(true)}
+              onKeyDown={(e) => {
+                if (
+                  e.key === "ArrowDown" ||
+                  e.key === "ArrowRight" ||
+                  e.key === "Tab"
+                ) {
+                  e.preventDefault();
+                  // Focus to kana select using ref
+                  if (kanaSelectRef.current) {
+                    kanaSelectRef.current.focus();
+                  }
+                }
+              }}
               className="border text-center w-32 bg-white border-black p-2 rounded-md shadow-md shadow-zinc-600"
             >
               詳細検索（S）
@@ -706,17 +822,17 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
                   </div>
                   <div className="text-sm flex items-center flex-row py-2 w-full">
                     <>
-                      <form className="">
-                        <Select
-                          value="0"
-                          onChange={() => {}}
+                      <div className="mr-2">
+                        <CustomSelect
+                          value={kanaSelectValue}
+                          onChange={(value) => setKanaSelectValue(value)}
                           options={[
                             { value: "0", label: "カナ" },
-                            { value: "1", label: "コード" }
+                            { value: "1", label: "コード" },
                           ]}
-                          className="h-7 mr-2 bg-input border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-24 [&>.ant-select-selector]:!bg-input"
+                          className="h-7 bg-input border border-gray-500 text-black text-sm px-2 w-24"
                         />
-                      </form>
+                      </div>
                       <input
                         ref={kanaInputRef}
                         type="text"
@@ -726,7 +842,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
                           setKanaInput(convertToFullWidth(e.target.value))
                         }
                         onKeyDown={(e) => {
-                          if (e.key === 'Enter') {
+                          if (e.key === "Enter") {
                             e.preventDefault();
                             e.stopPropagation();
                             searchButtonRef.current?.focus();
@@ -756,17 +872,17 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
                       <label className="bg-label p-1 font-bold w-24 text-center mr-2">
                         表示順
                       </label>
-                      <form className="">
-                        <Select
-                          value="0"
-                          onChange={() => {}}
+                      <div className="mr-2">
+                        <CustomSelect
+                          value={displayOrderValue}
+                          onChange={(value) => setDisplayOrderValue(value)}
                           options={[
                             { value: "0", label: "コード順" },
-                            { value: "1", label: "五十音順" }
+                            { value: "1", label: "五十音順" },
                           ]}
-                          className="mr-2 bg-input border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-24 [&>.ant-select-selector]:!bg-input"
+                          className="h-7 bg-input border border-gray-500 text-black text-sm px-2 w-24"
                         />
-                      </form>
+                      </div>
                       <label className="bg-label p-1 font-bold w-24 text-center mr-2">
                         検索種類
                       </label>

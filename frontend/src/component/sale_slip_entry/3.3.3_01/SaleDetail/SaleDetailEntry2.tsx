@@ -6,7 +6,7 @@ import {
   convertToFullWidth,
 } from "../../../../utils/InputHandlers";
 import { handleOpenWindow } from "../../../../constants/functions";
-import { Select } from "antd";
+import CustomSelect from "../../../../components/CustomSelect";
 
 interface SaleDetailEntry2Props {
   onChange: (field: string, value: string) => void;
@@ -80,7 +80,7 @@ const SaleDetailEntry2: React.FC<SaleDetailEntry2Props> = ({
 
           <div className=" text-center h-[64px] relative">
             <div className="bg-label h-1/2">売上単価区分</div>
-            <Select
+            <CustomSelect
               value={
                 formData.salesPriceType !== undefined
                   ? String(formData.salesPriceType)
@@ -91,7 +91,7 @@ const SaleDetailEntry2: React.FC<SaleDetailEntry2Props> = ({
                 { value: "0", label: "0 確定単価" },
                 { value: "1", label: "1 仮単価" }
               ]}
-              className="border border-black w-full h-1/2 [&>.ant-select-selector]:!bg-white"
+              className="border border-black w-full h-1/2 bg-white px-2"
             />
           </div>
 
@@ -137,7 +137,7 @@ const SaleDetailEntry2: React.FC<SaleDetailEntry2Props> = ({
 
           <div className=" text-center h-[64px] relative">
             <div className="bg-label h-1/2">仕入単価区分</div>
-            <Select
+            <CustomSelect
               value={
                 formData.purchasePriceType !== undefined
                   ? String(formData.purchasePriceType)
@@ -148,7 +148,7 @@ const SaleDetailEntry2: React.FC<SaleDetailEntry2Props> = ({
                 { value: "0", label: "0 確定単価" },
                 { value: "1", label: "1 仮単価" }
               ]}
-              className="border border-black w-full h-1/2 [&>.ant-select-selector]:!bg-white"
+              className="border border-black w-full h-1/2 bg-white px-2"
             />
           </div>
 
@@ -171,7 +171,7 @@ const SaleDetailEntry2: React.FC<SaleDetailEntry2Props> = ({
 
           <div className=" text-center h-[64px] relative">
             <div className="bg-label h-1/2">自振対象</div>
-            <Select
+            <CustomSelect
               value={
                 formData.selfTransferTarget !== undefined
                   ? String(formData.selfTransferTarget)
@@ -182,7 +182,7 @@ const SaleDetailEntry2: React.FC<SaleDetailEntry2Props> = ({
                 { value: "0", label: "0 対象" },
                 { value: "1", label: "1 対象外" }
               ]}
-              className="border border-black w-full h-1/2 [&>.ant-select-selector]:!bg-white"
+              className="border border-black w-full h-1/2 bg-white px-2"
             />
           </div>
 
@@ -190,7 +190,7 @@ const SaleDetailEntry2: React.FC<SaleDetailEntry2Props> = ({
             <div className="bg-label h-1/2">仕入先</div>
             <div className="flex">
               <div className="flex w-3/5 relative">
-                <Select
+                <CustomSelect
                   value={formData.supplierCode || "0000000000"}
                   onChange={(value) => onChange("supplierCode", value)}
                   options={[
@@ -200,7 +200,7 @@ const SaleDetailEntry2: React.FC<SaleDetailEntry2Props> = ({
                       return { value, label: value };
                     })
                   ]}
-                  className="border w-full border-black [&>.ant-select-selector]:!bg-white"
+                  className="border w-full border-black bg-white px-2"
                 />
               </div>
               <input
@@ -220,7 +220,7 @@ const SaleDetailEntry2: React.FC<SaleDetailEntry2Props> = ({
 
           <div className=" text-center h-[64px] relative">
             <div className="bg-label h-1/2">当月外</div>
-            <Select
+            <CustomSelect
               value={
                 formData.outsideMonth !== undefined
                   ? String(formData.outsideMonth)
@@ -231,7 +231,7 @@ const SaleDetailEntry2: React.FC<SaleDetailEntry2Props> = ({
                 { value: "0", label: "0 空欄" },
                 { value: "1", label: "1 当月外" }
               ]}
-              className="border border-black w-full h-1/2 [&>.ant-select-selector]:!bg-white"
+              className="border border-black w-full h-1/2 bg-white px-2"
             />
           </div>
 

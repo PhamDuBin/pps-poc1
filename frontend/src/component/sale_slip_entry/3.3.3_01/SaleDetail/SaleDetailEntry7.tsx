@@ -3,7 +3,7 @@ import {
   allowDecimalInput,
   extractHalfWidthDigits,
 } from "../../../../utils/InputHandlers";
-import { Select } from "antd";
+import CustomSelect from "../../../../components/CustomSelect";
 
 interface SaleDetailEntry7Props {
   onChange: (field: string, value: string) => void;
@@ -73,7 +73,7 @@ const SaleDetailEntry7: React.FC<SaleDetailEntry7Props> = ({
 
       <div className="h-[64px] w-[120px]">
         <div className="h-1/2 bg-label p-1">自振対象</div>
-        <Select
+        <CustomSelect
           value={
             formData.selfSwingTarget !== undefined
               ? String(formData.selfSwingTarget)
@@ -82,15 +82,15 @@ const SaleDetailEntry7: React.FC<SaleDetailEntry7Props> = ({
           onChange={(value) => onChange("selfSwingTarget", value)}
           options={[
             { value: "0", label: "0 対象" },
-            { value: "1", label: "1 対象外" }
+            { value: "1", label: "1 対象外" },
           ]}
-          className="border border-black w-full h-1/2 text-center [&>.ant-select-selector]:!bg-white"
+          className="border border-black w-full h-1/2 text-center bg-white px-2"
         />
       </div>
 
       <div className="h-[64px] w-[120px]">
         <div className="h-1/2 bg-label p-1">当月外</div>
-        <Select
+        <CustomSelect
           value={
             formData.outsideMonth !== undefined
               ? String(formData.outsideMonth)
@@ -99,9 +99,9 @@ const SaleDetailEntry7: React.FC<SaleDetailEntry7Props> = ({
           onChange={(value) => onChange("outsideMonth", value)}
           options={[
             { value: "0", label: "0 空欄" },
-            { value: "1", label: "1 当月外" }
+            { value: "1", label: "1 当月外" },
           ]}
-          className="border border-black w-full h-1/2 text-center [&>.ant-select-selector]:!bg-white"
+          className="border border-black w-full h-1/2 text-center bg-white px-2"
         />
       </div>
     </div>

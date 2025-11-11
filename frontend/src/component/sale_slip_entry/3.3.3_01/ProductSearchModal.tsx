@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import StatusBar from "../StatusBar";
+import CustomSelect from "../../../components/CustomSelect";
 import { mockData, fieldDefinitions } from "../../../constants/sale_slip_entry";
 
 interface ProductSearchModalProps {
@@ -22,13 +23,16 @@ const AdvancedSearchForm: React.FC<{
   const [formValues, setFormValues] = useState<FormValues>({});
   const currentField = fieldDefinitions.find((f) => f.id === selectedFieldId);
 
-  const selectRef = useRef<HTMLSelectElement>(null);
   const searchButtonRef = useRef<HTMLButtonElement>(null);
+  const firstInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (selectRef.current) {
-      selectRef.current.focus();
-    }
+    // Focus on the first input when component mounts
+    setTimeout(() => {
+      if (firstInputRef.current) {
+        firstInputRef.current.focus();
+      }
+    }, 150);
   }, []);
 
   const handleValueChange = (value: string, index: number | null = null) => {
@@ -82,18 +86,18 @@ const AdvancedSearchForm: React.FC<{
                 <label className="text-center text-sm bg-gray-300 border border-gray-400 px-2">
                   {part.label}
                 </label>
-                <select
-                  className="border border-gray-400 rounded-sm h-full px-2 bg-white"
+                <CustomSelect
                   value={(Array.isArray(value) && value[index]) || ""}
-                  onChange={(e) => handleValueChange(e.target.value, index)}
-                >
-                  <option value="">{part.placeholder}</option>
-                  {part.options.map((opt) => (
-                    <option key={opt} value={opt}>
-                      {opt}
-                    </option>
-                  ))}
-                </select>
+                  onChange={(val) => handleValueChange(val, index)}
+                  options={[
+                    { value: "", label: part.placeholder },
+                    ...part.options.map((opt) => ({
+                      value: opt,
+                      label: opt,
+                    })),
+                  ]}
+                  className="border border-gray-400 rounded-sm h-full px-2 bg-white"
+                />
               </div>
             ))}
           </div>
@@ -107,6 +111,7 @@ const AdvancedSearchForm: React.FC<{
               {currentField.label}
             </label>
             <input
+              ref={firstInputRef}
               type="text"
               className="p-1 w-full h-full bg-white rounded-b-sm"
               value={(typeof value === "string" && value) || ""}
@@ -130,18 +135,15 @@ const AdvancedSearchForm: React.FC<{
         <label className="text-center text-sm bg-gray-300 border border-gray-400 px-2 h-[28px]">
           検索種類
         </label>
-        <select
-          ref={selectRef}
-          className="border border-gray-400 p-2 bg-white h-[36px]"
+        <CustomSelect
           value={selectedFieldId}
-          onChange={(e) => setSelectedFieldId(e.target.value as FieldId)}
-        >
-          {fieldDefinitions.map((field) => (
-            <option key={field.id} value={field.id}>
-              {field.selectLabel}
-            </option>
-          ))}
-        </select>
+          onChange={(value) => setSelectedFieldId(value as FieldId)}
+          options={fieldDefinitions.map((field) => ({
+            value: field.id,
+            label: field.selectLabel,
+          }))}
+          className="border border-gray-400 p-2 bg-white h-[36px]"
+        />
       </div>
 
       <div className="flex-grow">{renderDynamicInput()}</div>

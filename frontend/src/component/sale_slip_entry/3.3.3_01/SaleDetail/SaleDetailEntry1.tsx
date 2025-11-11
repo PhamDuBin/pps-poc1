@@ -6,7 +6,7 @@ import {
   convertToFullWidth,
 } from "../../../../utils/InputHandlers";
 import { handleOpenWindow } from "../../../../constants/functions";
-import { Select } from "antd";
+import CustomSelect from "../../../../components/CustomSelect";
 
 interface SaleDetailEntry1Props {
   onChange: (field: string, value: string) => void;
@@ -80,14 +80,14 @@ const SaleDetailEntry1: React.FC<SaleDetailEntry1Props> = ({
           </div>
           <div className=" text-center h-[64px] relative">
             <div className="bg-label h-1/2">売上単価区分</div>
-            <Select
+            <CustomSelect
               value={formData.salesPriceType || "0"}
               onChange={(value) => onChange("salesPriceType", value)}
               options={[
                 { value: "0", label: "0 確定単価" },
                 { value: "1", label: "1 仮単価" }
               ]}
-              className="border border-black w-full h-1/2 [&>.ant-select-selector]:!bg-white"
+              className="border border-black w-full h-1/2 bg-white px-2"
             />
           </div>
           <div className=" text-center h-[64px] relative">
@@ -134,14 +134,14 @@ const SaleDetailEntry1: React.FC<SaleDetailEntry1Props> = ({
           </div>
           <div className=" text-center h-[64px] relative">
             <div className="bg-label h-1/2">仕入単価区分</div>
-            <Select
+            <CustomSelect
               value={formData.purchasePriceType || "0"}
               onChange={(value) => onChange("purchasePriceType", value)}
               options={[
                 { value: "0", label: "0 確定単価" },
                 { value: "1", label: "1 仮単価" }
               ]}
-              className="border border-black w-full h-1/2 [&>.ant-select-selector]:!bg-white"
+              className="border border-black w-full h-1/2 bg-white px-2"
             />
           </div>
           <div className=" text-center h-[64px] relative">
@@ -162,7 +162,7 @@ const SaleDetailEntry1: React.FC<SaleDetailEntry1Props> = ({
           </div>
           <div className=" text-center h-[64px] relative">
             <div className="bg-label h-1/2">自振対象</div>
-            <Select
+            <CustomSelect
               value={
                 formData.selfTransferTarget !== undefined
                   ? String(formData.selfTransferTarget)
@@ -173,12 +173,12 @@ const SaleDetailEntry1: React.FC<SaleDetailEntry1Props> = ({
                 { value: "0", label: "0 対象" },
                 { value: "1", label: "1 対象外" }
               ]}
-              className="border border-black w-full h-1/2 [&>.ant-select-selector]:!bg-white"
+              className="border border-black w-full h-1/2 bg-white px-2"
             />
           </div>
           <div className=" text-center h-[64px] relative">
             <div className="bg-label h-1/2">当月外</div>
-            <Select
+            <CustomSelect
               value={
                 formData.outsideMonth !== undefined
                   ? String(formData.outsideMonth)
@@ -189,7 +189,7 @@ const SaleDetailEntry1: React.FC<SaleDetailEntry1Props> = ({
                 { value: "0", label: "0 空欄" },
                 { value: "1", label: "1 当月外" }
               ]}
-              className="border border-black w-full h-1/2 [&>.ant-select-selector]:!bg-white"
+              className="border border-black w-full h-1/2 bg-white px-2"
             />
           </div>
           <div className=" text-center h-[64px] col-span-2 relative">

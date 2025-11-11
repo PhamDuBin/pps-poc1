@@ -21,7 +21,10 @@
       "Bash(findstr:*)",
       "Bash(dir \"C:\\Users\\Hoangpd\\Downloads\\*.xlsx\" /b)",
       "Bash(python:*)",
-      "Bash(test:*)"
+      "Bash(test:*)",
+      "Bash(npx eslint:*)",
+      "mcp__ide__getDiagnostics",
+      "Bash(dir:*)"
     ],
     "deny": [],
     "ask": []

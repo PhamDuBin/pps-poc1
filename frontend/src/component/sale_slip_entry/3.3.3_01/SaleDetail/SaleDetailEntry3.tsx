@@ -5,7 +5,7 @@ import {
   allowDecimalInput,
   convertToFullWidth,
 } from "../../../../utils/InputHandlers";
-import { Select } from "antd";
+import CustomSelect from "../../../../components/CustomSelect";
 
 interface SaleDetailEntry3Props {
   onChange: (field: string, value: string) => void;
@@ -107,7 +107,7 @@ const SaleDetailEntry3: React.FC<SaleDetailEntry3Props> = ({
           {/* Outside the Month */}
           <div className="text-center h-[64px] relative">
             <div className="bg-label h-1/2">当月外</div>
-            <Select
+            <CustomSelect
               value={
                 formData.outsideMonth !== undefined
                   ? String(formData.outsideMonth)
@@ -118,14 +118,14 @@ const SaleDetailEntry3: React.FC<SaleDetailEntry3Props> = ({
                 { value: "0", label: "0 空欄" },
                 { value: "1", label: "1 当月外" }
               ]}
-              className="border border-black w-full h-1/2 [&>.ant-select-selector]:!bg-white"
+              className="border border-black w-full h-1/2 bg-white px-2"
             />
           </div>
 
           {/* Self Swing Target */}
           <div className="text-center h-[64px] relative">
             <div className="bg-label h-1/2">売上消費税対象</div>
-            <Select
+            <CustomSelect
               value={
                 formData.selfTransferTarget !== undefined
                   ? String(formData.selfTransferTarget)
@@ -136,7 +136,7 @@ const SaleDetailEntry3: React.FC<SaleDetailEntry3Props> = ({
                 { value: "0", label: "0 対象" },
                 { value: "1", label: "1 対象外" }
               ]}
-              className="border border-black w-full h-1/2 [&>.ant-select-selector]:!bg-white"
+              className="border border-black w-full h-1/2 bg-white px-2"
             />
           </div>
 
