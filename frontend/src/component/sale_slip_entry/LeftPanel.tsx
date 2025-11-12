@@ -6,10 +6,10 @@ import AdvanceSearchModal from "../transaction_information/1.1.1_03/AdvanceSearc
 import CustomSelect from "../../components/CustomSelect";
 import {
   extractHalfWidthDigits,
-  convertToFullWidth,
   handleFormatting,
   allowDecimalInput,
 } from "../../utils/InputHandlers";
+import { processKatakanaInput } from "../../utils/katakana";
 import {
   kanaButtons,
   tableHeaders,
@@ -508,6 +508,11 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
     }
   };
 
+  const handleKatakanaBlur = () => {
+    const processedValue = processKatakanaInput(kanaInput);
+    setKanaInput(processedValue);
+  };
+
   const handleShowHardcodedCustomer = () => {
     setId1("000000");
     setId2("000");
@@ -670,7 +675,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
               <div className="flex justify-between h-8 items-center">
                 <div className="flex gap-20 items-center  ">
                   <span>{formatMultiValue(selectedFieldId)}</span>
-                  <div className="flex flex-col">
+                  <div className="flex flex-col ml-[-29px]">
                     <span>山田　太郎</span>
                     <span>東京都文京区小石川1-1-1 文京ビルディング</span>
                   </div>
@@ -693,7 +698,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
                 </button>
               </div>
 
-              <div className="flex gap-10 mt-2 text-center">
+              <div className="flex mt-2 text-center">
                 <div className="flex w-[35%] gap-4 ">
                   <label className="w-20 font-bold bg-label p-1">
                     電話番号
@@ -838,17 +843,16 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
                         type="text"
                         className="w-64 p-1 border border-gray-500 bg-input"
                         value={kanaInput}
-                        onChange={(e) =>
-                          setKanaInput(convertToFullWidth(e.target.value))
-                        }
+                        onChange={(e) => setKanaInput(e.target.value)}
+                        onBlur={handleKatakanaBlur}
                         onKeyDown={(e) => {
                           if (e.key === "Enter") {
                             e.preventDefault();
                             e.stopPropagation();
+                            handleKatakanaBlur();
                             searchButtonRef.current?.focus();
                           } else {
                             handleKanaKeyDown(e);
-                            handleFormatting(e, convertToFullWidth);
                           }
                         }}
                       />
