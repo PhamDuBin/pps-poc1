@@ -5,7 +5,7 @@ import {
   allowDecimalInput,
   convertToFullWidth,
 } from "../../../../utils/InputHandlers";
-import CustomSelect from "../../../../components/CustomSelect";
+import CustomSelect from "../../../CustomSelect";
 
 interface SaleDetailEntry3Props {
   onChange: (field: string, value: string) => void;
@@ -116,7 +116,7 @@ const SaleDetailEntry3: React.FC<SaleDetailEntry3Props> = ({
               onChange={(value) => onChange("outsideMonth", value)}
               options={[
                 { value: "0", label: "0 空欄" },
-                { value: "1", label: "1 当月外" }
+                { value: "1", label: "1 当月外" },
               ]}
               className="border border-black w-full h-1/2 bg-white px-2"
             />
@@ -134,7 +134,7 @@ const SaleDetailEntry3: React.FC<SaleDetailEntry3Props> = ({
               onChange={(value) => onChange("selfTransferTarget", value)}
               options={[
                 { value: "0", label: "0 対象" },
-                { value: "1", label: "1 対象外" }
+                { value: "1", label: "1 対象外" },
               ]}
               className="border border-black w-full h-1/2 bg-white px-2"
             />

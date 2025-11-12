@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import StatusBar from "../StatusBar";
-import CustomSelect from "../../../components/CustomSelect";
+import CustomSelect from "../../CustomSelect";
 import { mockData, fieldDefinitions } from "../../../constants/sale_slip_entry";
 
 interface ProductSearchModalProps {

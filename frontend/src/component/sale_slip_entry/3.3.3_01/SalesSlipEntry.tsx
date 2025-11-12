@@ -12,7 +12,7 @@ import CategorySelectionModal from "./CategorySelectionModal";
 import SalesSlipEntryRegistration from "./SalesSlipEntryRegistration";
 import ProductSearchModal from "./ProductSearchModal";
 import SaleDetailModal from "./SaleDetail/SaleDetailModal";
-import CustomSelect from "../../../components/CustomSelect";
+import CustomSelect from "../../CustomSelect";
 import { createPortal } from "react-dom";
 import { allowDecimalInput } from "../../../utils/InputHandlers";
 import JapaneseCalendar, {
@@ -78,7 +78,6 @@ const SalesSlipEntry = forwardRef(
         setIsOpenDepositProcess((prev) => !prev);
       },
     }));
-
 
     const handleClickSlip = (index: number) => {
       if (activeSlipIndex === index) {

@@ -6,7 +6,7 @@ import {
   convertToFullWidth,
 } from "../../../../utils/InputHandlers";
 import { handleOpenWindow } from "../../../../constants/functions";
-import CustomSelect from "../../../../components/CustomSelect";
+import CustomSelect from "../../../CustomSelect";
 
 interface SaleDetailEntry6Props {
   onChange: (field: string, value: string) => void;

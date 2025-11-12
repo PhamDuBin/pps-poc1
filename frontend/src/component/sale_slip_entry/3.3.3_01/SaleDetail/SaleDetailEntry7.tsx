@@ -3,7 +3,7 @@ import {
   allowDecimalInput,
   extractHalfWidthDigits,
 } from "../../../../utils/InputHandlers";
-import CustomSelect from "../../../../components/CustomSelect";
+import CustomSelect from "../../../CustomSelect";
 
 interface SaleDetailEntry7Props {
   onChange: (field: string, value: string) => void;

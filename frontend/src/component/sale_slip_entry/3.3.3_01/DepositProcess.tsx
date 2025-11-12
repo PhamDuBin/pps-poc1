@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import JapaneseCalendar from "../../JapaneseCalendar";
-import CustomSelect from "../../../components/CustomSelect";
+import CustomSelect from "../../CustomSelect";
 import {
   shukinOptions,
   nyukinOptions,

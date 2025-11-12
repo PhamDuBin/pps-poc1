@@ -3,7 +3,7 @@ import React, { useRef } from "react";
 //■左カラム顧客検索＆情報表示ランチャー
 import { useEffect, useState } from "react";
 import AdvanceSearchModal from "../transaction_information/1.1.1_03/AdvanceSearchModal";
-import CustomSelect from "../../components/CustomSelect";
+import CustomSelect from "../CustomSelect";
 import {
   extractHalfWidthDigits,
   handleFormatting,
