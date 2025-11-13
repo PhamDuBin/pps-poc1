@@ -226,7 +226,7 @@ function formatHalfWidthAlphaNum(value: string): string {
 
   let halfWidth = kata.replace(zenRegex, (m) => zenToHanMap[m] || m);
 
-  return halfWidth.replace(/[^\u0000-\u007F]/g, "");
+  return halfWidth.replace(/[^\x20-\x7E]/g, "");
 }
 
 function formatHalfWidthKana(value: string): string {
@@ -253,7 +253,8 @@ const BaseJapaneseInput = forwardRef<InputRef, JapaneseInputProps>(
       if (value !== internalValue) {
         setInternalValue(value || "");
       }
-    }, [value, internalValue]);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [value]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       setInternalValue(e.target.value);

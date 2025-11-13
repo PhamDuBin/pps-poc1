@@ -52,6 +52,8 @@ const BasicInformation = forwardRef<any, { showData: boolean }>(
           ...defaultInputValues,
           postalCode1: "111",
           postalCode2: "9999",
+          // Các giá trị này đã có trong initialEmptyValues (hoặc defaultInputValues)
+          // nên chúng sẽ được tải đúng khi showData=true
         }));
       } else {
         setFormValues(initialEmptyValues);
@@ -210,10 +212,13 @@ const BasicInformation = forwardRef<any, { showData: boolean }>(
                 )}
               </div>
 
+              {/* ===== SỬA LỖI TẠI ĐÂY ===== */}
               <HalfWidthAlphaNumInput
                 className={`${inputBaseClass} w-2/5`}
-                value={"9352716"}
-                onChange={() => {}}
+                value={formValues.deliveryCenterName}
+                onChange={(value: string) =>
+                  handleValueChange("deliveryCenterName", value)
+                }
                 disabled={isFormDisabled}
               />
             </div>
@@ -239,10 +244,13 @@ const BasicInformation = forwardRef<any, { showData: boolean }>(
                 )}
               </div>
 
+              {/* ===== SỬA LỖI TẠI ĐÂY ===== */}
               <HalfWidthAlphaNumInput
                 className={`${inputBaseClass} w-2/5`}
-                value={"TA90"}
-                onChange={() => {}}
+                value={formValues.securityAgencyName}
+                onChange={(value: string) =>
+                  handleValueChange("securityAgencyName", value)
+                }
                 disabled={isFormDisabled}
               />
             </div>
@@ -268,10 +276,13 @@ const BasicInformation = forwardRef<any, { showData: boolean }>(
                 )}
               </data>
 
+              {/* ===== SỬA LỖI TẠI ĐÂY ===== */}
               <HalfWidthNumberInput
                 className={`${inputBaseClass} w-2/5`}
-                value={"00503"}
-                onChange={() => {}}
+                value={formValues.monitoringName}
+                onChange={(value: string) =>
+                  handleValueChange("monitoringName", value)
+                }
                 disabled={isFormDisabled}
               />
             </div>
@@ -280,8 +291,11 @@ const BasicInformation = forwardRef<any, { showData: boolean }>(
         case "案内": // 半角英数字
           return (
             <div className="w-1/2">
+              {/* ===== SỬA LỖI TẠI ĐÂY ===== */}
               <HalfWidthAlphaNumInput
                 className={`${inputBaseClass} w-[59%]`}
+                value={formValues.案内}
+                onChange={(value: string) => handleValueChange("案内", value)}
                 disabled={isFormDisabled}
               />
             </div>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
-import { DatePicker, Button } from "antd";
+import { Button } from "antd";
 import dayjs from "dayjs";
 import CodeInputSelect from "../CodeInputSelect";
 import KanaFullWidthInput from "../KanaFullWidthInput";
@@ -10,6 +10,7 @@ import {
   healthOptions,
   hobbyOptions,
 } from "../../constants/customer_ledger";
+import JapaneseCalendar from "../JapaneseCalendar";
 interface FamilyMember {
   id: number | null;
   relation: string;
@@ -49,6 +50,7 @@ const FamilyInfoModal: React.FC<ModalProps> = ({
 
   const firstInputRef = useRef<any>(null);
   const [formData, setFormData] = useState<FamilyMember>(defaultFormData);
+  const [keiriDate, setKeiriDate] = useState<Date>(new Date());
 
   useEffect(() => {
     if (isOpen) {
@@ -117,13 +119,12 @@ const FamilyInfoModal: React.FC<ModalProps> = ({
             <label className="rounded-md w-24 h-6 flex items-center justify-center bg-gray-300">
               生年月日
             </label>
-            <DatePicker
-              value={dayjs(formData.dob, "YYYY/MM/DD")}
-              onChange={(date, dateString) =>
-                handleChange("dob", dateString as string)
-              }
-              className={`h-6 flex-1 ml-2`}
-              format="YYYY/MM/DD"
+            <JapaneseCalendar
+              value={keiriDate}
+              onChange={(date) => setKeiriDate(date)}
+              format="yyyy/MM/dd"
+              placeholder="yyyy/MM/dd"
+              className="japanese-calendar w-60 ml-2 px-2 py-1 rounded-md bg-input"
             />
           </div>
           <div className="flex items-center">
