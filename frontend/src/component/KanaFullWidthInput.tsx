@@ -6,10 +6,11 @@ import { convertToFullWidth } from "../utils/InputHandlers";
 interface KanaInputProps extends Omit<InputProps, "onChange" | "value"> {
   value?: string;
   onChange: (value: string) => void;
+  clearOnEscape?: boolean;
 }
 
 const KanaFullWidthInput = forwardRef<InputRef, KanaInputProps>(
-  ({ value = "", onChange, ...rest }, ref) => {
+  ({ value = "", onChange, clearOnEscape = true, onKeyDown, ...rest }, ref) => {
     const normalizedValue = convertToFullWidth(value);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -25,12 +26,24 @@ const KanaFullWidthInput = forwardRef<InputRef, KanaInputProps>(
       onChange(fullWidthValue);
     };
 
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (clearOnEscape && e.key === "Escape") {
+        e.preventDefault();
+        onChange("");
+      }
+      // Call original onKeyDown if provided
+      if (onKeyDown) {
+        onKeyDown(e);
+      }
+    };
+
     return (
       <Input
         ref={ref}
         value={normalizedValue}
         onChange={handleInputChange}
         onPaste={handlePaste}
+        onKeyDown={handleKeyDown}
         {...rest}
       />
     );

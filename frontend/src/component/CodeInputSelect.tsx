@@ -34,7 +34,7 @@ const CodeInputSelect = forwardRef<InputRef, CodeInputSelectProps>(
       selectClassName,
       onArrowUp,
       onArrowDown,
-      autoSelectOnFocus = false,
+      autoSelectOnFocus = true,
     },
     ref
   ) => {
@@ -46,7 +46,9 @@ const CodeInputSelect = forwardRef<InputRef, CodeInputSelectProps>(
         case "F4":
           e.preventDefault();
           setIsOpen(true);
-          selectRef.current?.focus();
+          setTimeout(() => {
+            selectRef.current?.focus();
+          }, 0);
           break;
 
         case "Escape":

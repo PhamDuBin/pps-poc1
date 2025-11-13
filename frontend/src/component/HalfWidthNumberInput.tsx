@@ -6,6 +6,7 @@ interface HalfWidthNumberInputProps
   extends Omit<InputProps, "onChange" | "value"> {
   value?: string;
   onChange: (value: string) => void;
+  clearOnEscape?: boolean;
 }
 
 const toHalfWidthNumber = (str: string): string => {
@@ -15,7 +16,7 @@ const toHalfWidthNumber = (str: string): string => {
 };
 
 const HalfWidthNumberInput = forwardRef<InputRef, HalfWidthNumberInputProps>(
-  ({ value = "", onChange, ...rest }, ref) => {
+  ({ value = "", onChange, clearOnEscape = true, onKeyDown, ...rest }, ref) => {
     const normalizedValue = toHalfWidthNumber(value);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -31,12 +32,23 @@ const HalfWidthNumberInput = forwardRef<InputRef, HalfWidthNumberInputProps>(
       onChange(halfWidthValue);
     };
 
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (clearOnEscape && e.key === "Escape") {
+        e.preventDefault();
+        onChange("");
+      }
+      if (onKeyDown) {
+        onKeyDown(e);
+      }
+    };
+
     return (
       <Input
         ref={ref}
         value={normalizedValue}
         onChange={handleInputChange}
         onPaste={handlePaste}
+        onKeyDown={handleKeyDown}
         {...rest}
       />
     );

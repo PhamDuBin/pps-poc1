@@ -13,8 +13,8 @@ import AdvanceSearchModal from "../transaction_information/1.1.1_03/AdvanceSearc
 import MessageModal from "../../context/MessageModal";
 import { Transition } from "@headlessui/react";
 import React from "react";
-import HalfWidthKanaInput from "../HalfWidthKanaInput";
 import { handleOpenWindow } from "../../constants/functions";
+import { HalfWidthKanaInput } from "../input/JapaneseInputs";
 
 const MainBusinessScreen = () => {
   const [activeSection, setActiveSection] = useState<string | null>(null);
@@ -133,7 +133,7 @@ const MainBusinessScreen = () => {
           part4: "000",
         });
         setShouldShowData(false);
-        firstInputRef.current?.focus();
+        setShowAdvanceSearch(true);
       },
 
       F9: () => {},
@@ -154,7 +154,6 @@ const MainBusinessScreen = () => {
       handleScrollAndFocus,
       setCustomerCode,
       setShouldShowData,
-      firstInputRef,
       openConfirmationModal,
     ]
   );
@@ -166,20 +165,25 @@ const MainBusinessScreen = () => {
     const handleKeyDown = (e: KeyboardEvent) => {
       const key = e.key.toUpperCase();
       if (key.startsWith("F") && !isNaN(Number(key.substring(1)))) {
-        e.preventDefault();
+        e.preventDefault(); // Chặn F-key của trình duyệt (F5, F11...)
         const action = shortcuts[key as keyof typeof shortcuts];
         if (action) {
           action();
         }
         return;
       }
-      // const isMac = navigator.platform.toUpperCase().includes("MAC");
       const isModifierPressed = e.ctrlKey && e.altKey;
-
       const action = shortcuts[key as keyof typeof shortcuts];
       if (isModifierPressed && action) {
         e.preventDefault();
         action();
+        return;
+      }
+      const isModalOpen =
+        container.querySelector(".advance-search-modal") ||
+        container.querySelector(".ant-modal-mask");
+
+      if (isModalOpen) {
         return;
       }
       if (e.key === "Tab") {
@@ -195,18 +199,68 @@ const MainBusinessScreen = () => {
         return;
       }
 
-      const focusableElements = Array.from(
+      const allElements = Array.from(
         container.querySelectorAll(
           "input:not([disabled]), button:not([disabled]), select:not([disabled]), textarea:not([disabled])"
         )
       ) as HTMLElement[];
 
-      const activeElement = document.activeElement as HTMLElement;
-      const currentIndex = focusableElements.indexOf(activeElement);
+      const focusableElements = allElements.filter((el) => {
+        if (
+          el.tagName === "INPUT" &&
+          (el as HTMLInputElement).type === "radio"
+        ) {
+          const radioGroup = el.closest(".ant-radio-group");
+          if (!radioGroup) {
+            return true;
+          }
+          const checkedRadio = radioGroup.querySelector(
+            'input[type="radio"]:checked'
+          ) as HTMLInputElement | null;
 
-      if (currentIndex !== -1) {
-        handleNavigationKey040504(e, currentIndex, focusableElements);
+          if (checkedRadio) {
+            return el === checkedRadio;
+          } else {
+            const firstRadioInGroup = radioGroup.querySelector(
+              'input[type="radio"]'
+            );
+            return el === firstRadioInGroup;
+          }
+        }
+        if (
+          el.tagName === "INPUT" &&
+          (el as HTMLInputElement).type === "checkbox"
+        ) {
+          const checkboxGroup = el.closest(".ant-checkbox-group-navigable");
+          if (!checkboxGroup) {
+            return true;
+          }
+          const firstCheckboxInGroup = checkboxGroup.querySelector(
+            'input[type="checkbox"]'
+          );
+          return el === firstCheckboxInGroup;
+        }
+
+        return true;
+      });
+
+      const activeElement = document.activeElement as HTMLElement;
+      if (
+        activeElement &&
+        activeElement.closest('[data-calendar-popup="true"]')
+      ) {
+        return;
       }
+
+      if (
+        e.key === "Enter" &&
+        activeElement &&
+        activeElement.classList.contains("japanese-calendar")
+      ) {
+        return;
+      }
+      const currentIndex = focusableElements.indexOf(activeElement);
+      handleNavigationKey040504(e, currentIndex, focusableElements);
     };
 
     container.addEventListener("keydown", handleKeyDown);

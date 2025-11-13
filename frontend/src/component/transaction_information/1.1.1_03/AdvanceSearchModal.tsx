@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import { fieldDefinitions } from "../../../constants/transaction_information";
 import { processKatakanaInput } from "../../../utils/katakana";
+import { Radio, Select, Button } from "antd";
+import type { BaseSelectRef } from "rc-select";
 
 type TableRowData = {
   kanaName: string;
@@ -15,16 +17,15 @@ type FormValues = { [key in FieldId]?: string | string[] };
 const AdvancedSearchForm: React.FC<{
   onSearch: () => void;
   onReset: () => void;
-  selectRef: React.RefObject<HTMLSelectElement | null>;
+  selectRef: React.RefObject<BaseSelectRef | null>;
   searchButtonRef: React.RefObject<HTMLButtonElement | null>;
-}> = ({ onSearch, onReset, selectRef, searchButtonRef }) => {
+  firstInputRef?: React.RefObject<HTMLInputElement | null>;
+}> = ({ onSearch, onReset, selectRef, searchButtonRef, firstInputRef }) => {
   const [selectedFieldId, setSelectedFieldId] = useState<FieldId>(
     fieldDefinitions[0].id
   );
   const [formValues, setFormValues] = useState<FormValues>({});
   const currentField = fieldDefinitions.find((f) => f.id === selectedFieldId);
-
-  const firstInputRef = useRef<HTMLInputElement>(null);
 
   const handleValueChange = (value: string, index: number | null = null) => {
     if (!currentField) return;
@@ -40,18 +41,14 @@ const AdvancedSearchForm: React.FC<{
       currentField.type === "double" ||
       currentField.type === "dropdown"
     ) {
-      let tempArray: string[];
+      let tempArray: string[] =
+        Array.isArray(newValues) && newValues.length
+          ? [...(newValues as string[])]
+          : currentField.type === "dropdown"
+          ? ["0", ""]
+          : [];
 
-      if (Array.isArray(newValues)) {
-        tempArray = [...newValues];
-      } else {
-        tempArray = currentField.type === "dropdown" ? ["0", ""] : [];
-      }
-
-      if (index !== null) {
-        tempArray[index] = value;
-      }
-
+      if (index !== null) tempArray[index] = value;
       newValues = tempArray;
     } else {
       newValues = value;
@@ -65,7 +62,10 @@ const AdvancedSearchForm: React.FC<{
       const currentValue = formValues[selectedFieldId];
       if (typeof currentValue === "string") {
         const processedValue = processKatakanaInput(currentValue);
-        setFormValues((prev) => ({ ...prev, [selectedFieldId]: processedValue }));
+        setFormValues((prev) => ({
+          ...prev,
+          [selectedFieldId]: processedValue,
+        }));
       }
     }
   };
@@ -148,6 +148,7 @@ const AdvancedSearchForm: React.FC<{
             onKeyDown={(e) => {
               if (e.key === "Enter" && typeof value === "string" && value) {
                 e.preventDefault();
+                e.stopPropagation();
                 handleKatakanaBlur();
                 searchButtonRef.current?.focus();
               }
@@ -168,18 +169,16 @@ const AdvancedSearchForm: React.FC<{
         <label className="text-xs font-semibold text-gray-600 my-1">
           検索種類 / 検索順
         </label>
-        <select
+        <Select
           ref={selectRef}
-          className="border border-black p-1 mt-1 h-[30px]"
+          className="w-40 mr-2 [&>.ant-select-selector]:!bg-input ant-select"
           value={selectedFieldId}
-          onChange={(e) => setSelectedFieldId(e.target.value as FieldId)}
-        >
-          {fieldDefinitions.map((field) => (
-            <option key={field.id} value={field.id}>
-              {field.label}
-            </option>
-          ))}
-        </select>
+          onChange={(value) => setSelectedFieldId(value as FieldId)}
+          options={fieldDefinitions.map((field) => ({
+            label: field.label,
+            value: field.id,
+          }))}
+        />
       </div>
 
       <div className="flex-grow">
@@ -190,19 +189,19 @@ const AdvancedSearchForm: React.FC<{
       </div>
 
       <div className="flex flex-col space-y-1">
-        <button
+        <Button
           ref={searchButtonRef}
           onClick={onSearch}
-          className="bg-label border border-black px-4 py-1 h-[26px] flex items-center justify-center shadow-md shadow-zinc-600"
+          className="bg-label border border-black px-4 py-1 h-[26px] flex items-center justify-center shadow-md shadow-zinc-600 ant-btn"
         >
           検索
-        </button>
-        <button
+        </Button>
+        <Button
           onClick={handleResetForm}
-          className="bg-label border border-black px-4 py-1 h-[26px] flex items-center justify-center shadow-md shadow-zinc-600"
+          className="bg-label border border-black px-4 py-1 h-[26px] flex items-center justify-center shadow-md shadow-zinc-600 ant-btn"
         >
           再入力
-        </button>
+        </Button>
       </div>
     </div>
   );
@@ -224,8 +223,10 @@ const AdvanceSearchModal: React.FC<AdvanceSearchModalProps> = ({
   const tbodyRef = useRef<HTMLTableSectionElement>(null);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const radioGroupRef = useRef<HTMLDivElement>(null);
-  const selectRef = useRef<HTMLSelectElement>(null);
+  const selectRef = useRef<BaseSelectRef>(null);
   const searchButtonRef = useRef<HTMLButtonElement>(null);
+  const firstInputRef = useRef<HTMLInputElement>(null);
+  const modalContainerRef = useRef<HTMLDivElement>(null);
 
   const handleSearch = () => {
     const mockData = Array.from({ length: 12 }).map((_, index) => ({
@@ -243,29 +244,21 @@ const AdvanceSearchModal: React.FC<AdvanceSearchModalProps> = ({
     setActiveIndex(null);
   };
 
-  // Focus on first radio button when modal opens
   useEffect(() => {
-    if (radioGroupRef.current) {
+    if (showAdvanceSearch && radioGroupRef.current) {
       const firstRadio = radioGroupRef.current.querySelector<HTMLInputElement>(
         'input[type="radio"]'
       );
-      if (firstRadio) {
-        setTimeout(() => {
-          firstRadio.focus();
-        }, 150);
-      }
+      if (firstRadio) setTimeout(() => firstRadio.focus(), 150);
     }
-  }, []);
+  }, [showAdvanceSearch]);
 
   useEffect(() => {
     if (activeIndex !== null && tbodyRef.current) {
       const row = tbodyRef.current.children[activeIndex] as HTMLElement;
       if (row) {
         row.focus();
-        row.scrollIntoView({
-          behavior: "smooth",
-          block: "center",
-        });
+        row.scrollIntoView({ behavior: "smooth", block: "center" });
       }
     }
   }, [activeIndex]);
@@ -274,17 +267,14 @@ const AdvanceSearchModal: React.FC<AdvanceSearchModalProps> = ({
     e: React.KeyboardEvent<HTMLTableSectionElement>
   ) => {
     if (activeIndex === null) return;
-
     switch (e.key) {
       case "ArrowDown":
         e.preventDefault();
-        const nextIndex = Math.min(activeIndex + 1, tableData.length - 1);
-        setActiveIndex(nextIndex);
+        setActiveIndex(Math.min(activeIndex + 1, tableData.length - 1));
         break;
       case "ArrowUp":
         e.preventDefault();
-        const prevIndex = Math.max(activeIndex - 1, 0);
-        setActiveIndex(prevIndex);
+        setActiveIndex(Math.max(activeIndex - 1, 0));
         break;
       case "Enter":
         e.preventDefault();
@@ -296,122 +286,243 @@ const AdvanceSearchModal: React.FC<AdvanceSearchModalProps> = ({
     }
   };
 
-  // Add radio navigation logic
   useEffect(() => {
-    if (!radioGroupRef.current) return;
+    const container = modalContainerRef.current;
+    if (!container) return;
 
-    const radios = Array.from(
-      radioGroupRef.current.querySelectorAll<HTMLInputElement>(
-        'input[type="radio"]'
-      )
-    );
+    const handleModalKeyDown = (e: KeyboardEvent) => {
+      const activeElement = document.activeElement as HTMLElement;
 
-    const handleRadioKeyDown = (e: KeyboardEvent, index: number) => {
-      // Block ArrowUp
-      if (e.key === "ArrowUp") {
-        e.preventDefault();
+      if (activeElement.closest("tbody")) {
         return;
       }
 
-      // Left/Right: cycle through radio buttons
-      if (["ArrowRight", "ArrowLeft"].includes(e.key)) {
-        e.preventDefault();
-        let nextIndex = index;
+      const allElements = Array.from(
+        container.querySelectorAll(
+          'input[type="radio"]:not([disabled]),' +
+            ".ant-select-selection-search-input:not([disabled])," +
+            'input[type="text"]:not([disabled]),' +
+            "button:not([disabled])"
+        )
+      ) as HTMLElement[];
 
-        if (e.key === "ArrowRight") {
-          nextIndex = (index + 1) % radios.length;
-        } else if (e.key === "ArrowLeft") {
-          nextIndex = (index - 1 + radios.length) % radios.length;
+      const focusableElements = allElements.filter((el) => {
+        if (
+          el.tagName === "INPUT" &&
+          (el as HTMLInputElement).type === "radio"
+        ) {
+          const radioGroup = el.closest(".ant-radio-group");
+          if (!radioGroup) return true;
+          const firstRadioInGroup = radioGroup.querySelector(
+            'input[type="radio"]'
+          );
+          return el === firstRadioInGroup;
         }
+        return true;
+      });
 
-        const nextRadio = radios[nextIndex];
-        if (nextRadio) {
-          nextRadio.focus();
-          nextRadio.click();
-          nextRadio.checked = true;
-          const event = new Event("change", { bubbles: true });
-          nextRadio.dispatchEvent(event);
+      let currentIndex = focusableElements.indexOf(activeElement);
+      if (currentIndex === -1) {
+        const radioGroup = activeElement.closest(".ant-radio-group");
+        if (radioGroup) {
+          const firstRadio = radioGroup.querySelector(
+            'input[type="radio"]'
+          ) as HTMLElement;
+          currentIndex = focusableElements.indexOf(firstRadio);
         }
       }
 
-      // Enter/Tab/ArrowDown: move to select field
-      if (["Enter", "Tab", "ArrowDown"].includes(e.key) && !e.shiftKey) {
-        e.preventDefault();
-        selectRef.current?.focus();
+      if (activeElement?.closest(".ant-select-open")) {
+        if (e.key !== "Tab") {
+          return;
+        }
       }
+
+      if (e.key === "Tab") {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const total = focusableElements.length;
+        if (total === 0) return;
+        let nextIndex = e.shiftKey
+          ? (currentIndex - 1 + total) % total
+          : (currentIndex + 1) % total;
+        focusableElements[nextIndex]?.focus();
+        return;
+      }
+
+      if (e.key === " " || e.key === "Spacebar") {
+        const isButton = activeElement?.closest(".ant-btn");
+        const isSelect = activeElement?.closest(".ant-select");
+
+        if (isButton || isSelect) {
+          return;
+        }
+
+        const isInput =
+          activeElement.tagName === "INPUT" &&
+          (activeElement as HTMLInputElement).type === "text";
+        if (isInput) {
+          return;
+        }
+
+        e.preventDefault();
+        e.stopPropagation();
+        return;
+      }
+
+      if (e.key === "Enter") {
+        const isButton = activeElement?.closest(".ant-btn");
+        const isSelect = activeElement?.closest(".ant-select");
+        const isDynamicInput =
+          activeElement.tagName === "INPUT" &&
+          (activeElement as HTMLInputElement).type === "text" &&
+          !activeElement?.closest(".ant-select");
+
+        if (isButton || isSelect || isDynamicInput) {
+          return;
+        }
+      }
+
+      const radioGroup = activeElement?.closest(".ant-radio-group");
+      if (radioGroup) {
+        if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
+          e.preventDefault();
+          e.stopPropagation();
+
+          const radios = Array.from(
+            radioGroup.querySelectorAll('input[type="radio"]')
+          ) as HTMLInputElement[];
+          let currentRadioIndex = radios.findIndex((r) => r === activeElement);
+          if (currentRadioIndex === -1) currentRadioIndex = 0;
+          const totalRadios = radios.length;
+
+          let nextRadioIndex;
+
+          if (e.key === "ArrowRight") {
+            nextRadioIndex = (currentRadioIndex + 1) % totalRadios;
+          } else {
+            // ArrowLeft
+            nextRadioIndex =
+              (currentRadioIndex - 1 + totalRadios) % totalRadios;
+          }
+
+          radios[nextRadioIndex]?.focus();
+          radios[nextRadioIndex]?.click();
+          return;
+        }
+      }
+
+      const tagName = activeElement?.tagName.toUpperCase();
+      const isInput = tagName === "INPUT";
+      if (isInput && activeElement.getAttribute("type") === "text") {
+        const isInsideSelect = activeElement?.closest(".ant-select");
+        if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
+          if (!isInsideSelect) {
+            return;
+          }
+        }
+      }
+
+      const navKeys = [
+        "ArrowLeft",
+        "ArrowRight",
+        "ArrowUp",
+        "ArrowDown",
+        "Enter",
+      ];
+      if (!navKeys.includes(e.key)) {
+        e.stopPropagation();
+        return;
+      }
+
+      e.preventDefault();
+      e.stopPropagation();
+
+      if (currentIndex === -1) {
+        if (focusableElements.length > 0) {
+          focusableElements[0].focus();
+        }
+        return;
+      }
+
+      let nextIndex = currentIndex;
+      const total = focusableElements.length;
+
+      // Next: ArrowDown, ArrowRight, Enter
+      if (
+        e.key === "ArrowRight" ||
+        e.key === "ArrowDown" ||
+        e.key === "Enter"
+      ) {
+        nextIndex = (currentIndex + 1) % total;
+      }
+      // Prev: ArrowUp, ArrowLeft
+      else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+        nextIndex = (currentIndex - 1 + total) % total;
+      }
+
+      focusableElements[nextIndex]?.focus();
     };
 
-    const listeners: Array<{
-      element: HTMLInputElement;
-      handler: (e: KeyboardEvent) => void;
-    }> = [];
-
-    radios.forEach((radio, index) => {
-      const handler = (e: KeyboardEvent) => handleRadioKeyDown(e, index);
-      radio.addEventListener("keydown", handler);
-      listeners.push({ element: radio, handler });
-    });
+    container.addEventListener("keydown", handleModalKeyDown, true);
 
     return () => {
-      listeners.forEach(({ element, handler }) => {
-        element.removeEventListener("keydown", handler);
-      });
+      container.removeEventListener("keydown", handleModalKeyDown, true);
     };
-  }, [searchMode]);
+  }, []); // Giữ nguyên `[]`
 
   return (
-    <div className="p-4 bg-white text-black w-full text-sm advance-search-modal">
+    <div
+      ref={modalContainerRef}
+      className="p-4 bg-white text-black w-full text-sm advance-search-modal"
+    >
       <style>{`
         .advance-search-modal input:focus,
         .advance-search-modal textarea:focus,
-        .advance-search-modal select:focus {
+        .advance-search-modal .ant-select-focused .ant-select-selector {
           background-color: #ffffcc !important;
           outline: 2px solid #4a90e2;
         }
       `}</style>
+
       <div className="bg-label border border-black p-2 text-center font-bold mb-2">
         顧客検索
       </div>
 
-      {/* Search mode */}
       <div className="flex items-center space-x-6 bg-label p-2 border border-black">
         <div className="flex items-center space-x-2">
           <label className="font-semibold">事務所</label>
           <span>0000-000 全指定</span>
         </div>
 
-        <div ref={radioGroupRef} className="flex items-center space-x-4">
+        <Radio.Group
+          ref={radioGroupRef}
+          onChange={(e) => setSearchMode(e.target.value)}
+          value={searchMode}
+          className="flex items-center space-x-4 ant-radio-group"
+        >
           {[
             { id: "overall", label: "全体検索" },
             { id: "collective", label: "集合検索" },
             { id: "bulk", label: "バルク" },
             { id: "kerosene", label: "灯油" },
           ].map((mode) => (
-            <div key={mode.id} className="flex items-center">
-              <input
-                type="radio"
-                id={mode.id}
-                name="searchMode"
-                value={mode.id}
-                checked={searchMode === mode.id}
-                onChange={(e) => setSearchMode(e.target.value)}
-                className="mr-1"
-              />
-              <label htmlFor={mode.id}>{mode.label}</label>
-            </div>
+            <Radio key={mode.id} value={mode.id}>
+              {mode.label}
+            </Radio>
           ))}
-        </div>
+        </Radio.Group>
       </div>
 
-      {/* Form */}
       <AdvancedSearchForm
         onSearch={handleSearch}
         onReset={handleReset}
         selectRef={selectRef}
         searchButtonRef={searchButtonRef}
+        firstInputRef={firstInputRef}
       />
 
-      {/* Table */}
       <div
         className="overflow-auto border border-black mt-2"
         style={{ height: "200px" }}
@@ -425,7 +536,7 @@ const AdvanceSearchModal: React.FC<AdvanceSearchModalProps> = ({
               <th className="border border-black p-1">住所名称 / 部屋番号</th>
             </tr>
           </thead>
-          <tbody ref={tbodyRef} onKeyDown={handleTableKeyDown}>
+          <tbody ref={tbodyRef} onKeyDown={handleTableKeyDown} tabIndex={-1}>
             {tableData.map((row, idx) => (
               <tr
                 key={idx}
@@ -439,29 +550,16 @@ const AdvanceSearchModal: React.FC<AdvanceSearchModalProps> = ({
                 }}
                 tabIndex={-1}
               >
-                <td
-                  onClick={() => setShowAdvanceSearch(false)}
-                  className="relative  border border-black p-1 pl-8 cursor-pointer"
-                >
-                  <div className="absolute left-2 top-1/2 -translate-y-1/2 w-3 h-3" />
+                <td className="relative border border-black p-1 pl-8 cursor-pointer">
                   {row.kanaName}
                 </td>
-                <td
-                  onClick={() => setShowAdvanceSearch(false)}
-                  className=" border border-black p-1 cursor-pointer"
-                >
+                <td className="border border-black p-1 cursor-pointer">
                   {row.name}
                 </td>
-                <td
-                  onClick={() => setShowAdvanceSearch(false)}
-                  className=" border border-black p-1 cursor-pointer"
-                >
+                <td className="border border-black p-1 cursor-pointer">
                   {row.address}
                 </td>
-                <td
-                  onClick={() => setShowAdvanceSearch(false)}
-                  className=" border border-black p-1 cursor-pointer"
-                >
+                <td className="border border-black p-1 cursor-pointer">
                   {row.building}
                 </td>
               </tr>
@@ -470,14 +568,13 @@ const AdvanceSearchModal: React.FC<AdvanceSearchModalProps> = ({
         </table>
       </div>
 
-      {/* Close button */}
-      <div className="flex justify-center">
-        <button
+      <div className="flex justify-center mt-2">
+        <Button
           onClick={() => setShowAdvanceSearch(false)}
-          className="w-20 border border-black bg-label px-2 py-1 flex mt-2 justify-center shadow-md shadow-zinc-600"
+          className="w-20 border border-black bg-label px-2 py-1 flex justify-center shadow-md shadow-zinc-600 ant-btn"
         >
           閉じる
-        </button>
+        </Button>
       </div>
     </div>
   );

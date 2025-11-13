@@ -1,4 +1,4 @@
-import { Button, Checkbox, DatePicker } from "antd";
+import { Button, Checkbox } from "antd";
 import dayjs, { Dayjs } from "dayjs";
 import {
   forwardRef,
@@ -8,7 +8,6 @@ import {
   useState,
 } from "react";
 import {
-  inputColor,
   labelColor,
   hoverInputColor,
   focusInputColor,
@@ -28,11 +27,14 @@ import {
   availabilityOptions,
 } from "../../../constants/customer_ledger";
 import { handleOpenWindow } from "../../../constants/functions";
+import JapaneseCalendar from "../../JapaneseCalendar";
 
 const labelClass = `w-32 mr-2 h-6 border-gray-300 rounded-md ${labelColor} font-bold flex text-center justify-center items-center`;
 
 const AcquisitionInformation = forwardRef<any, { showData: boolean }>(
   (props, ref) => {
+    const [keiriDate, setKeiriDate] = useState<Date>(new Date());
+    const [keiriDate1, setKeiriDate1] = useState<Date>(new Date());
     const { showData } = props;
     const isFormDisabled = !showData;
     const firstSelectRef = useRef<any>(null);
@@ -139,23 +141,23 @@ const AcquisitionInformation = forwardRef<any, { showData: boolean }>(
             <div className="w-1/2 flex">
               <div className={`${labelClass}`}>取引開始日</div>
               <div className="w-4/5">
-                <DatePicker
-                  value={formValues.startDate}
-                  onChange={(date) => handleValueChange("startDate", date)}
-                  className={`h-6 w-2/5 ${inputColor}`}
-                  format="YYYY/MM/DD"
-                  disabled={isFormDisabled}
+                <JapaneseCalendar
+                  value={keiriDate}
+                  onChange={(date) => setKeiriDate(date)}
+                  format="yyyy/MM/dd"
+                  placeholder="yyyy/MM/dd"
+                  className="japanese-calendar w-40  px-2 py-1 rounded-md bg-input"
                 />
               </div>
             </div>
             <div className="w-1/2 flex">
               <div className={`${labelClass}`}>取引中止日</div>
-              <DatePicker
-                value={formValues.endDate}
-                onChange={(date) => handleValueChange("endDate", date)}
-                className={`h-6 w-1/5 ${inputColor}`}
-                format="YYYY/MM/DD"
-                disabled={isFormDisabled}
+              <JapaneseCalendar
+                value={keiriDate1}
+                onChange={(date) => setKeiriDate1(date)}
+                format="yyyy/MM/dd"
+                placeholder="yyyy/MM/dd"
+                className="japanese-calendar w-40  px-2 py-1 rounded-md bg-input"
               />
             </div>
           </div>
@@ -439,7 +441,11 @@ const AcquisitionInformation = forwardRef<any, { showData: boolean }>(
                     <div>曜日</div>
                   </div>
                 </div>
-                <div className="w-full flex items-center gap-2">
+                <div
+                  className="w-full flex items-center gap-2 ant-checkbox-group-navigable"
+                  role="group"
+                  aria-label="在宅曜日"
+                >
                   <Checkbox disabled={isFormDisabled}>土</Checkbox>
                   <Checkbox disabled={isFormDisabled}>日</Checkbox>
                   <Checkbox disabled={isFormDisabled}>月</Checkbox>

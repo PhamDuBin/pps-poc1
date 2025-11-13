@@ -5,7 +5,7 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { Button, DatePicker } from "antd";
+import { Button } from "antd";
 import dayjs from "dayjs";
 import FamilyInfoModal from "../FamilyInfoModal";
 import { inputColor, labelColor } from "../../../constants/colors";
@@ -18,9 +18,11 @@ import {
   freeDescriptionOptions,
   initialFamilyData,
 } from "../../../constants/customer_ledger";
+import JapaneseCalendar from "../../JapaneseCalendar";
 
 const FamilyInfo = forwardRef<any, { showData: boolean }>((props, ref) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [keiriDate, setKeiriDate] = useState<Date>(new Date());
   const firstInputRef = useRef<any>(null);
   const { showData } = props;
   const isFormDisabled = !showData;
@@ -112,14 +114,13 @@ const FamilyInfo = forwardRef<any, { showData: boolean }>((props, ref) => {
       <div className="grid grid-cols-2 gap-x-6 gap-y-2 p-3">
         <div className="flex items-center">
           <label className={labelClass}>居住年月</label>
-          <DatePicker
+          <JapaneseCalendar
             ref={firstInputRef}
-            picker="month"
-            value={formValues.residenceDate}
-            onChange={(date) => handleValueChange("residenceDate", date)}
-            className={`h-6 w-32 !bg-input`}
-            format="YYYY/MM"
-            disabled={isFormDisabled}
+            value={keiriDate}
+            onChange={(date) => setKeiriDate(date)}
+            format="yyyy/MM/dd"
+            placeholder="yyyy/MM/dd"
+            className="japanese-calendar w-40  px-2 py-1 rounded-md bg-input"
           />
         </div>
         <div className="flex items-center">

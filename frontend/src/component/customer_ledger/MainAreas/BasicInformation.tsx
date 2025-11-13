@@ -5,7 +5,7 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { Input, Button, Radio } from "antd";
+import { Button, Radio, type RadioChangeEvent } from "antd";
 import {
   labelColor,
   hoverInputColor,
@@ -13,10 +13,6 @@ import {
 } from "../../../constants/colors";
 import { blockTab } from "../../../utils/InputHandlers";
 import CodeInputSelect from "../../CodeInputSelect";
-import KanaFullWidthInput from "../../KanaFullWidthInput";
-import { convertToFullWidth } from "../../../utils/InputHandlers";
-import HalfWidthKanaInput from "../../HalfWidthKanaInput";
-import HalfWidthNumberInput from "../../HalfWidthNumberInput";
 import {
   labels,
   labelGroups,
@@ -31,6 +27,13 @@ import {
   transactionTypeOption,
 } from "../../../constants/customer_ledger";
 
+import {
+  KanaFullWidthInput,
+  HalfWidthKanaInput,
+  HalfWidthNumberInput,
+  HalfWidthAlphaNumInput,
+} from "../../input/JapaneseInputs";
+
 const inputBaseClass = `${hoverInputColor} ${focusInputColor} focus:!bg-input border border-black h-6`;
 
 const BasicInformation = forwardRef<any, { showData: boolean }>(
@@ -42,21 +45,11 @@ const BasicInformation = forwardRef<any, { showData: boolean }>(
     };
     const { showData } = props;
     const isFormDisabled = !showData;
-
     useEffect(() => {
       if (showData) {
-        const convertedDefaults: { [key: string]: string } = {};
-
-        for (const key in defaultInputValues) {
-          if (Object.prototype.hasOwnProperty.call(defaultInputValues, key)) {
-            convertedDefaults[key] = convertToFullWidth(
-              defaultInputValues[key]
-            );
-          }
-        }
         setFormValues((prev) => ({
           ...prev,
-          ...convertedDefaults,
+          ...defaultInputValues,
           postalCode1: "111",
           postalCode2: "9999",
         }));
@@ -80,7 +73,7 @@ const BasicInformation = forwardRef<any, { showData: boolean }>(
           return (
             <Radio.Group
               value={formValues.customerType}
-              onChange={(e) =>
+              onChange={(e: RadioChangeEvent) =>
                 handleValueChange("customerType", e.target.value)
               }
               size="small"
@@ -94,23 +87,25 @@ const BasicInformation = forwardRef<any, { showData: boolean }>(
             </Radio.Group>
           );
 
-        case "住所":
+        case "住所": // 全角かな
           return (
             <KanaFullWidthInput
               className={`${inputBaseClass} w-3/5`}
               value={formValues.address}
-              onChange={(newValue) => handleValueChange("address", newValue)}
+              onChange={(newValue: string) =>
+                handleValueChange("address", newValue)
+              }
               disabled={isFormDisabled}
             />
           );
 
-        case "代表者名":
+        case "代表者名": // 全角かな
           return (
             <div className="w-1/2">
               <KanaFullWidthInput
                 className={`${inputBaseClass} w-[59%]`}
                 value={formValues.representativeName}
-                onChange={(newValue) =>
+                onChange={(newValue: string) =>
                   handleValueChange("representativeName", newValue)
                 }
                 disabled={isFormDisabled}
@@ -118,11 +113,11 @@ const BasicInformation = forwardRef<any, { showData: boolean }>(
             </div>
           );
 
-        case "取引種類":
+        case "取引種類": // Radio
           return (
             <Radio.Group
               value={formValues.transactionType}
-              onChange={(e) =>
+              onChange={(e: RadioChangeEvent) =>
                 handleValueChange("transactionType", e.target.value)
               }
               size="small"
@@ -136,19 +131,19 @@ const BasicInformation = forwardRef<any, { showData: boolean }>(
             </Radio.Group>
           );
 
-        case "郵便番号":
+        case "郵便番号": // 半角数字
           return (
             <div className="flex items-center gap-[6px] w-1/2 pr-10">
               <HalfWidthNumberInput
                 value={formValues.postalCode1}
-                onChange={(e) => handleValueChange("postalCode1", e)}
+                onChange={(e: string) => handleValueChange("postalCode1", e)}
                 disabled={isFormDisabled}
                 className={`${inputBaseClass} w-[30%]`}
               />
               <span>-</span>
               <HalfWidthNumberInput
                 value={formValues.postalCode2}
-                onChange={(e) => handleValueChange("postalCode2", e)}
+                onChange={(e: string) => handleValueChange("postalCode2", e)}
                 disabled={isFormDisabled}
                 className={`${inputBaseClass} w-[30%]`}
               />
@@ -163,43 +158,50 @@ const BasicInformation = forwardRef<any, { showData: boolean }>(
             </div>
           );
 
-        case "時間帯1":
-        case "時間帯2":
+        case "時間帯1": // Select
+        case "時間帯2": // Select
           const timeFieldName = label === "時間帯1" ? "time1" : "time2";
-
           return (
             <div className="w-[78%]">
               <CodeInputSelect
                 options={timeSlotOptions}
                 value={formValues[timeFieldName as keyof typeof formValues]}
-                onChange={(value) => handleValueChange(timeFieldName, value)}
+                onChange={(value: any) =>
+                  handleValueChange(timeFieldName, value)
+                }
                 disabled={isFormDisabled}
+                autoSelectOnFocus={true}
               />
             </div>
           );
 
-        case "管理部門":
+        case "管理部門": // Select
           return (
             <div className="w-[24%]">
               <CodeInputSelect
                 options={departmentOptions}
                 value={formValues.departmentCode}
-                onChange={(value) => handleValueChange("departmentCode", value)}
+                onChange={(value: any) =>
+                  handleValueChange("departmentCode", value)
+                }
                 disabled={isFormDisabled}
+                autoSelectOnFocus={true}
               />
             </div>
           );
-        case "配送センターコード":
+
+        case "配送センターコード": // Select + 半角英数字
           return (
             <div className="flex items-center w-[67%] justify-between">
               <div className="w-[48%] flex items-center">
                 <CodeInputSelect
                   options={deliveryCenterOptions}
                   value={formValues.deliveryCenterCode}
-                  onChange={(value) =>
+                  onChange={(value: any) =>
                     handleValueChange("deliveryCenterCode", value)
                   }
                   disabled={isFormDisabled}
+                  autoSelectOnFocus={true}
                 />
                 {showData && (
                   <div className="flex justify-center w-[120px]">
@@ -208,7 +210,7 @@ const BasicInformation = forwardRef<any, { showData: boolean }>(
                 )}
               </div>
 
-              <HalfWidthKanaInput
+              <HalfWidthAlphaNumInput
                 className={`${inputBaseClass} w-2/5`}
                 value={"9352716"}
                 onChange={() => {}}
@@ -217,17 +219,18 @@ const BasicInformation = forwardRef<any, { showData: boolean }>(
             </div>
           );
 
-        case "保安機関コード":
+        case "保安機関コード": // Select + 半角英数字
           return (
             <div className="flex items-center w-[67%] justify-between">
               <div className="w-[48%] flex items-center">
                 <CodeInputSelect
                   options={securityAgencyOptions}
                   value={formValues.securityAgencyCode}
-                  onChange={(value) =>
+                  onChange={(value: any) =>
                     handleValueChange("securityAgencyCode", value)
                   }
                   disabled={isFormDisabled}
+                  autoSelectOnFocus={true}
                 />
                 {showData && (
                   <div className="flex justify-center w-[120px]">
@@ -236,7 +239,7 @@ const BasicInformation = forwardRef<any, { showData: boolean }>(
                 )}
               </div>
 
-              <HalfWidthKanaInput
+              <HalfWidthAlphaNumInput
                 className={`${inputBaseClass} w-2/5`}
                 value={"TA90"}
                 onChange={() => {}}
@@ -245,17 +248,18 @@ const BasicInformation = forwardRef<any, { showData: boolean }>(
             </div>
           );
 
-        case "集中監視コード":
+        case "集中監視コード": // Select + 半角数字
           return (
             <div className="flex items-center w-[67%] justify-between">
               <data className="w-[48%] flex items-center">
                 <CodeInputSelect
                   options={monitoringOptions}
                   value={formValues.monitoringCode}
-                  onChange={(value) =>
+                  onChange={(value: any) =>
                     handleValueChange("monitoringCode", value)
                   }
                   disabled={isFormDisabled}
+                  autoSelectOnFocus={true}
                 />
                 {showData && (
                   <div className="flex justify-center w-[120px]">
@@ -264,7 +268,7 @@ const BasicInformation = forwardRef<any, { showData: boolean }>(
                 )}
               </data>
 
-              <HalfWidthKanaInput
+              <HalfWidthNumberInput
                 className={`${inputBaseClass} w-2/5`}
                 value={"00503"}
                 onChange={() => {}}
@@ -273,111 +277,113 @@ const BasicInformation = forwardRef<any, { showData: boolean }>(
             </div>
           );
 
-        case "案内":
+        case "案内": // 半角英数字
           return (
             <div className="w-1/2">
-              <Input
+              <HalfWidthAlphaNumInput
                 className={`${inputBaseClass} w-[59%]`}
                 disabled={isFormDisabled}
               />
             </div>
           );
 
-        case "検索キー1":
+        case "検索キー1": // 半角英数字
           return (
-            <HalfWidthKanaInput
+            <HalfWidthAlphaNumInput
               value={formValues.検索キー1}
-              onChange={(newValue) => handleValueChange("検索キー1", newValue)}
+              onChange={(newValue: string) =>
+                handleValueChange("検索キー1", newValue)
+              }
               className={`${inputBaseClass} w-3/5`}
               disabled={isFormDisabled}
             />
           );
 
-        case "検索キー2":
+        case "検索キー2": // 半角英数字
           return (
-            <HalfWidthKanaInput
+            <HalfWidthAlphaNumInput
               value={formValues.検索キー2}
-              onChange={(newValue) => handleValueChange("検索キー2", newValue)}
+              onChange={(newValue: string) =>
+                handleValueChange("検索キー2", newValue)
+              }
               className={`${inputBaseClass} w-3/5`}
               disabled={isFormDisabled}
             />
           );
 
-        case "備考1":
+        case "備考1": // 全角かな
+        case "備考2": // 全角かな
+        case "備考3": // 全角かな
+          const noteFieldName = label as keyof typeof formValues;
           return (
             <KanaFullWidthInput
               className={`${inputBaseClass} w-2/5`}
-              value={formValues.備考1}
-              onChange={(newValue) => handleValueChange("備考1", newValue)}
+              value={formValues[noteFieldName]}
+              onChange={(newValue: string) =>
+                handleValueChange(noteFieldName, newValue)
+              }
               disabled={isFormDisabled}
             />
           );
-        case "備考2":
-          return (
-            <KanaFullWidthInput
-              className={`${inputBaseClass} w-2/5`}
-              value={formValues.備考2}
-              onChange={(newValue) => handleValueChange("備考2", newValue)}
-              disabled={isFormDisabled}
-            />
-          );
-        case "備考3":
-          return (
-            <KanaFullWidthInput
-              className={`${inputBaseClass} w-2/5`}
-              value={formValues.備考3}
-              onChange={(newValue) => handleValueChange("備考3", newValue)}
-              disabled={isFormDisabled}
-            />
-          );
-        case "カナ":
+
+        case "カナ": // 半角カナ
           return (
             <HalfWidthKanaInput
               className={`${inputBaseClass} w-3/5`}
               value={formValues.カナ}
-              onChange={(newValue) => handleValueChange("カナ", newValue)}
+              onChange={(newValue: string) =>
+                handleValueChange("カナ", newValue)
+              }
               disabled={isFormDisabled}
             />
           );
 
-        case "住所名称":
+        case "住所名称": // 全角かな
           return (
             <div className="w-1/2">
               <KanaFullWidthInput
                 className={`${inputBaseClass} w-[59%]`}
                 value={formValues.住所名称}
-                onChange={(newValue) => handleValueChange("住所名称", newValue)}
+                onChange={(newValue: string) =>
+                  handleValueChange("住所名称", newValue)
+                }
                 disabled={isFormDisabled}
               />
             </div>
           );
-        case "メールアドレス":
+
+        case "メールアドレス": // 半角英数字
           return (
-            <HalfWidthKanaInput
+            <HalfWidthAlphaNumInput
               className={`${inputBaseClass} w-3/5`}
               value={formValues.メールアドレス}
-              onChange={(value) => handleValueChange("メールアドレス", value)}
+              onChange={(value: string) =>
+                handleValueChange("メールアドレス", value)
+              }
               disabled={isFormDisabled}
             />
           );
 
-        case "電話番号1":
-        case "電話番号2":
-        case "電話番号3":
-        case "FAX":
-        case "地図番号":
+        case "電話番号1": // 半角数字
+        case "電話番号2": // 半角数字
+        case "電話番号3": // 半角数字
+        case "FAX": // 半角数字
+        case "地図番号": // 半角数字
           const numberFieldName = label as keyof typeof formValues;
           if (numberFieldName in formValues) {
             return (
               <HalfWidthNumberInput
                 className={`${inputBaseClass} w-3/5`}
                 value={formValues[numberFieldName]}
-                onChange={(value) => handleValueChange(numberFieldName, value)}
+                onChange={(value: string) =>
+                  handleValueChange(numberFieldName, value)
+                }
                 disabled={isFormDisabled}
               />
             );
           }
           break;
+
         default: {
           const fieldName = label as keyof typeof formValues;
           if (fieldName in formValues) {
@@ -386,7 +392,9 @@ const BasicInformation = forwardRef<any, { showData: boolean }>(
                 ref={label === "氏名" ? firstInputRef : null}
                 className={`${inputBaseClass} w-3/5`}
                 value={formValues[fieldName]}
-                onChange={(value) => handleValueChange(fieldName, value)}
+                onChange={(value: string) =>
+                  handleValueChange(fieldName, value)
+                }
                 disabled={isFormDisabled}
               />
             );
