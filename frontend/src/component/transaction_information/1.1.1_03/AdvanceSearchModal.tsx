@@ -291,6 +291,11 @@ const AdvanceSearchModal: React.FC<AdvanceSearchModalProps> = ({
     if (!container) return;
 
     const handleModalKeyDown = (e: KeyboardEvent) => {
+      if (/^F\d{1,2}$/.test(e.key)) {
+        e.preventDefault();
+        e.stopPropagation();
+        return;
+      }
       const activeElement = document.activeElement as HTMLElement;
 
       if (activeElement.closest("tbody")) {
@@ -470,7 +475,7 @@ const AdvanceSearchModal: React.FC<AdvanceSearchModalProps> = ({
     return () => {
       container.removeEventListener("keydown", handleModalKeyDown, true);
     };
-  }, []); // Giữ nguyên `[]`
+  }, []);
 
   return (
     <div

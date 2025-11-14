@@ -52,8 +52,6 @@ const BasicInformation = forwardRef<any, { showData: boolean }>(
           ...defaultInputValues,
           postalCode1: "111",
           postalCode2: "9999",
-          // Các giá trị này đã có trong initialEmptyValues (hoặc defaultInputValues)
-          // nên chúng sẽ được tải đúng khi showData=true
         }));
       } else {
         setFormValues(initialEmptyValues);

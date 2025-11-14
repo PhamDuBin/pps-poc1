@@ -1,9 +1,15 @@
 import { useEffect, useRef, useState, KeyboardEvent } from "react";
 import { kanaButtons } from "../../constants/sale_slip_entry";
 import {
-  convertToFullWidth,
-  handleFormatting,
-} from "../../utils/InputHandlers";
+  Select,
+  Radio,
+  type RadioChangeEvent,
+  type InputRef,
+  Button,
+} from "antd";
+import { HalfWidthKanaInput } from "../input/JapaneseInputs";
+import { inputColor } from "../../constants/colors";
+
 type PersonnelSearchModalProps = {
   onSelectAndClose: (personnel: PersonnelData) => void;
 };
@@ -18,7 +24,10 @@ const PersonnelSearchModal: React.FC<PersonnelSearchModalProps> = ({
 }) => {
   const [showTable, setShowTable] = useState(false);
   const [selected, setSelected] = useState("1");
-  const [code, setCode] = useState("");
+  const [customerCode, setCustomerCode] = useState({
+    part1: "",
+  });
+
   const rowCount = 30;
   const [focusedRowIndex, setFocusedRowIndex] = useState<number | null>(null);
   const tableHeaders = [
@@ -37,8 +46,10 @@ const PersonnelSearchModal: React.FC<PersonnelSearchModalProps> = ({
   ];
   const colWidths = ["15%", "20%", "20%", "25%", "20%"];
 
-  const firstInputRef = useRef<HTMLInputElement>(null);
+  const firstInputRef = useRef<InputRef>(null);
   const tableContainerRef = useRef<HTMLDivElement>(null);
+  const filterButtonRef = useRef<HTMLButtonElement>(null);
+
   useEffect(() => {
     if (firstInputRef.current) {
       firstInputRef.current.focus();
@@ -53,12 +64,62 @@ const PersonnelSearchModal: React.FC<PersonnelSearchModalProps> = ({
     onSelectAndClose(selectedData);
   };
 
-  const handleOpenTable = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter" && code) {
-      e.preventDefault();
-      setShowTable(true);
-      setFocusedRowIndex(0);
+  const handleTableKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+    if (focusedRowIndex === null) {
+      if (e.key === "ArrowDown") {
+        e.preventDefault();
+        e.stopPropagation(); // <-- Thêm vào
+        setFocusedRowIndex(0); // Focus vào hàng đầu tiên
+      }
+      return;
     }
+
+    switch (e.key) {
+      case "ArrowDown":
+        e.preventDefault();
+        e.stopPropagation(); // <-- Thêm vào
+        setFocusedRowIndex((prev) => Math.min((prev ?? 0) + 1, rowCount - 1)); // Di chuyển xuống
+        break;
+      case "ArrowUp":
+        e.preventDefault();
+        e.stopPropagation(); // <-- Thêm vào
+        setFocusedRowIndex((prev) => Math.max((prev ?? 0) - 1, 0)); // Di chuyển lên
+        break;
+      case "Enter":
+        e.preventDefault();
+        e.stopPropagation(); // <-- Thêm vào
+        if (focusedRowIndex !== null) {
+          handleSelectRow(focusedRowIndex); // Chọn hàng hiện tại
+        }
+        break;
+      default:
+        // Không cần ngăn chặn các phím khác
+        break;
+    }
+  };
+  const rowRefs = useRef<(HTMLDivElement | null)[]>([]);
+  useEffect(() => {
+    if (focusedRowIndex !== null && rowRefs.current[focusedRowIndex]) {
+      rowRefs.current[focusedRowIndex]?.scrollIntoView({
+        behavior: "smooth", // Cuộn mượt
+        block: "center", // Đảm bảo hàng nằm giữa màn hình
+      });
+    }
+  }, [focusedRowIndex]);
+
+  const handleInputKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      filterButtonRef.current?.focus();
+    }
+  };
+
+  const handleFilterClick = () => {
+    setShowTable(true);
+    setFocusedRowIndex(0);
+    setTimeout(() => {
+      tableContainerRef.current?.focus();
+    }, 0);
   };
   useEffect(() => {
     if (showTable && tableContainerRef.current) {
@@ -66,42 +127,12 @@ const PersonnelSearchModal: React.FC<PersonnelSearchModalProps> = ({
     }
   }, [showTable]);
 
-  const handleTableKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
-    if (focusedRowIndex === null) {
-      if (e.key === "ArrowDown") {
-        e.preventDefault();
-        setFocusedRowIndex(0);
-      }
-      return;
-    }
-
-    if (e.key === "ArrowDown") {
-      e.preventDefault();
-      setFocusedRowIndex((prev) => (prev! + 1) % rowCount);
-    } else if (e.key === "ArrowUp") {
-      e.preventDefault();
-      setFocusedRowIndex((prev) => (prev! - 1 + rowCount) % rowCount);
-    } else if (e.key === "Enter") {
-      e.preventDefault();
-      if (focusedRowIndex !== null) {
-        handleSelectRow(focusedRowIndex);
-      }
-    }
-  };
-
-  const rowRefs = useRef<(HTMLDivElement | null)[]>([]);
-  useEffect(() => {
-    if (focusedRowIndex !== null && rowRefs.current[focusedRowIndex]) {
-      rowRefs.current[focusedRowIndex]?.scrollIntoView({
-        block: "nearest",
-        inline: "nearest",
-      });
-    }
-  }, [focusedRowIndex]);
-
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-      <div className="bg-white p-4 rounded-lg shadow-xl border border-gray-400 w-[800px]">
+      <div
+        onKeyDown={(e) => e.stopPropagation()}
+        className="bg-white p-4 rounded-lg shadow-xl border border-gray-400 w-[800px] "
+      >
         <div>
           <div className="text-center h-8 text-sm bg-label border border-black py-1 font-semibold">
             担当者検索
@@ -121,34 +152,38 @@ const PersonnelSearchModal: React.FC<PersonnelSearchModalProps> = ({
               <div className="text-sm flex items-center flex-row py-2 w-full">
                 <>
                   <form>
-                    <select className=" h-7 mr-2 bg-input border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-24">
-                      <option value="0">カナ</option>
-                      <option value="1">コード</option>
-                    </select>
+                    <Select className=" h-7 mr-2 bg-input border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-24">
+                      <Select.Option value="0">カナ</Select.Option>
+                      <Select.Option value="1">コード</Select.Option>
+                    </Select>
                   </form>
-                  <input
+                  <HalfWidthKanaInput
                     ref={firstInputRef}
-                    type="text"
-                    className="w-64 p-1 border border-gray-500 bg-input"
-                    onKeyDown={(e) => {
-                      handleFormatting(e, convertToFullWidth);
-                      handleOpenTable(e);
-                    }}
-                    onChange={(e) => {
-                      convertToFullWidth(e.target.value);
-                      setCode(e.target.value);
-                    }}
-                  />
+                    className={`w-64 p-1 border border-gray-500 hover:${inputColor}`}
+                    value={customerCode.part1}
+                    onChange={(e) =>
+                      setCustomerCode((prev) => ({ ...prev, part1: e }))
+                    }
+                    onKeyDown={handleInputKeyDown}
+                  ></HalfWidthKanaInput>
                 </>
               </div>
             </div>
             <div>
-              <button
-                onClick={() => setShowTable(true)}
+              <Button
+                ref={filterButtonRef}
+                onClick={handleFilterClick} // Giữ nguyên
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    // Gọi hàm handleFilterClick đã được cập nhật
+                    handleFilterClick();
+                  }
+                }}
                 className="bg-white border text-center border-black p-2 w-32 rounded-md shadow-md shadow-zinc-600"
               >
                 絞り込む
-              </button>
+              </Button>
             </div>
           </div>
           <div className="mb-2 flex flex-wrap items-center justify-between">
@@ -158,39 +193,32 @@ const PersonnelSearchModal: React.FC<PersonnelSearchModalProps> = ({
                   <label className="bg-label p-1 font-bold w-24 text-center mr-2">
                     表示順
                   </label>
-                  <form>
-                    <select className=" mr-2 bg-input border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-24">
-                      <option value="0">コード順</option>
-                      <option value="1">五十音順</option>
-                    </select>
-                  </form>
+
+                  <Select className=" mr-2 bg-input border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-24">
+                    <Select.Option value="0">コード順</Select.Option>
+                    <Select.Option value="1">五十音順</Select.Option>
+                  </Select>
+
                   <label className="bg-label p-1 font-bold w-24 text-center mr-2">
                     検索種類
                   </label>
-                  <div className="flex items-center w-24 justify-center">
-                    <input
-                      id="exceptRetiredEmployees"
-                      type="radio"
+                  <Radio.Group
+                    onChange={(e: RadioChangeEvent) =>
+                      setSelected(e.target.value)
+                    }
+                    value={selected}
+                    className="flex items-center"
+                  >
+                    <Radio
                       value="0"
-                      name="default-radio"
-                      checked={selected === "0"}
-                      onChange={(e) => setSelected(e.target.value)}
-                      className="w-4 h-4 mr-1"
-                    />
-                    <label htmlFor="exceptRetiredEmployees">退職者以外</label>
-                  </div>
-                  <div className="flex items-center w-24 justify-center">
-                    <input
-                      id="all"
-                      type="radio"
-                      value="1"
-                      name="default-radio"
-                      checked={selected === "1"}
-                      onChange={(e) => setSelected(e.target.value)}
-                      className="w-4 h-4 mr-1"
-                    />
-                    <label htmlFor="all">全て</label>
-                  </div>
+                      className="text-sm w-24 justify-center whitespace-nowrap"
+                    >
+                      退職者以外
+                    </Radio>
+                    <Radio value="1" className="text-sm w-24 justify-center">
+                      全て
+                    </Radio>
+                  </Radio.Group>
                 </>
               </div>
             </div>
@@ -216,7 +244,7 @@ const PersonnelSearchModal: React.FC<PersonnelSearchModalProps> = ({
         </div>
         <h1 className="mt-2">検索結果：{rowCount}件</h1>
         {showTable && (
-          <div>
+          <div className="personnel-search-modal-root">
             <div className="flex w-full sticky top-0 pr-3">
               {tableHeaders.map((header, colIndex) => (
                 <div
@@ -260,12 +288,12 @@ const PersonnelSearchModal: React.FC<PersonnelSearchModalProps> = ({
           </div>
         )}
         <div className="flex justify-center mt-4">
-          <button
+          <Button
             onClick={() => onSelectAndClose({ name: "", kanaName: "" })}
             className="bg-[#D9D9D9] font-bold py-2 px-8 rounded border border-gray-500"
           >
             閉じる
-          </button>
+          </Button>
         </div>
       </div>
     </div>

@@ -165,7 +165,7 @@ const MainBusinessScreen = () => {
     const handleKeyDown = (e: KeyboardEvent) => {
       const key = e.key.toUpperCase();
       if (key.startsWith("F") && !isNaN(Number(key.substring(1)))) {
-        e.preventDefault(); // Chặn F-key của trình duyệt (F5, F11...)
+        e.preventDefault();
         const action = shortcuts[key as keyof typeof shortcuts];
         if (action) {
           action();
@@ -180,17 +180,15 @@ const MainBusinessScreen = () => {
         return;
       }
 
-      // --- LOGIC XỬ LÝ MODAL ĐÃ SỬA ---
       const isAdvanceSearchOpen = container.querySelector(
         ".advance-search-modal"
       );
       const confirmationModalRoot = container.querySelector(".ant-modal-root");
 
       if (isAdvanceSearchOpen) {
-        return; // Để AdvanceSearchModal tự xử lý
+        return;
       }
 
-      // Kiểm tra xem modal xác nhận có đang mở không
       if (
         confirmationModalRoot &&
         modalConfig.isOpen &&

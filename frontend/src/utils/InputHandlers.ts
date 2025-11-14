@@ -208,6 +208,7 @@ export const handleNavigationKey040504 = (
   if (activeElement?.closest(".advance-search-modal")) return;
   if (activeElement?.closest('[role="dialog"]')) return;
   if (activeElement?.closest(".modal")) return;
+  if (activeElement?.closest(".personnel-search-modal-root")) return;
 
   e.preventDefault();
   e.stopPropagation();
