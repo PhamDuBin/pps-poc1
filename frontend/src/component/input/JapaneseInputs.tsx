@@ -2,7 +2,9 @@ import React, { useState, useEffect, forwardRef } from "react";
 import { Input } from "antd";
 import type { InputProps, InputRef } from "antd";
 
+// ... (Toàn bộ code từ zenToHanMap đến hanRegex của bạn giữ nguyên) ...
 const zenToHanMap: { [key: string]: string } = {
+  // ... (giữ nguyên)
   "。": "｡",
   "「": "｢",
   "」": "｣",
@@ -193,7 +195,85 @@ const zenRegex = new RegExp(
   "g"
 );
 
+const hanToZenMap: { [key: string]: string } = {
+  // ... (giữ nguyên)
+  " ": "　",
+  "0": "０",
+  "1": "１",
+  "2": "２",
+  "3": "３",
+  "4": "４",
+  "5": "５",
+  "6": "６",
+  "7": "７",
+  "8": "８",
+  "9": "９",
+  a: "ａ",
+  b: "ｂ",
+  c: "ｃ",
+  d: "ｄ",
+  e: "ｅ",
+  f: "ｆ",
+  g: "ｇ",
+  h: "ｈ",
+  i: "ｉ",
+  j: "ｊ",
+  k: "ｋ",
+  l: "ｌ",
+  m: "ｍ",
+  n: "ｎ",
+  o: "ｏ",
+  p: "ｐ",
+  q: "ｑ",
+  r: "ｒ",
+  s: "ｓ",
+  t: "ｔ",
+  u: "ｕ",
+  v: "ｖ",
+  w: "ｗ",
+  x: "ｘ",
+  y: "ｙ",
+  z: "ｚ",
+  A: "Ａ",
+  B: "Ｂ",
+  C: "Ｃ",
+  D: "Ｄ",
+  E: "Ｅ",
+  F: "Ｆ",
+  G: "Ｇ",
+  H: "Ｈ",
+  I: "Ｉ",
+  J: "Ｊ",
+  K: "Ｋ",
+  L: "Ｌ",
+  M: "Ｍ",
+  N: "Ｎ",
+  O: "Ｏ",
+  P: "Ｐ",
+  Q: "Ｑ",
+  R: "Ｒ",
+  S: "Ｓ",
+  T: "Ｔ",
+  U: "Ｕ",
+  V: "Ｖ",
+  W: "Ｗ",
+  X: "Ｘ",
+  Y: "Ｙ",
+  Z: "Ｚ",
+};
+
+const hanRegex = new RegExp(
+  "(" +
+    Object.keys(hanToZenMap)
+      // eslint-disable-next-line
+      .map((k) => k.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&"))
+      .join("|") +
+    ")",
+  "g"
+);
+
 function hiraToKata(str: string): string {
+  // ... (giữ nguyên)
   if (!str) return "";
   return str.replace(/[\u3041-\u3096]/g, (match) => {
     return String.fromCharCode(match.charCodeAt(0) + 0x60);
@@ -201,41 +281,43 @@ function hiraToKata(str: string): string {
 }
 
 function formatKanaFullWidth(value: string): string {
+  // ... (giữ nguyên)
   if (!value) return "";
-  let kata = hiraToKata(value);
-  let normalized = kata.normalize("NFKC");
-  return normalized.replace(/[^\u30A0-\u30FF\u30FC]/g, "");
+  let normalized = value.normalize("NFKC");
+  let fullWidth = normalized.replace(hanRegex, (m) => hanToZenMap[m] || m);
+  return fullWidth.replace(
+    /[^\u3040-\u309F\u30A0-\u30FF\u30FC\u4E00-\u9FAF\uFF10-\uFF19\uFF21-\uFF3A\uFF41-\uFF5A\u3000]/g,
+    ""
+  );
 }
 
 function formatToHalfWidth(value: string): string {
+  // ... (giữ nguyên)
   if (!value) return "";
   let kata = hiraToKata(value);
   return kata.replace(zenRegex, (m) => zenToHanMap[m] || m);
 }
 
 function formatHalfWidthNumber(value: string): string {
+  // ... (giữ nguyên)
   if (!value) return "";
   let normalized = value.normalize("NFKC");
   return normalized.replace(/[^0-9]/g, "");
 }
 
 function formatHalfWidthAlphaNum(value: string): string {
+  // ... (giữ nguyên)
   if (!value) return "";
-
   let kata = hiraToKata(value);
-
   let halfWidth = kata.replace(zenRegex, (m) => zenToHanMap[m] || m);
-
   return halfWidth.replace(/[^\x20-\x7E]/g, "");
 }
 
 function formatHalfWidthKana(value: string): string {
+  // ... (giữ nguyên)
   if (!value) return "";
-
   let kata = hiraToKata(value);
-
   let halfWidth = kata.replace(zenRegex, (m) => zenToHanMap[m] || m);
-
   return halfWidth.replace(/[^\uFF61-\uFF9F]/g, "");
 }
 
@@ -245,8 +327,10 @@ interface JapaneseInputProps extends Omit<InputProps, "onChange"> {
   formatter: (value: string) => string;
 }
 
+// --- 🔽 THAY ĐỔI COMPONENT NÀY ---
 const BaseJapaneseInput = forwardRef<InputRef, JapaneseInputProps>(
-  ({ value, onChange, formatter, ...props }, ref) => {
+  ({ value, onChange, formatter, onKeyDown, ...props }, ref) => {
+    // 1. Tách 'onKeyDown' ra khỏi props
     const [internalValue, setInternalValue] = useState(value || "");
 
     useEffect(() => {
@@ -257,7 +341,12 @@ const BaseJapaneseInput = forwardRef<InputRef, JapaneseInputProps>(
     }, [value]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      setInternalValue(e.target.value);
+      const newValue = e.target.value; // Lấy giá trị mới
+      setInternalValue(newValue); // Cập nhật state nội bộ
+
+      if (onChange) {
+        onChange(newValue); // <-- THÊM DÒNG NÀY: Báo cho component cha (MainBusinessScreen) ngay lập tức
+      }
     };
 
     const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
@@ -265,7 +354,24 @@ const BaseJapaneseInput = forwardRef<InputRef, JapaneseInputProps>(
       setInternalValue(formattedValue);
 
       if (onChange) {
-        onChange(formattedValue);
+        onChange(formattedValue); // <-- Giữ nguyên dòng này để xử lý padding (ví dụ: '1' -> '001')
+      }
+    };
+
+    // 2. Tạo hàm handleKeyDown mới
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+      // 3. Xử lý phím Escape
+      if (e.key === "Escape") {
+        e.preventDefault(); // Ngăn hành vi mặc định (ví dụ: đóng modal)
+        setInternalValue(""); // Xóa giá trị nội bộ
+        if (onChange) {
+          onChange(""); // Cập nhật state của component cha
+        }
+      }
+
+      // 4. Gọi hàm onKeyDown gốc (nếu có)
+      if (onKeyDown) {
+        onKeyDown(e);
       }
     };
 
@@ -276,6 +382,7 @@ const BaseJapaneseInput = forwardRef<InputRef, JapaneseInputProps>(
         value={internalValue}
         onChange={handleChange}
         onBlur={handleBlur}
+        onKeyDown={handleKeyDown} // 5. Sử dụng hàm mới
       />
     );
   }
@@ -301,12 +408,19 @@ export const HalfWidthInput = forwardRef<InputRef, ExportInputProps>(
 
 export const HalfWidthNumberInput = forwardRef<InputRef, ExportInputProps>(
   (props, ref) => {
+    // ... (Giữ nguyên component này)
+    const { maxLength } = props;
+
+    const numberFormatter = (value: string): string => {
+      let cleanedValue = formatHalfWidthNumber(value);
+      if (maxLength && cleanedValue) {
+        cleanedValue = cleanedValue.padStart(maxLength, "0");
+      }
+      return cleanedValue;
+    };
+
     return (
-      <BaseJapaneseInput
-        formatter={formatHalfWidthNumber}
-        {...props}
-        ref={ref}
-      />
+      <BaseJapaneseInput formatter={numberFormatter} {...props} ref={ref} />
     );
   }
 );

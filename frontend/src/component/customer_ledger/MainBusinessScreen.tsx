@@ -14,7 +14,7 @@ import MessageModal from "../../context/MessageModal";
 import { Transition } from "@headlessui/react";
 import React from "react";
 import { handleOpenWindow } from "../../constants/functions";
-import { HalfWidthKanaInput } from "../input/JapaneseInputs";
+import { HalfWidthNumberInput } from "../input/JapaneseInputs";
 
 const MainBusinessScreen = () => {
   const [activeSection, setActiveSection] = useState<string | null>(null);
@@ -24,6 +24,8 @@ const MainBusinessScreen = () => {
   const otherInfoRef = useRef<any>(null);
   const areaInfoRef = useRef<any>(null);
   const emergencyContactRef = useRef<any>(null);
+  const customerCodeInput1Ref = useRef<any>(null);
+  const customerCodeInput4Ref = useRef<any>(null);
   const [shouldShowData, setShouldShowData] = useState(false);
   const sections = useMemo(
     () => [
@@ -38,10 +40,10 @@ const MainBusinessScreen = () => {
   );
   const [showAdvanceSearch, setShowAdvanceSearch] = useState(true);
   const [customerCode, setCustomerCode] = useState({
-    part1: "0000",
-    part2: "000",
-    part3: "000000",
-    part4: "000",
+    part1: "",
+    part2: "",
+    part3: "",
+    part4: "",
   });
   const [modalConfig, setModalConfig] = useState({
     isOpen: false,
@@ -127,10 +129,10 @@ const MainBusinessScreen = () => {
 
       F8: () => {
         setCustomerCode({
-          part1: "0000",
-          part2: "000",
-          part3: "000000",
-          part4: "000",
+          part1: "",
+          part2: "",
+          part3: "",
+          part4: "",
         });
         setShouldShowData(false);
         setShowAdvanceSearch(true);
@@ -335,6 +337,12 @@ const MainBusinessScreen = () => {
       ) {
         return;
       }
+      if (
+        e.key === "Enter" &&
+        activeElement === customerCodeInput4Ref.current?.input
+      ) {
+        return;
+      }
       const currentIndex = focusableElements.indexOf(activeElement);
       handleNavigationKey040504(e, currentIndex, focusableElements);
     };
@@ -395,41 +403,74 @@ const MainBusinessScreen = () => {
                 集中監視センターコード
               </Select.Option>
             </Select>
-            <HalfWidthKanaInput
+            <HalfWidthNumberInput
+              ref={customerCodeInput1Ref}
               className={`w-10 !px-0 text-center hover:${inputColor}`}
-              defaultValue={"0000"}
+              placeholder={"0000"}
+              maxLength={4}
               value={customerCode.part1}
               onChange={(e) =>
                 setCustomerCode((prev) => ({ ...prev, part1: e }))
               }
-            ></HalfWidthKanaInput>
+            ></HalfWidthNumberInput>
             <span>-</span>
-            <HalfWidthKanaInput
+            <HalfWidthNumberInput
               className={`w-10 !px-0 text-center hover:${inputColor}`}
-              defaultValue={"000"}
+              placeholder={"000"}
+              maxLength={3}
               value={customerCode.part2}
               onChange={(e) =>
                 setCustomerCode((prev) => ({ ...prev, part2: e }))
               }
-            ></HalfWidthKanaInput>
+              disabled={!customerCode.part1}
+            ></HalfWidthNumberInput>
             <span>-</span>
-            <HalfWidthKanaInput
+            <HalfWidthNumberInput
               className={`w-14 !px-0 text-center hover:${inputColor}`}
-              defaultValue={"000000"}
+              placeholder={"000000"}
+              maxLength={6}
               value={customerCode.part3}
               onChange={(e) =>
                 setCustomerCode((prev) => ({ ...prev, part3: e }))
               }
-            ></HalfWidthKanaInput>
+              disabled={!customerCode.part1 || !customerCode.part2}
+            ></HalfWidthNumberInput>
             <span>-</span>
-            <HalfWidthKanaInput
+            <HalfWidthNumberInput
+              ref={customerCodeInput4Ref}
               className={`w-10 !px-0 text-center hover:${inputColor}`}
-              defaultValue={"000"}
+              placeholder={"000"}
+              maxLength={3}
               value={customerCode.part4}
               onChange={(e) =>
                 setCustomerCode((prev) => ({ ...prev, part4: e }))
               }
-            ></HalfWidthKanaInput>
+              disabled={
+                !customerCode.part1 ||
+                !customerCode.part2 ||
+                !customerCode.part3
+              }
+              onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+                if (e.key === "Enter") {
+                  // THÊM 2 DÒNG NÀY:
+                  e.preventDefault(); // Ngăn hành vi 'Enter' mặc định (như submit form)
+                  e.stopPropagation(); // Ngăn sự kiện 'Enter' bị bắt bởi trình xử lý điều hướng chung
+
+                  // SỬA LẠI ĐIỀU KIỆN IF:
+                  const currentValue = (e.target as HTMLInputElement).value;
+                  if (
+                    customerCode.part1 &&
+                    customerCode.part2 &&
+                    customerCode.part3 &&
+                    currentValue // Dùng giá trị hiện tại của ô input
+                  ) {
+                    console.log("hello");
+                    setShouldShowData(true);
+                    handleScrollAndFocus("basicInformation");
+                  }
+                }
+              }}
+            ></HalfWidthNumberInput>
             <Button
               onClick={() => setShowAdvanceSearch(true)}
               className={`${button} mx-2`}
@@ -440,12 +481,13 @@ const MainBusinessScreen = () => {
               ref={firstInputRef}
               onClick={() => {
                 setCustomerCode({
-                  part1: "0000",
-                  part2: "000",
-                  part3: "000000",
-                  part4: "000",
+                  part1: "",
+                  part2: "",
+                  part3: "",
+                  part4: "",
                 });
                 setShouldShowData(false);
+                customerCodeInput1Ref.current?.focus();
               }}
               className={`${button} mx-2`}
             >
@@ -646,10 +688,10 @@ const MainBusinessScreen = () => {
           <Button
             onClick={() => {
               setCustomerCode({
-                part1: "0000",
-                part2: "000",
-                part3: "000000",
-                part4: "000",
+                part1: "",
+                part2: "",
+                part3: "",
+                part4: "",
               });
               setShowAdvanceSearch(true);
             }}
@@ -820,7 +862,7 @@ const MainBusinessScreen = () => {
                   part4: "020",
                 });
                 setShouldShowData(true);
-                firstInputRef.current?.focus();
+                handleScrollAndFocus("basicInformation");
               }}
             />
           </Transition.Child>
