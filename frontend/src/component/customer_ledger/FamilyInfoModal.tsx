@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useMemo } from "react";
 import { Button } from "antd";
 import dayjs from "dayjs";
 import CodeInputSelect from "../CodeInputSelect";
-import KanaFullWidthInput from "../KanaFullWidthInput";
+import { KanaFullWidthInput } from "../input/JapaneseInputs";
 import {
   relationOptions,
   genderOptions,

@@ -12,8 +12,8 @@ import {
 } from "../../../constants/colors";
 import { blockTab } from "../../../utils/InputHandlers";
 import PersonnelSearchModal from "../../input_inspection_result/PersonnelSearchModal";
-import HalfWidthNumberInput from "../../HalfWidthNumberInput";
 import { handleOpenWindow } from "../../../constants/functions";
+import { HalfWidthNumberInput } from "../../input/JapaneseInputs";
 
 const AreaInfo = forwardRef<any, { showData: boolean }>((props, ref) => {
   const headerCellClass = `h-6 px-2 ${labelColor} font-bold text-center flex items-center justify-center text-sm rounded-md`;

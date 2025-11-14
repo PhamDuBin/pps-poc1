@@ -14,7 +14,6 @@ import {
 } from "../../../constants/colors";
 import { blockTab } from "../../../utils/InputHandlers";
 import CodeInputSelect from "../../CodeInputSelect";
-import HalfWidthNumberInput from "../../HalfWidthNumberInput";
 import {
   openCloseOptions,
   contractOptions,
@@ -28,6 +27,7 @@ import {
 } from "../../../constants/customer_ledger";
 import { handleOpenWindow } from "../../../constants/functions";
 import JapaneseCalendar from "../../JapaneseCalendar";
+import { HalfWidthNumberInput } from "../../input/JapaneseInputs";
 
 const labelClass = `w-32 mr-2 h-6 border-gray-300 rounded-md ${labelColor} font-bold flex text-center justify-center items-center`;
 
@@ -317,7 +317,7 @@ const AcquisitionInformation = forwardRef<any, { showData: boolean }>(
           <div className="w-full flex gap-4 justify-between py-1">
             <div className="w-1/2 flex">
               <div className={`${labelClass}`}>ガス販売形態</div>
-              <div className="w-2/5">
+              <div className="w-[40%]">
                 <CodeInputSelect
                   options={inspectionTypeOptions}
                   value={formValues.inspectionType}
@@ -330,7 +330,7 @@ const AcquisitionInformation = forwardRef<any, { showData: boolean }>(
             </div>
             <div className="w-1/2 flex">
               <div className={`${labelClass}`}>販売用途区分</div>
-              <div className="w-2/5">
+              <div className="w-[40%]">
                 <CodeInputSelect
                   options={usageTypeOptions}
                   value={formValues.usageType}
@@ -424,21 +424,6 @@ const AcquisitionInformation = forwardRef<any, { showData: boolean }>(
                       disabled={isFormDisabled}
                     />
                     <div>時</div>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <HalfWidthNumberInput
-                      value={formValues.zaitakuWeek ?? ""}
-                      onChange={(value) =>
-                        handleValueChange("zaitakuWeek", value)
-                      }
-                      size="small"
-                      className={`w-[50px] ${hoverInputColor} ${focusInputColor}`}
-                      disabled={isFormDisabled}
-                    />
-                    <Button disabled={isFormDisabled} className="ml-1 w-6 h-6">
-                      ▼
-                    </Button>
-                    <div>曜日</div>
                   </div>
                 </div>
                 <div

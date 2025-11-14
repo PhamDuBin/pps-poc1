@@ -212,7 +212,6 @@ const BasicInformation = forwardRef<any, { showData: boolean }>(
                 )}
               </div>
 
-              {/* ===== SỬA LỖI TẠI ĐÂY ===== */}
               <HalfWidthAlphaNumInput
                 className={`${inputBaseClass} w-2/5`}
                 value={formValues.deliveryCenterName}
@@ -244,7 +243,6 @@ const BasicInformation = forwardRef<any, { showData: boolean }>(
                 )}
               </div>
 
-              {/* ===== SỬA LỖI TẠI ĐÂY ===== */}
               <HalfWidthAlphaNumInput
                 className={`${inputBaseClass} w-2/5`}
                 value={formValues.securityAgencyName}
@@ -276,7 +274,6 @@ const BasicInformation = forwardRef<any, { showData: boolean }>(
                 )}
               </data>
 
-              {/* ===== SỬA LỖI TẠI ĐÂY ===== */}
               <HalfWidthNumberInput
                 className={`${inputBaseClass} w-2/5`}
                 value={formValues.monitoringName}
@@ -291,8 +288,7 @@ const BasicInformation = forwardRef<any, { showData: boolean }>(
         case "案内": // 半角英数字
           return (
             <div className="w-1/2">
-              {/* ===== SỬA LỖI TẠI ĐÂY ===== */}
-              <HalfWidthAlphaNumInput
+              <KanaFullWidthInput
                 className={`${inputBaseClass} w-[59%]`}
                 value={formValues.案内}
                 onChange={(value: string) => handleValueChange("案内", value)}

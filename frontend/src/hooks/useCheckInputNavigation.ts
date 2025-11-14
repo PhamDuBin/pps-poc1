@@ -89,33 +89,16 @@ export const useKeyboardNavigation = (
     navigableInputs.forEach((input, index) => {
       addListener(input, "keydown", (e: Event) => {
         const kbEvent = e as KeyboardEvent;
-        // *** MODIFIED START: Thêm kiểm tra IME ***
         if (kbEvent.isComposing || kbEvent.keyCode === 229) {
           return;
         }
-        // *** MODIFIED END ***
-        const target = kbEvent.target as HTMLInputElement | HTMLTextAreaElement;
+        const target = kbEvent.target as HTMLInputElement | HTMLTextAreaElement; // Handle ESC key to clear input/textarea value
 
-        // Handle ESC key to clear input/textarea value
         if (kbEvent.key === "Escape") {
           kbEvent.preventDefault();
           if (target.tagName === "INPUT" || target.tagName === "TEXTAREA") {
             target.value = "";
           }
-          return;
-        }
-
-        // For TEXTAREA, only handle ESC, not navigation keys
-        if (input.tagName === "TEXTAREA") {
-          return;
-        }
-
-        // ... (rest of the function)
-        // Skip navigation for custom inputs with special Tab/Enter handling
-        if (
-          input.classList.contains("halfwidth-kana-input") ||
-          input.classList.contains("halfwidth-alphanum-input")
-        ) {
           return;
         }
 
@@ -140,13 +123,24 @@ export const useKeyboardNavigation = (
           hasCustomForwardNav &&
           ["Tab", "Enter", "ArrowDown"].includes(kbEvent.key)
         ) {
-          return;
+          return; // Vẫn giữ return này để ưu tiên điều hướng tùy chỉnh
         }
 
         if (hasCustomBackNav && kbEvent.key === "Tab" && kbEvent.shiftKey) {
-          return;
+          return; // Vẫn giữ return này để ưu tiên điều hướng tùy chỉnh
         }
 
+        // --- MODIFIED START: Cho phím Trái/Phải hoạt động mặc định ---
+        // Nếu là phím Mũi tên Trái hoặc Mũi tên Phải,
+        // chúng ta "return" để ngăn không cho `handleNavigationKey` xử lý.
+        // Điều này cho phép hành vi mặc định của trình duyệt (di chuyển con trỏ văn bản).
+        if (kbEvent.key === "ArrowLeft" || kbEvent.key === "ArrowRight") {
+          return;
+        }
+        // --- MODIFIED END ---
+
+        // Tất cả input (bao gồm textarea và input tùy chỉnh)
+        // bây giờ sẽ chạy hàm handleNavigationKey
         handleNavigationKey(kbEvent, index, navigableInputs);
       });
     });
@@ -195,10 +189,8 @@ export const useKeyboardNavigation = (
     mainRadios.forEach((radio, index) => {
       addListener(radio, "keydown", (e: Event) => {
         const kbEvent = e as KeyboardEvent;
-        // Radio không cần check IME vì không nhập text
         kbEvent.stopPropagation(); // Stop NextUI's built-in handler
 
-        // ... (rest of the function)
         if (
           (kbEvent.key === "Tab" && kbEvent.shiftKey) ||
           kbEvent.key === "ArrowUp"
@@ -252,10 +244,9 @@ export const useKeyboardNavigation = (
     radioGroup1.forEach((radio, index) => {
       addListener(radio, "keydown", (e: Event) => {
         const kbEvent = e as KeyboardEvent;
-        // Radio không cần check IME
+
         kbEvent.stopPropagation(); // Stop NextUI's built-in handler
 
-        // ... (rest of the function)
         if (
           (kbEvent.key === "Tab" && kbEvent.shiftKey) ||
           kbEvent.key === "ArrowUp"
@@ -305,10 +296,8 @@ export const useKeyboardNavigation = (
     radioGroup2.forEach((radio, index) => {
       addListener(radio, "keydown", (e: Event) => {
         const kbEvent = e as KeyboardEvent;
-        // Radio không cần check IME
-        kbEvent.stopPropagation(); // Stop NextUI's built-in handler
 
-        // ... (rest of the function)
+        kbEvent.stopPropagation(); // Stop NextUI's built-in handler
         if (
           (kbEvent.key === "Tab" && kbEvent.shiftKey) ||
           kbEvent.key === "ArrowUp"
@@ -362,10 +351,7 @@ export const useKeyboardNavigation = (
     checkboxes.forEach((checkbox, index) => {
       const handler = (e: Event) => {
         const kbEvent = e as KeyboardEvent;
-        // Checkbox không cần check IME
         kbEvent.stopPropagation(); // Stop any potential built-in checkbox group handlers
-
-        // ... (rest of the function)
         if (kbEvent.key === "Escape") {
           kbEvent.preventDefault();
           checkbox.checked = false;
@@ -416,13 +402,9 @@ export const useKeyboardNavigation = (
     if (text3Input && radioGroup1.length > 0) {
       addListener(text3Input, "keydown", (e: Event) => {
         const kbEvent = e as KeyboardEvent;
-        // *** MODIFIED START: Thêm kiểm tra IME ***
         if (kbEvent.isComposing || kbEvent.keyCode === 229) {
           return;
         }
-        // *** MODIFIED END ***
-
-        // Handle Shift+Tab to go back using normal navigation
         if (kbEvent.key === "Tab" && kbEvent.shiftKey) {
           const text3Index = navigableInputs.indexOf(text3Input);
           if (text3Index > 0) {
@@ -442,13 +424,9 @@ export const useKeyboardNavigation = (
     if (inputToCheckbox && checkboxes.length > 0) {
       addListener(inputToCheckbox, "keydown", (e: Event) => {
         const kbEvent = e as KeyboardEvent;
-        // *** MODIFIED START: Thêm kiểm tra IME ***
         if (kbEvent.isComposing || kbEvent.keyCode === 229) {
           return;
         }
-        // *** MODIFIED END ***
-
-        // Handle Shift+Tab to go back to CODE2
         if (kbEvent.key === "Tab" && kbEvent.shiftKey) {
           kbEvent.preventDefault();
           const lastCodeInput = codeInputs[codeInputs.length - 1];
@@ -468,13 +446,9 @@ export const useKeyboardNavigation = (
     codeInputs.forEach((input, index) => {
       const handler = (e: Event) => {
         const kbEvent = e as KeyboardEvent;
-        // *** MODIFIED START: Thêm kiểm tra IME ***
         if (kbEvent.isComposing || kbEvent.keyCode === 229) {
           return;
         }
-        // *** MODIFIED END ***
-
-        // Handle Shift+Tab to go back to previous code input or text5
         if (kbEvent.key === "Tab" && kbEvent.shiftKey) {
           kbEvent.preventDefault();
           if (index > 0) {
@@ -489,8 +463,6 @@ export const useKeyboardNavigation = (
           }
           return;
         }
-
-        // Handle Tab/Enter to go forward
         if (kbEvent.key === "Enter" || kbEvent.key === "Tab") {
           kbEvent.preventDefault();
           const nextCodeInput = codeInputs[index + 1];
@@ -512,13 +484,9 @@ export const useKeyboardNavigation = (
     if (afterRadioInput && mainRadios.length > 0) {
       addListener(afterRadioInput, "keydown", (e: Event) => {
         const kbEvent = e as KeyboardEvent;
-        // *** MODIFIED START: Thêm kiểm tra IME ***
         if (kbEvent.isComposing || kbEvent.keyCode === 229) {
           return;
         }
-        // *** MODIFIED END ***
-
-        // Handle Shift+Tab and ArrowUp to go back to radio group
         if (
           (kbEvent.key === "Tab" && kbEvent.shiftKey) ||
           kbEvent.key === "ArrowUp"
@@ -532,13 +500,9 @@ export const useKeyboardNavigation = (
     if (afterRadio1Input && radioGroup1.length > 0) {
       addListener(afterRadio1Input, "keydown", (e: Event) => {
         const kbEvent = e as KeyboardEvent;
-        // *** MODIFIED START: Thêm kiểm tra IME ***
         if (kbEvent.isComposing || kbEvent.keyCode === 229) {
           return;
         }
-        // *** MODIFIED END ***
-
-        // Handle Shift+Tab and ArrowUp to go back to radio group
         if (
           (kbEvent.key === "Tab" && kbEvent.shiftKey) ||
           kbEvent.key === "ArrowUp"
@@ -552,13 +516,10 @@ export const useKeyboardNavigation = (
     if (textareaAfterRadio2 && radioGroup2.length > 0) {
       addListener(textareaAfterRadio2, "keydown", (e: Event) => {
         const kbEvent = e as KeyboardEvent;
-        // *** MODIFIED START: Thêm kiểm tra IME ***
         if (kbEvent.isComposing || kbEvent.keyCode === 229) {
           return;
         }
-        // *** MODIFIED END ***
 
-        // Only handle Shift+Tab specially to go back to radio group
         if (kbEvent.key === "Tab" && kbEvent.shiftKey) {
           kbEvent.preventDefault();
           navigateToRadioGroup(radioGroup2, false);

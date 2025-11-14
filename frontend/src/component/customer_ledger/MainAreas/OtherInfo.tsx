@@ -3,13 +3,16 @@ import { labelColor, inputColor } from "../../../constants/colors";
 import { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import { blockTab } from "../../../utils/InputHandlers";
 import CodeInputSelect from "../../CodeInputSelect";
-import HalfWidthNumberInput from "../../HalfWidthNumberInput";
-import KanaFullWidthInput from "../../KanaFullWidthInput";
 import {
   homeOwnershipOptions,
   notificationTypeOptions,
 } from "../../../constants/customer_ledger";
 import { handleOpenWindow } from "../../../constants/functions";
+import {
+  KanaFullWidthInput,
+  HalfWidthNumberInput,
+  HalfWidthAlphaNumInput,
+} from "../../input/JapaneseInputs";
 
 const OtherInfo = forwardRef<any, { showData: boolean }>((props, ref) => {
   const firstButtonRef = useRef<any>(null);
@@ -255,7 +258,7 @@ const OtherInfo = forwardRef<any, { showData: boolean }>((props, ref) => {
 
         <div className="flex items-center">
           <label className={label}>財務補助コード</label>
-          <KanaFullWidthInput
+          <HalfWidthAlphaNumInput
             className={`h-6 w-32 ${inputColorClass}`}
             value={formValues.financeAuxCode}
             onChange={(val) => handleValueChange("financeAuxCode", val)}

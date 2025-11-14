@@ -179,13 +179,91 @@ const MainBusinessScreen = () => {
         action();
         return;
       }
-      const isModalOpen =
-        container.querySelector(".advance-search-modal") ||
-        container.querySelector(".ant-modal-mask");
 
-      if (isModalOpen) {
-        return;
+      // --- LOGIC XỬ LÝ MODAL ĐÃ SỬA ---
+      const isAdvanceSearchOpen = container.querySelector(
+        ".advance-search-modal"
+      );
+      const confirmationModalRoot = container.querySelector(".ant-modal-root");
+
+      if (isAdvanceSearchOpen) {
+        return; // Để AdvanceSearchModal tự xử lý
       }
+
+      // Kiểm tra xem modal xác nhận có đang mở không
+      if (
+        confirmationModalRoot &&
+        modalConfig.isOpen &&
+        (confirmationModalRoot as HTMLElement).style.display !== "none"
+      ) {
+        const confirmationModal =
+          confirmationModalRoot.querySelector(".ant-modal");
+        if (!confirmationModal) return;
+
+        const buttons = Array.from(
+          confirmationModal.querySelectorAll<HTMLButtonElement>(
+            ".ant-modal-footer button:not([disabled])"
+          )
+        );
+
+        if (buttons.length === 0) return; // Không có nút nào
+
+        const activeElement = document.activeElement as HTMLElement;
+        let currentIndex = buttons.findIndex((btn) => btn === activeElement);
+
+        // Nếu focus không nằm trên nút, đặt mặc định cho các phím điều hướng
+        if (
+          currentIndex === -1 &&
+          ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Tab"].includes(
+            e.key
+          )
+        ) {
+          // Mặc định là nút primary (OK) hoặc nút cuối (Cancel)
+          const primaryButtonIndex = buttons.findIndex((b) =>
+            b.classList.contains("ant-btn-primary")
+          );
+          currentIndex =
+            primaryButtonIndex !== -1 ? primaryButtonIndex : buttons.length - 1;
+          buttons[currentIndex]?.focus();
+          e.preventDefault();
+          return;
+        }
+
+        // Xử lý điều hướng
+        if (
+          (e.key === "Tab" && e.shiftKey) ||
+          e.key === "ArrowLeft" ||
+          e.key === "ArrowUp"
+        ) {
+          e.preventDefault();
+          const nextIndex =
+            (currentIndex - 1 + buttons.length) % buttons.length;
+          buttons[nextIndex]?.focus();
+        } else if (
+          e.key === "Tab" ||
+          e.key === "ArrowRight" ||
+          e.key === "ArrowDown"
+        ) {
+          e.preventDefault();
+          const nextIndex = (currentIndex + 1) % buttons.length;
+          buttons[nextIndex]?.focus();
+        } else if (e.key === "Enter" || e.key === " ") {
+          // Cho phép hành động mặc định (click) của trình duyệt/Ant
+          return;
+        } else if (e.key === "Escape") {
+          // Cho phép modal tự xử lý đóng
+          return;
+        } else {
+          // Chặn các phím khác
+          if (!e.metaKey && !e.ctrlKey) {
+            e.preventDefault();
+          }
+        }
+        return; // Đã xử lý phím trong modal, dừng lại
+      }
+      // --- KẾT THÚC LOGIC XỬ LÝ MODAL ---
+
+      // Logic điều hướng trang (chỉ chạy khi không có modal nào mở)
       if (e.key === "Tab") {
         e.preventDefault();
         const currentSectionIndex = sections.indexOf(activeSection ?? "");
@@ -267,7 +345,13 @@ const MainBusinessScreen = () => {
     return () => {
       container.removeEventListener("keydown", handleKeyDown);
     };
-  }, [activeSection, sections, shortcuts, handleScrollAndFocus]);
+  }, [
+    activeSection,
+    sections,
+    shortcuts,
+    handleScrollAndFocus,
+    modalConfig.isOpen,
+  ]);
 
   const label = `h-8 border border-gray-300 font-bold rounded-md flex text-center justify-center items-center px-2 ml-7 mr-2 ${labelColor}`;
   const button = `flex text-center justify-center items-center ${labelColor} border border-black xl:text-base text-xs font-bold shadow-md shadow-zinc-600 hover:bg-white`;

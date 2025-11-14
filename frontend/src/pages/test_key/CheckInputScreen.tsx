@@ -9,10 +9,15 @@ import { Card, CardBody, Radio, RadioGroup } from "@nextui-org/react";
 import BackButton from "../../component/BackButton";
 import CodeInputSelect from "../../component/CodeInputSelect";
 import type { InputRef } from "antd";
+import {
+  HalfWidthKanaInput,
+  HalfWidthNumberInput,
+  HalfWidthAlphaNumInput,
+  KanaFullWidthInput,
+} from "../../component/input/JapaneseInputs";
 
 import {
   extractHalfWidthDigits,
-  convertToFullWidth,
   removeAllWhitespace,
   handleFormatting,
 } from "../../utils/InputHandlers";
@@ -79,132 +84,11 @@ export default function CheckInputScreen() {
     { code: "3", label: "Three" },
     { code: "", label: "Invalid" },
   ];
-  const processHalfWidthKatakana = (str: string) => {
-    // Mapping table for fullwidth katakana to halfwidth katakana
-    const kanaMap: { [key: string]: string } = {
-      ァ: "ｧ",
-      ア: "ｱ",
-      ィ: "ｨ",
-      イ: "ｲ",
-      ゥ: "ｩ",
-      ウ: "ｳ",
-      ェ: "ｪ",
-      エ: "ｴ",
-      ォ: "ｫ",
-      オ: "ｵ",
-      カ: "ｶ",
-      ガ: "ｶﾞ",
-      キ: "ｷ",
-      ギ: "ｷﾞ",
-      ク: "ｸ",
-      グ: "ｸﾞ",
-      ケ: "ｹ",
-      ゲ: "ｹﾞ",
-      コ: "ｺ",
-      ゴ: "ｺﾞ",
-      サ: "ｻ",
-      ザ: "ｻﾞ",
-      シ: "ｼ",
-      ジ: "ｼﾞ",
-      ス: "ｽ",
-      ズ: "ｽﾞ",
-      セ: "ｾ",
-      ゼ: "ｾﾞ",
-      ソ: "ｿ",
-      ゾ: "ｿﾞ",
-      タ: "ﾀ",
-      ダ: "ﾀﾞ",
-      チ: "ﾁ",
-      ヂ: "ﾁﾞ",
-      ッ: "ｯ",
-      ツ: "ﾂ",
-      ヅ: "ﾂﾞ",
-      テ: "ﾃ",
-      デ: "ﾃﾞ",
-      ト: "ﾄ",
-      ド: "ﾄﾞ",
-      ナ: "ﾅ",
-      ニ: "ﾆ",
-      ヌ: "ﾇ",
-      ネ: "ﾈ",
-      ノ: "ﾉ",
-      ハ: "ﾊ",
-      バ: "ﾊﾞ",
-      パ: "ﾊﾟ",
-      ヒ: "ﾋ",
-      ビ: "ﾋﾞ",
-      ピ: "ﾋﾟ",
-      フ: "ﾌ",
-      ブ: "ﾌﾞ",
-      プ: "ﾌﾟ",
-      ヘ: "ﾍ",
-      ベ: "ﾍﾞ",
-      ペ: "ﾍﾟ",
-      ホ: "ﾎ",
-      ボ: "ﾎﾞ",
-      ポ: "ﾎﾟ",
-      マ: "ﾏ",
-      ミ: "ﾐ",
-      ム: "ﾑ",
-      メ: "ﾒ",
-      モ: "ﾓ",
-      ャ: "ｬ",
-      ヤ: "ﾔ",
-      ュ: "ｭ",
-      ユ: "ﾕ",
-      ョ: "ｮ",
-      ヨ: "ﾖ",
-      ラ: "ﾗ",
-      リ: "ﾘ",
-      ル: "ﾙ",
-      レ: "ﾚ",
-      ロ: "ﾛ",
-      ヮ: "ﾜ",
-      ワ: "ﾜ",
-      ヰ: "ｲ",
-      ヱ: "ｴ",
-      ヲ: "ｦ",
-      ン: "ﾝ",
-      ヴ: "ｳﾞ",
-      ヵ: "ｶ",
-      ヶ: "ｹ",
-      "゛": "ﾞ",
-      "゜": "ﾟ",
-      ー: "ｰ",
-      "、": "､",
-      "。": "｡",
-      "「": "｢",
-      "」": "｣",
-      "・": "･",
-    };
 
-    // Convert fullwidth katakana to halfwidth using the map
-    let result = str
-      .split("")
-      .map((char) => kanaMap[char] || char)
-      .join("");
-
-    // Remove non-halfwidth-katakana characters (kanji, hiragana, numbers, alphabet)
-    return result.replace(/[^\uFF61-\uFF9F]/g, "");
-  };
-  const [hasConvertedKana, setHasConvertedKana] = useState(false);
-  const [hasConvertedAlphaNum, setHasConvertedAlphaNum] = useState(false);
-  const [isComposingJP, setIsComposingJP] = useState(false);
-  const [isComposingAlphaNum, setIsComposingAlphaNum] = useState(false);
-
-  const processHalfWidthAlphaNumeric = (str: string) => {
-    // Convert fullwidth to halfwidth
-    let result = str.replace(/[０-９]/g, (char) => {
-      return String.fromCharCode(char.charCodeAt(0) - 0xfee0);
-    });
-
-    result = result.replace(/[Ａ-Ｚａ-ｚ]/g, (char) => {
-      return String.fromCharCode(char.charCodeAt(0) - 0xfee0);
-    });
-
-    // Keep only halfwidth alphanumeric (0-9, A-Z, a-z)
-    return result.replace(/[^0-9A-Za-z]/g, "");
-  };
+  // --- MODIFIED START: Đã xóa các hàm 'processHalfWidthKatakana' và 'processHalfWidthAlphaNumeric'
+  // và các state 'hasConvertedKana', 'hasConvertedAlphaNum', 'isComposingJP', 'isComposingAlphaNum'
+  // vì logic này đã được chuyển vào các component input mới.
+  // --- MODIFIED END ---
 
   const btnBaseStyle =
     "font-semibold py-1 px-4 rounded-lg transition-all duration-200 shadow-md";
@@ -621,379 +505,52 @@ export default function CheckInputScreen() {
                 <label className="flex justify-center min-w-[100px] font-black bg-gray-300 py-0.5 px-8 whitespace-nowrap overflow-hidden text-ellipsis">
                   半角カナ
                 </label>
-                <input
+                {/* --- MODIFIED START: Thay thế input bằng HalfWidthKanaInput --- */}
+                <HalfWidthKanaInput
                   disabled={shouldDisableFields}
                   className={`col-span-2 ${className_input_text} input-navigable halfwidth-kana-input disabled:bg-gray-200 disabled:cursor-not-allowed`}
-                  onCompositionStart={() => {
-                    setIsComposingJP(true);
-                  }}
-                  onCompositionEnd={(e) => {
-                    setIsComposingJP(false);
-                    // Không tự động format khi composition end
-                  }}
-                  onKeyDown={(e: ReactKeyboardEvent<HTMLInputElement>) => {
-                    const input = e.currentTarget;
-
-                    // ① Nếu IME đang mở candidate → bỏ qua ENTER/TAB/ARROWS
-                    if (
-                      isComposingJP ||
-                      e.nativeEvent.isComposing ||
-                      e.keyCode === 229
-                    ) {
-                      e.preventDefault();
-                      return;
-                    }
-
-                    // Xử lý Tab
-                    if (e.key === "Tab") {
-                      e.preventDefault();
-                      e.stopPropagation();
-
-                      const currentValue = input.value;
-                      const formattedValue =
-                        processHalfWidthKatakana(currentValue);
-
-                      // Kiểm tra nếu text cần xử lý (khác sau khi format)
-                      const needsProcessing = currentValue !== formattedValue;
-
-                      // ② CHƯA convert VÀ CẦN xử lý → convert và giữ focus
-                      if (!hasConvertedKana && needsProcessing) {
-                        input.value = formattedValue;
-
-                        setHasConvertedKana(true);
-                        return;
-                      }
-
-                      // ③ ĐÃ convert HOẶC không cần xử lý → nhảy field
-                      const navigableInputs = Array.from(
-                        formRef.current?.querySelectorAll<HTMLElement>(
-                          ".input-navigable"
-                        ) || []
-                      );
-                      const currentIndex = navigableInputs.indexOf(input);
-
-                      if (e.shiftKey) {
-                        // Shift+Tab: về field trước
-                        if (currentIndex > 0) {
-                          navigableInputs[currentIndex - 1].focus();
-                        }
-                      } else {
-                        // Tab: sang field sau
-                        if (
-                          currentIndex !== -1 &&
-                          currentIndex + 1 < navigableInputs.length
-                        ) {
-                          navigableInputs[currentIndex + 1].focus();
-                        }
-                      }
-
-                      // reset flag
-                      setHasConvertedKana(false);
-                      return;
-                    }
-
-                    // Xử lý Enter và ArrowDown
-                    if (e.key === "Enter" || e.key === "ArrowDown") {
-                      e.preventDefault();
-                      e.stopPropagation();
-
-                      const currentValue = input.value;
-                      const formattedValue =
-                        processHalfWidthKatakana(currentValue);
-
-                      // Kiểm tra nếu text cần xử lý
-                      const needsProcessing = currentValue !== formattedValue;
-
-                      // ② CHƯA convert VÀ CẦN xử lý → convert và giữ focus
-                      if (!hasConvertedKana && needsProcessing) {
-                        input.value = formattedValue;
-
-                        setHasConvertedKana(true);
-                        return;
-                      }
-
-                      // ③ ĐÃ convert HOẶC không cần xử lý → nhảy field tiếp theo
-                      const navigableInputs = Array.from(
-                        formRef.current?.querySelectorAll<HTMLElement>(
-                          ".input-navigable"
-                        ) || []
-                      );
-                      const currentIndex = navigableInputs.indexOf(input);
-
-                      if (
-                        currentIndex !== -1 &&
-                        currentIndex + 1 < navigableInputs.length
-                      ) {
-                        navigableInputs[currentIndex + 1].focus();
-                      }
-
-                      // reset flag
-                      setHasConvertedKana(false);
-                      return;
-                    }
-
-                    // Xử lý ArrowUp
-                    if (e.key === "ArrowUp") {
-                      e.preventDefault();
-                      e.stopPropagation();
-
-                      const currentValue = input.value;
-                      const formattedValue =
-                        processHalfWidthKatakana(currentValue);
-
-                      // Kiểm tra nếu text cần xử lý
-                      const needsProcessing = currentValue !== formattedValue;
-
-                      // ② CHƯA convert VÀ CẦN xử lý → convert và giữ focus
-                      if (!hasConvertedKana && needsProcessing) {
-                        input.value = formattedValue;
-
-                        setHasConvertedKana(true);
-                        return;
-                      }
-
-                      // ③ ĐÃ convert HOẶC không cần xử lý → nhảy field trước đó
-                      const navigableInputs = Array.from(
-                        formRef.current?.querySelectorAll<HTMLElement>(
-                          ".input-navigable"
-                        ) || []
-                      );
-                      const currentIndex = navigableInputs.indexOf(input);
-
-                      if (currentIndex > 0) {
-                        navigableInputs[currentIndex - 1].focus();
-                      }
-
-                      // reset flag
-                      setHasConvertedKana(false);
-                      return;
-                    }
-                  }}
-                  onBlur={(e) => {
-                    const formattedValue = processHalfWidthKatakana(
-                      e.currentTarget.value
-                    );
-                    e.currentTarget.value = formattedValue;
-
-                    setHasConvertedKana(false);
-                  }}
-                  onChange={() => {
-                    // reset để Enter lần đầu convert
-                    setHasConvertedKana(false);
-                  }}
+                  // Tất cả onKeyDown, onBlur, onChange, onComposition... đã bị xóa
+                  // vì HalfWidthKanaInput sẽ tự xử lý logic format.
                 />
+                {/* --- MODIFIED END --- */}
 
                 <span></span>
 
                 <label className="flex justify-center min-w-[100px] font-black bg-gray-300 py-0.5 px-8 whitespace-nowrap overflow-hidden text-ellipsis">
                   半角数字
                 </label>
-                <input
+                {/* --- MODIFIED START: Thay thế input bằng HalfWidthNumberInput --- */}
+                <HalfWidthNumberInput
                   disabled={shouldDisableFields}
                   className={`col-span-2 ${className_input_text} input-navigable disabled:bg-gray-200 disabled:cursor-not-allowed`}
-                  onKeyDown={(e) => {
-                    if (e.nativeEvent.isComposing) {
-                      if (e.key === "Enter") {
-                        e.preventDefault();
-                        return;
-                      }
-                    } else {
-                      handleFormatting(e, extractHalfWidthDigits);
-                    }
-                  }}
-                  onCompositionEnd={(e) => {
-                    const target = e.target as HTMLInputElement;
-                    target.value = extractHalfWidthDigits(target.value);
-                  }}
+                  // onKeyDown, onCompositionEnd đã bị xóa.
                 />
+                {/* --- MODIFIED END --- */}
                 <span></span>
 
                 <label className="flex justify-center min-w-[100px] font-black bg-gray-300 py-0.5 px-8 whitespace-nowrap overflow-hidden text-ellipsis">
                   半角英数字
                 </label>
-                <input
+                {/* --- MODIFIED START: Thay thế input bằng HalfWidthAlphaNumInput --- */}
+                <HalfWidthAlphaNumInput
                   disabled={shouldDisableFields}
                   className={`col-span-2 ${className_input_text} input-navigable halfwidth-alphanum-input disabled:bg-gray-200 disabled:cursor-not-allowed`}
-                  onCompositionStart={() => {
-                    setIsComposingAlphaNum(true);
-                  }}
-                  onCompositionEnd={(e) => {
-                    setIsComposingAlphaNum(false);
-                  }}
-                  onKeyDown={(e: ReactKeyboardEvent<HTMLInputElement>) => {
-                    const input = e.currentTarget;
-
-                    // ① Nếu IME đang mở → bỏ qua
-                    if (
-                      isComposingAlphaNum ||
-                      e.nativeEvent.isComposing ||
-                      e.keyCode === 229
-                    ) {
-                      e.preventDefault();
-                      return;
-                    }
-
-                    // Xử lý Tab
-                    if (e.key === "Tab") {
-                      e.preventDefault();
-                      e.stopPropagation();
-
-                      const currentValue = input.value;
-                      const formattedValue =
-                        processHalfWidthAlphaNumeric(currentValue);
-
-                      // Kiểm tra nếu text cần xử lý
-                      const needsProcessing = currentValue !== formattedValue;
-
-                      // ② CHƯA convert VÀ CẦN xử lý → convert và giữ focus
-                      if (!hasConvertedAlphaNum && needsProcessing) {
-                        input.value = formattedValue;
-                        setHasConvertedAlphaNum(true);
-                        return;
-                      }
-
-                      // ③ ĐÃ convert HOẶC không cần xử lý → nhảy field
-                      const navigableInputs = Array.from(
-                        formRef.current?.querySelectorAll<HTMLElement>(
-                          ".input-navigable"
-                        ) || []
-                      );
-                      const currentIndex = navigableInputs.indexOf(input);
-
-                      if (e.shiftKey) {
-                        if (currentIndex > 0) {
-                          navigableInputs[currentIndex - 1].focus();
-                        }
-                      } else {
-                        if (
-                          currentIndex !== -1 &&
-                          currentIndex + 1 < navigableInputs.length
-                        ) {
-                          navigableInputs[currentIndex + 1].focus();
-                        }
-                      }
-
-                      setHasConvertedAlphaNum(false);
-                      return;
-                    }
-
-                    // Xử lý Enter và ArrowDown
-                    if (e.key === "Enter" || e.key === "ArrowDown") {
-                      e.preventDefault();
-                      e.stopPropagation();
-
-                      const currentValue = input.value;
-                      const formattedValue =
-                        processHalfWidthAlphaNumeric(currentValue);
-
-                      // Kiểm tra nếu text cần xử lý
-                      const needsProcessing = currentValue !== formattedValue;
-
-                      // ② CHƯA convert VÀ CẦN xử lý → convert và giữ focus
-                      if (!hasConvertedAlphaNum && needsProcessing) {
-                        input.value = formattedValue;
-                        setHasConvertedAlphaNum(true);
-                        return;
-                      }
-
-                      // ③ ĐÃ convert HOẶC không cần xử lý → nhảy field tiếp theo
-                      const navigableInputs = Array.from(
-                        formRef.current?.querySelectorAll<HTMLElement>(
-                          ".input-navigable"
-                        ) || []
-                      );
-                      const currentIndex = navigableInputs.indexOf(input);
-
-                      if (
-                        currentIndex !== -1 &&
-                        currentIndex + 1 < navigableInputs.length
-                      ) {
-                        navigableInputs[currentIndex + 1].focus();
-                      }
-
-                      setHasConvertedAlphaNum(false);
-                      return;
-                    }
-
-                    // Xử lý ArrowUp
-                    if (e.key === "ArrowUp") {
-                      e.preventDefault();
-                      e.stopPropagation();
-
-                      const currentValue = input.value;
-                      const formattedValue =
-                        processHalfWidthAlphaNumeric(currentValue);
-
-                      // Kiểm tra nếu text cần xử lý
-                      const needsProcessing = currentValue !== formattedValue;
-
-                      // ② CHƯA convert VÀ CẦN xử lý → convert và giữ focus
-                      if (!hasConvertedAlphaNum && needsProcessing) {
-                        input.value = formattedValue;
-                        setHasConvertedAlphaNum(true);
-                        return;
-                      }
-
-                      // ③ ĐÃ convert HOẶC không cần xử lý → nhảy field trước đó
-                      const navigableInputs = Array.from(
-                        formRef.current?.querySelectorAll<HTMLElement>(
-                          ".input-navigable"
-                        ) || []
-                      );
-                      const currentIndex = navigableInputs.indexOf(input);
-
-                      if (currentIndex > 0) {
-                        navigableInputs[currentIndex - 1].focus();
-                      }
-
-                      setHasConvertedAlphaNum(false);
-                      return;
-                    }
-                  }}
-                  onBlur={(e) => {
-                    const formattedValue = processHalfWidthAlphaNumeric(
-                      e.currentTarget.value
-                    );
-                    e.currentTarget.value = formattedValue;
-                    setHasConvertedAlphaNum(false);
-                  }}
-                  onChange={() => {
-                    setHasConvertedAlphaNum(false);
-                  }}
+                  // Tất cả onKeyDown, onBlur, onChange, onComposition... đã bị xóa
                 />
+                {/* --- MODIFIED END --- */}
                 <span></span>
 
                 <label className="flex justify-center min-w-[100px] font-black bg-gray-300 py-0.5 px-8 whitespace-nowrap overflow-hidden text-ellipsis">
                   全角
                 </label>
-                <input
+                {/* --- MODIFIED START: Thay thế input bằng KanaFullWidthInput --- */}
+                <KanaFullWidthInput
                   disabled={shouldDisableFields}
                   className={`col-span-2 ${className_input_text} input-navigable disabled:bg-gray-200 disabled:cursor-not-allowed`}
-                  onKeyDown={(e) => handleFormatting(e, convertToFullWidth)}
+                  // onKeyDown đã bị xóa.
                 />
+                {/* --- MODIFIED END --- */}
                 <span></span>
-
-                {/* <label className="flex justify-center min-w-[100px] font-black bg-gray-300 py-0.5 px-8 whitespace-nowrap overflow-hidden text-ellipsis">
-                  ゼロパディング
-                </label>
-                <input
-                  disabled={shouldDisableFields}
-                  value={zeroSuppress}
-                  onChange={(e) => {
-                    const value = e.target.value.replace(/[^0-9]/g, "");
-                    setZeroSuppress(value);
-                  }}
-                  onBlur={(e) => {
-                    const value = e.target.value;
-                    if (value) {
-                      // Add two zeros at the beginning if not already present
-                      if (!value.startsWith("00")) {
-                        setZeroSuppress("00" + value);
-                      }
-                    }
-                  }}
-                  className={`col-span-2 ${className_input_text} input-navigable disabled:bg-gray-200 disabled:cursor-not-allowed`}
-                /> */}
 
                 <label className="flex justify-center min-w-[100px] font-black bg-gray-300 py-0.5 px-8 whitespace-nowrap overflow-hidden text-ellipsis">
                   E/Tab排除

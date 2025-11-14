@@ -12,9 +12,11 @@ import {
 } from "../../../constants/colors";
 import { blockTab } from "../../../utils/InputHandlers";
 import CodeInputSelect from "../../CodeInputSelect";
-import KanaFullWidthInput from "../../KanaFullWidthInput";
-import HalfWidthNumberInput from "../../HalfWidthNumberInput";
 import { timeSlotOptions } from "../../../constants/customer_ledger";
+import {
+  KanaFullWidthInput,
+  HalfWidthNumberInput,
+} from "../../input/JapaneseInputs";
 
 const EmergencyContact = forwardRef<any, { showData: boolean }>(
   (props, ref) => {
