@@ -178,22 +178,101 @@ const MainBusinessScreen = () => {
       const key = e.key.toUpperCase();
       if (key.startsWith("F") && !isNaN(Number(key.substring(1)))) {
         e.preventDefault();
-
         const action = shortcuts[key as keyof typeof shortcuts];
         if (action) {
           action();
         }
         return;
       }
-      // const isMac = navigator.platform.toUpperCase().includes("MAC");
       const isModifierPressed = e.ctrlKey && e.altKey;
-
       const action = shortcuts[key as keyof typeof shortcuts];
       if (isModifierPressed && action) {
         e.preventDefault();
         action();
         return;
       }
+
+      const isAdvanceSearchOpen = container.querySelector(
+        ".advance-search-modal"
+      );
+      const confirmationModalRoot = container.querySelector(".ant-modal-root");
+
+      if (isAdvanceSearchOpen) {
+        return;
+      }
+
+      if (
+        confirmationModalRoot &&
+        (confirmationModalRoot as HTMLElement).style.display !== "none"
+      ) {
+        const confirmationModal =
+          confirmationModalRoot.querySelector(".ant-modal");
+        if (!confirmationModal) return;
+
+        const buttons = Array.from(
+          confirmationModal.querySelectorAll<HTMLButtonElement>(
+            ".ant-modal-footer button:not([disabled])"
+          )
+        );
+
+        if (buttons.length === 0) return; // Không có nút nào
+
+        const activeElement = document.activeElement as HTMLElement;
+        let currentIndex = buttons.findIndex((btn) => btn === activeElement);
+
+        // Nếu focus không nằm trên nút, đặt mặc định cho các phím điều hướng
+        if (
+          currentIndex === -1 &&
+          ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Tab"].includes(
+            e.key
+          )
+        ) {
+          // Mặc định là nút primary (OK) hoặc nút cuối (Cancel)
+          const primaryButtonIndex = buttons.findIndex((b) =>
+            b.classList.contains("ant-btn-primary")
+          );
+          currentIndex =
+            primaryButtonIndex !== -1 ? primaryButtonIndex : buttons.length - 1;
+          buttons[currentIndex]?.focus();
+          e.preventDefault();
+          return;
+        }
+
+        // Xử lý điều hướng
+        if (
+          (e.key === "Tab" && e.shiftKey) ||
+          e.key === "ArrowLeft" ||
+          e.key === "ArrowUp"
+        ) {
+          e.preventDefault();
+          const nextIndex =
+            (currentIndex - 1 + buttons.length) % buttons.length;
+          buttons[nextIndex]?.focus();
+        } else if (
+          e.key === "Tab" ||
+          e.key === "ArrowRight" ||
+          e.key === "ArrowDown"
+        ) {
+          e.preventDefault();
+          const nextIndex = (currentIndex + 1) % buttons.length;
+          buttons[nextIndex]?.focus();
+        } else if (e.key === "Enter" || e.key === " ") {
+          // Cho phép hành động mặc định (click) của trình duyệt/Ant
+          return;
+        } else if (e.key === "Escape") {
+          // Cho phép modal tự xử lý đóng
+          return;
+        } else {
+          // Chặn các phím khác
+          if (!e.metaKey && !e.ctrlKey) {
+            e.preventDefault();
+          }
+        }
+        return; // Đã xử lý phím trong modal, dừng lại
+      }
+      // --- KẾT THÚC LOGIC XỬ LÝ MODAL ---
+
+      // Logic điều hướng trang (chỉ chạy khi không có modal nào mở)
       if (e.key === "Tab") {
         e.preventDefault();
         const currentSectionIndex = sections.indexOf(activeSection ?? "");
@@ -207,25 +286,76 @@ const MainBusinessScreen = () => {
         return;
       }
 
-      const focusableElements = Array.from(
+      const allElements = Array.from(
         container.querySelectorAll(
           "input:not([disabled]), button:not([disabled]), select:not([disabled]), textarea:not([disabled])"
         )
       ) as HTMLElement[];
 
-      const activeElement = document.activeElement as HTMLElement;
-      const currentIndex = focusableElements.indexOf(activeElement);
+      const focusableElements = allElements.filter((el) => {
+        if (
+          el.tagName === "INPUT" &&
+          (el as HTMLInputElement).type === "radio"
+        ) {
+          const radioGroup = el.closest(".ant-radio-group");
+          if (!radioGroup) {
+            return true;
+          }
+          const checkedRadio = radioGroup.querySelector(
+            'input[type="radio"]:checked'
+          ) as HTMLInputElement | null;
 
-      if (currentIndex !== -1) {
-        handleNavigationKey040504(e, currentIndex, focusableElements);
+          if (checkedRadio) {
+            return el === checkedRadio;
+          } else {
+            const firstRadioInGroup = radioGroup.querySelector(
+              'input[type="radio"]'
+            );
+            return el === firstRadioInGroup;
+          }
+        }
+        if (
+          el.tagName === "INPUT" &&
+          (el as HTMLInputElement).type === "checkbox"
+        ) {
+          const checkboxGroup = el.closest(".ant-checkbox-group-navigable");
+          if (!checkboxGroup) {
+            return true;
+          }
+          const firstCheckboxInGroup = checkboxGroup.querySelector(
+            'input[type="checkbox"]'
+          );
+          return el === firstCheckboxInGroup;
+        }
+
+        return true;
+      });
+
+      const activeElement = document.activeElement as HTMLElement;
+      if (
+        activeElement &&
+        activeElement.closest('[data-calendar-popup="true"]')
+      ) {
+        return;
       }
+
+      if (
+        e.key === "Enter" &&
+        activeElement &&
+        activeElement.classList.contains("japanese-calendar")
+      ) {
+        return;
+      }
+
+      const currentIndex = focusableElements.indexOf(activeElement);
+      handleNavigationKey040504(e, currentIndex, focusableElements);
     };
 
     container.addEventListener("keydown", handleKeyDown);
     return () => {
       container.removeEventListener("keydown", handleKeyDown);
     };
-  }, [activeSection, sections, handleScrollAndFocus, shortcuts]);
+  }, [activeSection, sections, shortcuts, handleScrollAndFocus]);
 
   return (
     <div

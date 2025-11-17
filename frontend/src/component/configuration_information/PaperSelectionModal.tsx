@@ -3,7 +3,6 @@ import {
   Modal,
   Button,
   Table,
-  DatePicker,
   Select,
   Radio,
   Row,
@@ -11,7 +10,6 @@ import {
   ConfigProvider,
   RadioChangeEvent,
 } from "antd";
-import dayjs from "dayjs";
 import jaJP from "antd/es/locale/ja_JP";
 import "../../styles/04.05.04/style.css";
 import {
@@ -20,6 +18,7 @@ import {
   newData,
   columns,
 } from "../../constants/configuration_information";
+import JapaneseCalendar from "../JapaneseCalendar";
 
 const { Option } = Select;
 const PaperSelectionModal = ({
@@ -33,8 +32,9 @@ const PaperSelectionModal = ({
   const [radioValue, setRadioValue] = useState("individual");
   const [data, setData] = useState(newData);
   const [selectedRowIndex, setSelectedRowIndex] = useState<number | null>(null);
+  const [keiriDate, setKeiriDate] = useState<Date>(new Date());
+  const [keiriDate1, setKeiriDate1] = useState<Date>(new Date());
 
-  // Refs
   const firstInputRef = useRef<any>(null);
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const newRadioRef = useRef<any>(null);
@@ -62,12 +62,10 @@ const PaperSelectionModal = ({
           newRadioRef.current?.focus();
         }
       }, 0);
-
       wasChangedByKeyboard.current = false;
     }
   };
 
-  // Radio change handler
   const onRadioChange = (e: RadioChangeEvent) => {
     setRadioValue(e.target.value);
     setSelectedRowIndex(null);
@@ -78,7 +76,6 @@ const PaperSelectionModal = ({
     }
   };
 
-  // Focus first input when modal opens
   useEffect(() => {
     if (open) {
       setTimeout(() => {
@@ -88,8 +85,6 @@ const PaperSelectionModal = ({
       setSelectedRowIndex(null);
     }
   }, [open]);
-
-  // Table keyboard navigation
   useEffect(() => {
     if (!open) return;
     const wrapper = wrapperRef.current;
@@ -128,14 +123,15 @@ const PaperSelectionModal = ({
         }
         if (key === "Tab" && e.shiftKey) {
           if (selectValue !== "new") {
-            if (radioValue === "individual") newRadioRef.current?.focus();
-            else referenceRadioRef.current?.focus();
+            (radioValue === "individual"
+              ? newRadioRef.current
+              : referenceRadioRef.current
+            )?.focus();
           } else {
             firstInputRef.current?.focus();
           }
           return null;
         }
-
         return prev;
       });
     };
@@ -149,15 +145,12 @@ const PaperSelectionModal = ({
     };
   }, [open, data, radioValue, selectValue, onClose]);
 
-  // Scroll table to selected row
   useEffect(() => {
     if (selectedRowIndex === null) return;
     const wrapper = wrapperRef.current;
     if (!wrapper) return;
-
     const body = wrapper.querySelector(".ant-table-body") as HTMLElement | null;
     if (!body) return;
-
     const rows = body.querySelectorAll("tbody tr");
     const rowEl = rows[selectedRowIndex] as HTMLElement | undefined;
     rowEl?.scrollIntoView({ block: "center", behavior: "smooth" });
@@ -172,7 +165,25 @@ const PaperSelectionModal = ({
   };
 
   const handleRadioKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter") {
+    const key = e.key;
+
+    if (key === "ArrowLeft" || key === "ArrowRight") {
+      e.preventDefault();
+      e.stopPropagation();
+      const newValue = radioValue === "individual" ? "common" : "individual";
+      setRadioValue(newValue);
+      if (newValue === "individual") {
+        setData(existIndividualData);
+      } else {
+        setData(existCommonData);
+      }
+      setTimeout(() => {
+        (newValue === "individual"
+          ? newRadioRef.current
+          : referenceRadioRef.current
+        )?.focus();
+      }, 0);
+    } else if (key === "Enter") {
       e.preventDefault();
       e.stopPropagation();
       const tableBody = wrapperRef.current?.querySelector(
@@ -213,7 +224,6 @@ const PaperSelectionModal = ({
         width={600}
       >
         <ConfigProvider locale={jaJP}>
-          {/* Select and Radio group */}
           <Row gutter={16} align="middle" className="mb-4">
             <Col>
               <Select
@@ -273,32 +283,32 @@ const PaperSelectionModal = ({
               }}
             />
           </div>
-
-          {/* DatePickers */}
           <Row gutter={16} className="mb-4">
             <Col span={12} className="flex items-center">
               <span className="bg-[#D9D9D9] font-bold text-sm text-black px-2 py-1 mr-2">
                 作成日
               </span>
-              <DatePicker
-                className="flex-1"
-                format="YYYY/MM/DD"
-                value={dayjs("2010-12-30")}
+              <JapaneseCalendar
+                value={keiriDate}
+                onChange={(date) => setKeiriDate(date)}
+                format="yyyy/MM/dd"
+                placeholder="yyyy/MM/dd"
+                className="japanese-calendar w-40 ml-2 px-2 py-1 rounded-md bg-input flex-1"
               />
             </Col>
             <Col span={12} className="flex items-center">
               <span className="bg-[#D9D9D9] font-bold text-sm text-black px-2 py-1 mr-2">
                 更新日
               </span>
-              <DatePicker
-                className="flex-1"
-                format="YYYY/MM/DD"
-                value={dayjs("2015-12-30")}
+              <JapaneseCalendar
+                value={keiriDate1}
+                onChange={(date) => setKeiriDate1(date)}
+                format="yyyy/MM/dd"
+                placeholder="yyyy/MM/dd"
+                className="japanese-calendar w-40 ml-2 px-2 py-1 rounded-md bg-input flex-1"
               />
             </Col>
           </Row>
-
-          {/* Notes */}
           <div className="text-center mt-4 w-full">
             <div className="bg-[#D9D9D9] font-bold text-sm text-black mb-2 px-2 py-1 w-full inline-block">
               保存目的

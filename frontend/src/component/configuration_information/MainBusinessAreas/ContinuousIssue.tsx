@@ -1,15 +1,14 @@
 "use client";
 
 import { forwardRef, useState } from "react";
-import { DatePicker, Select, Checkbox } from "antd";
-import dayjs from "dayjs";
-import { inputColor } from "../../../constants/colors";
+import { Select, Checkbox } from "antd";
 import { blockTab } from "../../../utils/InputHandlers";
+import JapaneseCalendar from "../../JapaneseCalendar";
 
 const ContinuousIssue = forwardRef<any>((props, ref) => {
-  const [month, setMonth] = useState(dayjs());
-  const [rangeStart, setRangeStart] = useState<dayjs.Dayjs | null>(null);
-  const [rangeEnd, setRangeEnd] = useState<dayjs.Dayjs | null>(null);
+  const [keiriDate, setKeiriDate] = useState<Date>(new Date());
+  const [keiriDate1, setKeiriDate1] = useState<Date>(new Date());
+  const [keiriDate2, setKeiriDate2] = useState<Date>(new Date());
 
   const labelClass =
     "bg-label border border-gray-400 text-sm font-bold flex items-center justify-center min-h-[32px] w-[120px] px-2 rounded-md";
@@ -26,14 +25,14 @@ const ContinuousIssue = forwardRef<any>((props, ref) => {
         {/* 月度 */}
         <div className="flex items-center">
           <div className={labelClass}>月度</div>
-          <DatePicker
+
+          <JapaneseCalendar
             ref={ref}
-            picker="month"
-            value={month}
-            onChange={(date) => setMonth(date)}
-            className={`ml-2 max-w-[160px] w-full ${inputColor}`}
-            format="YYYY/MM"
-            style={{ width: "160px" }}
+            value={keiriDate}
+            onChange={(date) => setKeiriDate(date)}
+            format="yyyy/MM/dd"
+            placeholder="yyyy/MM/dd"
+            className="japanese-calendar w-40 ml-2 px-2 py-1 rounded-md bg-input"
           />
         </div>
 
@@ -77,22 +76,20 @@ const ContinuousIssue = forwardRef<any>((props, ref) => {
               flexBasis: "320px",
             }}
           >
-            <DatePicker
-              value={rangeStart}
-              onChange={(date) => setRangeStart(date)}
-              format="YYYY/MM/DD"
-              style={{ flex: 1, minWidth: 0 }}
-              placeholder="開始日"
-              className={`bg-input `}
+            <JapaneseCalendar
+              value={keiriDate1}
+              onChange={(date) => setKeiriDate1(date)}
+              format="yyyy/MM/dd"
+              placeholder="yyyy/MM/dd"
+              className="japanese-calendar w-40  px-2 py-1 rounded-md bg-input"
             />
             <span className="select-none">〜</span>
-            <DatePicker
-              value={rangeEnd}
-              onChange={(date) => setRangeEnd(date)}
-              format="YYYY/MM/DD"
-              style={{ flex: 1, minWidth: 0 }}
-              placeholder="終了日"
-              className={`bg-input `}
+            <JapaneseCalendar
+              value={keiriDate2}
+              onChange={(date) => setKeiriDate2(date)}
+              format="yyyy/MM/dd"
+              placeholder="yyyy/MM/dd"
+              className="japanese-calendar w-40  px-2 py-1 rounded-md bg-input"
             />
           </div>
         </div>
@@ -113,13 +110,10 @@ const ContinuousIssue = forwardRef<any>((props, ref) => {
         {/* 取引区分 */}
         <div className="flex items-center sm:col-span-1">
           <div className={labelClass}>取引区分</div>
-          <Checkbox.Group
-            defaultValue={["直売", "卸"]}
-            className="ml-2 flex gap-4"
-          >
+          <div className="ant-checkbox-group-navigable ml-2" role="group">
             <Checkbox value="直売">直売</Checkbox>
             <Checkbox value="卸">卸</Checkbox>
-          </Checkbox.Group>
+          </div>
         </div>
       </div>
     </div>

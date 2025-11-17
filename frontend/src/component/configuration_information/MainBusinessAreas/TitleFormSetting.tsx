@@ -1,10 +1,9 @@
 import { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import { labelColor, inputColor } from "../../../constants/colors";
-import { Input } from "antd";
-import { convertToFullWidth } from "../../../utils/InputHandlers";
 import { blockTab } from "../../../utils/InputHandlers";
 import CodeInputSelect from "../../CodeInputSelect";
 import { labelOptions } from "../../../constants/configuration_information";
+import { KanaFullWidthInput } from "../../input/JapaneseInputs";
 
 const labelClass = `${labelColor} px-2 flex items-center justify-center h-[32px] w-[180px] rounded-md`;
 
@@ -33,25 +32,9 @@ const TitleFormSetting = forwardRef<any>((props, ref) => {
     },
   }));
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    fieldName: keyof typeof formValues
-  ) => {
-    const value = convertToFullWidth(e.target.value);
-    setFormValues((prev) => ({
-      ...prev,
-      [fieldName]: value,
-    }));
-  };
-
   const handleValueChange = (fieldName: string, value: string | null) => {
     setFormValues((prev) => ({ ...prev, [fieldName]: value }));
   };
-  useImperativeHandle(ref, () => ({
-    focusFirstButton: () => {
-      firstInputRef.current?.focus();
-    },
-  }));
 
   return (
     <div
@@ -75,13 +58,17 @@ const TitleFormSetting = forwardRef<any>((props, ref) => {
           >
             請求書タイトル
           </div>
-          <Input
+          <KanaFullWidthInput
             ref={firstInputRef}
             className={`border border-black h-6 px-2 ${inputColor}`}
-            type="text"
-            placeholder="ご請求書"
             value={formValues.invoiceTitle}
-            onChange={(e) => handleInputChange(e, "invoiceTitle")}
+            onChange={(newValue: string) => {
+              setFormValues((prev) => ({
+                ...prev,
+                invoiceTitle: newValue,
+              }));
+            }}
+            placeholder="ご請求書"
           />
         </div>
         <div className="flex gap-3 items-center w-[40%]">
@@ -106,32 +93,44 @@ const TitleFormSetting = forwardRef<any>((props, ref) => {
           <div className="flex p-2 gap-5">
             <span className="flex gap-4 w-[40%]">
               <div className={`font-semibold ${labelClass}`}>前回ご請求</div>
-              <Input
-                type="text"
+              <KanaFullWidthInput
                 placeholder="前回ご請求額"
                 className={`border border-black px-2 w-full ${inputColor}`}
                 value={formValues.previousBilling}
-                onChange={(e) => handleInputChange(e, "previousBilling")}
+                onChange={(newValue: string) => {
+                  setFormValues((prev) => ({
+                    ...prev,
+                    previousBilling: newValue,
+                  }));
+                }}
               />
             </span>
             <span className="flex gap-5 w-[30%]">
               <div className={`font-semibold ${labelClass}`}>今回ご請求</div>
-              <Input
-                type="text"
+              <KanaFullWidthInput
                 placeholder="今回ご請求額"
                 className={`border border-black px-2 w-full ${inputColor}`}
                 value={formValues.currentBilling}
-                onChange={(e) => handleInputChange(e, "currentBilling")}
+                onChange={(newValue: string) => {
+                  setFormValues((prev) => ({
+                    ...prev,
+                    currentBilling: newValue,
+                  }));
+                }}
               />
             </span>
             <span className="flex gap-5 w-[30%]">
               <div className={`font-semibold ${labelClass}`}>当月ご入金額</div>
-              <Input
-                type="text"
+              <KanaFullWidthInput
                 placeholder="当月ご入金額"
                 className={`border border-black px-2 w-full ${inputColor}`}
                 value={formValues.currentMonthPayment}
-                onChange={(e) => handleInputChange(e, "currentMonthPayment")}
+                onChange={(newValue: string) => {
+                  setFormValues((prev) => ({
+                    ...prev,
+                    currentMonthPayment: newValue,
+                  }));
+                }}
               />
             </span>
           </div>
@@ -140,32 +139,44 @@ const TitleFormSetting = forwardRef<any>((props, ref) => {
           <div className="flex p-2 gap-4">
             <span className="flex gap-4 w-[40%]">
               <div className={`font-semibold ${labelClass}`}>差引金額</div>
-              <Input
-                type="text"
+              <KanaFullWidthInput
                 placeholder="差引金額"
                 className={`border border-black px-2 w-full ${inputColor}`}
                 value={formValues.balance}
-                onChange={(e) => handleInputChange(e, "balance")}
+                onChange={(newValue: string) => {
+                  setFormValues((prev) => ({
+                    ...prev,
+                    balance: newValue,
+                  }));
+                }}
               />
             </span>
             <span className="flex gap-5 w-[30%]">
               <div className={`font-semibold ${labelClass}`}>当月お買上額</div>
-              <Input
-                type="text"
+              <KanaFullWidthInput
                 placeholder="当月お買上額"
                 className={`border border-black px-2 w-full ${inputColor}`}
                 value={formValues.currentMonthPurchase}
-                onChange={(e) => handleInputChange(e, "currentMonthPurchase")}
+                onChange={(newValue: string) => {
+                  setFormValues((prev) => ({
+                    ...prev,
+                    currentMonthPurchase: newValue,
+                  }));
+                }}
               />
             </span>
             <span className="flex gap-5 w-[30%]">
               <div className={`font-semibold ${labelClass}`}>当月外修正額</div>
-              <Input
-                type="text"
+              <KanaFullWidthInput
                 placeholder="当月外修正額"
                 className={`border border-black px-2 w-full ${inputColor}`}
                 value={formValues.otherAdjustments}
-                onChange={(e) => handleInputChange(e, "otherAdjustments")}
+                onChange={(newValue: string) => {
+                  setFormValues((prev) => ({
+                    ...prev,
+                    otherAdjustments: newValue,
+                  }));
+                }}
               />
             </span>
           </div>
@@ -174,12 +185,16 @@ const TitleFormSetting = forwardRef<any>((props, ref) => {
           <div className="flex p-2 gap-5">
             <span className="flex gap-4 w-[40%] items-stretch">
               <div className={`font-semibold ${labelClass}`}>当月消費税額</div>
-              <Input
-                type="text"
+              <KanaFullWidthInput
                 placeholder="当月消費税額"
                 className={`border border-black px-2 w-full ${inputColor}`}
                 value={formValues.currentMonthTax}
-                onChange={(e) => handleInputChange(e, "currentMonthTax")}
+                onChange={(newValue: string) => {
+                  setFormValues((prev) => ({
+                    ...prev,
+                    currentMonthTax: newValue,
+                  }));
+                }}
               />
             </span>
             <span className="flex gap-5 w-[30%]"></span>

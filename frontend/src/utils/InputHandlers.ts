@@ -127,6 +127,37 @@ export const handleNavigationKey040504 = (
     return;
   }
 
+  if (e.code === "KeyC") {
+    const tagName = activeElement?.tagName.toUpperCase();
+    const isInput = tagName === "INPUT";
+    const isTextArea = tagName === "TEXTAREA";
+    const isTextInput =
+      ((isInput &&
+        activeElement.getAttribute("type") !== "radio" &&
+        activeElement.getAttribute("type") !== "checkbox") ||
+        isTextArea) &&
+      !activeElement?.closest(".ant-select");
+
+    if (isTextInput) return;
+
+    const checkboxGroup = activeElement?.closest(
+      ".ant-checkbox-group-navigable"
+    );
+    if (checkboxGroup) {
+      e.preventDefault();
+      e.stopPropagation();
+      activeElement.click();
+      return;
+    }
+  }
+
+  if (e.key === "Enter") {
+    const tagName = activeElement?.tagName.toUpperCase();
+    if (tagName === "BUTTON") {
+      return;
+    }
+  }
+
   if (!keysToHandle.includes(e.key)) {
     return;
   }

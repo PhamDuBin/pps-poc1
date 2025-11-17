@@ -1,10 +1,6 @@
 import { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import { inputColor, labelColor } from "../../../constants/colors";
-import { Select, Checkbox, Radio, Input } from "antd";
-import {
-  convertToFullWidth,
-  handleFormatting,
-} from "../../../utils/InputHandlers";
+import { Select, Checkbox, Radio } from "antd";
 import { blockTab } from "../../../utils/InputHandlers";
 import {
   printingButtons,
@@ -12,23 +8,20 @@ import {
   detailOptions,
   taxTypeOptions,
   taxCollectOptions,
-  printItemOptions,
   memoOptions,
   memoRadioOptions,
   parentChildOptions,
   addressOptions,
   detailOrderOptions,
 } from "../../../constants/configuration_information";
+import { KanaFullWidthInput } from "../../input/JapaneseInputs";
 
 const PrintingDesignation = forwardRef<any>((props, ref) => {
   const [selectedOrder, setSelectedOrder] = useState("0");
   const [selectedDetail, setSelectedDetail] = useState("0");
   const [selectedTaxType, setSelectedTaxType] = useState("0");
   const [selectedTaxCollect, setSelectedTaxCollect] = useState("1");
-  const [selectedPrintItems, setSelectedPrintItems] = useState<string[]>([
-    "0",
-    "4",
-  ]);
+
   const [selectedMemo, setSelectedMemo] = useState("0");
   const [selectedMemoRadio, setSelectedMemoRadio] = useState("0");
   const [selectedParentChild, setSelectedParentChild] = useState("0");
@@ -287,12 +280,14 @@ const PrintingDesignation = forwardRef<any>((props, ref) => {
           >
             印刷項目
           </div>
-          <Checkbox.Group
-            className="flex flex-row gap-1"
-            options={createOptions(printItemOptions)}
-            value={selectedPrintItems}
-            onChange={setSelectedPrintItems}
-          />
+          <div className="ant-checkbox-group-navigable" role="group">
+            <Checkbox value="事業所名">事業所名</Checkbox>
+            <Checkbox value="ガス料金名称">ガス料金名称</Checkbox>
+            <Checkbox value="電話番号">電話番号</Checkbox>
+            <Checkbox value="領収額">領収額</Checkbox>
+            <Checkbox value="振込先">振込先</Checkbox>
+            <Checkbox value="お買い上げ先">お買い上げ先</Checkbox>
+          </div>
         </div>
 
         <div className="flex items-center gap-3">
@@ -342,16 +337,11 @@ const PrintingDesignation = forwardRef<any>((props, ref) => {
             >
               施設使用料とりまとめ名称
             </div>
-            <Input
-              placeholder="ここに入力してください"
-              className="w-full"
+            <KanaFullWidthInput
+              className={` w-full`}
               value={facilityUsageFee}
-              onChange={(e) =>
-                setFacilityUsageFee(convertToFullWidth(e.target.value))
-              }
-              onKeyDown={(e) => {
-                handleFormatting(e, convertToFullWidth);
-              }}
+              onChange={(e: string) => setFacilityUsageFee(e)}
+              placeholder="ここに入力してください"
             />
           </div>
         </div>

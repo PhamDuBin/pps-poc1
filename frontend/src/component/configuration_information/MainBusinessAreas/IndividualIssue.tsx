@@ -1,16 +1,15 @@
 "use client";
 
-import { DatePicker, Input, Button, Select } from "antd";
-import dayjs from "dayjs";
+import { Button, Select } from "antd";
 import AdvanceSearchModal from "../../transaction_information/1.1.1_03/AdvanceSearchModal";
 import { useRef, useState, KeyboardEvent } from "react";
 import { forwardRef } from "react";
 import { labelColor, inputColor } from "../../../constants/colors";
-import { allowDecimalInput } from "../../../utils/InputHandlers";
 import { blockTab } from "../../../utils/InputHandlers";
 import { options } from "../../../constants/configuration_information";
+import JapaneseCalendar from "../../JapaneseCalendar";
+import HalfWidthNumberInput from "../../HalfWidthNumberInput";
 
-const { MonthPicker } = DatePicker;
 const { Option } = Select;
 
 const labelClass = `${labelColor} border border-black px-2 flex items-center justify-center min-h-[32px] w-[120px] rounded-md`;
@@ -22,11 +21,17 @@ const IndividualIssue = forwardRef<any>((props, ref) => {
   const [officeCode, setOfficeCode] = useState(["", ""]);
   const [customerCode, setCustomerCode] = useState(["", ""]);
   const [officeName, setOfficeName] = useState("");
+  const [keiriDate, setKeiriDate] = useState<Date>(new Date());
+  const officeInput1Ref = useRef<any>(null);
+  const officeInput2Ref = useRef<any>(null);
+  const customerInput1Ref = useRef<any>(null);
+  const customerInput2Ref = useRef<any>(null);
 
   const btnRef = useRef<HTMLButtonElement>(null);
 
   const handleCloseCustomerInfor = () => {
     setShowCustomerInfor(false);
+    setCustomerCode(["", ""]);
   };
 
   const handleCloseOfficeInfor = () => {
@@ -96,45 +101,45 @@ const IndividualIssue = forwardRef<any>((props, ref) => {
           {/* 月度 */}
           <span className="flex gap-4">
             <div className={labelClass}>月度</div>
-            <MonthPicker
-              ref={ref}
-              defaultValue={dayjs()}
-              format="YYYY/MM"
-              className={`${inputColor}`}
+            <JapaneseCalendar
+              value={keiriDate}
+              onChange={(date) => setKeiriDate(date)}
+              format="yyyy/MM/dd"
+              placeholder="yyyy/MM/dd"
+              className={`japanese-calendar w-40  px-2 py-1 rounded-md ${inputColor}`}
             />
           </span>
 
           {/* 事務所 */}
           <span className="flex mt-2 gap-4 items-center">
             <div className={labelClass}>事務所</div>
-            <Input
-              disabled={showCustomerInfor}
-              className={`w-[100px] ${inputColor} ${
-                showCustomerInfor
-                  ? ""
-                  : "disabled:bg-[#f2e2dc] disabled:cursor-not-allowed"
-              }`}
-              placeholder="0000000"
-              onKeyDown={(e) => {
-                allowDecimalInput(e);
+            <HalfWidthNumberInput
+              ref={officeInput1Ref}
+              value={officeCode[0]}
+              onChange={(e: string) => {
+                setOfficeCode([e, officeCode[1]]);
+
+                if (e.length === 4) {
+                  officeInput2Ref.current?.focus();
+                }
               }}
-              onChange={(e) => setOfficeCode([officeCode[0], e.target.value])}
+              disabled={showCustomerInfor}
+              className={`w-[100px] ${inputColor} disabled:bg-[#f2e2dc] disabled:cursor-not-allowed`}
+              maxLength={4}
+              placeholder="0000"
             />
             <div>-</div>
-            <Input
-              disabled={showCustomerInfor}
-              className={`w-[100px] ${inputColor} ${
-                showCustomerInfor
-                  ? ""
-                  : "disabled:bg-[#f2e2dc] disabled:cursor-not-allowed"
-              }`}
-              onChange={(e) => setOfficeCode([officeCode[1], e.target.value])}
-              placeholder="0000000"
-              onKeyDown={(e) => {
-                allowDecimalInput(e);
-                handleOfficeSearch(e);
-              }}
+            <HalfWidthNumberInput
+              ref={officeInput2Ref}
+              value={officeCode[1]}
+              onKeyDown={handleOfficeSearch}
+              onChange={(e: string) => setOfficeCode([officeCode[0], e])}
+              disabled={showCustomerInfor || !officeCode[0]}
+              className={`w-[100px] ${inputColor} disabled:bg-[#f2e2dc] disabled:cursor-not-allowed`}
+              maxLength={3}
+              placeholder="000"
             />
+
             <Button
               onClick={() => {
                 setShowAdvanceSearch(true);
@@ -158,12 +163,12 @@ const IndividualIssue = forwardRef<any>((props, ref) => {
               value={selected}
               onChange={(value) => setSelected(value)}
               className={`w-[120px] text-black 
-                [&>.ant-select-selector]:!bg-blue-300 
-                [&>.ant-select-selector]:!border-black 
-                [&>.ant-select-selector]:!text-black 
-                [&>.ant-select-selector]:!text-center 
-                [&>.ant-select-selector]:!rounded-md
-              `}
+              [&>.ant-select-selector]:!bg-blue-300 
+              [&>.ant-select-selector]:!border-black 
+              [&>.ant-select-selector]:!text-black 
+              [&>.ant-select-selector]:!text-center 
+              [&>.ant-select-selector]:!rounded-md
+            `}
             >
               {options.map((option) => (
                 <Option key={option.value} value={option.value}>
@@ -172,37 +177,31 @@ const IndividualIssue = forwardRef<any>((props, ref) => {
               ))}
             </Select>
 
-            <Input
-              disabled={showCustomerInfor}
-              className={`w-[100px] ${inputColor}  ${
-                showCustomerInfor
-                  ? ""
-                  : "disabled:bg-gray-300 disabled:cursor-not-allowed"
-              }`}
-              placeholder="0000000"
-              onKeyDown={(e) => {
-                allowDecimalInput(e);
+            <HalfWidthNumberInput
+              ref={customerInput1Ref}
+              value={customerCode[0]}
+              onChange={(e: string) => {
+                setCustomerCode([e, customerCode[1]]);
+
+                if (e.length === 6) {
+                  customerInput2Ref.current?.focus();
+                }
               }}
-              onChange={(e) =>
-                setCustomerCode([customerCode[0], e.target.value])
-              }
+              disabled={showCustomerInfor}
+              className={`w-[100px] ${inputColor} disabled:bg-[#f2e2dc] disabled:cursor-not-allowed`}
+              maxLength={6}
+              placeholder="000000"
             />
             <div>-</div>
-            <Input
-              disabled={showCustomerInfor}
-              className={`w-[100px] ${inputColor}  ${
-                showCustomerInfor
-                  ? ""
-                  : "disabled:bg-gray-300 disabled:cursor-not-allowed"
-              }`}
-              placeholder="0000000"
-              onKeyDown={(e) => {
-                allowDecimalInput(e);
-                handleShowCustomerInforKeyDown(e);
-              }}
-              onChange={(e) =>
-                setCustomerCode([customerCode[1], e.target.value])
-              }
+            <HalfWidthNumberInput
+              ref={customerInput2Ref}
+              value={customerCode[1]}
+              onChange={(e: string) => setCustomerCode([customerCode[0], e])}
+              disabled={showCustomerInfor || !customerCode[0]}
+              className={`w-[100px] ${inputColor} disabled:bg-[#f2e2dc] disabled:cursor-not-allowed`}
+              maxLength={3}
+              onKeyDown={handleShowCustomerInforKeyDown}
+              placeholder="000"
             />
             <Button
               onClick={() => {
