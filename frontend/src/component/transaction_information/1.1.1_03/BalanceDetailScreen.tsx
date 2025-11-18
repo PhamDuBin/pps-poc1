@@ -7,19 +7,23 @@ import {
   categoryItemNames,
 } from "../../../constants/transaction_information";
 import { handleOpenWindow } from "../../../constants/functions";
+import { Button, Radio } from "antd"; // Đã sửa đổi: Chỉ cần import từ 'antd'
 
 const BalanceDetailScreen = ({ onSwitchScreen }: any) => {
   const [view, setView] = useState("category");
   const containerRef = useScreenNavigation<HTMLDivElement>(onSwitchScreen);
-  const detailsRadioRef = useRef<HTMLInputElement>(null);
-  const categoryRadioRef = useRef<HTMLInputElement>(null);
+
+  // Ref cho component <Radio> của AntD (sẽ trỏ đến div wrapper)
+  const detailsRadioRef = useRef<any>(null);
+  const categoryRadioRef = useRef<any>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
 
   // Focus on category radio when component mounts
   useEffect(() => {
     if (categoryRadioRef.current) {
       setTimeout(() => {
-        categoryRadioRef.current?.focus();
+        // AntD Radio ref trỏ đến wrapper, cần focus vào input bên trong
+        categoryRadioRef.current?.input?.focus();
       }, 100);
     }
   }, []);
@@ -33,14 +37,15 @@ const BalanceDetailScreen = ({ onSwitchScreen }: any) => {
         // Toggle between values
         const newValue = currentValue === "details" ? "category" : "details";
         setView(newValue);
-        // Focus and click the other radio to select it
+
+        // Focus vào input của Radio kia
         const targetRadio =
           newValue === "details"
             ? detailsRadioRef.current
             : categoryRadioRef.current;
         if (targetRadio) {
-          targetRadio.focus();
-          targetRadio.click();
+          targetRadio.input?.focus();
+          // Không cần click() nữa vì <Radio.Group> đã xử lý state
         }
       } else if (e.key === "ArrowDown" || e.key === "Enter") {
         e.preventDefault();
@@ -50,22 +55,23 @@ const BalanceDetailScreen = ({ onSwitchScreen }: any) => {
       }
     };
 
-    const detailsRadio = detailsRadioRef.current;
-    const categoryRadio = categoryRadioRef.current;
+    // Lấy thẻ input thật từ ref của AntD
+    const detailsRadioInput = detailsRadioRef.current?.input;
+    const categoryRadioInput = categoryRadioRef.current?.input;
 
     const detailsHandler = (e: KeyboardEvent) =>
       handleRadioKeyDown(e, "details");
     const categoryHandler = (e: KeyboardEvent) =>
       handleRadioKeyDown(e, "category");
 
-    detailsRadio?.addEventListener("keydown", detailsHandler);
-    categoryRadio?.addEventListener("keydown", categoryHandler);
+    detailsRadioInput?.addEventListener("keydown", detailsHandler);
+    categoryRadioInput?.addEventListener("keydown", categoryHandler);
 
     return () => {
-      detailsRadio?.removeEventListener("keydown", detailsHandler);
-      categoryRadio?.removeEventListener("keydown", categoryHandler);
+      detailsRadioInput?.removeEventListener("keydown", detailsHandler);
+      categoryRadioInput?.removeEventListener("keydown", categoryHandler);
     };
-  }, []);
+  }, [view]); // Thêm 'view' vào dependency array để đảm bảo 'currentValue' luôn đúng
 
   const buttonStyle =
     "px-4 py-1.5 rounded-sm font-semibold w-[150px] bg-button-primary cursor-pointer hover:bg-white shadow-md shadow-zinc-600 transition-all duration-200 active:shadow-none active:translate-y-px";
@@ -91,40 +97,29 @@ const BalanceDetailScreen = ({ onSwitchScreen }: any) => {
           <span className="font-semibold p-2 bg-label w-[150px] flex justify-center">
             表示種類
           </span>
-          <div className="flex items-center gap-4">
-            <label className="flex items-center gap-2 cursor-pointer">
-              <input
-                ref={detailsRadioRef}
-                type="radio"
-                name="displayType"
-                value="details"
-                checked={view === "details"}
-                onChange={() => setView("details")}
-                className="form-radio h-4 w-4"
-              />
-              <span>明細</span>
-            </label>
-            <label className="flex items-center gap-2 cursor-pointer">
-              <input
-                ref={categoryRadioRef}
-                type="radio"
-                name="displayType"
-                value="category"
-                checked={view === "category"}
-                onChange={() => setView("category")}
-                className="form-radio h-4 w-4"
-              />
-              <span>大分類別</span>
-            </label>
-          </div>
+
+          {/* === KHỐI RADIO ĐÃ THAY THẾ === */}
+          <Radio.Group
+            onChange={(e) => setView(e.target.value)}
+            value={view}
+            className="flex items-center gap-4"
+          >
+            <Radio ref={detailsRadioRef} value="details">
+              明細
+            </Radio>
+            <Radio ref={categoryRadioRef} value="category">
+              大分類別
+            </Radio>
+          </Radio.Group>
+          {/* === KẾT THÚC THAY THẾ === */}
         </div>
-        <button
+        <Button
           ref={buttonRef}
           onClick={handleOpenWindow}
           className={buttonStyle}
         >
           全明細
-        </button>
+        </Button>
       </div>
 
       {view === "details" ? (

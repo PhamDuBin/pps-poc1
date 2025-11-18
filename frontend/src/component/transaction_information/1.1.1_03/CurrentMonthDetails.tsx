@@ -1,14 +1,12 @@
 // ■01当月明細
 import React, { useMemo } from "react";
-import { useScreenNavigation } from "../../../utils/useScreenNavigation";
 import { handleOpenWindow } from "../../../constants/functions";
 import type { ScreenNavigationProps } from "../../../types";
+import { Button } from "antd/lib";
 
 const CurrentMonthDetails: React.FC<ScreenNavigationProps> = ({
   onSwitchScreen,
 }) => {
-  const containerRef = useScreenNavigation<HTMLDivElement>(() => {}, true);
-
   // Memoize static data to prevent re-creation on every render
   const balanceMonths = useMemo(
     () => [
@@ -45,7 +43,7 @@ const CurrentMonthDetails: React.FC<ScreenNavigationProps> = ({
     "font-semibold w-full text-sm p-1 text-center border bg-label my-1";
 
   const buttonLabelStyle =
-    "my-1 h-8 flex items-center justify-center font-semibold text-sm bg-button-primary w-full cursor-pointer hover:bg-white shadow-md shadow-zinc-600 transition-all duration-200 active:shadow-none active:translate-y-px";
+    "my-1 h-8 flex items-center justify-center font-semibold text-sm bg-button-primary w-full";
 
   const verticalLabelStyle =
     "flex items-center justify-center text-sm font-semibold bg-label my-1";
@@ -164,15 +162,15 @@ const CurrentMonthDetails: React.FC<ScreenNavigationProps> = ({
                 ))}
               </div>
             </div>
-            <div ref={containerRef} className="flex flex-col gap-1 mt-1 w-full">
+            <div className="flex flex-col gap-1 mt-1 w-full">
               <div className="flex">
-                <button
+                <Button
                   onClick={handleOpenWindow}
                   className={`${buttonLabelStyle} !w-[75%]`}
                   aria-label="警報器リース詳細を開く"
                 >
                   警報器リース
-                </button>
+                </Button>
                 <input
                   placeholder="0"
                   type="text"
@@ -182,13 +180,13 @@ const CurrentMonthDetails: React.FC<ScreenNavigationProps> = ({
                 />
               </div>
               <div className="flex">
-                <button
+                <Button
                   onClick={handleOpenWindow}
                   className={`${buttonLabelStyle} !w-[75%]`}
                   aria-label="設備使用料詳細を開く"
                 >
                   設備使用料
-                </button>
+                </Button>
                 <input
                   placeholder="0"
                   type="text"

@@ -1,6 +1,5 @@
 // ■07CRM
 import React from "react";
-import { useScreenNavigation } from "../../../utils/useScreenNavigation";
 import { handleOpenWindow } from "../../../constants/functions";
 
 const CRM = ({ onSwitchScreen }: any) => {
@@ -23,9 +22,8 @@ const CRM = ({ onSwitchScreen }: any) => {
   ];
 
   const rowCount = 10;
-  const containerRef = useScreenNavigation<HTMLDivElement>(onSwitchScreen);
   return (
-    <div ref={containerRef} className="p-4 text-black w-full text-sm crm-screen">
+    <div className="p-4 text-black w-full text-sm crm-screen">
       <style>{`
         .crm-screen input:focus,
         .crm-screen textarea:focus,

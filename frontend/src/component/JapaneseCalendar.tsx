@@ -12,6 +12,8 @@ import {
   endOfMonth,
   eachDayOfInterval,
   isSameDay,
+  parse, // +++ THÊM IMPORT
+  isValid, // +++ THÊM IMPORT
 } from "date-fns";
 import { ja } from "date-fns/locale";
 import HolidayJp from "@holiday-jp/holiday_jp";
@@ -46,9 +48,14 @@ const JapaneseCalendar = forwardRef<
     const [selectedDate, setSelectedDate] = useState<Date>(value || new Date());
     const [isOpen, setIsOpen] = useState(false);
     const [month, setMonth] = useState<Date>(value || new Date());
-    const [popupPosition, setPopupPosition] = useState<'bottom' | 'top'>('bottom');
+    const [popupPosition, setPopupPosition] = useState<"bottom" | "top">(
+      "bottom"
+    );
     const inputRef = useRef<HTMLInputElement>(null);
     const calendarRef = useRef<HTMLDivElement>(null);
+
+    // +++ THÊM STATE CHO INPUT VALUE +++
+    const [inputValue, setInputValue] = useState("");
 
     useImperativeHandle(ref, () => ({
       focus: () => {
@@ -56,7 +63,7 @@ const JapaneseCalendar = forwardRef<
       },
     }));
 
-    // Get Japanese holidays for the current month
+    // Get Japanese holidays (không đổi)
     const getHolidaysInMonth = (date: Date): Date[] => {
       const start = startOfMonth(date);
       const end = endOfMonth(date);
@@ -69,14 +76,12 @@ const JapaneseCalendar = forwardRef<
     };
 
     const holidays = getHolidaysInMonth(month);
-
-    // Check if a date is Saturday, Sunday, or holiday
     const isSaturday = (date: Date) => date.getDay() === 6;
     const isSunday = (date: Date) => date.getDay() === 0;
     const isHoliday = (date: Date) =>
       holidays.some((holiday) => isSameDay(holiday, date));
 
-    // Handle keyboard navigation in calendar
+    // Handle keyboard navigation in calendar (không đổi)
     const handleCalendarKeyDown = (e: React.KeyboardEvent) => {
       if (!isOpen) {
         if (e.key === "Enter") {
@@ -86,16 +91,21 @@ const JapaneseCalendar = forwardRef<
         }
         return;
       }
-
-      // CRITICAL: Stop ALL arrow keys and Enter/Escape from propagating to parent
-      if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Enter', 'Escape'].includes(e.key)) {
+      if (
+        [
+          "ArrowUp",
+          "ArrowDown",
+          "ArrowLeft",
+          "ArrowRight",
+          "Enter",
+          "Escape",
+        ].includes(e.key)
+      ) {
         e.preventDefault();
         e.stopPropagation();
       }
-
       switch (e.key) {
         case "ArrowUp": {
-          // Create new date object to avoid mutation
           const newDate = new Date(selectedDate);
           newDate.setDate(newDate.getDate() - 7);
           setSelectedDate(newDate);
@@ -139,7 +149,7 @@ const JapaneseCalendar = forwardRef<
       }
     };
 
-    // Handle click outside to close calendar
+    // Handle click outside (không đổi)
     useEffect(() => {
       const handleClickOutside = (event: MouseEvent) => {
         if (
@@ -150,7 +160,6 @@ const JapaneseCalendar = forwardRef<
           setIsOpen(false);
         }
       };
-
       document.addEventListener("mousedown", handleClickOutside);
       return () => {
         document.removeEventListener("mousedown", handleClickOutside);
@@ -165,22 +174,24 @@ const JapaneseCalendar = forwardRef<
       }
     }, [value]);
 
-    // Focus calendar and calculate position when it opens
+    // +++ THÊM EFFECT ĐỂ ĐỒNG BỘ STATE VÀO INPUT +++
+    // Khi selectedDate thay đổi (do click lịch hoặc prop), cập nhật inputValue
+    useEffect(() => {
+      setInputValue(format(selectedDate, dateFormat, { locale: ja }));
+    }, [selectedDate, dateFormat]);
+
+    // Focus calendar and calculate position (không đổi)
     useEffect(() => {
       if (isOpen && inputRef.current) {
         const rect = inputRef.current.getBoundingClientRect();
         const spaceBelow = window.innerHeight - rect.bottom;
         const spaceAbove = rect.top;
-        const calendarHeight = 400; // Approximate calendar height
-
-        // If not enough space below and more space above, show on top
+        const calendarHeight = 400;
         if (spaceBelow < calendarHeight && spaceAbove > spaceBelow) {
-          setPopupPosition('top');
+          setPopupPosition("top");
         } else {
-          setPopupPosition('bottom');
+          setPopupPosition("bottom");
         }
-
-        // Focus calendar after position is set
         setTimeout(() => {
           if (calendarRef.current) {
             calendarRef.current.focus();
@@ -189,6 +200,7 @@ const JapaneseCalendar = forwardRef<
       }
     }, [isOpen]);
 
+    // Handle Day Click (không đổi)
     const handleDayClick = (date: Date | undefined) => {
       if (date) {
         setSelectedDate(date);
@@ -200,12 +212,35 @@ const JapaneseCalendar = forwardRef<
       }
     };
 
+    // +++ HANDLER MỚI CHO VIỆC GÕ INPUT +++
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      setInputValue(e.target.value);
+    };
+
+    // +++ HANDLER MỚI ĐỂ VALIDATE KHI RỜI INPUT +++
+    const handleInputBlur = () => {
+      const parsedDate = parse(inputValue, dateFormat, new Date(), {
+        locale: ja,
+      });
+
+      if (isValid(parsedDate)) {
+        // Nếu ngày gõ vào là hợp lệ
+        setSelectedDate(parsedDate);
+        setMonth(parsedDate);
+        if (onChange) {
+          onChange(parsedDate);
+        }
+      } else {
+        // Nếu ngày gõ vào không hợp lệ, trả lại giá trị cũ
+        setInputValue(format(selectedDate, dateFormat, { locale: ja }));
+      }
+    };
+
     const modifiers = {
       saturday: isSaturday,
       sunday: isSunday,
       holiday: isHoliday,
     };
-
     const modifiersStyles = {
       saturday: { color: "#0066cc" },
       sunday: { color: "#cc0000" },
@@ -217,16 +252,20 @@ const JapaneseCalendar = forwardRef<
         <input
           ref={inputRef}
           type="text"
-          value={format(selectedDate, dateFormat, { locale: ja })}
-          readOnly
+          value={inputValue} // <-- Sửa: dùng inputValue
+          // readOnly // <-- XÓA: Bỏ readOnly
           placeholder={placeholder}
           className={`cursor-pointer ${className}`}
           onClick={() => setIsOpen(!isOpen)}
+          onChange={handleInputChange} // <-- THÊM: cho phép gõ
+          onBlur={handleInputBlur} // <-- THÊM: validate khi rời
           onKeyDown={(e) => {
-            if (e.key === 'Enter') {
+            if (e.key === "Enter") {
               e.preventDefault();
               e.stopPropagation();
-              setIsOpen(true);
+              // Nếu gõ xong nhấn Enter, validate luôn
+              handleInputBlur();
+              setIsOpen(!isOpen); // Toggle lịch
             }
           }}
         />
@@ -235,7 +274,7 @@ const JapaneseCalendar = forwardRef<
           <div
             ref={calendarRef}
             className={`japanese-calendar-popup absolute left-0 z-50 bg-white border-2 border-gray-400 shadow-lg rounded-md p-2 ${
-              popupPosition === 'top' ? 'bottom-full mb-1' : 'top-full mt-1'
+              popupPosition === "top" ? "bottom-full mb-1" : "top-full mt-1"
             }`}
             onKeyDown={handleCalendarKeyDown}
             tabIndex={-1}
@@ -245,6 +284,7 @@ const JapaneseCalendar = forwardRef<
             }}
           >
             <style>{`
+              /* ... (CSS style không đổi) ... */
               .rdp {
                 --rdp-cell-size: 40px;
                 --rdp-accent-color: #4a90e2;

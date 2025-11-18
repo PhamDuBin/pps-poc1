@@ -1,5 +1,6 @@
 import React, { forwardRef } from "react";
 import { handleOpenWindow } from "../../constants/functions";
+import { Button } from "antd/lib";
 interface RightPanelProps {
   onButtonClick: (buttonName: string) => void;
   activeButton: string | null;
@@ -23,7 +24,7 @@ const RightPanel = forwardRef<HTMLDivElement, RightPanelProps>(
             const isSpecial = specialLabels.includes(label);
 
             return (
-              <button
+              <Button
                 data-button-id={label}
                 key={label}
                 onClick={
@@ -36,13 +37,13 @@ const RightPanel = forwardRef<HTMLDivElement, RightPanelProps>(
                 }`}
               >
                 {label}
-              </button>
+              </Button>
             );
           })}
 
           <div className="flex items-center justify-center space-x-4 mt-10 mb-8">
             <div className="flex flex-col items-center">
-              <button
+              <Button
                 className="w-0 h-0 border-t-8 border-b-8 border-r-8 border-t-transparent border-b-transparent border-r-gray-500 bg-transparent"
                 disabled
                 aria-label="left"
@@ -53,7 +54,7 @@ const RightPanel = forwardRef<HTMLDivElement, RightPanelProps>(
               顧客切替
             </div>
             <div className="flex flex-col items-center">
-              <button
+              <Button
                 className="w-0 h-0 border-t-8 border-b-8 border-l-8 border-t-transparent border-b-transparent border-l-gray-500 bg-transparent"
                 disabled
                 aria-label="right"

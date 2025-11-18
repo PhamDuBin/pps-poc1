@@ -2,11 +2,9 @@
 import { useEffect, useRef, useState } from "react";
 import AdvanceSearchModal from "./1.1.1_03/AdvanceSearchModal";
 import TooltipPortal from "./1.1.1_03/TooltipPortal";
-import {
-  extractHalfWidthDigits,
-  allowDecimalInput,
-} from "../../utils/InputHandlers";
 import { handleOpenWindow } from "../../constants/functions";
+import { HalfWidthNumberInput } from "../input/JapaneseInputs";
+import { Button, InputRef } from "antd";
 
 type LeftPanelProps = {
   showAdvanceSearch: boolean;
@@ -219,20 +217,17 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
         <div className="text-xs flex items-center flex-row py-2 w-full">
           {!showDepart ? (
             <>
-              <input
-                ref={firstInputRef}
-                type="text"
+              {/* === THAY THẾ 1 === */}
+              <HalfWidthNumberInput
+                ref={firstInputRef as unknown as React.RefObject<InputRef>}
                 placeholder="0000"
                 value={postcode1}
                 maxLength={4}
                 className="w-[30%] bg-input px-1 py-0.5 border border-black"
-                onChange={(e) =>
-                  setPostcode1(extractHalfWidthDigits(e.target.value))
-                }
-                onBlur={() => setPostcode1(padLeft(postcode1, 4))} // Thêm onBlur
+                onChange={(newValue: string) => setPostcode1(newValue)}
+                onBlur={() => setPostcode1(padLeft(postcode1, 4))}
                 onKeyDown={(e) => {
                   if (e.nativeEvent.isComposing) return;
-                  allowDecimalInput(e);
                   handlePostcodeKeyDown(e);
                   if (e.key === "Escape") {
                     e.preventDefault();
@@ -242,23 +237,20 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
                 }}
               />
               <span className="mx-1">-</span>
-              <input
-                ref={postcode2Ref}
-                type="text"
+              {/* === THAY THẾ 2 === */}
+              <HalfWidthNumberInput
+                ref={(el) => {
+                  postcode2Ref.current = el as HTMLInputElement | null;
+                }}
                 placeholder="000"
                 maxLength={3}
                 disabled={!postcode1}
                 value={postcode2}
                 className="w-[30%] bg-input px-1 py-0.5 border border-gray-500 disabled:bg-gray-200 disabled:cursor-not-allowed"
-                onChange={(e) =>
-                  setPostcode2(extractHalfWidthDigits(e.target.value))
-                }
-                onBlur={() => setPostcode2(padLeft(postcode2, 3))} // Thêm onBlur
+                onChange={(newValue: string) => setPostcode2(newValue)}
+                onBlur={() => setPostcode2(padLeft(postcode2, 3))}
                 onKeyDown={(e) => {
                   if (e.nativeEvent.isComposing) return;
-
-                  allowDecimalInput(e);
-
                   if (e.key === "Escape") {
                     e.preventDefault();
                     setPostcode2("");
@@ -268,19 +260,19 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
                 }}
               />
 
-              <button
+              <Button
                 onClick={handleSearchDepartment}
-                className="mx-1 w-[20px] h-[20px] inset-y-0 right-0 flex items-center px-1 bg-gray-200 border border-black cursor-pointer"
+                className="mx-1 w-[20px] h-[20px] flex items-center px-1 bg-gray-200 border border-black cursor-pointer"
               >
                 ▼
-              </button>
+              </Button>
             </>
           ) : (
             <div className="w-full flex items-center justify-between">
               <span>
                 {postcode1} - {postcode2}
               </span>
-              <button
+              <Button
                 ref={resetDepartRef}
                 onClick={() => {
                   handleResetDepartmentSearch();
@@ -290,10 +282,10 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
                     f?.current?.focus();
                   }, 100);
                 }}
-                className=" border border-black rounded"
+                className=" border border-black rounded w-14 h-8 text-xs"
               >
-                <span className="w-[25%] m-2">再検索</span>
-              </button>
+                再検索
+              </Button>
             </div>
           )}
         </div>
@@ -313,20 +305,19 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
         <div className="text-xs flex items-center flex-row py-2 w-full">
           {!showCustomer ? (
             <>
-              <input
-                ref={customerId1Ref}
-                type="text"
+              {/* === THAY THẾ 3 === */}
+              <HalfWidthNumberInput
+                ref={(el) => {
+                  customerId1Ref.current = el as HTMLInputElement | null;
+                }}
                 placeholder="0000"
                 value={id1}
                 maxLength={4}
                 className="w-[30%] bg-input px-1 py-0.5 border border-gray-500"
-                onChange={(e) => setId1(extractHalfWidthDigits(e.target.value))}
-                onBlur={() => setId1(padLeft(id1, 4))} // Thêm onBlur
+                onChange={(newValue: string) => setId1(newValue)}
+                onBlur={() => setId1(padLeft(id1, 4))}
                 onKeyDown={(e) => {
                   if (e.nativeEvent.isComposing) return;
-
-                  allowDecimalInput(e);
-
                   if (e.key === "Escape") {
                     e.preventDefault();
                     setId1("");
@@ -336,20 +327,20 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
                 }}
               />
               <span className="mx-1">-</span>
-              <input
-                ref={id2Ref}
-                type="text"
+              {/* === THAY THẾ 4 === */}
+              <HalfWidthNumberInput
+                ref={(el) => {
+                  id2Ref.current = el as HTMLInputElement | null;
+                }}
                 placeholder="000"
                 value={id2}
                 maxLength={3}
                 disabled={!id1}
                 className="w-[30%] bg-input px-1 py-0.5 border border-gray-500 disabled:bg-gray-200 disabled:cursor-not-allowed"
-                onChange={(e) => setId2(extractHalfWidthDigits(e.target.value))}
-                onBlur={() => setId2(padLeft(id2, 3))} // Thêm onBlur
+                onChange={(newValue: string) => setId2(newValue)}
+                onBlur={() => setId2(padLeft(id2, 3))}
                 onKeyDown={(e) => {
                   if (e.nativeEvent.isComposing) return;
-                  allowDecimalInput(e);
-
                   if (e.key === "Escape") {
                     e.preventDefault();
                     setId2("");
@@ -358,29 +349,29 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
                   handleCustomerIdKeyDown(e);
                 }}
               />
-              <button
+              <Button
                 onClick={handleSearchCustomer}
-                className="mx-1 w-[20px] h-[20px] inset-y-0 right-0 flex items-center px-1 bg-gray-200 border border-black cursor-pointer"
+                className="mx-1 w-[20px] h-[20px] flex items-center px-1 bg-gray-200 border border-black cursor-pointer"
               >
                 ▼
-              </button>
+              </Button>
             </>
           ) : (
             <div className="w-full flex items-center justify-between">
               <span>
                 {id1} - {id2}
               </span>
-              <button
+              <Button
                 onClick={() => {
                   handleResetCustomerSearch();
                   setTimeout(() => {
                     customerId1Ref.current?.focus();
                   }, 100);
                 }}
-                className="border border-black rounded"
+                className="border border-black rounded w-14 h-8 text-xs"
               >
-                <span className="w-[25%] m-2">再検索</span>
-              </button>
+                再検索
+              </Button>
             </div>
           )}
         </div>
@@ -394,12 +385,12 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
                   電話番号
                 </label>
                 <span>03-1234-9999</span>
-                <button
+                <Button
                   onClick={handleOpenWindow}
-                  className="border border-black rounded"
+                  className="border border-black rounded w-14 h-8 text-xs"
                 >
-                  <span className="w-[25%] m-2">電話番号</span>
-                </button>
+                  電話番号
+                </Button>
               </div>
               <div className="mt-2 flex flex-row items-center">
                 <label className="bg-gray-200 p-1 font-bold w-[80px] text-center">
@@ -456,17 +447,17 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
           </div>
         )}
         <div className="text-xs mt-4 flex items-center flex-col gap-2">
-          <button
+          <Button
             ref={advancedSearchButtonRef}
             onClick={() => setShowAdvanceSearch(true)}
             className="border text-center border-black p-2 rounded-md shadow-md shadow-zinc-600"
           >
             詳細検索（S）
-          </button>
-          <button className="w-1/2 font-bold border text-center border-black p-2 text-white bg-[#4d7a90] shadow-md shadow-zinc-600">
+          </Button>
+          <Button className="w-1/2 font-bold border text-center border-black p-2 text-white bg-[#4d7a90] shadow-md shadow-zinc-600">
             請求親
-          </button>
-          <button
+          </Button>
+          <Button
             ref={tantoRef}
             onMouseEnter={() =>
               handleShowTooltip(tantoRef, tantoTooltipContent)
@@ -481,9 +472,9 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
             className="w-1/2 font-bold border text-center border-black p-2 bg-label shadow-md shadow-zinc-600"
           >
             担当者
-          </button>
+          </Button>
 
-          <button
+          <Button
             ref={bikouRef}
             onMouseEnter={() =>
               handleShowTooltip(bikouRef, bikouTooltipContent)
@@ -498,8 +489,8 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
             className="w-1/2 font-bold border text-center border-black p-2 bg-label shadow-md shadow-zinc-600"
           >
             顧客備考
-          </button>
-          <button
+          </Button>
+          <Button
             ref={lastButtonRef}
             onClick={handleOpenWindow}
             onMouseEnter={() =>
@@ -519,7 +510,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
             className="w-1/2 font-bold border text-center border-black p-2 bg-label shadow-md shadow-zinc-600"
           >
             日報入力
-          </button>
+          </Button>
         </div>
       </div>
       {showAdvanceSearch && (

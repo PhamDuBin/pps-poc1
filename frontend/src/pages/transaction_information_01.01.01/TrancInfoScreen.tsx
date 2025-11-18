@@ -9,26 +9,8 @@ import BalanceDetailScreen from "../../component/transaction_information/1.1.1_0
 import MeterReadingInforScreen from "../../component/transaction_information/1.1.1_03/MeterReadingInforScreen";
 import CRM from "../../component/transaction_information/1.1.1_03/CRM";
 import LinkDestinationScreen from "../../component/transaction_information/1.1.1_03/LinkDestinationScreen";
-export const handleNavigationKey = (
-  e: KeyboardEvent,
-  currentIndex: number,
-  focusableElements: HTMLElement[]
-) => {
-  // ArrowDown and ArrowUp act like Tab and Shift+Tab
-  if (["ArrowUp", "ArrowDown"].includes(e.key)) {
-    e.preventDefault();
-    let nextIndex = currentIndex;
-    const total = focusableElements.length;
+import { handleNavigationKey040504 } from "../../utils/InputHandlers";
 
-    if (e.key === "ArrowDown") {
-      nextIndex = (currentIndex + 1) % total;
-    } else if (e.key === "ArrowUp") {
-      nextIndex = (currentIndex - 1 + total) % total;
-    }
-
-    focusableElements[nextIndex]?.focus();
-  }
-};
 const screens = [
   "当月明細",
   "当月売上状況",
@@ -127,7 +109,10 @@ const TrancInfoScreen = () => {
     const handleGlobalKeyDown = (e: KeyboardEvent) => {
       const activeElement = document.activeElement as HTMLElement;
       const leftPanel = leftPanelRef.current;
+
+      // +++ LOGIC CHO LEFTPANEL +++
       if (leftPanel && leftPanel.contains(activeElement)) {
+        // GIỮ NGUYÊN: Logic Tab đặc biệt (ưu tiên hàng đầu)
         if (
           e.key === "Tab" &&
           !e.shiftKey &&
@@ -147,6 +132,13 @@ const TrancInfoScreen = () => {
           }, 0);
           return;
         }
+
+        // GIỮ NGUYÊN: Logic Tab (chung) sẽ không làm gì cả, để trình duyệt xử lý
+        if (e.key === "Tab") {
+          return;
+        }
+
+        // +++ THAY THẾ: Gọi handleNavigationKey040504 +++
         const focusableElements = Array.from(
           leftPanel.querySelectorAll(
             'input:not([disabled]), button:not([disabled]), [role="button"], select, textarea'
@@ -155,9 +147,15 @@ const TrancInfoScreen = () => {
 
         const currentIndex = focusableElements.indexOf(activeElement);
         if (currentIndex !== -1) {
-          handleNavigationKey(e, currentIndex, focusableElements);
+          // Gọi hàm mới: Hàm này đã bao gồm logic Lên/Xuống = Tab/Shift+Tab
+          handleNavigationKey040504(e, currentIndex, focusableElements);
         }
+        return; // Đã xử lý xong LeftPanel, dừng lại
       }
+
+      // +++ LOGIC CHO MAIN SCREEN +++
+
+      // GIỮ NGUYÊN: Logic Tab đặc biệt (chuyển screen)
       if (isNavActive && e.key === "Tab") {
         e.preventDefault();
         handleSwitchScreen(e.shiftKey ? "prev" : "next");
@@ -168,13 +166,67 @@ const TrancInfoScreen = () => {
           ) as HTMLElement;
           firstFocusable?.focus();
         }, 0);
+        return;
       }
+
+      // +++ THAY THẾ: Logic điều hướng nội bộ cho Main Screen +++
       const isInsideMainScreen = mainScreenRef.current?.contains(activeElement);
-      if (
-        isNavActive &&
-        isInsideMainScreen &&
-        ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key)
-      ) {
+      if (isNavActive && isInsideMainScreen && mainScreenRef.current) {
+        // (Thêm các kiểm tra ngoại lệ nếu cần)
+        // if (activeElement.closest(".ant-modal-root")) return;
+        // if (activeElement.closest(".ant-select-open")) return;
+        if (
+          activeElement &&
+          activeElement.closest('[data-calendar-popup="true"]')
+        ) {
+          return;
+        }
+
+        const allElements = Array.from(
+          mainScreenRef.current.querySelectorAll(
+            // <--- GIỜ ĐÃ AN TOÀN
+            "input:not([disabled]), button:not([disabled]), select:not([disabled]), textarea:not([disabled])"
+          )
+        ) as HTMLElement[];
+
+        // Lọc các element (logic lọc radio/checkbox từ các file trước)
+        const focusableElements = allElements.filter((el) => {
+          if (el.offsetParent === null) return false; // Bỏ qua element bị ẩn
+
+          if (
+            el.tagName === "INPUT" &&
+            (el as HTMLInputElement).type === "radio"
+          ) {
+            const radioGroup = el.closest(".ant-radio-group");
+            if (!radioGroup) return true;
+            const checkedRadio = radioGroup.querySelector(
+              'input[type="radio"]:checked'
+            ) as HTMLInputElement | null;
+
+            if (checkedRadio) return el === checkedRadio;
+
+            const firstRadioInGroup = radioGroup.querySelector(
+              'input[type="radio"]'
+            );
+            return el === firstRadioInGroup;
+          }
+          if (
+            el.tagName === "INPUT" &&
+            (el as HTMLInputElement).type === "checkbox"
+          ) {
+            const checkboxGroup = el.closest(".ant-checkbox-group-navigable");
+            if (!checkboxGroup) return true;
+
+            const firstCheckboxInGroup = checkboxGroup.querySelector(
+              'input[type="checkbox"]'
+            );
+            return el === firstCheckboxInGroup;
+          }
+          return true;
+        });
+
+        const currentIndex = focusableElements.indexOf(activeElement);
+        handleNavigationKey040504(e, currentIndex, focusableElements);
       }
     };
 

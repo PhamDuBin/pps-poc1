@@ -33,8 +33,34 @@ const OperatorSelectionModal: React.FC<OperatorSelectionModalProps> = ({
   const [selectedKeys, setSelectedKeys] = useState<Key[]>([]);
   const modalRef = useRef<HTMLDivElement>(null);
 
-  const onChange: TransferProps["onChange"] = (nextTargetKeys) => {
+  const onChange: TransferProps["onChange"] = (
+    nextTargetKeys,
+    direction,
+    moveKeys
+  ) => {
     setTargetKeys(nextTargetKeys);
+
+    // Logic Auto-Focus sau khi nhấn nút chuyển
+    setTimeout(() => {
+      const container = modalRef.current;
+      if (!container) return;
+
+      // Lấy cả 2 ô input (Trái và Phải)
+      const inputs = container.querySelectorAll(
+        ".ant-transfer-list-search .ant-input"
+      );
+
+      if (direction === "right") {
+        // CASE 1: Vừa nhấn "Thêm" (Items chạy sang phải)
+        // -> Focus lại Input bên TRÁI (index 0) để người dùng có thể tìm và thêm tiếp
+        (inputs[0] as HTMLElement)?.focus();
+      } else if (direction === "left") {
+        // CASE 2: Vừa nhấn "Xóa" (Items chạy về trái)
+        // -> Focus lại Input bên PHẢI (index 1) để người dùng có thể chọn xóa tiếp
+        // (Lưu ý: Nếu bạn muốn xóa xong focus về ô tìm kiếm bên Trái luôn thì sửa thành inputs[0])
+        (inputs[1] as HTMLElement)?.focus();
+      }
+    }, 50); // setTimeout nhỏ để đợi DOM render xong
   };
 
   const onSelectChange: TransferProps["onSelectChange"] = (
@@ -48,94 +74,177 @@ const OperatorSelectionModal: React.FC<OperatorSelectionModalProps> = ({
     const container = modalRef.current;
     if (!container || !isOpen) return;
 
+    // Focus vào ô input đầu tiên khi mở modal
     setTimeout(() => {
       const firstInput = container.querySelector(
-        ".ant-transfer-list-search input"
+        ".ant-transfer-list-search .ant-input"
       ) as HTMLElement | null;
       firstInput?.focus();
     }, 100);
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      e.stopPropagation();
-
       const key = e.key;
       const code = e.code;
       const activeElement = document.activeElement as HTMLElement;
 
-      if (activeElement.matches(".ant-transfer-list-search input")) {
-        if (
-          key === "ArrowLeft" ||
-          key === "ArrowRight" ||
-          key === "ArrowUp" ||
-          key === "ArrowDown"
-        ) {
-          return;
-        }
-      }
+      // =========================================================
+      // 1. LOGIC KHI ĐANG Ở TRONG DANH SÁCH (CHECKBOX ITEMS)
+      // =========================================================
+      // Kiểm tra xem có đang đứng ở item (dòng) nào không
+      const currentItemRow = activeElement.closest(
+        ".ant-transfer-list-content-item"
+      );
 
-      if (
-        activeElement.matches(".ant-checkbox-input") &&
-        activeElement.closest(".ant-transfer-list-content")
-      ) {
-        if (code === "Space" || key === "Enter" || code === "KeyC") {
+      if (currentItemRow) {
+        // --- XỬ LÝ CHECK/UNCHECK ---
+        if (code === "KeyC" || code === "Space" || key === "Enter") {
           e.preventDefault();
-          activeElement.click();
+          e.stopPropagation();
+          const checkbox = currentItemRow.querySelector(
+            'input[type="checkbox"]'
+          ) as HTMLElement;
+          checkbox?.click();
+          return;
+        }
+
+        // --- XỬ LÝ ĐIỀU HƯỚNG ---
+        const listContent = currentItemRow.closest(
+          ".ant-transfer-list-content"
+        );
+        if (listContent) {
+          const allRows = Array.from(
+            listContent.querySelectorAll(".ant-transfer-list-content-item")
+          ) as HTMLElement[];
+          const currentIndex = allRows.indexOf(currentItemRow as HTMLElement);
+
+          // TRÁI / PHẢI: Di chuyển giữa các checkbox trong list
+          if (key === "ArrowLeft" || key === "ArrowRight") {
+            e.preventDefault();
+            e.stopPropagation();
+
+            let nextIndex = currentIndex;
+            if (key === "ArrowRight") {
+              // Sang item tiếp theo, nếu hết thì dừng ở cuối (hoặc vòng về đầu tuỳ bạn, ở đây mình để dừng)
+              if (currentIndex < allRows.length - 1) nextIndex++;
+            } else {
+              // Về item trước đó
+              if (currentIndex > 0) nextIndex--;
+            }
+
+            const nextRow = allRows[nextIndex];
+            const nextInput = nextRow.querySelector(
+              'input[type="checkbox"]'
+            ) as HTMLElement;
+            nextInput?.focus();
+            return;
+          }
+
+          // LÊN (ArrowUp): Thoát khỏi list -> Lên ô Input Search
+          if (key === "ArrowUp") {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const currentColumn = listContent.closest(".ant-transfer-list");
+            const searchInput = currentColumn?.querySelector(
+              ".ant-transfer-list-search .ant-input"
+            ) as HTMLElement;
+            searchInput?.focus();
+            return;
+          }
+
+          // XUỐNG (ArrowDown): Thoát khỏi list -> Xuống Button bên dưới
+          if (key === "ArrowDown") {
+            e.preventDefault();
+            e.stopPropagation();
+
+            // Lấy tất cả phần tử focus được trong modal
+            const allFocusables = Array.from(
+              container.querySelectorAll(
+                'input:not([disabled]), button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+              )
+            ) as HTMLElement[];
+
+            // Tìm phần tử focusable đầu tiên KHÔNG nằm trong danh sách hiện tại
+            // (Nghĩa là bỏ qua toàn bộ các checkbox còn lại bên dưới)
+            const currentListContainer =
+              listContent.closest(".ant-transfer-list");
+
+            let nextFocusableOutside: HTMLElement | null = null;
+            let foundCurrent = false;
+
+            for (const el of allFocusables) {
+              // Đánh dấu khi duyệt qua phần tử hiện tại
+              if (
+                el === activeElement ||
+                el.closest(".ant-transfer-list-content-item") === currentItemRow
+              ) {
+                foundCurrent = true;
+                continue;
+              }
+
+              // Chỉ bắt đầu tìm SAU KHI đã qua phần tử hiện tại
+              if (foundCurrent) {
+                // Nếu phần tử này KHÔNG nằm trong cùng cái List Container hiện tại -> Nó chính là Button ở dưới
+                if (!currentListContainer?.contains(el)) {
+                  nextFocusableOutside = el;
+                  break;
+                }
+              }
+            }
+
+            nextFocusableOutside?.focus();
+            return;
+          }
+        }
+      }
+
+      // =========================================================
+      // 2. LOGIC KHI ĐANG Ở Ô INPUT SEARCH
+      // =========================================================
+      if (activeElement.matches(".ant-transfer-list-search .ant-input")) {
+        // Trái/Phải: Di chuyển con trỏ chữ (Mặc định)
+        if (key === "ArrowLeft" || key === "ArrowRight") return;
+
+        // Xuống: Nhảy vào Checkbox đầu tiên
+        if (key === "ArrowDown") {
+          e.preventDefault();
+          const currentColumn = activeElement.closest(".ant-transfer-list");
+          const firstRow = currentColumn?.querySelector(
+            ".ant-transfer-list-content-item"
+          );
+          if (firstRow) {
+            const firstCheckbox = firstRow.querySelector(
+              'input[type="checkbox"]'
+            ) as HTMLElement;
+            firstCheckbox?.focus();
+          }
           return;
         }
       }
 
-      if (
-        (key === "Enter" || code === "Space") &&
-        activeElement.tagName === "BUTTON"
-      ) {
-        return;
-      }
-
-      const keysToCycle = [
-        "ArrowLeft",
-        "ArrowRight",
-        "ArrowUp",
-        "ArrowDown",
-        "Tab",
-      ];
-
-      if (keysToCycle.includes(key)) {
+      // =========================================================
+      // 3. LOGIC TAB (FOCUS TRAP & CYCLE)
+      // =========================================================
+      if (key === "Tab") {
         e.preventDefault();
-
-        const allElements = Array.from(
+        const allFocusables = Array.from(
           container.querySelectorAll(
             'input:not([disabled]), button:not([disabled]), [tabindex]:not([tabindex="-1"])'
           )
         ) as HTMLElement[];
 
-        const focusableElements = allElements.filter(
+        // Lọc element ẩn
+        const visibleFocusables = allFocusables.filter(
           (el) => el.offsetParent !== null
         );
 
-        let currentIndex = focusableElements.indexOf(activeElement);
-        if (currentIndex === -1) {
-          focusableElements[0]?.focus();
-          return;
-        }
+        const currentIndex = visibleFocusables.indexOf(activeElement);
+        const total = visibleFocusables.length;
+        const nextIndex = e.shiftKey
+          ? (currentIndex - 1 + total) % total
+          : (currentIndex + 1) % total;
 
-        const total = focusableElements.length;
-        let nextIndex = currentIndex;
-
-        if (
-          key === "ArrowRight" ||
-          key === "ArrowDown" ||
-          (key === "Tab" && !e.shiftKey)
-        ) {
-          nextIndex = (currentIndex + 1) % total;
-        } else if (
-          key === "ArrowLeft" ||
-          key === "ArrowUp" ||
-          (key === "Tab" && e.shiftKey)
-        ) {
-          nextIndex = (currentIndex - 1 + total) % total;
-        }
-
-        focusableElements[nextIndex]?.focus();
+        visibleFocusables[nextIndex]?.focus();
       }
     };
 

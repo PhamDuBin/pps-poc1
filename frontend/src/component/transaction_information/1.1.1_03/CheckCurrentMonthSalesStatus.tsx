@@ -1,6 +1,6 @@
 // ■02当月売上状況
-import { useScreenNavigation } from "../../../utils/useScreenNavigation";
 import { handleOpenWindow } from "../../../constants/functions";
+import { Button } from "antd/lib";
 const billingLabels = [
   "前月繰越金",
   "当月売上（税込）",
@@ -32,7 +32,6 @@ const borderContainerClass = "border border-black p-1";
 const borderContainerBillingClass = "border border-black mb-1 p-1 h-[265px]";
 
 function CheckCurrentMonthSalesStatusScreen({ onSwitchScreen }: any) {
-  const containerRef = useScreenNavigation<HTMLDivElement>(onSwitchScreen);
   return (
     <>
       <div
@@ -40,7 +39,7 @@ function CheckCurrentMonthSalesStatusScreen({ onSwitchScreen }: any) {
       >
         ＜当月売上状況＞
       </div>
-      <div ref={containerRef} className="p-4 w-[70%] mx-auto">
+      <div className="p-4 w-[70%] mx-auto">
         <div className="grid grid-rows-2 gap-1.5">
           <div className="flex grid-cols-2 gap-1.5 flex-col lg:flex-row w-full">
             {/* ＜請求残高＞ */}
@@ -93,12 +92,12 @@ function CheckCurrentMonthSalesStatusScreen({ onSwitchScreen }: any) {
                 <div className={borderContainerClass}>
                   {secondOtherLabels.map((label, idx) => (
                     <div className={containerClass} key={idx}>
-                      <button
+                      <Button
                         onClick={handleOpenWindow}
-                        className={`text-base font-medium h-8 flex items-center justify-center bg-button-primary w-full cursor-pointer hover:bg-white shadow-md shadow-zinc-600 transition-all duration-200 active:shadow-none active:translate-y-px`}
+                        className={`text-base font-medium h-8 flex items-center justify-center bg-button-primary w-full `}
                       >
                         {label}
-                      </button>
+                      </Button>
                       <input
                         placeholder="000"
                         className={`${inputClass}  border border-black`}
@@ -114,12 +113,12 @@ function CheckCurrentMonthSalesStatusScreen({ onSwitchScreen }: any) {
                   {thirdOtherLabels.map((label, idx) => (
                     <div className={containerClass} key={idx}>
                       {label === "保証金" ? (
-                        <button
+                        <Button
                           onClick={handleOpenWindow}
-                          className={`text-base font-medium h-8 flex items-center justify-center bg-button-primary w-full cursor-pointer hover:bg-white shadow-md shadow-zinc-600 transition-all duration-200 active:shadow-none active:translate-y-px`}
+                          className={`text-base font-medium h-8 flex items-center justify-center bg-button-primary w-full `}
                         >
                           {label}
-                        </button>
+                        </Button>
                       ) : (
                         <label className={labelClass}>{label}</label>
                       )}
@@ -145,12 +144,12 @@ function CheckCurrentMonthSalesStatusScreen({ onSwitchScreen }: any) {
                 {autoDebitLabels.map((label, idx) => (
                   <div className={container4colClass} key={idx}>
                     {label === "自振履歴" ? (
-                      <button
+                      <Button
                         onClick={handleOpenWindow}
-                        className={`text-base font-medium h-8 flex items-center justify-center bg-button-primary w-full cursor-pointer hover:bg-white shadow-md shadow-zinc-600 transition-all duration-200 active:shadow-none active:translate-y-px`}
+                        className={`text-base font-medium h-8 flex items-center justify-center bg-button-primary w-full`}
                       >
                         {label}
-                      </button>
+                      </Button>
                     ) : (
                       <label className={labelClass}>{label}</label>
                     )}

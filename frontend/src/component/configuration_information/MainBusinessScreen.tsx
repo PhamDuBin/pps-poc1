@@ -200,6 +200,9 @@ const MainBusinessScreen = () => {
       if (isAdvanceSearchOpen) {
         return;
       }
+      if (isOperationSeachModalOpen === true) {
+        return;
+      }
 
       if (
         confirmationModalRoot &&
@@ -355,7 +358,13 @@ const MainBusinessScreen = () => {
     return () => {
       container.removeEventListener("keydown", handleKeyDown);
     };
-  }, [activeSection, sections, shortcuts, handleScrollAndFocus]);
+  }, [
+    activeSection,
+    sections,
+    shortcuts,
+    handleScrollAndFocus,
+    isOperationSeachModalOpen,
+  ]);
 
   return (
     <div
