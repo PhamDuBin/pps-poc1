@@ -3,6 +3,26 @@ import { fieldDefinitions } from "../../../constants/transaction_information";
 import { processKatakanaInput } from "../../../utils/katakana";
 import { Radio, Select, Button } from "antd";
 import type { BaseSelectRef } from "rc-select";
+import {
+  HalfWidthNumberInput,
+  HalfWidthKanaInput,
+  KanaFullWidthInput,
+} from "../../input/JapaneseInputs";
+
+const getJapaneseInputComponent = (label: string) => {
+  if (
+    label.includes("コード") ||
+    label.includes("番号") ||
+    label.includes("順")
+  ) {
+    return HalfWidthNumberInput;
+  }
+
+  if (label.includes("カナ")) {
+    return HalfWidthKanaInput;
+  }
+  return KanaFullWidthInput;
+};
 
 type TableRowData = {
   kanaName: string;
@@ -58,7 +78,7 @@ const AdvancedSearchForm: React.FC<{
   };
 
   const handleKatakanaBlur = () => {
-    if (selectedFieldId === "allTel") {
+    if (selectedFieldId === "allTelNumber") {
       const currentValue = formValues[selectedFieldId];
       if (typeof currentValue === "string") {
         const processedValue = processKatakanaInput(currentValue);
@@ -73,83 +93,102 @@ const AdvancedSearchForm: React.FC<{
   const renderDynamicInput = (): React.ReactNode => {
     if (!currentField) return null;
     const value = formValues[currentField.id];
+    const { label } = currentField;
 
     switch (currentField.type) {
       case "multi":
+        const MultiInput = getJapaneseInputComponent(
+          label
+        ) as typeof HalfWidthNumberInput;
         return (
-          <div className="flex items-center space-x-1">
-            {currentField.partSizes?.map((size, index) => (
+          <div className="flex items-center space-x-1 w-full">
+            {(
+              currentField.partSizes as unknown as {
+                size: number;
+                placeholder: string;
+              }[]
+            )?.map((part, index) => (
               <React.Fragment key={index}>
-                <input
-                  type="text"
-                  placeholder="000"
-                  className="border border-black p-1 text-center placeholder-black"
-                  style={{ width: `${size}px` }}
+                <MultiInput
+                  placeholder={part.placeholder}
+                  className="border border-black p-1 text-center placeholder-black flex-1"
+                  maxLength={part.size}
                   value={(Array.isArray(value) && value[index]) || ""}
-                  onChange={(e) => handleValueChange(e.target.value, index)}
+                  onChange={(e) => handleValueChange(e, index)}
                 />
-                {index < currentField.partSizes.length - 1 && <span>-</span>}
+                {index <
+                  (
+                    currentField.partSizes as unknown as {
+                      size: number;
+                      placeholder: string;
+                    }[]
+                  ).length -
+                    1 && <span className="shrink-0">-</span>}
               </React.Fragment>
             ))}
           </div>
         );
-
       case "dropdown":
         return (
           <div className="flex items-center space-x-1">
-            <input
-              type="text"
+            <HalfWidthNumberInput
               className="border border-black p-1 placeholder-black w-[40px]"
               placeholder="0"
+              maxLength={1}
+              value={(Array.isArray(value) && value[0]) || ""}
+              onChange={(e) => handleValueChange(e, 0)}
             />
             <span>-</span>
-            <input
-              type="text"
+            <KanaFullWidthInput
               className="border border-black p-1 flex-1"
               value={(Array.isArray(value) && value[1]) || ""}
-              onChange={(e) => handleValueChange(e.target.value, 1)}
+              onChange={(e) => handleValueChange(e, 1)}
             />
           </div>
         );
 
       case "double":
+        const isKanaSecond = currentField.placeholders?.[1]?.includes("カナ");
+        const Input1 = KanaFullWidthInput;
+        const Input2 = isKanaSecond ? HalfWidthKanaInput : KanaFullWidthInput;
+
         return (
           <div className="flex flex-col space-y-1">
             <div className="bg-gray-300 flex text-center justify-center p-1">
               {currentField.placeholders?.[0]}
             </div>
-            <input
-              type="text"
+            <Input1
               className="border border-gray-400 p-1 placeholder-black"
               value={(Array.isArray(value) && value[0]) || ""}
-              onChange={(e) => handleValueChange(e.target.value, 0)}
+              onChange={(e) => handleValueChange(e, 0)}
             />
             <div className="bg-gray-300 flex text-center justify-center p-1">
               {currentField.placeholders?.[1]}
             </div>
-            <input
-              type="text"
+            <Input2
               className="border border-gray-400 p-1 placeholder-black"
               value={(Array.isArray(value) && value[1]) || ""}
-              onChange={(e) => handleValueChange(e.target.value, 1)}
+              onChange={(e) => handleValueChange(e, 1)}
             />
           </div>
         );
 
       default:
+        const SingleInput = getJapaneseInputComponent(
+          label
+        ) as React.ComponentType<any>;
+
         return (
-          <input
+          <SingleInput
             ref={firstInputRef}
-            type="text"
             className="border border-black p-1 w-full"
             value={(typeof value === "string" && value) || ""}
-            onChange={(e) => handleValueChange(e.target.value)}
+            onChange={(e: string) => handleValueChange(e)}
             onBlur={handleKatakanaBlur}
-            onKeyDown={(e) => {
+            onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
               if (e.key === "Enter" && typeof value === "string" && value) {
                 e.preventDefault();
                 e.stopPropagation();
-                handleKatakanaBlur();
                 searchButtonRef.current?.focus();
               }
             }}
@@ -157,7 +196,6 @@ const AdvancedSearchForm: React.FC<{
         );
     }
   };
-
   const handleResetForm = () => {
     setFormValues({});
     onReset();
@@ -246,10 +284,19 @@ const AdvanceSearchModal: React.FC<AdvanceSearchModalProps> = ({
 
   useEffect(() => {
     if (showAdvanceSearch && radioGroupRef.current) {
+      const checkedRadio =
+        radioGroupRef.current.querySelector<HTMLInputElement>(
+          'input[type="radio"]:checked'
+        );
       const firstRadio = radioGroupRef.current.querySelector<HTMLInputElement>(
         'input[type="radio"]'
       );
-      if (firstRadio) setTimeout(() => firstRadio.focus(), 150);
+
+      const radioToFocus = checkedRadio || firstRadio;
+
+      if (radioToFocus) {
+        setTimeout(() => radioToFocus.focus(), 150);
+      }
     }
   }, [showAdvanceSearch]);
 
@@ -317,25 +364,26 @@ const AdvanceSearchModal: React.FC<AdvanceSearchModalProps> = ({
           (el as HTMLInputElement).type === "radio"
         ) {
           const radioGroup = el.closest(".ant-radio-group");
-          if (!radioGroup) return true;
-          const firstRadioInGroup = radioGroup.querySelector(
-            'input[type="radio"]'
-          );
-          return el === firstRadioInGroup;
+          if (!radioGroup) {
+            return true;
+          }
+          const checkedRadio = radioGroup.querySelector(
+            'input[type="radio"]:checked'
+          ) as HTMLInputElement | null;
+
+          if (checkedRadio) {
+            return el === checkedRadio;
+          } else {
+            const firstRadioInGroup = radioGroup.querySelector(
+              'input[type="radio"]'
+            );
+            return el === firstRadioInGroup;
+          }
         }
         return true;
       });
 
       let currentIndex = focusableElements.indexOf(activeElement);
-      if (currentIndex === -1) {
-        const radioGroup = activeElement.closest(".ant-radio-group");
-        if (radioGroup) {
-          const firstRadio = radioGroup.querySelector(
-            'input[type="radio"]'
-          ) as HTMLElement;
-          currentIndex = focusableElements.indexOf(firstRadio);
-        }
-      }
 
       if (activeElement?.closest(".ant-select-open")) {
         if (e.key !== "Tab") {
@@ -384,7 +432,7 @@ const AdvanceSearchModal: React.FC<AdvanceSearchModalProps> = ({
           (activeElement as HTMLInputElement).type === "text" &&
           !activeElement?.closest(".ant-select");
 
-        if (isButton || isSelect || isDynamicInput) {
+        if (isButton || isSelect) {
           return;
         }
       }
@@ -399,7 +447,13 @@ const AdvanceSearchModal: React.FC<AdvanceSearchModalProps> = ({
             radioGroup.querySelectorAll('input[type="radio"]')
           ) as HTMLInputElement[];
           let currentRadioIndex = radios.findIndex((r) => r === activeElement);
-          if (currentRadioIndex === -1) currentRadioIndex = 0;
+          if (currentRadioIndex === -1) {
+            const checkedRadio = radioGroup.querySelector(
+              'input[type="radio"]:checked'
+            ) as HTMLInputElement | null;
+            currentRadioIndex = radios.findIndex((r) => r === checkedRadio);
+            if (currentRadioIndex === -1) currentRadioIndex = 0;
+          }
           const totalRadios = radios.length;
 
           let nextRadioIndex;
@@ -422,10 +476,12 @@ const AdvanceSearchModal: React.FC<AdvanceSearchModalProps> = ({
       const isInput = tagName === "INPUT";
       if (isInput && activeElement.getAttribute("type") === "text") {
         const isInsideSelect = activeElement?.closest(".ant-select");
-        if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
-          if (!isInsideSelect) {
-            return;
-          }
+        if (
+          !isInsideSelect &&
+          (e.key === "ArrowLeft" || e.key === "ArrowRight")
+        ) {
+          // Cho phép người dùng di chuyển con trỏ trong input text thông thường.
+          return;
         }
       }
 
@@ -456,18 +512,20 @@ const AdvanceSearchModal: React.FC<AdvanceSearchModalProps> = ({
 
       // Next: ArrowDown, ArrowRight, Enter
       if (
-        e.key === "ArrowRight" ||
         e.key === "ArrowDown" ||
-        e.key === "Enter"
+        e.key === "Enter" ||
+        e.key === "ArrowRight"
       ) {
         nextIndex = (currentIndex + 1) % total;
       }
       // Prev: ArrowUp, ArrowLeft
-      else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+      else if (e.key === "ArrowUp" || e.key === "ArrowLeft") {
         nextIndex = (currentIndex - 1 + total) % total;
       }
 
-      focusableElements[nextIndex]?.focus();
+      if (navKeys.includes(e.key)) {
+        focusableElements[nextIndex]?.focus();
+      }
     };
 
     container.addEventListener("keydown", handleModalKeyDown, true);
@@ -480,7 +538,7 @@ const AdvanceSearchModal: React.FC<AdvanceSearchModalProps> = ({
   return (
     <div
       ref={modalContainerRef}
-      className="p-4 bg-white text-black w-full text-sm advance-search-modal"
+      className="p-4 bg-white text-black w-full text-sm advance-search-modal rounded-lg"
     >
       <style>{`
         .advance-search-modal input:focus,
@@ -491,11 +549,11 @@ const AdvanceSearchModal: React.FC<AdvanceSearchModalProps> = ({
         }
       `}</style>
 
-      <div className="bg-label border border-black p-2 text-center font-bold mb-2">
+      <div className="bg-label border border-black p-2 text-center font-bold mb-2 rounded-lg">
         顧客検索
       </div>
 
-      <div className="flex items-center space-x-6 bg-label p-2 border border-black">
+      <div className="flex items-center space-x-6 bg-label p-2 border border-black rounded-lg">
         <div className="flex items-center space-x-2">
           <label className="font-semibold">事務所</label>
           <span>0000-000 全指定</span>
@@ -529,7 +587,7 @@ const AdvanceSearchModal: React.FC<AdvanceSearchModalProps> = ({
       />
 
       <div
-        className="overflow-auto border border-black mt-2"
+        className="overflow-auto border border-black mt-2 rounded-lg"
         style={{ height: "200px" }}
       >
         <table className="min-w-full border-collapse border border-black text-sm">
