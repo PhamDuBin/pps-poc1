@@ -427,11 +427,6 @@ const AdvanceSearchModal: React.FC<AdvanceSearchModalProps> = ({
       if (e.key === "Enter") {
         const isButton = activeElement?.closest(".ant-btn");
         const isSelect = activeElement?.closest(".ant-select");
-        const isDynamicInput =
-          activeElement.tagName === "INPUT" &&
-          (activeElement as HTMLInputElement).type === "text" &&
-          !activeElement?.closest(".ant-select");
-
         if (isButton || isSelect) {
           return;
         }
