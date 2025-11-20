@@ -338,6 +338,9 @@ const AdvanceSearchModal: React.FC<AdvanceSearchModalProps> = ({
     if (!container) return;
 
     const handleModalKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        return;
+      }
       if (/^F\d{1,2}$/.test(e.key)) {
         e.preventDefault();
         e.stopPropagation();
@@ -386,7 +389,12 @@ const AdvanceSearchModal: React.FC<AdvanceSearchModalProps> = ({
       let currentIndex = focusableElements.indexOf(activeElement);
 
       if (activeElement?.closest(".ant-select-open")) {
-        if (e.key !== "Tab") {
+        if (
+          e.key !== "Tab" &&
+          e.key !== "Enter" &&
+          e.key !== " " &&
+          e.key !== "Spacebar"
+        ) {
           return;
         }
       }
@@ -406,9 +414,24 @@ const AdvanceSearchModal: React.FC<AdvanceSearchModalProps> = ({
 
       if (e.key === " " || e.key === "Spacebar") {
         const isButton = activeElement?.closest(".ant-btn");
-        const isSelect = activeElement?.closest(".ant-select");
+        if (isButton) {
+          return;
+        }
+        const selectContainer = activeElement?.closest(".ant-select");
+        if (selectContainer) {
+          if (selectContainer.classList.contains("ant-select-open")) {
+            e.preventDefault();
+            e.stopPropagation();
 
-        if (isButton || isSelect) {
+            const activeOption = document.querySelector(
+              ".ant-select-dropdown:not(.ant-select-dropdown-hidden) .ant-select-item-option-active"
+            ) as HTMLElement;
+
+            if (activeOption) {
+              activeOption.click();
+            }
+            return;
+          }
           return;
         }
 
@@ -475,7 +498,6 @@ const AdvanceSearchModal: React.FC<AdvanceSearchModalProps> = ({
           !isInsideSelect &&
           (e.key === "ArrowLeft" || e.key === "ArrowRight")
         ) {
-          // Cho phép người dùng di chuyển con trỏ trong input text thông thường.
           return;
         }
       }
@@ -505,16 +527,13 @@ const AdvanceSearchModal: React.FC<AdvanceSearchModalProps> = ({
       let nextIndex = currentIndex;
       const total = focusableElements.length;
 
-      // Next: ArrowDown, ArrowRight, Enter
       if (
         e.key === "ArrowDown" ||
         e.key === "Enter" ||
         e.key === "ArrowRight"
       ) {
         nextIndex = (currentIndex + 1) % total;
-      }
-      // Prev: ArrowUp, ArrowLeft
-      else if (e.key === "ArrowUp" || e.key === "ArrowLeft") {
+      } else if (e.key === "ArrowUp" || e.key === "ArrowLeft") {
         nextIndex = (currentIndex - 1 + total) % total;
       }
 

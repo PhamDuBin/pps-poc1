@@ -113,6 +113,12 @@ export const handleNavigationKey040504 = (
       if (activeElement?.closest(".ant-select-open")) {
         e.preventDefault();
         e.stopPropagation();
+        const activeOption = document.querySelector(
+          ".ant-select-dropdown:not(.ant-select-dropdown-hidden) .ant-select-item-option-active"
+        ) as HTMLElement;
+        if (activeOption) {
+          activeOption.click();
+        }
       }
       return;
     }
@@ -165,20 +171,26 @@ export const handleNavigationKey040504 = (
   if (activeElement?.closest(".ant-select-open")) return;
   if (activeElement?.closest(".ant-btn") && e.key === "Enter") return;
 
+  if (activeElement?.closest(".ant-select")) {
+    if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
+      e.preventDefault();
+      e.stopPropagation();
+      return;
+    }
+    if (e.key === "Enter") {
+      return;
+    }
+  }
   const tagName = activeElement?.tagName.toUpperCase();
   const isInput = tagName === "INPUT";
   const isTextArea = tagName === "TEXTAREA";
-  const isTextInput =
+  const isTextInput2 =
     ((isInput &&
       activeElement.getAttribute("type") !== "radio" &&
       activeElement.getAttribute("type") !== "checkbox") ||
       isTextArea) &&
     !activeElement?.closest(".ant-select");
-  if (isTextInput && (e.key === "ArrowLeft" || e.key === "ArrowRight")) {
-    return;
-  }
-
-  if (activeElement?.closest(".ant-select") && e.key === "Enter") {
+  if (isTextInput2 && (e.key === "ArrowLeft" || e.key === "ArrowRight")) {
     return;
   }
 

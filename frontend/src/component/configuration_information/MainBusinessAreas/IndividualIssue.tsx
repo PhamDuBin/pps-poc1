@@ -8,7 +8,7 @@ import { labelColor, inputColor } from "../../../constants/colors";
 import { blockTab } from "../../../utils/InputHandlers";
 import { options } from "../../../constants/configuration_information";
 import JapaneseCalendar from "../../JapaneseCalendar";
-import HalfWidthNumberInput from "../../HalfWidthNumberInput";
+import { HalfWidthNumberInput } from "../../input/JapaneseInputs";
 
 const { Option } = Select;
 
@@ -32,11 +32,17 @@ const IndividualIssue = forwardRef<any>((props, ref) => {
   const handleCloseCustomerInfor = () => {
     setShowCustomerInfor(false);
     setCustomerCode(["", ""]);
+    setTimeout(() => {
+      customerInput1Ref.current?.focus();
+    }, 100);
   };
 
   const handleCloseOfficeInfor = () => {
     setOfficeName("");
     setOfficeCode(["", ""]);
+    setTimeout(() => {
+      officeInput1Ref.current?.focus();
+    }, 100);
   };
 
   const handleOfficeSearch = (e: KeyboardEvent<HTMLInputElement>) => {
@@ -117,9 +123,9 @@ const IndividualIssue = forwardRef<any>((props, ref) => {
               ref={officeInput1Ref}
               value={officeCode[0]}
               onChange={(e: string) => {
+                const prevValue = officeCode[0];
                 setOfficeCode([e, officeCode[1]]);
-
-                if (e.length === 4) {
+                if (prevValue.length < 4 && e.length === 4) {
                   officeInput2Ref.current?.focus();
                 }
               }}
@@ -160,6 +166,7 @@ const IndividualIssue = forwardRef<any>((props, ref) => {
           {/* 顧客コード */}
           <span className="flex mt-2 gap-4 items-center">
             <Select
+              showSearch
               value={selected}
               onChange={(value) => setSelected(value)}
               className={`w-[120px] text-black 
@@ -181,9 +188,9 @@ const IndividualIssue = forwardRef<any>((props, ref) => {
               ref={customerInput1Ref}
               value={customerCode[0]}
               onChange={(e: string) => {
+                const prevValue = customerCode[0];
                 setCustomerCode([e, customerCode[1]]);
-
-                if (e.length === 6) {
+                if (prevValue.length < 6 && e.length === 6) {
                   customerInput2Ref.current?.focus();
                 }
               }}

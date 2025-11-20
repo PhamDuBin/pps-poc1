@@ -4,7 +4,6 @@ import type { InputProps, InputRef } from "antd";
 
 // ... (Toàn bộ code từ zenToHanMap đến hanRegex của bạn giữ nguyên) ...
 const zenToHanMap: { [key: string]: string } = {
-  // ... (giữ nguyên)
   "。": "｡",
   "「": "｢",
   "」": "｣",
@@ -196,7 +195,6 @@ const zenRegex = new RegExp(
 );
 
 const hanToZenMap: { [key: string]: string } = {
-  // ... (giữ nguyên)
   " ": "　",
   "0": "０",
   "1": "１",
@@ -273,7 +271,6 @@ const hanRegex = new RegExp(
 );
 
 function hiraToKata(str: string): string {
-  // ... (giữ nguyên)
   if (!str) return "";
   return str.replace(/[\u3041-\u3096]/g, (match) => {
     return String.fromCharCode(match.charCodeAt(0) + 0x60);
@@ -281,32 +278,25 @@ function hiraToKata(str: string): string {
 }
 
 function formatKanaFullWidth(value: string): string {
-  // ... (giữ nguyên)
   if (!value) return "";
   let normalized = value.normalize("NFKC");
   let fullWidth = normalized.replace(hanRegex, (m) => hanToZenMap[m] || m);
-  return fullWidth.replace(
-    /[^\u3040-\u309F\u30A0-\u30FF\u30FC\u4E00-\u9FAF\uFF10-\uFF19\uFF21-\uFF3A\uFF41-\uFF5A\u3000]/g,
-    ""
-  );
+  return fullWidth;
 }
 
 function formatToHalfWidth(value: string): string {
-  // ... (giữ nguyên)
   if (!value) return "";
   let kata = hiraToKata(value);
   return kata.replace(zenRegex, (m) => zenToHanMap[m] || m);
 }
 
 function formatHalfWidthNumber(value: string): string {
-  // ... (giữ nguyên)
   if (!value) return "";
   let normalized = value.normalize("NFKC");
   return normalized.replace(/[^0-9]/g, "");
 }
 
 function formatHalfWidthAlphaNum(value: string): string {
-  // ... (giữ nguyên)
   if (!value) return "";
   let kata = hiraToKata(value);
   let halfWidth = kata.replace(zenRegex, (m) => zenToHanMap[m] || m);
@@ -314,7 +304,6 @@ function formatHalfWidthAlphaNum(value: string): string {
 }
 
 function formatHalfWidthKana(value: string): string {
-  // ... (giữ nguyên)
   if (!value) return "";
   let kata = hiraToKata(value);
   let halfWidth = kata.replace(zenRegex, (m) => zenToHanMap[m] || m);
