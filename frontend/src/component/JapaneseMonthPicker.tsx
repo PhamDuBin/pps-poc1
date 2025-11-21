@@ -1,6 +1,12 @@
-import React, { useState, useRef, useEffect, forwardRef, useImperativeHandle } from 'react';
-import { format, addMonths, subMonths, startOfMonth } from 'date-fns';
-import { ja } from 'date-fns/locale';
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  forwardRef,
+  useImperativeHandle,
+} from "react";
+import { format, addMonths, subMonths, startOfMonth } from "date-fns";
+import { ja } from "date-fns/locale";
 
 interface JapaneseMonthPickerProps {
   value?: Date;
@@ -14,12 +20,30 @@ export interface JapaneseMonthPickerHandle {
   focus: () => void;
 }
 
-const JapaneseMonthPicker = forwardRef<JapaneseMonthPickerHandle, JapaneseMonthPickerProps>(
-  ({ value, onChange, placeholder = 'YYYY/MM', className = '', format: dateFormat = 'yyyy/MM' }, ref) => {
-    const [selectedMonth, setSelectedMonth] = useState<Date>(value ? startOfMonth(value) : startOfMonth(new Date()));
+const JapaneseMonthPicker = forwardRef<
+  JapaneseMonthPickerHandle,
+  JapaneseMonthPickerProps
+>(
+  (
+    {
+      value,
+      onChange,
+      placeholder = "YYYY/MM",
+      className = "",
+      format: dateFormat = "yyyy/MM",
+    },
+    ref
+  ) => {
+    const [selectedMonth, setSelectedMonth] = useState<Date>(
+      value ? startOfMonth(value) : startOfMonth(new Date())
+    );
     const [isOpen, setIsOpen] = useState(false);
-    const [displayYear, setDisplayYear] = useState<number>(selectedMonth.getFullYear());
-    const [popupPosition, setPopupPosition] = useState<'bottom' | 'top'>('bottom');
+    const [displayYear, setDisplayYear] = useState<number>(
+      selectedMonth.getFullYear()
+    );
+    const [popupPosition, setPopupPosition] = useState<"bottom" | "top">(
+      "bottom"
+    );
     const inputRef = useRef<HTMLInputElement>(null);
     const pickerRef = useRef<HTMLDivElement>(null);
 
@@ -32,7 +56,7 @@ const JapaneseMonthPicker = forwardRef<JapaneseMonthPickerHandle, JapaneseMonthP
     // Handle keyboard navigation
     const handleKeyDown = (e: React.KeyboardEvent) => {
       if (!isOpen) {
-        if (e.key === 'Enter') {
+        if (e.key === "Enter") {
           e.preventDefault();
           e.stopPropagation();
           setIsOpen(true);
@@ -41,44 +65,53 @@ const JapaneseMonthPicker = forwardRef<JapaneseMonthPickerHandle, JapaneseMonthP
       }
 
       // CRITICAL: Stop ALL arrow keys and Enter/Escape from propagating to parent
-      if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Enter', 'Escape'].includes(e.key)) {
+      if (
+        [
+          "ArrowUp",
+          "ArrowDown",
+          "ArrowLeft",
+          "ArrowRight",
+          "Enter",
+          "Escape",
+        ].includes(e.key)
+      ) {
         e.preventDefault();
         e.stopPropagation();
       }
 
       switch (e.key) {
-        case 'ArrowUp': {
+        case "ArrowUp": {
           const newDate = subMonths(selectedMonth, 3);
           setSelectedMonth(newDate);
           setDisplayYear(newDate.getFullYear());
           break;
         }
-        case 'ArrowDown': {
+        case "ArrowDown": {
           const newDate = addMonths(selectedMonth, 3);
           setSelectedMonth(newDate);
           setDisplayYear(newDate.getFullYear());
           break;
         }
-        case 'ArrowLeft': {
+        case "ArrowLeft": {
           const newDate = subMonths(selectedMonth, 1);
           setSelectedMonth(newDate);
           setDisplayYear(newDate.getFullYear());
           break;
         }
-        case 'ArrowRight': {
+        case "ArrowRight": {
           const newDate = addMonths(selectedMonth, 1);
           setSelectedMonth(newDate);
           setDisplayYear(newDate.getFullYear());
           break;
         }
-        case 'Enter':
+        case "Enter":
           if (onChange) {
             onChange(selectedMonth);
           }
           setIsOpen(false);
           inputRef.current?.focus();
           break;
-        case 'Escape':
+        case "Escape":
           setIsOpen(false);
           inputRef.current?.focus();
           break;
@@ -99,9 +132,9 @@ const JapaneseMonthPicker = forwardRef<JapaneseMonthPickerHandle, JapaneseMonthP
         }
       };
 
-      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener("mousedown", handleClickOutside);
       return () => {
-        document.removeEventListener('mousedown', handleClickOutside);
+        document.removeEventListener("mousedown", handleClickOutside);
       };
     }, []);
 
@@ -124,9 +157,9 @@ const JapaneseMonthPicker = forwardRef<JapaneseMonthPickerHandle, JapaneseMonthP
 
         // If not enough space below and more space above, show on top
         if (spaceBelow < pickerHeight && spaceAbove > spaceBelow) {
-          setPopupPosition('top');
+          setPopupPosition("top");
         } else {
-          setPopupPosition('bottom');
+          setPopupPosition("bottom");
         }
 
         // Focus picker after position is set
@@ -149,8 +182,18 @@ const JapaneseMonthPicker = forwardRef<JapaneseMonthPickerHandle, JapaneseMonthP
     };
 
     const months = [
-      '1月', '2月', '3月', '4月', '5月', '6月',
-      '7月', '8月', '9月', '10月', '11月', '12月'
+      "1月",
+      "2月",
+      "3月",
+      "4月",
+      "5月",
+      "6月",
+      "7月",
+      "8月",
+      "9月",
+      "10月",
+      "11月",
+      "12月",
     ];
 
     return (
@@ -161,10 +204,10 @@ const JapaneseMonthPicker = forwardRef<JapaneseMonthPickerHandle, JapaneseMonthP
           value={format(selectedMonth, dateFormat, { locale: ja })}
           readOnly
           placeholder={placeholder}
-          className={`cursor-pointer ${className}`}
+          className={`cursor-pointer ${className} custom-date-input`}
           onClick={() => setIsOpen(!isOpen)}
           onKeyDown={(e) => {
-            if (e.key === 'Enter') {
+            if (e.key === "Enter") {
               e.preventDefault();
               e.stopPropagation();
               setIsOpen(true);
@@ -176,14 +219,14 @@ const JapaneseMonthPicker = forwardRef<JapaneseMonthPickerHandle, JapaneseMonthP
           <div
             ref={pickerRef}
             className={`japanese-month-picker-popup absolute left-0 z-50 bg-white border-2 border-gray-400 shadow-lg rounded-md p-4 ${
-              popupPosition === 'top' ? 'bottom-full mb-1' : 'top-full mt-1'
+              popupPosition === "top" ? "bottom-full mb-1" : "top-full mt-1"
             }`}
             onKeyDown={handleKeyDown}
             tabIndex={-1}
             data-calendar-popup="true"
             style={{
-              outline: 'none',
-              width: '280px',
+              outline: "none",
+              width: "280px",
             }}
           >
             {/* Year selector */}
@@ -215,8 +258,8 @@ const JapaneseMonthPicker = forwardRef<JapaneseMonthPickerHandle, JapaneseMonthP
                     key={index}
                     className={`py-2 px-3 border rounded text-sm ${
                       isSelected
-                        ? 'bg-[#ffffcc] border-[#4a90e2] border-2 font-bold'
-                        : 'border-gray-300 hover:bg-gray-100'
+                        ? "bg-[#ffffcc] border-[#4a90e2] border-2 font-bold"
+                        : "border-gray-300 hover:bg-gray-100"
                     }`}
                     onClick={() => handleMonthClick(index)}
                   >
@@ -232,6 +275,6 @@ const JapaneseMonthPicker = forwardRef<JapaneseMonthPickerHandle, JapaneseMonthP
   }
 );
 
-JapaneseMonthPicker.displayName = 'JapaneseMonthPicker';
+JapaneseMonthPicker.displayName = "JapaneseMonthPicker";
 
 export default JapaneseMonthPicker;

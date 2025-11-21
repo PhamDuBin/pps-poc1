@@ -1,4 +1,5 @@
 import React from "react";
+import { Button } from "antd";
 
 interface RightPanelProps {
   onButtonClick: (buttonName: string) => void;
@@ -10,23 +11,31 @@ const RightPanel: React.FC<RightPanelProps> = ({
   activeButton,
 }) => {
   const buttons = ["行追加 (F1)", "請求年月変更 (F2)", "入金処理 (F3)"];
-  const buttonRefs = React.useRef<(HTMLButtonElement | null)[]>([]);
+  const buttonRefs = React.useRef<(HTMLElement | null)[]>([]);
 
   const handleButtonKeyDown = (e: React.KeyboardEvent, index: number) => {
     // ArrowDown / ArrowRight / Tab: next button
-    if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || (e.key === 'Tab' && !e.shiftKey)) {
+    if (
+      e.key === "ArrowDown" ||
+      e.key === "ArrowRight" ||
+      (e.key === "Tab" && !e.shiftKey)
+    ) {
       e.preventDefault();
       const nextIndex = (index + 1) % buttons.length;
       buttonRefs.current[nextIndex]?.focus();
     }
     // ArrowUp / ArrowLeft / Shift+Tab: previous button
-    else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft' || (e.key === 'Tab' && e.shiftKey)) {
+    else if (
+      e.key === "ArrowUp" ||
+      e.key === "ArrowLeft" ||
+      (e.key === "Tab" && e.shiftKey)
+    ) {
       e.preventDefault();
       const prevIndex = (index - 1 + buttons.length) % buttons.length;
       buttonRefs.current[prevIndex]?.focus();
     }
     // Enter / Space: activate button
-    else if (e.key === 'Enter' || e.key === ' ') {
+    else if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();
       onButtonClick(buttons[index]);
     }
@@ -36,7 +45,7 @@ const RightPanel: React.FC<RightPanelProps> = ({
     <div className="w-2/12 border bg-bg-alt border-black h-full pt-5">
       <div className="mx-3 font-bold text-base text-black flex flex-col gap-2 overflow-auto h-full">
         {buttons.map((label, index) => (
-          <button
+          <Button
             key={index}
             ref={(el) => {
               buttonRefs.current[index] = el;
@@ -54,7 +63,7 @@ const RightPanel: React.FC<RightPanelProps> = ({
             }`}
           >
             {label}
-          </button>
+          </Button>
         ))}
       </div>
     </div>

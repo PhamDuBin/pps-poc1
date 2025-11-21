@@ -47,106 +47,187 @@ const SaleSlipEntryScreen = () => {
     const container = containerRef.current;
     if (!container) return;
 
-    const handleContainerKeyDown = (e: KeyboardEvent) => {
-      const activeElement = document.activeElement as HTMLElement;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const key = e.key.toUpperCase();
+      if (key.startsWith("F") && !isNaN(Number(key.substring(1)))) {
+        e.preventDefault();
 
-      // Check if active element is inside AdvanceSearchModal - if so, let modal handle all navigation
-      const advanceSearchModal = document.querySelector('.advance-search-modal');
-      if (advanceSearchModal && advanceSearchModal.contains(activeElement)) {
-        // Let the AdvanceSearchModal handle all its own navigation
+        return;
+      }
+      const isModifierPressed = e.ctrlKey && e.altKey;
+
+      if (isModifierPressed) {
+        e.preventDefault();
+
         return;
       }
 
-      // Check if there's a calendar popup open by looking for the data attribute
-      const calendarPopup = document.querySelector(
-        '[data-calendar-popup="true"]'
+      const isAdvanceSearchOpen = container.querySelector(
+        ".advance-search-modal"
       );
+      const confirmationModalRoot = container.querySelector(".ant-modal-root");
 
-      // If calendar popup exists and arrow keys are pressed, don't handle navigation
-      if (
-        calendarPopup &&
-        ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key)
-      ) {
-        // Let the calendar handle the event completely
+      if (isAdvanceSearchOpen) {
         return;
       }
 
-      // Check if Ant Design Select dropdown is open
-      const antSelectDropdown = document.querySelector(
-        ".ant-select-dropdown:not(.ant-select-dropdown-hidden)"
-      );
-
-      // If Select dropdown is open, let Select handle arrow/enter/space keys
       if (
-        antSelectDropdown &&
-        ["ArrowUp", "ArrowDown", "Enter", " "].includes(e.key)
+        confirmationModalRoot &&
+        (confirmationModalRoot as HTMLElement).style.display !== "none"
       ) {
-        // Let the Select dropdown handle the event
-        return;
-      }
+        const confirmationModal =
+          confirmationModalRoot.querySelector(".ant-modal");
+        if (!confirmationModal) return;
 
-      // Check if CustomSelect dropdown is open (aria-expanded="true")
-      const customSelectOpen = activeElement.closest('.custom-select[aria-expanded="true"]');
-      if (
-        customSelectOpen &&
-        ["ArrowUp", "ArrowDown", "Enter", " "].includes(e.key)
-      ) {
-        // Let the CustomSelect handle the event
-        return;
-      }
+        const buttons = Array.from(
+          confirmationModal.querySelectorAll<HTMLButtonElement>(
+            ".ant-modal-footer button:not([disabled])"
+          )
+        );
 
-      const focusableElements = Array.from(
+        if (buttons.length === 0) return; // Không có nút nào
+
+        const activeElement = document.activeElement as HTMLElement;
+        let currentIndex = buttons.findIndex((btn) => btn === activeElement);
+
+        // Nếu focus không nằm trên nút, đặt mặc định cho các phím điều hướng
+        if (
+          currentIndex === -1 &&
+          ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Tab"].includes(
+            e.key
+          )
+        ) {
+          // Mặc định là nút primary (OK) hoặc nút cuối (Cancel)
+          const primaryButtonIndex = buttons.findIndex((b) =>
+            b.classList.contains("ant-btn-primary")
+          );
+          currentIndex =
+            primaryButtonIndex !== -1 ? primaryButtonIndex : buttons.length - 1;
+          buttons[currentIndex]?.focus();
+          e.preventDefault();
+          return;
+        }
+
+        // Xử lý điều hướng
+        if (
+          (e.key === "Tab" && e.shiftKey) ||
+          e.key === "ArrowLeft" ||
+          e.key === "ArrowUp"
+        ) {
+          e.preventDefault();
+          const nextIndex =
+            (currentIndex - 1 + buttons.length) % buttons.length;
+          buttons[nextIndex]?.focus();
+        } else if (
+          e.key === "Tab" ||
+          e.key === "ArrowRight" ||
+          e.key === "ArrowDown"
+        ) {
+          e.preventDefault();
+          const nextIndex = (currentIndex + 1) % buttons.length;
+          buttons[nextIndex]?.focus();
+        } else if (e.key === "Enter" || e.key === " ") {
+          // Cho phép hành động mặc định (click) của trình duyệt/Ant
+          return;
+        } else if (e.key === "Escape") {
+          // Cho phép modal tự xử lý đóng
+          return;
+        } else {
+          // Chặn các phím khác
+          if (!e.metaKey && !e.ctrlKey) {
+            e.preventDefault();
+          }
+        }
+        return; // Đã xử lý phím trong modal, dừng lại
+      }
+      // --- KẾT THÚC LOGIC XỬ LÝ MODAL ---
+
+      const allElements = Array.from(
         container.querySelectorAll(
-          'input, button, [role="registmodal"], select, textarea, .ant-select, .custom-select'
+          "input:not([disabled]), button:not([disabled]), select:not([disabled]), textarea:not([disabled])"
         )
       ) as HTMLElement[];
 
-      const currentIndex = focusableElements.indexOf(activeElement);
+      const focusableElements = allElements.filter((el) => {
+        if (
+          el.tagName === "INPUT" &&
+          (el as HTMLInputElement).type === "radio"
+        ) {
+          const radioGroup = el.closest(".ant-radio-group");
+          if (!radioGroup) {
+            return true;
+          }
+          const checkedRadio = radioGroup.querySelector(
+            'input[type="radio"]:checked'
+          ) as HTMLInputElement | null;
 
-      // Prevent Enter key from navigating to next element
-      if (e.key === "Enter") {
-        e.preventDefault();
-        // Trigger click event on the current element if it's a button
-        if (activeElement.tagName === "BUTTON") {
-          activeElement.click();
+          if (checkedRadio) {
+            return el === checkedRadio;
+          } else {
+            const firstRadioInGroup = radioGroup.querySelector(
+              'input[type="radio"]'
+            );
+            return el === firstRadioInGroup;
+          }
         }
+        if (
+          el.tagName === "INPUT" &&
+          (el as HTMLInputElement).type === "checkbox"
+        ) {
+          const checkboxGroup = el.closest(".ant-checkbox-group-navigable");
+          if (!checkboxGroup) {
+            return true;
+          }
+          const firstCheckboxInGroup = checkboxGroup.querySelector(
+            'input[type="checkbox"]'
+          );
+          return el === firstCheckboxInGroup;
+        }
+
+        return true;
+      });
+
+      const activeElement = document.activeElement as HTMLElement;
+
+      // --- CÁC LOGIC BỎ QUA ĐIỀU HƯỚNG ---
+
+      if (
+        activeElement &&
+        activeElement.closest('[data-calendar-popup="true"]')
+      ) {
         return;
       }
 
-      // Handle left/right arrow keys for navigation (except in text input fields)
-      if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
-        // Check if we're in a text input/textarea where cursor movement should work
-        const isTextInput =
-          (activeElement.tagName === "INPUT" &&
-            (activeElement as HTMLInputElement).type === "text") ||
-          activeElement.tagName === "TEXTAREA";
+      // Giữ nguyên logic cũ của bạn cho class "japanese-calendar"
+      if (
+        e.key === "Enter" &&
+        activeElement &&
+        activeElement.classList.contains("japanese-calendar")
+      ) {
+        return;
+      }
 
-        if (!isTextInput) {
-          e.preventDefault();
-          const total = focusableElements.length;
-          let nextIndex = currentIndex;
-
-          if (e.key === "ArrowRight") {
-            nextIndex = (currentIndex + 1) % total;
-          } else if (e.key === "ArrowLeft") {
-            nextIndex = (currentIndex - 1 + total) % total;
-          }
-
-          focusableElements[nextIndex]?.focus();
+      if (e.key === "Enter") {
+        if (activeElement?.classList.contains("custom-date-input")) {
+          return;
+        }
+        if (activeElement?.classList.contains("japanese-calendar")) {
+          return;
+        }
+        if (activeElement?.closest(".ant-picker")) {
           return;
         }
       }
 
-      if (currentIndex !== -1) {
-        handleNavigationKey(e, currentIndex, focusableElements);
-      }
+      const currentIndex = focusableElements.indexOf(activeElement);
+      handleNavigationKey(e, currentIndex, focusableElements);
     };
 
-    container.addEventListener("keydown", handleContainerKeyDown as any);
+    container.addEventListener("keydown", handleKeyDown);
     return () => {
-      container.removeEventListener("keydown", handleContainerKeyDown as any);
+      container.removeEventListener("keydown", handleKeyDown);
     };
-  }, []);
+  });
 
   useEffect(() => {
     if (!showLeftPanel) {
@@ -155,32 +236,6 @@ const SaleSlipEntryScreen = () => {
       }, 0);
     }
   }, [showLeftPanel]);
-
-  // Prevent Ant Design Select from auto-opening on arrow keys
-  useEffect(() => {
-    const handleSelectKeyDown = (e: KeyboardEvent) => {
-      const target = e.target as HTMLElement;
-      const isAntSelect =
-        target.classList.contains("ant-select") ||
-        target.closest(".ant-select");
-
-      if (isAntSelect && ["ArrowUp", "ArrowDown"].includes(e.key)) {
-        // Check if dropdown is open
-        const dropdown = document.querySelector(
-          ".ant-select-dropdown:not(.ant-select-dropdown-hidden)"
-        );
-        if (!dropdown) {
-          // Dropdown is closed - prevent arrow keys from opening it
-          e.stopPropagation();
-        }
-      }
-    };
-
-    document.addEventListener("keydown", handleSelectKeyDown, true); // Use capture phase
-    return () => {
-      document.removeEventListener("keydown", handleSelectKeyDown, true);
-    };
-  }, []);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {

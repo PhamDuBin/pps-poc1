@@ -12,15 +12,15 @@ import CategorySelectionModal from "./CategorySelectionModal";
 import SalesSlipEntryRegistration from "./SalesSlipEntryRegistration";
 import ProductSearchModal from "./ProductSearchModal";
 import SaleDetailModal from "./SaleDetail/SaleDetailModal";
-import CustomSelect from "../../CustomSelect";
 import { createPortal } from "react-dom";
-import { allowDecimalInput } from "../../../utils/InputHandlers";
 import JapaneseCalendar, {
   JapaneseCalendarHandle,
 } from "../../JapaneseCalendar";
 import JapaneseMonthPicker, {
   JapaneseMonthPickerHandle,
 } from "../../JapaneseMonthPicker";
+import { HalfWidthNumberInput } from "../../input/JapaneseInputs";
+import { Select, Button } from "antd";
 
 type SalesSlipEntryProps = {
   onOpenLeftPanelForSearch: () => void;
@@ -41,6 +41,8 @@ const SalesSlipEntry = forwardRef(
     const [rowEdit, setRowEdit] = useState<any>(null);
     const [saleSlips, setSaleSlips] = useState<any>([]);
     const [selectedTanto, setSelectedTanto] = useState("営業タロウ");
+    const [numberValue, setNumberValue] = useState("0000000000");
+    const [numberValue1, setNumberValue1] = useState("0000000000");
 
     const tantoOptions = [
       "営業タロウ",
@@ -281,7 +283,7 @@ const SalesSlipEntry = forwardRef(
                   onChange={(date) => setUriageDate(date)}
                   format="yyyy/MM/dd"
                   placeholder="YYYY/MM/DD"
-                  className="w-full border border-black px-2 py-1 h-[26px] rounded-none"
+                  className="w-full border border-black px-2 py-1 h-[26px] "
                 />
               </div>
             </div>
@@ -289,22 +291,20 @@ const SalesSlipEntry = forwardRef(
               <label className="w-1/2 bg-[#D9D9D9] px-2 py-1 text-center">
                 品番No.
               </label>
-              <input
-                type="text"
-                defaultValue="0000000000"
-                className="ml-1 w-1/2 border border-black text-black px-1 py-1"
-                onKeyDown={allowDecimalInput}
+              <HalfWidthNumberInput
+                value={numberValue}
+                onChange={(val) => setNumberValue(val)}
+                className="ml-1 w-1/2 border border-black text-black px-1 py-1 h-[26px]"
               />
             </div>
             <div className="flex items-center">
               <label className="w-1/2 bg-[#D9D9D9] px-2 py-1 text-center">
                 伝票No.
               </label>
-              <input
-                type="text"
-                defaultValue="0000000000"
-                className="ml-1 w-1/2 border border-black px-2 py-1"
-                onKeyDown={allowDecimalInput}
+              <HalfWidthNumberInput
+                value={numberValue1}
+                onChange={(val) => setNumberValue1(val)}
+                className="ml-1 w-1/2 border border-black px-2 py-1 h-[26px]"
               />
             </div>
 
@@ -328,14 +328,14 @@ const SalesSlipEntry = forwardRef(
                 担当者
               </label>
               <div className="mx-1 w-1/2">
-                <CustomSelect
+                <Select
                   value={selectedTanto}
                   onChange={(value) => setSelectedTanto(value)}
                   options={tantoOptions.map((opt) => ({
                     value: opt,
                     label: opt,
                   }))}
-                  className="w-full border border-black px-2 py-1 bg-white"
+                  className="h-7"
                 />
               </div>
             </div>
@@ -379,24 +379,24 @@ const SalesSlipEntry = forwardRef(
                 >
                   <div className="relative bg-white border border-black shadow-lg rounded-md p-2 font-normal text-[14px] text-black">
                     <div className="absolute top-4 -left-2 w-0 h-0 border-t-8 border-b-8 border-r-8 border-transparent border-r-[#D9D9D9]"></div>
-                    <button
+                    <Button
                       onClick={() => handleEditLine(activeSlipIndex!)}
                       className="block w-full px-2 py-1 hover:bg-gray-100 border border-black rounded shadow-md shadow-zinc-600 text-center"
                     >
                       行編集
-                    </button>
-                    <button
+                    </Button>
+                    <Button
                       onClick={() => handleDeleteLine(activeSlipIndex)}
                       className="block w-full px-2 py-1 hover:bg-gray-100 border border-black rounded shadow-md shadow-zinc-600 mt-2 text-center"
                     >
                       行削除
-                    </button>
-                    <button
+                    </Button>
+                    <Button
                       onClick={() => handleOpenCategorySelection()}
                       className="block w-full px-2 py-1 hover:bg-gray-100 border border-black rounded shadow-md shadow-zinc-600 mt-2 text-center"
                     >
                       行追加
-                    </button>
+                    </Button>
                   </div>
                 </div>,
                 document.body
@@ -404,12 +404,12 @@ const SalesSlipEntry = forwardRef(
           </div>
           {/* 行追加 */}
           <div className="flex justify-center items-center my-6 font-bold text-[16px] text-black">
-            <button
+            <Button
               className="bg-bg-gray border border-black px-12 py-2 rounded shadow-md shadow-zinc-600"
               onClick={() => setIsOpenCategorySelection(true)}
             >
               行追加
-            </button>
+            </Button>
           </div>
 
           {/* 売上合計 */}
@@ -436,12 +436,12 @@ const SalesSlipEntry = forwardRef(
           {/* 入金処理 */}
         </div>
         <div className="w-3/5 bottom-0 flex justify-center items-center mt-12 font-bold text-[16px] text-black">
-          <button
+          <Button
             className="bg-[#D9D9D9] border border-black px-12 py-2 rounded shadow-md shadow-zinc-600"
             onClick={() => setIsOpenDepositProcess(!isOpenDepositProcess)}
           >
             {labelDeposit}
-          </button>
+          </Button>
         </div>
         <div className="w-3/5 mt-0">
           {isOpenDepositProcess && (

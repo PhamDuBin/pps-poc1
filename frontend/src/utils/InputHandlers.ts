@@ -22,62 +22,232 @@ export function handleDigitInput(
     inputs[index + 1].focus();
   }
 }
-
 export const handleNavigationKey = (
   e: KeyboardEvent,
-  index: number,
-  inputs: HTMLElement[]
+  currentIndex: number,
+  focusableElements: HTMLElement[]
 ) => {
-  const input = inputs[index];
-  const key = e.key;
+  const keysToHandle = [
+    "ArrowLeft",
+    "ArrowRight",
+    "ArrowUp",
+    "ArrowDown",
+    "Enter",
+  ];
 
-  const isCustomDropdownOpen = document.querySelector(".custom-dropdown-open");
-  if (isCustomDropdownOpen) {
-    if (["ArrowUp", "ArrowDown", "Enter", "Tab"].includes(key)) {
+  const activeElement = e.target as HTMLElement;
+
+  // ... (Logic xử lý Space và KeyC giữ nguyên) ...
+  if (e.code === "Space") {
+    const tagName = activeElement?.tagName.toUpperCase();
+    const isInput = tagName === "INPUT";
+    const isTextArea = tagName === "TEXTAREA";
+    const isTextInput =
+      ((isInput &&
+        activeElement.getAttribute("type") !== "radio" &&
+        activeElement.getAttribute("type") !== "checkbox") ||
+        isTextArea) &&
+      !activeElement?.closest(".ant-select");
+
+    if (isTextInput) return;
+    if (activeElement?.closest(".ant-btn")) return;
+
+    if (activeElement?.closest(".ant-select")) {
+      if (activeElement?.closest(".ant-select-open")) {
+        e.preventDefault();
+        e.stopPropagation();
+        const activeOption = document.querySelector(
+          ".ant-select-dropdown:not(.ant-select-dropdown-hidden) .ant-select-item-option-active"
+        ) as HTMLElement;
+        if (activeOption) {
+          activeOption.click();
+        }
+      }
+      return;
+    }
+
+    if (isInput && (activeElement as HTMLInputElement).type === "checkbox") {
+      e.preventDefault();
+      activeElement.click();
+      return;
+    }
+
+    e.preventDefault();
+    return;
+  }
+
+  if (e.code === "KeyC") {
+    const tagName = activeElement?.tagName.toUpperCase();
+    const isInput = tagName === "INPUT";
+    const isTextArea = tagName === "TEXTAREA";
+    const isTextInput =
+      ((isInput &&
+        activeElement.getAttribute("type") !== "radio" &&
+        activeElement.getAttribute("type") !== "checkbox") ||
+        isTextArea) &&
+      !activeElement?.closest(".ant-select");
+
+    if (isTextInput) return;
+
+    const checkboxGroup = activeElement?.closest(
+      ".ant-checkbox-group-navigable"
+    );
+    if (checkboxGroup) {
+      e.preventDefault();
+      e.stopPropagation();
+      activeElement.click();
       return;
     }
   }
 
-  // Handle Shift+Tab to go back to previous element
-  if (key === "Tab" && e.shiftKey) {
-    e.preventDefault();
-    const prevIndex = index - 1;
-    if (prevIndex >= 0) inputs[prevIndex].focus();
+  if (e.key === "Enter") {
+    const tagName = activeElement?.tagName.toUpperCase();
+    if (tagName === "BUTTON") {
+      return;
+    }
+  }
+
+  if (!keysToHandle.includes(e.key)) {
     return;
   }
 
-  if (["Tab", "Enter", "ArrowDown"].includes(key)) {
-    e.preventDefault();
-    if (
-      input instanceof HTMLInputElement ||
-      input instanceof HTMLTextAreaElement
-    ) {
-      const el = input;
-      if ((e as any).isComposing || e.keyCode === 229) return;
+  if (activeElement?.closest(".ant-select-open")) return;
+  if (activeElement?.closest(".ant-btn") && e.key === "Enter") return;
 
-      let isComposing = false;
-      const handler = () => {
-        if (!isComposing) {
-          const nextIndex = index + 1;
-          if (nextIndex < inputs.length) inputs[nextIndex].focus();
-          el.removeEventListener("compositionend", handler);
-        }
-      };
-
-      el.addEventListener("compositionend", handler);
-      if (!isComposing) {
-        const nextIndex = index + 1;
-        if (nextIndex < inputs.length) inputs[nextIndex].focus();
-      }
-    } else {
-      const nextIndex = index + 1;
-      if (nextIndex < inputs.length) inputs[nextIndex].focus();
+  if (activeElement?.closest(".ant-select")) {
+    if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
+      e.preventDefault();
+      e.stopPropagation();
+      return;
     }
-  } else if (key === "ArrowUp") {
-    e.preventDefault();
-    const prevIndex = index - 1;
-    if (prevIndex >= 0) inputs[prevIndex].focus();
+    if (e.key === "Enter") {
+      return;
+    }
   }
+  const tagName = activeElement?.tagName.toUpperCase();
+  const isInput = tagName === "INPUT";
+  const isTextArea = tagName === "TEXTAREA";
+  const isTextInput2 =
+    ((isInput &&
+      activeElement.getAttribute("type") !== "radio" &&
+      activeElement.getAttribute("type") !== "checkbox") ||
+      isTextArea) &&
+    !activeElement?.closest(".ant-select");
+  if (isTextInput2 && (e.key === "ArrowLeft" || e.key === "ArrowRight")) {
+    return;
+  }
+
+  const checkboxGroup = activeElement?.closest(".ant-checkbox-group-navigable");
+  const radioGroup = activeElement?.closest(".ant-radio-group");
+
+  // ... (Logic checkboxGroup và radioGroup giữ nguyên) ...
+  if (checkboxGroup) {
+    if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
+      e.preventDefault();
+      e.stopPropagation();
+      const checkboxes = Array.from(
+        checkboxGroup.querySelectorAll('input[type="checkbox"]:not([disabled])')
+      ) as HTMLInputElement[];
+      let currentCheckboxIndex = checkboxes.findIndex(
+        (cb) => cb === activeElement
+      );
+      if (currentCheckboxIndex === -1) currentCheckboxIndex = 0;
+      const totalCheckboxes = checkboxes.length;
+      let nextCheckboxIndex;
+      if (e.key === "ArrowRight")
+        nextCheckboxIndex = (currentCheckboxIndex + 1) % totalCheckboxes;
+      else
+        nextCheckboxIndex =
+          (currentCheckboxIndex - 1 + totalCheckboxes) % totalCheckboxes;
+      checkboxes[nextCheckboxIndex]?.focus();
+      return;
+    }
+    if (e.key === "Enter") {
+      e.preventDefault();
+      e.stopPropagation();
+      activeElement.click();
+      return;
+    }
+  }
+  if (radioGroup) {
+    if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
+      e.preventDefault();
+      e.stopPropagation();
+      const radios = Array.from(
+        radioGroup.querySelectorAll('input[type="radio"]')
+      ) as HTMLInputElement[];
+      let currentRadioIndex = radios.findIndex((r) => r === activeElement);
+      if (currentRadioIndex === -1) currentRadioIndex = 0;
+      const totalRadios = radios.length;
+      let nextRadioIndex;
+      if (e.key === "ArrowRight")
+        nextRadioIndex = (currentRadioIndex + 1) % totalRadios;
+      else nextRadioIndex = (currentRadioIndex - 1 + totalRadios) % totalRadios;
+      const nextRadio = radios[nextRadioIndex];
+      if (nextRadio) {
+        nextRadio.focus();
+        nextRadio.click();
+      }
+      return;
+    }
+  }
+
+  if (activeElement?.closest(".advance-search-modal")) return;
+  if (activeElement?.closest('[role="dialog"]')) return;
+  if (activeElement?.closest(".modal")) return;
+  if (activeElement?.closest(".personnel-search-modal-root")) return;
+
+  // --- THÊM DÒNG NÀY: Bỏ qua nếu đang focus vào hàng của bảng ---
+  if (activeElement?.tagName === "TR") return;
+  // -------------------------------------------------------------
+
+  e.preventDefault();
+  e.stopPropagation();
+
+  let validCurrentIndex = currentIndex;
+  if (validCurrentIndex === -1) {
+    if (checkboxGroup) {
+      const firstCheckbox = checkboxGroup.querySelector(
+        'input[type="checkbox"]'
+      ) as HTMLElement;
+      validCurrentIndex = focusableElements.indexOf(firstCheckbox);
+    } else if (radioGroup) {
+      const representativeRadio = focusableElements.find(
+        (el) => el.closest(".ant-radio-group") === radioGroup
+      );
+      if (representativeRadio)
+        validCurrentIndex = focusableElements.indexOf(representativeRadio);
+    }
+  }
+  if (validCurrentIndex === -1) return;
+
+  // ... (Phần logic tính toán nextIndex giữ nguyên) ...
+  let nextIndex = validCurrentIndex;
+  const total = focusableElements.length;
+
+  if (e.key === "ArrowRight" || e.key === "ArrowDown" || e.key === "Enter") {
+    let step = 1;
+    const codeInputSelect = activeElement?.closest(".code-input-select");
+    const isCodeInput = codeInputSelect && activeElement.tagName === "INPUT";
+    if (isCodeInput && (e.key === "ArrowDown" || e.key === "Enter")) {
+      step = 2;
+    }
+    nextIndex = (validCurrentIndex + step) % total;
+  } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+    let step = 1;
+    let potentialNextIndex = (validCurrentIndex - 1 + total) % total;
+    const nextElement = focusableElements[potentialNextIndex];
+    const nextElementIsCodeSelect =
+      nextElement?.closest(".code-input-select") &&
+      !!nextElement?.closest(".ant-select");
+
+    if (nextElementIsCodeSelect) {
+      step = 2;
+    }
+    nextIndex = (validCurrentIndex - step + total) % total;
+  }
+
+  focusableElements[nextIndex]?.focus();
 };
 
 export const handleNavigationKey040504 = (

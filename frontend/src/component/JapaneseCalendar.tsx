@@ -255,7 +255,7 @@ const JapaneseCalendar = forwardRef<
           value={inputValue} // <-- Sửa: dùng inputValue
           // readOnly // <-- XÓA: Bỏ readOnly
           placeholder={placeholder}
-          className={`cursor-pointer ${className}`}
+          className={`cursor-pointer ${className} custom-date-input`}
           onClick={() => setIsOpen(!isOpen)}
           onChange={handleInputChange} // <-- THÊM: cho phép gõ
           onBlur={handleInputBlur} // <-- THÊM: validate khi rời

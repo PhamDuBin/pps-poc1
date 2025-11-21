@@ -1,7 +1,9 @@
 import React, { useState, useEffect, forwardRef } from "react";
 import { Input } from "antd";
 import type { InputProps, InputRef } from "antd";
-
+interface HalfWidthNumberInputProps extends ExportInputProps {
+  allowDecimal?: boolean;
+}
 // ... (Toàn bộ code từ zenToHanMap đến hanRegex của bạn giữ nguyên) ...
 const zenToHanMap: { [key: string]: string } = {
   "。": "｡",
@@ -290,12 +292,6 @@ function formatToHalfWidth(value: string): string {
   return kata.replace(zenRegex, (m) => zenToHanMap[m] || m);
 }
 
-function formatHalfWidthNumber(value: string): string {
-  if (!value) return "";
-  let normalized = value.normalize("NFKC");
-  return normalized.replace(/[^0-9]/g, "");
-}
-
 function formatHalfWidthAlphaNum(value: string): string {
   if (!value) return "";
   let kata = hiraToKata(value);
@@ -395,24 +391,55 @@ export const HalfWidthInput = forwardRef<InputRef, ExportInputProps>(
   }
 );
 
-export const HalfWidthNumberInput = forwardRef<InputRef, ExportInputProps>(
-  (props, ref) => {
-    // ... (Giữ nguyên component này)
-    const { maxLength } = props;
+// allowDecimal={true}
+export const HalfWidthNumberInput = forwardRef<
+  InputRef,
+  HalfWidthNumberInputProps
+>((props, ref) => {
+  const { maxLength, onFocus, allowDecimal, ...restProps } = props;
 
-    const numberFormatter = (value: string): string => {
-      let cleanedValue = formatHalfWidthNumber(value);
+  const numberFormatter = (value: string): string => {
+    if (!value) return "";
+
+    let normalized = value.normalize("NFKC");
+
+    if (allowDecimal) {
+      let cleaned = normalized.replace(/[^0-9.]/g, "");
+      const parts = cleaned.split(".");
+      if (parts.length > 2) {
+        cleaned = parts[0] + "." + parts.slice(1).join("");
+      }
+      return cleaned;
+    } else {
+      let cleanedValue = normalized.replace(/[^0-9]/g, "");
       if (maxLength && cleanedValue) {
         cleanedValue = cleanedValue.padStart(maxLength, "0");
       }
       return cleanedValue;
-    };
+    }
+  };
 
-    return (
-      <BaseJapaneseInput formatter={numberFormatter} {...props} ref={ref} />
-    );
-  }
-);
+  const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+    const target = e.target;
+    setTimeout(() => {
+      target.select();
+    }, 0);
+
+    if (onFocus) {
+      onFocus(e);
+    }
+  };
+
+  return (
+    <BaseJapaneseInput
+      formatter={numberFormatter}
+      maxLength={maxLength}
+      onFocus={handleFocus}
+      {...restProps}
+      ref={ref}
+    />
+  );
+});
 
 export const HalfWidthAlphaNumInput = forwardRef<InputRef, ExportInputProps>(
   (props, ref) => {
