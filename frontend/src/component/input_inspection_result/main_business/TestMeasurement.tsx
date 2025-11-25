@@ -1,6 +1,22 @@
 import { useState } from "react";
 import { labelColor } from "../../../constants/colors";
 import { symbols } from "../../../constants/input_inspection_result";
+import { Select, Checkbox, Radio } from "antd";
+import { HalfWidthNumberInput } from "../../JapaneseInputs";
+
+const { Option } = Select;
+
+const topOptions = ["供給点検", "消費調査", "供給消費"];
+const methodOptions = [
+  "0:空白",
+  "1:掘出調査",
+  "2:気密試験",
+  "3:漏洩試験",
+  "4:目視",
+  "5:ボーリング調査",
+  "6:検知装置",
+  "7:その他",
+];
 
 const TestMeasurement = () => {
   const label = `w-1/6 flex text-center justify-center ${labelColor} border border-black h-6`;
@@ -15,26 +31,25 @@ const TestMeasurement = () => {
   const [airtightButtonStates, setAirtightButtonStates] = useState([0, 0]);
   const [leakageButtonStates, setLeakageButtonStates] = useState([0, 0]);
 
+  const [topSelectVal, setTopSelectVal] = useState(topOptions[0]);
+  const [airtightMethodVal, setAirtightMethodVal] = useState(methodOptions[0]);
+  const [leakageMethodVal, setLeakageMethodVal] = useState(methodOptions[0]);
+
   const getButtonColor = (val: number) => {
     if (val === 2) return "bg-red-500";
     if (val === 3) return "bg-green-600";
     return "";
   };
 
-  const handleNumericSelectKeyDown = (
-    e: React.KeyboardEvent<HTMLSelectElement>
+  const handleKeyDownForSelect = (
+    e: React.KeyboardEvent,
+    optionsList: string[],
+    setValue: (val: string) => void
   ) => {
     const num = parseInt(e.key, 10);
-    if (!isNaN(num)) {
+    if (!isNaN(num) && num >= 0 && num < optionsList.length) {
       e.preventDefault();
-      const options = e.currentTarget.options;
-      for (let i = 0; i < options.length; i++) {
-        if (options[i].text.startsWith(num.toString() + ":")) {
-          e.currentTarget.value = options[i].value;
-          e.currentTarget.dispatchEvent(new Event("change", { bubbles: true }));
-          break;
-        }
-      }
+      setValue(optionsList[num]);
     }
   };
 
@@ -65,55 +80,50 @@ const TestMeasurement = () => {
   return (
     <>
       <div className={`p-1 flex flex-row text-[10px] w-full`}>
-        <select className={`border border-black w-1/12`}>
-          <option>供給点検</option>
-          <option>消費調査</option>
-          <option>供給消費</option>
-        </select>
+        {/* Top Select */}
+        <Select
+          className={`w-1/12`}
+          value={topSelectVal}
+          onChange={setTopSelectVal}
+          onKeyDown={(e) =>
+            handleKeyDownForSelect(e, topOptions, setTopSelectVal)
+          }
+        >
+          {topOptions.map((opt) => (
+            <Option key={opt} value={opt}>
+              {opt}
+            </Option>
+          ))}
+        </Select>
 
         <div className="flex items-center space-x-4 mx-3">
-          <label className="flex items-center">
-            <input
-              type="radio"
-              name="test-type"
-              defaultChecked
-              className="mr-1"
-            />
-            測定
-          </label>
-          <label className="flex items-center">
-            <input type="radio" name="test-type" className="mr-1" /> 代替
-          </label>
+          <Radio.Group defaultValue={1}>
+            <Radio value={1}>測定</Radio>
+            <Radio value={2}>代替</Radio>
+          </Radio.Group>
         </div>
 
         <div className="flex items-center space-x-4">
-          <label className="flex items-center">
-            <input
-              type="checkbox"
-              className="mr-1"
-              checked={pressureChecked}
-              onChange={(e) => setPressureChecked(e.target.checked)}
-            />
+          <Checkbox
+            checked={pressureChecked}
+            onChange={(e) => setPressureChecked(e.target.checked)}
+          >
             圧力検査
-          </label>
-          <label className="flex items-center">
-            <input
-              type="checkbox"
-              className="mr-1"
-              checked={airtightChecked}
-              onChange={(e) => setAirtightChecked(e.target.checked)}
-            />
+          </Checkbox>
+
+          <Checkbox
+            checked={airtightChecked}
+            onChange={(e) => setAirtightChecked(e.target.checked)}
+          >
             気密試験
-          </label>
-          <label className="flex items-center">
-            <input
-              type="checkbox"
-              className="mr-1"
-              checked={leakageChecked}
-              onChange={(e) => setLeakageChecked(e.target.checked)}
-            />
+          </Checkbox>
+
+          <Checkbox
+            checked={leakageChecked}
+            onChange={(e) => setLeakageChecked(e.target.checked)}
+          >
             漏洩試験
-          </label>
+          </Checkbox>
         </div>
       </div>
 
@@ -123,7 +133,11 @@ const TestMeasurement = () => {
         <span className={label}>調整圧力</span>
 
         {pressureChecked ? (
-          <input className={input} placeholder="00.00" />
+          <HalfWidthNumberInput
+            allowDecimal={true}
+            className={input}
+            placeholder="00.00"
+          />
         ) : (
           <span className={input}></span>
         )}
@@ -144,7 +158,11 @@ const TestMeasurement = () => {
 
         <span className={label}>入口圧力</span>
         {pressureChecked ? (
-          <input className={input} placeholder="00.00" />
+          <HalfWidthNumberInput
+            allowDecimal={true}
+            className={input}
+            placeholder="00.00"
+          />
         ) : (
           <span className={input}></span>
         )}
@@ -165,16 +183,24 @@ const TestMeasurement = () => {
 
         <span className={label}>圧力損失</span>
         {pressureChecked ? (
-          <input className={input} placeholder="00.00" />
+          <HalfWidthNumberInput
+            allowDecimal={true}
+            className={input}
+            placeholder="00.00"
+          />
         ) : (
           <span className={input}></span>
         )}
 
-        <input className={input} placeholder="XXX003" readOnly />
+        <HalfWidthNumberInput className={input} placeholder="XXX003" readOnly />
 
         <span className={label}>閉塞圧力</span>
         {pressureChecked ? (
-          <input className={input} placeholder="00.00" />
+          <HalfWidthNumberInput
+            allowDecimal={true}
+            className={input}
+            placeholder="00.00"
+          />
         ) : (
           <span className={input}></span>
         )}
@@ -200,52 +226,72 @@ const TestMeasurement = () => {
         <span className={label}>初期圧力</span>
 
         {airtightChecked ? (
-          <input className={input} placeholder="00.00" />
+          <HalfWidthNumberInput
+            allowDecimal={true}
+            className={input}
+            placeholder="00.00"
+          />
         ) : (
           <span className={input}></span>
         )}
 
         <span className={label}>終了圧力</span>
         {airtightChecked ? (
-          <input className={input} placeholder="00.00" />
+          <HalfWidthNumberInput
+            allowDecimal={true}
+            className={input}
+            placeholder="00.00"
+          />
         ) : (
           <span className={input}></span>
         )}
 
         <span className={label}>補正圧力</span>
         {airtightChecked ? (
-          <input className={input} placeholder="00.00" />
+          <HalfWidthNumberInput
+            allowDecimal={true}
+            className={input}
+            placeholder="00.00"
+          />
         ) : (
           <span className={input}></span>
         )}
 
         <span className={label}>保持時間</span>
         {airtightChecked ? (
-          <input className={`${input} !w-[30px]`} placeholder="0" />
+          <HalfWidthNumberInput
+            className={`${input} !w-[30px]`}
+            placeholder="0"
+          />
         ) : (
-          <input className={`${input} !w-[30px]`} placeholder="" disabled />
+          <HalfWidthNumberInput
+            className={`${input} !w-[30px]`}
+            placeholder=""
+            disabled
+          />
         )}
 
         <span className={label}>点検方法</span>
         {airtightChecked ? (
-          <select
-            className={`$ w-1/6 text-center border border-black h-6`}
-            onKeyDown={handleNumericSelectKeyDown}
+          <Select
+            className={`w-1/6 text-center border border-black h-6 custom-select-center`}
+            value={airtightMethodVal}
+            onChange={setAirtightMethodVal}
+            onKeyDown={(e) =>
+              handleKeyDownForSelect(e, methodOptions, setAirtightMethodVal)
+            }
           >
-            <option>0:空白</option>
-            <option>1:掘出調査</option>
-            <option>2:気密試験</option>
-            <option>3:漏洩試験</option>
-            <option>4:目視</option>
-            <option>5:ボーリング調査</option>
-            <option>6:検知装置</option>
-            <option>7:その他</option>
-          </select>
+            {methodOptions.map((opt) => (
+              <Option key={opt} value={opt}>
+                {opt}
+              </Option>
+            ))}
+          </Select>
         ) : (
-          <select
+          <Select
             disabled
-            className={`w-1/6 border border-gray-300 h-6 `}
-          ></select>
+            className={`w-1/6 border border-gray-300 h-6`}
+          ></Select>
         )}
 
         <button
@@ -269,52 +315,72 @@ const TestMeasurement = () => {
         <span className={label}>初期圧力</span>
 
         {leakageChecked ? (
-          <input className={input} placeholder="00.00" />
+          <HalfWidthNumberInput
+            allowDecimal={true}
+            className={input}
+            placeholder="00.00"
+          />
         ) : (
           <span className={input}></span>
         )}
 
         <span className={label}>終了圧力</span>
         {leakageChecked ? (
-          <input className={input} placeholder="00.00" />
+          <HalfWidthNumberInput
+            allowDecimal={true}
+            className={input}
+            placeholder="00.00"
+          />
         ) : (
           <span className={input}></span>
         )}
 
         <span className={label}>補正圧力</span>
         {leakageChecked ? (
-          <input className={input} placeholder="00.00" />
+          <HalfWidthNumberInput
+            allowDecimal={true}
+            className={input}
+            placeholder="00.00"
+          />
         ) : (
           <span className={input}></span>
         )}
 
         <span className={label}>保持時間</span>
         {leakageChecked ? (
-          <input className={`${input} !w-[30px]`} placeholder="0" />
+          <HalfWidthNumberInput
+            className={`${input} !w-[30px]`}
+            placeholder="0"
+          />
         ) : (
-          <input className={`${input} !w-[30px]`} placeholder="" disabled />
+          <HalfWidthNumberInput
+            className={`${input} !w-[30px]`}
+            placeholder=""
+            disabled
+          />
         )}
 
         <span className={label}>点検方法</span>
         {leakageChecked ? (
-          <select
-            className={` w-1/6 text-center border border-black h-6`}
-            onKeyDown={handleNumericSelectKeyDown}
+          <Select
+            className={`w-1/6 text-center border border-black h-6 custom-select-center`}
+            value={leakageMethodVal}
+            onChange={setLeakageMethodVal}
+            onKeyDown={(e) =>
+              handleKeyDownForSelect(e, methodOptions, setLeakageMethodVal)
+            }
           >
-            <option>0:空白</option>
-            <option>1:掘出調査</option>
-            <option>2:気密試験</option>
-            <option>3:漏洩試験</option>
-            <option>4:目視</option>
-            <option>5:ボーリング調査</option>
-            <option>6:検知装置</option>
-            <option>7:その他</option>
-          </select>
+            {methodOptions.map((opt) => (
+              <Option key={opt} value={opt}>
+                {opt}
+              </Option>
+            ))}
+          </Select>
         ) : (
-          <select
+          <Select
             disabled
             className={`w-1/6 border border-gray-300 h-6`}
-          ></select>
+          ></Select>
         )}
 
         <button

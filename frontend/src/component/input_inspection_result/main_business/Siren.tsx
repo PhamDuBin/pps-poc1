@@ -2,10 +2,14 @@ import { useState } from "react";
 import ModalF1 from "../../modal/Modal_F1";
 import { labelColor } from "../../../constants/colors";
 import { symbols } from "../../../constants/input_inspection_result";
+import { Select } from "antd";
+import { HalfWidthNumberInput } from "../../JapaneseInputs";
 
 const Siren = () => {
   const [modalF1Open, setModalF1Open] = useState(false);
   const totalRows = 20;
+  const [selectedValue, setSelectedValue] = useState("0:未選択");
+  const options = ["0:未選択", "1:義務", "2:指導", "3:その他", "4:不要"];
 
   const [states, setStates] = useState(
     Array(totalRows)
@@ -34,46 +38,34 @@ const Siren = () => {
         >
           設置施設区分
         </span>
-        <select
-          className={`border border-black w-16 ml-3`}
+        <Select
+          className="w-24 ml-3"
+          value={selectedValue}
+          onChange={(val) => setSelectedValue(val)}
           onKeyDown={(e) => {
             if (/^[0-9]$/.test(e.key)) {
               e.preventDefault();
-              const options = [
-                "0:未選択",
-                "1:義務",
-                "2:指導",
-                "3:その他",
-                "4:不要",
-              ];
               const index = parseInt(e.key, 10);
               const match = options.find((opt) => opt.startsWith(`${index}:`));
               if (match) {
-                const select = e.currentTarget as HTMLSelectElement;
-                select.value = match;
+                setSelectedValue(match);
               }
             }
           }}
-        >
-          <option>0:未選択</option>
-          <option>1:義務</option>
-          <option>2:指導</option>
-          <option>3:その他</option>
-          <option>4:不要</option>
-        </select>
-
+          options={options.map((opt) => ({ label: opt, value: opt }))}
+        />
         <span
           className={`w-1/12 border border-black p-1 flex justify-center min-w-[83px] ${labelColor} ml-4`}
         >
           必要個数
         </span>
-        <input className={`border border-black w-12 ml-3`}></input>
+        <HalfWidthNumberInput className={`w-24 ml-3`}></HalfWidthNumberInput>
         <span
           className={`w-1/12 border border-black p-1 flex justify-center min-w-[83px] ${labelColor} ml-4`}
         >
           設置個数
         </span>
-        <input className={`border border-black w-12 ml-3 `}></input>
+        <HalfWidthNumberInput className={`w-24 l-3 `}></HalfWidthNumberInput>
       </div>
       <div className="w-full min-w-[922px] text-[10px] mt-2">
         <div className="overflow-auto h-40 border border-black">

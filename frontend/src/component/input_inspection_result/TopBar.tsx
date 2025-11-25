@@ -2,7 +2,9 @@ import { useState, KeyboardEvent, useRef, useEffect } from "react";
 import PersonnelSearchModal from "./PersonnelSearchModal";
 import { inputColor, labelColor } from "../../constants/colors";
 import { CustomerSearchModal } from "./CustomerSearchModal";
-import { handleNumericSelectKeyDown } from "../../utils/InputHandlers";
+import { Button, Select } from "antd";
+import { HalfWidthNumberInput } from "../JapaneseInputs";
+import type { InputRef } from "antd";
 
 type PersonnelData = {
   name: string;
@@ -18,7 +20,7 @@ const TopBar = () => {
   const [managerCode, setManagerCode] = useState([""]);
   const [value, setValue] = useState("0");
 
-  const firstInputRef = useRef<HTMLInputElement>(null);
+  const firstInputRef = useRef<InputRef>(null);
   const btnRef = useRef<HTMLButtonElement>(null);
 
   const label = `${labelColor} w-[6%] flex justify-center items-center mr-2`;
@@ -80,26 +82,25 @@ const TopBar = () => {
           ) : showMamager ? (
             <p className={`${input} !mx-0`}>佐々木　担当タロウ</p>
           ) : (
-            <input
+            <HalfWidthNumberInput
               ref={firstInputRef}
-              onChange={(e) => setManagerCode([e.target.value])}
+              onChange={(e) => setManagerCode([e])}
               onKeyDown={handleShowManager}
-              className={`${inputColor} border border-black w-[10%]`}
+              className={` w-[10%]`}
             />
           )}
-          <button
+          <Button
             ref={btnRef}
             onClick={() => setIsModalOpen(true)}
-            className=" w-[20px] h-[20px] mt-1 flex items-center justify-center px-1 bg-white border border-gray-500 cursor-pointer mr-5"
+            className=" w-[20px] h-[20px] mt-1  px-1 mr-5"
           >
             ▼
-          </button>
+          </Button>
           <span className={label}>立会人</span>
-          <select
+          <Select
             value={value}
-            onChange={(e) => setValue(e.target.value)}
-            onKeyDown={(e) => handleNumericSelectKeyDown(e, setValue)}
-            className="border border-black rounded-lg mr-4 shadow-medium w-36"
+            onChange={(e) => setValue(e)}
+            className="mr-4 w-36"
           >
             <option value="0">0:未選択</option>
             <option value="1">1:世帯主</option>
@@ -110,7 +111,7 @@ const TopBar = () => {
             <option value="6">6:大家</option>
             <option value="7">7:管理人</option>
             <option value="8">8:大家</option>
-          </select>
+          </Select>
         </div>
       </div>
 

@@ -5,6 +5,8 @@ import {
   leftLabels,
   rightLabels,
 } from "../../../constants/input_inspection_result";
+import { HalfWidthNumberInput } from "../../JapaneseInputs";
+
 const Vessel = () => {
   const [states, setStates] = useState<number[][]>([Array(12).fill(0)]);
 
@@ -33,33 +35,33 @@ const Vessel = () => {
       {/* Ô nhập số liệu */}
       <div className="flex gap-x-4 mb-1 px-1 border border-black min-w-[919px] text-[10px]">
         <div className="flex my-2 gap-x-2 items-center">
-          <input
-            type="text"
-            className={`text-right border border-black p-2 w-16 h-8 placeholder-slate-950 `}
+          <HalfWidthNumberInput
+            maxLength={3}
+            className={`text-right  p-2 w-16 h-8 placeholder-slate-950 `}
             placeholder="0"
           />
           <div>kg</div>
         </div>
         <div className="flex my-2 gap-x-2 items-center">
-          <input
-            type="text"
-            className={`text-right border border-black p-2 w-12 h-8 placeholder-slate-950 `}
+          <HalfWidthNumberInput
+            maxLength={2}
+            className={`text-right  p-2 w-12 h-8 placeholder-slate-950 `}
             placeholder="0"
           />
           <div>本</div>
         </div>
         <div className="flex my-2 gap-x-2 items-center">
-          <input
-            type="text"
-            className={`text-right border border-black p-2 w-16 h-8 placeholder-slate-950`}
+          <HalfWidthNumberInput
+            maxLength={3}
+            className={`text-right  p-2 w-16 h-8 placeholder-slate-950`}
             placeholder="0"
           />
           <div>kg</div>
         </div>
         <div className="flex my-2 gap-x-2 items-center">
-          <input
-            type="text"
-            className={`text-right border border-black p-2 w-12 h-8 placeholder-slate-950`}
+          <HalfWidthNumberInput
+            maxLength={2}
+            className={`text-right  p-2 w-12 h-8 placeholder-slate-950`}
             placeholder="0"
           />
           <div>本</div>
@@ -70,10 +72,11 @@ const Vessel = () => {
           貯蔵
         </div>
         <div className="flex my-2 gap-x-2 items-center">
-          <input
-            type="text"
-            className={`text-right border border-black p-2 w-16 h-8 placeholder-slate-950 `}
-            placeholder="0"
+          <HalfWidthNumberInput
+            maxLength={6}
+            allowDecimal={true}
+            className={`text-right  p-2 w-16 h-8 placeholder-slate-950 `}
+            placeholder="0.0"
           />
           <div>kg</div>
         </div>

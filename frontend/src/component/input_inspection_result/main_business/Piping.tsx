@@ -1,11 +1,14 @@
 import { useState } from "react";
 import ModalF1 from "../../modal/Modal_F1";
 import { labelColor } from "../../../constants/colors";
-import { handleNumericSelectKeyDown } from "../../../utils/InputHandlers";
 import {
   symbols,
   inspectionMethods,
 } from "../../../constants/input_inspection_result";
+import { Button, Select } from "antd";
+
+const { Option } = Select;
+
 const Piping = () => {
   const [modalF1Open, setModalF1Open] = useState(false);
   const labels = ["空白", "有", "無"];
@@ -31,13 +34,10 @@ const Piping = () => {
     setState((prev) => (prev + 1) % labels.length);
   };
 
-  const handleSelectChange = (
-    e: React.ChangeEvent<HTMLSelectElement>,
-    row: number
-  ) => {
+  const handleSelectChange = (value: number, row: number) => {
     setValues((prev) => {
       const newVals = [...prev];
-      newVals[row] = parseInt(e.target.value, 10);
+      newVals[row] = value;
       return newVals;
     });
   };
@@ -54,12 +54,9 @@ const Piping = () => {
         >
           埋設管
         </span>
-        <button
-          className={`border border-black w-12 ml-3`}
-          onClick={handleClickBtn}
-        >
+        <Button className={` w-12 ml-3`} onClick={handleClickBtn}>
           {labels[state]}
-        </button>
+        </Button>
       </div>
       <div className="w-full min-w-[922px] text-[10px] mt-2">
         <div className="overflow-auto h-40 border border-black">
@@ -146,32 +143,33 @@ const Piping = () => {
                             key={col}
                             className={`border border-black text-center p-0 hover:bg-[#E5F7E5]`}
                           >
-                            <select
+                            <Select
                               className={`
-      w-full h-full text-center cursor-pointer
-     
-      outline-none
-      focus-visible:ring-2 focus-visible:ring-black
-      focus-visible:ring-offset-0 hover:bg-[#E5F7E5]
-    `}
+                                w-full h-full 
+                                focus-visible:ring-2 focus-visible:ring-black
+                                focus-visible:ring-offset-0 hover:bg-[#E5F7E5]
+                              `}
                               value={values[row]}
                               onChange={(e) => handleSelectChange(e, row)}
-                              onKeyDown={(e) =>
-                                handleNumericSelectKeyDown(e, (val) => {
-                                  setValues((prev) => {
-                                    const newVals = [...prev];
-                                    newVals[row] = parseInt(val, 10);
-                                    return newVals;
-                                  });
-                                })
-                              }
+                              onKeyDown={(e) => {
+                                const num = parseInt(e.key, 10);
+
+                                if (
+                                  !isNaN(num) &&
+                                  num >= 0 &&
+                                  num < inspectionMethods.length
+                                ) {
+                                  e.preventDefault();
+                                  handleSelectChange(num, row);
+                                }
+                              }}
                             >
-                              {inspectionMethods.map((option) => (
-                                <option key={option.value} value={option.value}>
-                                  {option.label}
-                                </option>
+                              {inspectionMethods.map((opt, i) => (
+                                <Option key={i} value={i}>
+                                  {opt.label}
+                                </Option>
                               ))}
-                            </select>
+                            </Select>
                           </td>
                         );
                       }

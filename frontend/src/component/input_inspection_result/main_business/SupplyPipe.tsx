@@ -1,12 +1,15 @@
 import { useState } from "react";
 import ModalF1 from "../../modal/Modal_F1";
 import { labelColor } from "../../../constants/colors";
-import { handleNumericSelectKeyDown } from "../../../utils/InputHandlers";
 import {
   symbols,
   optionsSupplyPipe,
   rowsSupplyPipe,
 } from "../../../constants/input_inspection_result";
+import { Button, Select } from "antd";
+
+const { Option } = Select;
+
 const SupplyPipe = () => {
   const [modalF1Open, setModalF1Open] = useState(false);
   const totalRows = 4;
@@ -34,13 +37,10 @@ const SupplyPipe = () => {
     });
   };
 
-  const handleSelectChange = (
-    e: React.ChangeEvent<HTMLSelectElement>,
-    rowIndex: number
-  ) => {
+  const handleSelectChange = (value: number, rowIndex: number) => {
     setSelectValues((prev) => {
       const newValues = [...prev];
-      newValues[rowIndex] = parseInt(e.target.value, 10);
+      newValues[rowIndex] = value;
       return newValues;
     });
   };
@@ -54,19 +54,13 @@ const SupplyPipe = () => {
       </span>
       <div className="flex gap-x-4 mb-1 p-2 border border-black items-center text-[10px]">
         <div>埋設管</div>
-        <button
-          onClick={handleClickSButton}
-          className={`border border-black w-6 h-6 flex items-center justify-center `}
-        >
+        <Button onClick={handleClickSButton} className={`w-6 h-6 `}>
           {labels[statelabel]}
-        </button>
+        </Button>
         <div>高圧側｜集合装置</div>
-        <button
-          onClick={handleClickSButton2}
-          className={`border border-black w-6 h-6 flex items-center justify-center`}
-        >
+        <Button onClick={handleClickSButton2} className={`w-6 h-6`}>
           {labels[statelabel2]}
-        </button>
+        </Button>
       </div>
 
       <div className="w-full min-w-[922px] text-[10px]">
@@ -142,7 +136,6 @@ const SupplyPipe = () => {
                           absolute inset-0 w-full h-full flex items-center justify-center
                           cursor-pointer hover:bg-[#E5F7E5]
                           ${rowHasCheck ? "bg-red-500" : ""}
-                          
                         `}
                       >
                         ▼
@@ -155,29 +148,28 @@ const SupplyPipe = () => {
                             key={col}
                             className={`border border-black p-0 hover:bg-[#E5F7E5]`}
                           >
-                            <select
+                            <Select
                               value={selectValues[idx]}
-                              onChange={(e) => handleSelectChange(e, idx)}
-                              onKeyDown={(e) =>
-                                handleNumericSelectKeyDown(e, (val) => {
-                                  setSelectValues((prev) => {
-                                    const newVals = [...prev];
-                                    const numVal = parseInt(val, 10);
-                                    if (numVal < optionsSupplyPipe.length) {
-                                      newVals[idx] = numVal;
-                                    }
-                                    return newVals;
-                                  });
-                                })
-                              }
-                              className={`w-full h-full font-medium text-center hover:bg-[#E5F7E5]`}
+                              onChange={(val) => handleSelectChange(val, idx)}
+                              className="w-full h-full text-center"
+                              onKeyDown={(e) => {
+                                const num = parseInt(e.key, 10);
+                                if (
+                                  !isNaN(num) &&
+                                  num >= 0 &&
+                                  num < optionsSupplyPipe.length
+                                ) {
+                                  e.preventDefault();
+                                  handleSelectChange(num, idx);
+                                }
+                              }}
                             >
                               {optionsSupplyPipe.map((opt, i) => (
-                                <option key={i} value={i}>
+                                <Option key={i} value={i}>
                                   {opt}
-                                </option>
+                                </Option>
                               ))}
-                            </select>
+                            </Select>
                           </td>
                         );
                       }

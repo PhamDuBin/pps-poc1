@@ -1,11 +1,13 @@
 import { useState } from "react";
 import ModalF1 from "../../modal/Modal_F1";
 import { labelColor } from "../../../constants/colors";
-import { handleNumericSelectKeyDown } from "../../../utils/InputHandlers";
 import {
   optionsMeter,
   symbols,
 } from "../../../constants/input_inspection_result";
+import { Button, Select } from "antd";
+
+const { Option } = Select;
 
 const Meter = () => {
   const [modalF1Open, setModalF1Open] = useState(false);
@@ -40,8 +42,8 @@ const Meter = () => {
     });
   };
 
-  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectValue(parseInt(e.target.value, 10));
+  const handleSelectChange = (value: number) => {
+    setSelectValue(value);
   };
 
   return (
@@ -54,12 +56,9 @@ const Meter = () => {
 
       <div className="flex gap-x-4 mb-1 p-2 border border-black items-center text-xs">
         <div>認定対象区分</div>
-        <button
-          onClick={handleClickSButton}
-          className={`border border-black w-6 h-6 flex items-center justify-center`}
-        >
+        <Button onClick={handleClickSButton} className={`w-6 h-6`}>
           {labels[statelabel]}
-        </button>
+        </Button>
       </div>
 
       <div className="w-full min-w-[922px] text-[10px]">
@@ -91,24 +90,16 @@ const Meter = () => {
 
                 return (
                   <tr key={idx} className="h-6">
-                    <td
-                      className={`border border-black text-center bg-input`}
-                    >
+                    <td className={`border border-black text-center bg-input`}>
                       {row.type}
                     </td>
-                    <td
-                      className={`border border-black text-center bg-input`}
-                    >
+                    <td className={`border border-black text-center bg-input`}>
                       {row.manufacturer}
                     </td>
-                    <td
-                      className={`border border-black text-center bg-input`}
-                    >
+                    <td className={`border border-black text-center bg-input`}>
                       {row.model}
                     </td>
-                    <td
-                      className={`border border-black text-center bg-input`}
-                    >
+                    <td className={`border border-black text-center bg-input`}>
                       {row.製造番号}
                     </td>
 
@@ -140,29 +131,31 @@ const Meter = () => {
                       />
                     </td>
 
-                    {/* 常時監視 */}
                     <td
-                      className={`border border-black p-0 hover:bg-[#E5F7E5] `}
+                      className={`border border-black p-0 hover:bg-[#E5F7E5]`}
                     >
-                      <select
+                      <Select
                         value={selectValue}
                         onChange={handleSelectChange}
-                        onKeyDown={(e) =>
-                          handleNumericSelectKeyDown(e, (val) => {
-                            const numVal = parseInt(val, 10);
-                            if (numVal < optionsMeter.length) {
-                              setSelectValue(numVal);
-                            }
-                          })
-                        }
-                        className={`w-full h-full font-medium   text-center`}
+                        className="w-full h-full text-center"
+                        onKeyDown={(e) => {
+                          const num = parseInt(e.key, 10);
+                          if (
+                            !isNaN(num) &&
+                            num >= 0 &&
+                            num < optionsMeter.length
+                          ) {
+                            e.preventDefault();
+                            handleSelectChange(num);
+                          }
+                        }}
                       >
                         {optionsMeter.map((opt, i) => (
-                          <option key={i} value={i}>
+                          <Option key={i} value={i}>
                             {opt}
-                          </option>
+                          </Option>
                         ))}
-                      </select>
+                      </Select>
                     </td>
 
                     {/* 適合 */}

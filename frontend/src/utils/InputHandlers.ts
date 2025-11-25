@@ -22,9 +22,17 @@ export const handleNavigationKey = (
 
   const activeElement = e.target as HTMLElement;
 
-  // ... (Logic xử lý Space và KeyC giữ nguyên) ...
+  if (activeElement.tagName === "SELECT" && /^[0-9]$/.test(e.key)) {
+    return;
+  }
   if (e.code === "Space") {
     const tagName = activeElement?.tagName.toUpperCase();
+
+    if (tagName === "SELECT") {
+      e.stopPropagation();
+      return;
+    }
+
     const isInput = tagName === "INPUT";
     const isTextArea = tagName === "TEXTAREA";
     const isTextInput =
@@ -35,7 +43,7 @@ export const handleNavigationKey = (
       !activeElement?.closest(".ant-select");
 
     if (isTextInput) return;
-    if (activeElement?.closest(".ant-btn")) return;
+    if (activeElement?.closest(".ant-btn") || tagName === "BUTTON") return;
 
     if (activeElement?.closest(".ant-select")) {
       if (activeElement?.closest(".ant-select-open")) {
@@ -48,11 +56,13 @@ export const handleNavigationKey = (
           activeOption.click();
         }
       }
+      e.preventDefault();
       return;
     }
 
     if (isInput && (activeElement as HTMLInputElement).type === "checkbox") {
       e.preventDefault();
+      e.stopPropagation();
       activeElement.click();
       return;
     }

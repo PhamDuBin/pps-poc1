@@ -1,12 +1,15 @@
 import { useState } from "react";
 import ModalF1 from "../../modal/Modal_F1";
 import { labelColor } from "../../../constants/colors";
-import { handleNumericSelectKeyDown } from "../../../utils/InputHandlers";
 import {
   options,
   rowsPipe,
   symbols,
 } from "../../../constants/input_inspection_result";
+import { Select } from "antd";
+
+const { Option } = Select;
+
 const ConnectingPipe = () => {
   const [modalF1Open, setModalF1Open] = useState(false);
   const totalRows = 4;
@@ -27,13 +30,10 @@ const ConnectingPipe = () => {
     });
   };
 
-  const handleSelectChange = (
-    e: React.ChangeEvent<HTMLSelectElement>,
-    rowIndex: number
-  ) => {
+  const handleSelectChange = (value: number, rowIndex: number) => {
     setSelectValues((prev) => {
       const newValues = [...prev];
-      newValues[rowIndex] = parseInt(e.target.value, 10);
+      newValues[rowIndex] = value;
       return newValues;
     });
   };
@@ -159,31 +159,35 @@ const ConnectingPipe = () => {
                         return (
                           <td
                             key={col}
-                            className={`border border-black p-0 hover:bg-[#E5F7E5]`}
+                            className={`border border-black p-0 text-center hover:bg-[#E5F7E5]`}
                           >
-                            <select
+                            <Select
                               value={selectValues[idx]}
-                              onChange={(e) => handleSelectChange(e, idx)}
-                              onKeyDown={(e) =>
-                                handleNumericSelectKeyDown(e, (val) => {
-                                  setSelectValues((prev) => {
-                                    const newVals = [...prev];
-                                    const numVal = parseInt(val, 10);
-                                    if (numVal < options.length) {
-                                      newVals[idx] = numVal;
-                                    }
-                                    return newVals;
-                                  });
-                                })
-                              }
-                              className={`w-full h-full text-center cursor-pointer focus:ring-2 focus:ring-black hover:bg-[#E5F7E5]`}
+                              onChange={(val) => handleSelectChange(val, idx)}
+                              className={`
+                                w-full h-full 
+                                focus-visible:ring-2 focus-visible:ring-black
+                                focus-visible:ring-offset-0 hover:bg-[#E5F7E5]
+                              `}
+                              onKeyDown={(e) => {
+                                const num = parseInt(e.key, 10);
+
+                                if (
+                                  !isNaN(num) &&
+                                  num >= 0 &&
+                                  num < options.length
+                                ) {
+                                  e.preventDefault();
+                                  handleSelectChange(num, idx);
+                                }
+                              }}
                             >
                               {options.map((opt, i) => (
-                                <option key={i} value={i}>
+                                <Option key={i} value={i}>
                                   {opt}
-                                </option>
+                                </Option>
                               ))}
-                            </select>
+                            </Select>
                           </td>
                         );
                       }

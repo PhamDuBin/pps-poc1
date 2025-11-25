@@ -13,6 +13,61 @@ const InspectionResultScreen = () => {
     if (!container) return;
 
     const handleContainerKeyDown = (e: KeyboardEvent) => {
+      const key = e.key.toUpperCase();
+      if (key.startsWith("F") && !isNaN(Number(key.substring(1)))) {
+        e.preventDefault();
+        return;
+      }
+
+      if (e.ctrlKey && e.altKey) {
+        e.preventDefault();
+        return;
+      }
+
+      const isAdvanceSearchOpen = container.querySelector(
+        ".advance-search-modal"
+      );
+      if (isAdvanceSearchOpen) return;
+
+      const confirmationModalRoot = container.querySelector(".ant-modal-root");
+      if (
+        confirmationModalRoot &&
+        (confirmationModalRoot as HTMLElement).style.display !== "none" &&
+        getComputedStyle(confirmationModalRoot).pointerEvents !== "none"
+      ) {
+        return;
+      }
+
+      const activeElement = document.activeElement as HTMLElement;
+
+      if (
+        activeElement &&
+        activeElement.closest('[data-calendar-popup="true"]')
+      ) {
+        return;
+      }
+
+      if (e.key === "Enter") {
+        if (activeElement?.classList.contains("custom-date-input")) return;
+        if (activeElement?.classList.contains("japanese-calendar")) return;
+        if (activeElement?.closest(".ant-picker")) return;
+      }
+
+      if (activeElement?.classList.contains("sale-slip-row")) {
+        if (
+          [
+            "ArrowUp",
+            "ArrowDown",
+            "ArrowRight",
+            "ArrowLeft",
+            "Enter",
+            "Tab",
+          ].includes(e.key)
+        ) {
+          return;
+        }
+      }
+
       const topbarEls = Array.from(
         container.querySelectorAll(
           "#topbar input:not([disabled]), #topbar button:not([disabled]), #topbar select:not([disabled]), #topbar textarea:not([disabled])"
@@ -29,9 +84,33 @@ const InspectionResultScreen = () => {
         )
       ) as HTMLElement[];
 
-      const focusableElements = [...topbarEls, ...rightEls, ...mainEls];
+      let focusableElements = [...topbarEls, ...rightEls, ...mainEls];
 
-      const activeElement = document.activeElement as HTMLElement;
+      focusableElements = focusableElements.filter((el) => {
+        if (
+          el.tagName === "INPUT" &&
+          (el as HTMLInputElement).type === "radio"
+        ) {
+          const radioGroup = el.closest(".ant-radio-group");
+          if (!radioGroup) return true;
+          const checkedRadio = radioGroup.querySelector(
+            'input[type="radio"]:checked'
+          ) as HTMLInputElement | null;
+          if (checkedRadio) return el === checkedRadio;
+          else return el === radioGroup.querySelector('input[type="radio"]');
+        }
+        if (
+          el.tagName === "INPUT" &&
+          (el as HTMLInputElement).type === "checkbox"
+        ) {
+          const checkboxGroup = el.closest(".ant-checkbox-group-navigable");
+          if (!checkboxGroup) return true;
+          return el === checkboxGroup.querySelector('input[type="checkbox"]');
+        }
+
+        return true;
+      });
+
       const currentIndex = focusableElements.indexOf(activeElement);
 
       if (currentIndex !== -1) {

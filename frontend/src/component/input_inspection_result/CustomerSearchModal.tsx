@@ -2,7 +2,9 @@ import AdvanceSearchModal from "../transaction_information/1.1.1_03/AdvanceSearc
 import { useEffect, useRef, useState, KeyboardEvent } from "react";
 import { fieldDefinitionsLeftPanel } from "../../constants/sale_slip_entry";
 import React from "react";
-import { Button } from "antd";
+import { Button, Select } from "antd";
+import { HalfWidthNumberInput, KanaFullWidthInput } from "../JapaneseInputs";
+import type { InputRef } from "antd";
 
 interface CustomerDetails {
   name: string;
@@ -46,8 +48,8 @@ export const CustomerSearchModal = ({ onClose }: { onClose: () => void }) => {
     (!customerCodeValues[0] || !customerCodeValues[1]);
   const areButtonsOfficeDisabled = !officeCode[0] || !officeCode[1];
 
-  const firstInputRef = useRef<HTMLInputElement>(null);
-  const customerCode1Ref = useRef<HTMLInputElement>(null);
+  const firstInputRef = useRef<InputRef>(null);
+  const dynamicInputRef = useRef<InputRef>(null);
   const resetCustomerBtnref = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
@@ -56,10 +58,13 @@ export const CustomerSearchModal = ({ onClose }: { onClose: () => void }) => {
     }
   }, []);
 
-  const handleOfficeSearch = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter" && officeCode[0] && officeCode[1]) {
+  const handleOfficeSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      e.stopPropagation();
       e.preventDefault();
-      setOfficeName("関東地方営業事務所");
+      if (officeCode[0] && officeCode[1]) {
+        setOfficeName("関東地方営業事務所");
+      }
     }
   };
 
@@ -90,9 +95,7 @@ export const CustomerSearchModal = ({ onClose }: { onClose: () => void }) => {
     }, 100);
   };
 
-  const handleDynamicInputEnter = (
-    e: KeyboardEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
+  const handleDynamicInputEnter = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       e.preventDefault();
       const currentValues = formValues[selectedFieldId];
@@ -106,31 +109,20 @@ export const CustomerSearchModal = ({ onClose }: { onClose: () => void }) => {
     }
   };
 
-  if (showAdvanceSearch) {
-    return (
-      <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-        <div className="w-1/2">
-          <AdvanceSearchModal
-            showAdvanceSearch={showAdvanceSearch}
-            setShowAdvanceSearch={setShowAdvanceSearch}
-            onRowEnter={() => {
-              showCustomerDetails();
-              setFormValues((prev) => ({
-                ...prev,
-                customerCode: ["000000", "000000"],
-              }));
-            }}
-          />
-        </div>
-      </div>
-    );
-  }
+  const extractValue = (e: any): string => {
+    if (typeof e === "string") return e;
+    if (e && typeof e === "object" && "target" in e) {
+      return e.target.value;
+    }
+    return "";
+  };
 
   const handleValueChange = (
-    value: string,
+    e: React.ChangeEvent<HTMLInputElement> | string,
     index: number | null = null
   ): void => {
     if (!currentField) return;
+    const value = extractValue(e);
     let newValues: string | string[] =
       formValues[selectedFieldId] ||
       (currentField.type === "multi" || currentField.type === "double"
@@ -169,69 +161,100 @@ export const CustomerSearchModal = ({ onClose }: { onClose: () => void }) => {
       onKeyDown: handleDynamicInputEnter,
     };
 
+    const isKanaField =
+      currentField.id === "searchKey1" || currentField.id === "searchKey2";
+    const InputComponent = isKanaField
+      ? KanaFullWidthInput
+      : HalfWidthNumberInput;
+
+    const getValueAtIndex = (idx: number) => {
+      if (Array.isArray(value)) return value[idx];
+      return "";
+    };
+
     switch (currentField.type) {
       case "multi":
         return (
-          <div className="flex items-center space-x-1 mr-[1px]">
-            {currentField.partSizes?.map((size, index) => (
-              <React.Fragment key={index}>
-                <input
-                  ref={customerCode1Ref}
-                  type="text"
-                  placeholder="000"
-                  className="w-20 h-6 border border-black p-1 text-center placeholder-gray-400 bg-input"
-                  style={{ width: `${size}px` }}
-                  value={(Array.isArray(value) && value[index]) || ""}
-                  onChange={(e) => handleValueChange(e.target.value, index)}
-                  {...commonInputProps}
-                />
-                {index < currentField.partSizes.length - 1 && <span>-</span>}
-              </React.Fragment>
-            ))}
+          <div className="flex items-center">
+            {currentField.partSizes?.map((size, index) => {
+              const isDisabled = index > 0 && !getValueAtIndex(index - 1);
+
+              return (
+                <React.Fragment key={index}>
+                  <InputComponent
+                    ref={index === 0 ? dynamicInputRef : null}
+                    placeholder="000"
+                    maxLength={3}
+                    disabled={isDisabled}
+                    className={`h-6 w-14 box-border placeholder-gray-400 p-1 ${
+                      isDisabled ? "bg-gray-200 cursor-not-allowed" : ""
+                    }`}
+                    value={(Array.isArray(value) && value[index]) || ""}
+                    onChange={(e: any) => handleValueChange(e, index)}
+                    {...commonInputProps}
+                  />
+                  {index < currentField.partSizes.length - 1 && (
+                    <span className="mx-0 w-2 text-center text-gray-500">
+                      -
+                    </span>
+                  )}
+                </React.Fragment>
+              );
+            })}
           </div>
         );
       case "dropdown":
         return (
-          <div className="flex items-center space-x-1">
-            <input
-              ref={customerCode1Ref}
-              type="text"
-              className="border border-black p-1 placeholder-gray-400 w-20 h-6 bg-input"
+          <div className="flex items-center">
+            <HalfWidthNumberInput
+              ref={dynamicInputRef}
+              className="placeholder-gray-400 w-20 h-6"
               placeholder="000000"
+              maxLength={6}
+              style={{ padding: "4px" }}
               value={(Array.isArray(value) && value[0]) || ""}
-              onChange={(e) => handleValueChange(e.target.value, 0)}
+              onChange={(e: any) => handleValueChange(e, 0)}
               {...commonInputProps}
             />
-            <span> - </span>
-            <input
-              type="text"
-              className="border w-20 h-6 border-gray-400 p-1 bg-input"
-              value={(Array.isArray(value) && value[1]) || ""}
-              onChange={(e) => handleValueChange(e.target.value, 1)}
+            <span className="mx-2">-</span>
+            <HalfWidthNumberInput
+              disabled={!getValueAtIndex(0)}
+              className={`w-20 h-6 placeholder-gray-400 ${
+                !getValueAtIndex(0) ? "bg-gray-200 cursor-not-allowed" : ""
+              }`}
               placeholder="000000"
+              maxLength={6}
+              style={{ padding: "4px" }}
+              value={(Array.isArray(value) && value[1]) || ""}
+              onChange={(e: any) => handleValueChange(e, 1)}
               {...commonInputProps}
             />
           </div>
         );
       case "double":
         return (
-          <div className="flex gap-4">
-            <input
-              ref={customerCode1Ref}
-              type="text"
-              className="border w-20 h-6 border-gray-400 p-1 placeholder-gray-400 bg-input"
+          <div className="flex items-center">
+            <HalfWidthNumberInput
+              ref={dynamicInputRef}
+              className="w-20 h-6 placeholder-gray-400"
+              style={{ padding: "4px" }}
               value={(Array.isArray(value) && value[0]) || ""}
-              onChange={(e) => handleValueChange(e.target.value, 0)}
+              onChange={(e: any) => handleValueChange(e, 0)}
               placeholder="000000"
+              maxLength={6}
               {...commonInputProps}
             />
-            <div>-</div>
-            <input
-              type="text"
-              className="border w-20 h-6 border-gray-400 p-1 placeholder-gray-400 bg-input"
+            <span className="mx-2">-</span>
+            <HalfWidthNumberInput
+              disabled={!getValueAtIndex(0)}
+              className={`w-20 h-6 placeholder-gray-400 ${
+                !getValueAtIndex(0) ? "bg-gray-200 cursor-not-allowed" : ""
+              }`}
+              style={{ padding: "4px" }}
               value={(Array.isArray(value) && value[1]) || ""}
-              onChange={(e) => handleValueChange(e.target.value, 1)}
+              onChange={(e: any) => handleValueChange(e, 1)}
               placeholder="000000"
+              maxLength={6}
               {...commonInputProps}
             />
           </div>
@@ -239,12 +262,12 @@ export const CustomerSearchModal = ({ onClose }: { onClose: () => void }) => {
       default:
         return (
           <>
-            <input
-              ref={customerCode1Ref}
-              type="text"
-              className="border h-6 border-black p-1 w-[197px] mr-[-1px] bg-input"
+            <InputComponent
+              ref={dynamicInputRef}
+              className="h-6 w-[182px] mr-[-1px] "
+              style={{ padding: "4px" }}
               value={(typeof value === "string" && value) || ""}
-              onChange={(e) => handleValueChange(e.target.value)}
+              onChange={(e: any) => handleValueChange(e)}
               {...commonInputProps}
             />
           </>
@@ -258,8 +281,8 @@ export const CustomerSearchModal = ({ onClose }: { onClose: () => void }) => {
       customerCode: ["", ""],
     }));
     setCustomerData(null);
-    if (customerCode1Ref.current) {
-      customerCode1Ref.current.focus();
+    if (dynamicInputRef.current) {
+      dynamicInputRef.current.focus();
     }
   };
 
@@ -275,6 +298,26 @@ export const CustomerSearchModal = ({ onClose }: { onClose: () => void }) => {
     }
   };
 
+  if (showAdvanceSearch) {
+    return (
+      <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+        <div className="w-[700px] max-w-full">
+          <AdvanceSearchModal
+            showAdvanceSearch={showAdvanceSearch}
+            setShowAdvanceSearch={setShowAdvanceSearch}
+            onRowEnter={() => {
+              showCustomerDetails();
+              setFormValues((prev) => ({
+                ...prev,
+                customerCode: ["000000", "000000"],
+              }));
+            }}
+          />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
       <div className="border border-black bg-white p-2">
@@ -288,27 +331,40 @@ export const CustomerSearchModal = ({ onClose }: { onClose: () => void }) => {
                 <span className="w-28 h-6 bg-[#D9D9D9] flex justify-center items-center">
                   事務所
                 </span>
-                <input
-                  ref={firstInputRef}
-                  className="w-20 h-6 border border-black text-center"
-                  value={officeCode[0]}
-                  onChange={(e) =>
-                    setOfficeCode([e.target.value, officeCode[1]])
-                  }
-                  onKeyDown={handleOfficeSearch}
-                />
-                <p>-</p>
-                <input
-                  className="w-20 h-6 border border-black text-center"
-                  value={officeCode[1]}
-                  onChange={(e) =>
-                    setOfficeCode([officeCode[0], e.target.value])
-                  }
-                  onKeyDown={handleOfficeSearch}
-                />
+
+                <div className="flex items-center">
+                  <HalfWidthNumberInput
+                    maxLength={4}
+                    placeholder="0000"
+                    ref={firstInputRef}
+                    className="w-20 h-6 placeholder-gray-400"
+                    style={{ padding: "4px" }}
+                    value={officeCode[0]}
+                    onChange={(e: any) =>
+                      setOfficeCode([extractValue(e), officeCode[1]])
+                    }
+                    onKeyDown={handleOfficeSearch}
+                  />
+                  <span className="mx-2">-</span>
+                  <HalfWidthNumberInput
+                    maxLength={3}
+                    placeholder="000"
+                    disabled={!officeCode[0]}
+                    className={`w-20 h-6 placeholder-gray-400 ${
+                      !officeCode[0] ? "bg-gray-200 cursor-not-allowed" : ""
+                    }`}
+                    style={{ padding: "4px" }}
+                    value={officeCode[1]}
+                    onChange={(e: any) =>
+                      setOfficeCode([officeCode[0], extractValue(e)])
+                    }
+                    onKeyDown={handleOfficeSearch}
+                  />
+                </div>
+
                 <Button
                   onClick={() => setShowAdvanceSearch(true)}
-                  className="w-[22px] h-[22px] flex items-center justify-center border border-gray-500 shadow-md shadow-zinc-600"
+                  className="w-[22px] h-[22px] shadow-md shadow-zinc-600"
                 >
                   ▼
                 </Button>
@@ -328,26 +384,26 @@ export const CustomerSearchModal = ({ onClose }: { onClose: () => void }) => {
 
               <div className="flex flex-row items-center gap-4 mt-2">
                 <>
-                  <select
-                    className="bg-[#D9D9D9] w-28 h-6 text-center"
+                  <Select
+                    className="w-28 h-6 text-center [&_.ant-select-selector]:!h-6 [&_.ant-select-selector]:!bg-[#D9D9D9] [&_.ant-select-selector]:!rounded-none [&_.ant-select-selection-item]:!leading-[22px]"
                     value={selectedFieldId}
-                    onChange={(e) => {
-                      setSelectedFieldId(e.target.value as FieldId);
+                    onChange={(value) => {
+                      setSelectedFieldId(value as FieldId);
                       setCustomerData(null);
                     }}
-                  >
-                    {fieldDefinitionsLeftPanel.map((field) => (
-                      <option key={field.id} value={field.id}>
-                        {field.label}
-                      </option>
-                    ))}
-                  </select>
+                    options={fieldDefinitionsLeftPanel.map((field) => ({
+                      label: field.label,
+                      value: field.id,
+                    }))}
+                  />
 
-                  <div className="flex">{renderDynamicInput()}</div>
+                  <div className="flex max-w-[180.78px]">
+                    {renderDynamicInput()}
+                  </div>
                 </>
                 <Button
                   onClick={() => setShowAdvanceSearch(true)}
-                  className="w-[18px] h-[22px] flex items-center justify-center border border-gray-500 shadow-md shadow-zinc-600"
+                  className="w-[18px] h-[22px] shadow-md shadow-zinc-600"
                 >
                   ▼
                 </Button>
@@ -377,7 +433,6 @@ export const CustomerSearchModal = ({ onClose }: { onClose: () => void }) => {
               </div>
             </div>
           </div>
-
           <div className="mt-4 px-2">
             <span className="font-bold">顧客情報詳細</span>
             <div className="border border-black p-4 mt-1 text-sm">
@@ -478,30 +533,38 @@ export const CustomerSearchModal = ({ onClose }: { onClose: () => void }) => {
               <span className="w-28 h-5 bg-[#D9D9D9] flex justify-center items-center">
                 印刷コード
               </span>
-              <select className="border border-black ml-2 w-32">
-                <option value="0">検索キー1</option>
-                <option value="1">検索キー２</option>
-                <option value="2">検索キー３</option>
-              </select>
+              <Select
+                className="ml-2 w-32 h-6 [&_.ant-select-selector]:!h-full [&_.ant-select-selector]:!rounded-none [&_.ant-select-selection-item]:!leading-5"
+                defaultValue="0"
+                options={[
+                  { value: "0", label: "検索キー1" },
+                  { value: "1", label: "検索キー２" },
+                  { value: "2", label: "検索キー３" },
+                ]}
+              />
             </div>
             <div className="flex flex-row ml-4">
               <span className="w-28 h-5 bg-[#D9D9D9] flex justify-center items-center">
                 集合装置
               </span>
-              <select className="border border-black ml-2 w-24">
-                <option value="0">00</option>
-                <option value="1">01</option>
-                <option value="2">02</option>
-                <option value="3">03</option>
-                <option value="4">04</option>
-                <option value="5">05</option>
-              </select>
+              <Select
+                className="ml-2 w-24 h-6 [&_.ant-select-selector]:!h-full [&_.ant-select-selector]:!rounded-none [&_.ant-select-selection-item]:!leading-5"
+                defaultValue="0"
+                options={[
+                  { value: "0", label: "00" },
+                  { value: "1", label: "01" },
+                  { value: "2", label: "02" },
+                  { value: "3", label: "03" },
+                  { value: "4", label: "04" },
+                  { value: "5", label: "05" },
+                ]}
+              />
             </div>
           </div>
           <div className="w-full flex justify-center items-center mt-5">
             <Button
               onClick={onClose}
-              className="w-36 h-10 bg-[#D9D9D9] font-bold shadow-md shadow-zinc-600"
+              className="w-36 h-10 bg-[#D9D9D9] font-bold shadow-md shadow-zinc-600 rounded-md"
             >
               閉じる
             </Button>
