@@ -2,7 +2,6 @@ import React, { useRef } from "react";
 import { InputRef, Radio, Select, Button } from "antd";
 import { useEffect, useState } from "react";
 import AdvanceSearchModal from "../transaction_information/1.1.1_03/AdvanceSearchModal";
-import { processKatakanaInput } from "../../utils/katakana";
 import {
   kanaButtons,
   tableHeaders,
@@ -10,10 +9,7 @@ import {
   colWidths,
   fieldDefinitionsLeftPanel,
 } from "../../constants/sale_slip_entry";
-import {
-  HalfWidthNumberInput,
-  KanaFullWidthInput,
-} from "../input/JapaneseInputs";
+import { HalfWidthNumberInput, KanaFullWidthInput } from "../JapaneseInputs";
 
 type LeftPanelProps = {
   showAdvanceSearch: boolean;
@@ -415,11 +411,6 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
     }
   };
 
-  const handleKatakanaBlur = () => {
-    const processedValue = processKatakanaInput(kanaInput);
-    setKanaInput(processedValue);
-  };
-
   const handleShowHardcodedCustomer = () => {
     setId1("000000");
     setId2("000");
@@ -735,7 +726,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
                           if (e.key === "Enter") {
                             e.preventDefault();
                             e.stopPropagation();
-                            handleKatakanaBlur();
+
                             searchButtonRef.current?.focus();
                           } else {
                             handleKanaKeyDown(e);

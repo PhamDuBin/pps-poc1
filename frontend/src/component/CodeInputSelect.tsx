@@ -2,7 +2,7 @@ import React, { useState, useRef, forwardRef } from "react";
 import { Select } from "antd";
 import type { BaseSelectRef } from "rc-select";
 import type { InputRef } from "antd";
-import { HalfWidthNumberInput } from "./input/JapaneseInputs";
+import { HalfWidthNumberInput } from "./JapaneseInputs";
 
 interface CodeOption {
   code: string;

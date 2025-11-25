@@ -27,7 +27,7 @@ import {
 } from "../../../constants/customer_ledger";
 import { handleOpenWindow } from "../../../constants/functions";
 import JapaneseCalendar from "../../JapaneseCalendar";
-import { HalfWidthNumberInput } from "../../input/JapaneseInputs";
+import { HalfWidthNumberInput } from "../../JapaneseInputs";
 
 const labelClass = `w-32 mr-2 h-6 border-gray-300 rounded-md ${labelColor} font-bold flex text-center justify-center items-center`;
 

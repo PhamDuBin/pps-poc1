@@ -32,7 +32,7 @@ import {
   HalfWidthKanaInput,
   HalfWidthNumberInput,
   HalfWidthAlphaNumInput,
-} from "../../input/JapaneseInputs";
+} from "../../JapaneseInputs";
 
 const inputBaseClass = `${hoverInputColor} ${focusInputColor} focus:!bg-input border border-black h-6`;
 

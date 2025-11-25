@@ -8,7 +8,7 @@ import { labelColor, inputColor } from "../../../constants/colors";
 import { blockTab } from "../../../utils/InputHandlers";
 import { options } from "../../../constants/configuration_information";
 import JapaneseCalendar from "../../JapaneseCalendar";
-import { HalfWidthNumberInput } from "../../input/JapaneseInputs";
+import { HalfWidthNumberInput } from "../../JapaneseInputs";
 
 const { Option } = Select;
 

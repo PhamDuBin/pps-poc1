@@ -5,10 +5,7 @@ import {
   nyukinOptions,
 } from "../../../constants/sale_slip_entry";
 import { Button, Select } from "antd";
-import {
-  HalfWidthNumberInput,
-  KanaFullWidthInput,
-} from "../../input/JapaneseInputs";
+import { HalfWidthNumberInput, KanaFullWidthInput } from "../../JapaneseInputs";
 import { InputRef } from "antd";
 
 type Props = {

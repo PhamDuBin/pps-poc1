@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import AdvanceSearchModal from "./1.1.1_03/AdvanceSearchModal";
 import TooltipPortal from "./1.1.1_03/TooltipPortal";
 import { handleOpenWindow } from "../../constants/functions";
-import { HalfWidthNumberInput } from "../input/JapaneseInputs";
+import { HalfWidthNumberInput } from "../JapaneseInputs";
 import { Button, InputRef } from "antd";
 
 type LeftPanelProps = {

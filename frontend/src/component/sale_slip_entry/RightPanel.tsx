@@ -10,7 +10,7 @@ const RightPanel: React.FC<RightPanelProps> = ({
   onButtonClick,
   activeButton,
 }) => {
-  const buttons = ["行追加 (F1)", "請求年月変更 (F2)", "入金処理 (F3)"];
+  const buttons = ["行追加", "請求年月変更", "入金処理"];
   const buttonRefs = React.useRef<(HTMLElement | null)[]>([]);
 
   const handleButtonKeyDown = (e: React.KeyboardEvent, index: number) => {

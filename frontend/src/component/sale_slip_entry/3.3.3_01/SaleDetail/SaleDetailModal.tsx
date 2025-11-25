@@ -10,6 +10,7 @@ import SaleDetailEntry6 from "./SaleDetailEntry6";
 import SaleDetailEntry7 from "./SaleDetailEntry7";
 import SaleDetailEntry5 from "./SaleDetailEntry5";
 import { useEffect, useCallback } from "react";
+import { Button } from "antd";
 
 interface SaleDetailModalProps {
   isOpen: boolean;
@@ -248,13 +249,19 @@ const SaleDetailModal: React.FC<SaleDetailModalProps> = ({
 
       const target = event.target as HTMLElement;
 
-      // Allow Space, Enter, and Arrow keys to work with CustomSelect (has tabIndex)
-      // CustomSelect is a div with tabIndex, so check if it's focusable
-      if (target.hasAttribute('tabindex') && target.getAttribute('tabindex') !== '-1') {
+      if (
+        target.hasAttribute("tabindex") &&
+        target.getAttribute("tabindex") !== "-1"
+      ) {
         // Don't block Space, Enter, or Arrow keys for focusable elements
-        if (event.key === " " || event.key === "Enter" ||
-            event.key === "ArrowUp" || event.key === "ArrowDown" ||
-            event.key === "ArrowLeft" || event.key === "ArrowRight") {
+        if (
+          event.key === " " ||
+          event.key === "Enter" ||
+          event.key === "ArrowUp" ||
+          event.key === "ArrowDown" ||
+          event.key === "ArrowLeft" ||
+          event.key === "ArrowRight"
+        ) {
           return; // Let the element handle it
         }
       }
@@ -296,14 +303,12 @@ const SaleDetailModal: React.FC<SaleDetailModalProps> = ({
         {/* 1. Status Bar & Title */}
         <div className="w-full flex items-center justify-between">
           {/* Button */}
-          <button
+          <Button
             onClick={onBackToCategorySelection}
             className="flex items-center justify-center mb-8 shadow-md shadow-zinc-600"
           >
-            <span className="text-black border bg-[#D9D9D9] p-4">
-              {categoryName}
-            </span>
-          </button>
+            {categoryName}
+          </Button>
 
           {/* StatusBar + Title */}
           <div className="flex-1 flex flex-col items-center justify-center mr-20">
@@ -321,20 +326,20 @@ const SaleDetailModal: React.FC<SaleDetailModalProps> = ({
 
         {/* 4. Footer Actions */}
         <div className="flex gap-4 w-full justify-center items-center">
-          <button
+          <Button
             onClick={onClose}
             className="bg-gray-300 border border-gray-500 rounded px-10 py-2 font-bold hover:bg-[#E5F7E5] shadow-md shadow-zinc-600"
           >
             戻る (R)
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={() => {
               handleNext();
             }}
             className="bg-gray-300 border border-gray-500 rounded px-10 py-2 font-bold hover:bg-[#E5F7E5] shadow-md shadow-zinc-600"
           >
             選択 (N)
-          </button>
+          </Button>
         </div>
       </div>
     </div>

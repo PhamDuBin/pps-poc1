@@ -1,11 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
+import { Select } from "antd";
 import {
-  extractHalfWidthDigits,
-  handleFormatting,
-  allowDecimalInput,
-  convertToFullWidth,
-} from "../../../../utils/InputHandlers";
-import CustomSelect from "../../../CustomSelect";
+  KanaFullWidthInput,
+  HalfWidthNumberInput,
+} from "../../../JapaneseInputs";
+import type { InputRef } from "antd";
 
 interface SaleDetailEntry3Props {
   onChange: (field: string, value: string) => void;
@@ -16,7 +15,7 @@ const SaleDetailEntry3: React.FC<SaleDetailEntry3Props> = ({
   onChange,
   formData,
 }) => {
-  const firstInputRef = useRef<HTMLInputElement>(null);
+  const firstInputRef = useRef<InputRef>(null);
 
   useEffect(() => {
     if (firstInputRef.current) {
@@ -24,7 +23,6 @@ const SaleDetailEntry3: React.FC<SaleDetailEntry3Props> = ({
     }
   }, []);
 
-  const [isQuantityFocused, setIsQuantityFocused] = useState(false);
   return (
     <div className="flex gap-1 ">
       <div className="flex gap-2 p-1 border border-black h-40">
@@ -32,38 +30,26 @@ const SaleDetailEntry3: React.FC<SaleDetailEntry3Props> = ({
         <div className="w-20 text-center">
           <div className="bg-label">数量</div>
           <div>
-            <input
+            <HalfWidthNumberInput
               ref={firstInputRef}
-              type="text"
-              className="w-20 text-right border border-black"
-              value={
-                isQuantityFocused
-                  ? formData.quantity || ""
-                  : `(${Number(formData.quantity || 0).toFixed(2)})`
-              }
-              onFocus={() => setIsQuantityFocused(true)}
-              onBlur={() => setIsQuantityFocused(false)}
+              maxLength={5}
+              className="w-20 h-7 placeholder-black-200"
+              placeholder="(0.00)"
+              value={formData.quantity}
               onChange={(e) => {
-                const val = e.target.value;
-                const cleaned = val.replace(/[^\d.]/g, "");
-                onChange("quantity", extractHalfWidthDigits(cleaned));
+                onChange("quantity", e);
               }}
-              onKeyDown={allowDecimalInput}
             />
           </div>
         </div>
         <div className="w-14 text-center">
           <div className="bg-label">単位</div>
           <div>
-            <input
-              type="text"
+            <KanaFullWidthInput
               placeholder="000"
-              className="w-14 placeholder-black-200 border border-black"
+              className="w-14 h-7 placeholder-black-200 "
               value={formData.unit || ""}
-              onChange={(e) =>
-                onChange("unit", extractHalfWidthDigits(e.target.value))
-              }
-              onKeyDown={allowDecimalInput}
+              onChange={(e) => onChange("unit", e)}
             />
           </div>
         </div>
@@ -76,15 +62,13 @@ const SaleDetailEntry3: React.FC<SaleDetailEntry3Props> = ({
           <div className="text-center h-[64px]">
             <div className="bg-label h-1/2">売上金額</div>
             <div className="h-1/2">
-              <input
-                type="text"
+              <HalfWidthNumberInput
+                allowDecimal={true}
+                maxLength={9}
                 placeholder="0"
-                className="h-full px-1 w-[120px] border border-black placeholder-black-200"
+                className="h-full w-[120px] placeholder-black-200"
                 value={formData.saleAmount || ""}
-                onChange={(e) =>
-                  onChange("saleAmount", extractHalfWidthDigits(e.target.value))
-                }
-                onKeyDown={allowDecimalInput}
+                onChange={(e) => onChange("saleAmount", e)}
               />
             </div>
           </div>
@@ -92,22 +76,19 @@ const SaleDetailEntry3: React.FC<SaleDetailEntry3Props> = ({
           {/* Tax */}
           <div className="text-center h-[64px]">
             <div className="bg-label h-1/2">売上消費税</div>
-            <input
-              type="text"
+            <HalfWidthNumberInput
+              maxLength={8}
               placeholder="0"
-              className="w-[120px] h-1/2 border px-1 border-black placeholder-black-200"
+              className="w-[120px] h-1/2  placeholder-black-200"
               value={formData.tax || ""}
-              onChange={(e) =>
-                onChange("tax", extractHalfWidthDigits(e.target.value))
-              }
-              onKeyDown={allowDecimalInput}
+              onChange={(e) => onChange("tax", e)}
             />
           </div>
 
           {/* Outside the Month */}
           <div className="text-center h-[64px] relative">
             <div className="bg-label h-1/2">当月外</div>
-            <CustomSelect
+            <Select
               value={
                 formData.outsideMonth !== undefined
                   ? String(formData.outsideMonth)
@@ -118,14 +99,14 @@ const SaleDetailEntry3: React.FC<SaleDetailEntry3Props> = ({
                 { value: "0", label: "0 空欄" },
                 { value: "1", label: "1 当月外" },
               ]}
-              className="border border-black w-full h-1/2 bg-white px-2"
+              className=" w-full h-1/2 "
             />
           </div>
 
           {/* Self Swing Target */}
           <div className="text-center h-[64px] relative">
             <div className="bg-label h-1/2">売上消費税対象</div>
-            <CustomSelect
+            <Select
               value={
                 formData.selfTransferTarget !== undefined
                   ? String(formData.selfTransferTarget)
@@ -136,24 +117,18 @@ const SaleDetailEntry3: React.FC<SaleDetailEntry3Props> = ({
                 { value: "0", label: "0 対象" },
                 { value: "1", label: "1 対象外" },
               ]}
-              className="border border-black w-full h-1/2 bg-white px-2"
+              className="w-full h-1/2 "
             />
           </div>
 
           {/* Note */}
           <div className="text-center h-[64px] col-span-2 relative">
             <div className="bg-label h-1/2">備考</div>
-            <input
-              type="text"
+            <KanaFullWidthInput
               placeholder="値引き"
-              className="w-full h-1/2 border px-1 border-black placeholder-black-200"
+              className="w-full h-1/2 placeholder-black-200"
               value={formData.note || ""}
-              onChange={(e) =>
-                onChange("note", convertToFullWidth(e.target.value))
-              }
-              onKeyDown={(e) => {
-                handleFormatting(e, convertToFullWidth);
-              }}
+              onChange={(e) => onChange("note", e)}
             />
           </div>
         </div>

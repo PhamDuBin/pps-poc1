@@ -252,20 +252,19 @@ const JapaneseCalendar = forwardRef<
         <input
           ref={inputRef}
           type="text"
-          value={inputValue} // <-- Sửa: dùng inputValue
-          // readOnly // <-- XÓA: Bỏ readOnly
+          value={inputValue}
           placeholder={placeholder}
           className={`cursor-pointer ${className} custom-date-input`}
           onClick={() => setIsOpen(!isOpen)}
-          onChange={handleInputChange} // <-- THÊM: cho phép gõ
-          onBlur={handleInputBlur} // <-- THÊM: validate khi rời
+          onChange={handleInputChange}
+          onBlur={handleInputBlur}
           onKeyDown={(e) => {
             if (e.key === "Enter") {
               e.preventDefault();
               e.stopPropagation();
-              // Nếu gõ xong nhấn Enter, validate luôn
+
               handleInputBlur();
-              setIsOpen(!isOpen); // Toggle lịch
+              setIsOpen(!isOpen);
             }
           }}
         />

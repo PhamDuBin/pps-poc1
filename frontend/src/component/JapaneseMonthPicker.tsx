@@ -202,7 +202,6 @@ const JapaneseMonthPicker = forwardRef<
           ref={inputRef}
           type="text"
           value={format(selectedMonth, dateFormat, { locale: ja })}
-          readOnly
           placeholder={placeholder}
           className={`cursor-pointer ${className} custom-date-input`}
           onClick={() => setIsOpen(!isOpen)}

@@ -1,7 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import StatusBar from "../StatusBar";
-import CustomSelect from "../../CustomSelect";
 import { mockData, fieldDefinitions } from "../../../constants/sale_slip_entry";
+import { Select, Button, Radio } from "antd";
+import type { InputRef } from "antd";
+import { KanaFullWidthInput, HalfWidthNumberInput } from "../../JapaneseInputs";
 
 interface ProductSearchModalProps {
   isOpen: boolean;
@@ -24,16 +26,15 @@ const AdvancedSearchForm: React.FC<{
   const currentField = fieldDefinitions.find((f) => f.id === selectedFieldId);
 
   const searchButtonRef = useRef<HTMLButtonElement>(null);
-  const firstInputRef = useRef<HTMLInputElement>(null);
+  const firstInputRef = useRef<InputRef>(null);
 
   useEffect(() => {
-    // Focus on the first input when component mounts
     setTimeout(() => {
       if (firstInputRef.current) {
         firstInputRef.current.focus();
       }
     }, 150);
-  }, []);
+  }, [selectedFieldId]);
 
   const handleValueChange = (value: string, index: number | null = null) => {
     if (!currentField) return;
@@ -71,6 +72,9 @@ const AdvancedSearchForm: React.FC<{
   const handleResetClick = () => {
     setFormValues({});
     onReset();
+    setTimeout(() => {
+      firstInputRef.current?.focus();
+    }, 0);
   };
 
   const renderDynamicInput = () => {
@@ -80,13 +84,13 @@ const AdvancedSearchForm: React.FC<{
     switch (currentField.type) {
       case "multi-labeled":
         return (
-          <div className="flex items-stretch gap-2 border border-gray-400 p-2 h-[64px]">
+          <div className="flex items-stretch gap-2 border border-gray-400 p-2 h-[72px]">
             {currentField.parts.map((part, index) => (
               <div key={index} className="flex flex-col flex-grow">
                 <label className="text-center text-sm bg-gray-300 border border-gray-400 px-2">
                   {part.label}
                 </label>
-                <CustomSelect
+                <Select
                   value={(Array.isArray(value) && value[index]) || ""}
                   onChange={(val) => handleValueChange(val, index)}
                   options={[
@@ -96,7 +100,7 @@ const AdvancedSearchForm: React.FC<{
                       label: opt,
                     })),
                   ]}
-                  className="border border-gray-400 rounded-sm h-full px-2 bg-white"
+                  className="w-full"
                 />
               </div>
             ))}
@@ -105,17 +109,23 @@ const AdvancedSearchForm: React.FC<{
 
       case "single":
       default:
+        let InputComponent;
+        if (currentField.id === "1") {
+          InputComponent = HalfWidthNumberInput;
+        } else {
+          InputComponent = KanaFullWidthInput;
+        }
+
         return (
           <div className="border border-gray-400 h-[64px] flex flex-col">
             <label className="text-center text-sm bg-gray-300 border-b border-gray-400 px-2">
               {currentField.label}
             </label>
-            <input
+            <InputComponent
               ref={firstInputRef}
-              type="text"
-              className="p-1 w-full h-full bg-white rounded-b-sm"
+              className="p-1 w-full h-full bg-white rounded-b-sm border-none focus:ring-0"
               value={(typeof value === "string" && value) || ""}
-              onChange={(e) => handleValueChange(e.target.value)}
+              onChange={(val) => handleValueChange(val)}
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
                   e.preventDefault();
@@ -135,33 +145,33 @@ const AdvancedSearchForm: React.FC<{
         <label className="text-center text-sm bg-gray-300 border border-gray-400 px-2 h-[28px]">
           検索種類
         </label>
-        <CustomSelect
+        <Select
           value={selectedFieldId}
           onChange={(value) => setSelectedFieldId(value as FieldId)}
           options={fieldDefinitions.map((field) => ({
             value: field.id,
             label: field.selectLabel,
           }))}
-          className="border border-gray-400 p-2 bg-white h-[36px]"
+          style={{ width: 200 }}
         />
       </div>
 
       <div className="flex-grow">{renderDynamicInput()}</div>
 
       <div className="flex flex-col gap-1 h-[64px]">
-        <button
+        <Button
           ref={searchButtonRef}
           onClick={handleSearchClick}
           className="bg-gray-300 border border-gray-500 rounded px-8 font-bold hover:bg-[#E5F7E5] h-[30px] shadow-md shadow-zinc-600"
         >
           検索
-        </button>
-        <button
+        </Button>
+        <Button
           onClick={handleResetClick}
           className="bg-gray-300 border border-gray-500 rounded px-8 font-bold hover:bg-[#E5F7E5] h-[30px] shadow-md shadow-zinc-600"
         >
           再入力
-        </button>
+        </Button>
       </div>
     </div>
   );
@@ -177,12 +187,6 @@ const ProductSearchModal: React.FC<ProductSearchModalProps> = ({
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const tableBodyRef = useRef<HTMLTableSectionElement>(null);
 
-  // Refs for radio buttons
-  const stockRadio1Ref = useRef<HTMLInputElement>(null);
-  const stockRadio2Ref = useRef<HTMLInputElement>(null);
-  const warehouseRadio1Ref = useRef<HTMLInputElement>(null);
-  const warehouseRadio2Ref = useRef<HTMLInputElement>(null);
-
   const handleSearch = () => {
     setHasSearched(true);
     setActiveIndex(0);
@@ -191,103 +195,6 @@ const ProductSearchModal: React.FC<ProductSearchModalProps> = ({
   const handleReset = () => {
     setHasSearched(false);
     setActiveIndex(null);
-  };
-
-  // Keyboard navigation for stock radio group
-  const handleStockRadioKeyDown = (
-    e: React.KeyboardEvent<HTMLInputElement>,
-    currentValue: number
-  ) => {
-    const radios = [
-      { ref: stockRadio1Ref, value: 0 },
-      { ref: stockRadio2Ref, value: 1 },
-    ];
-    const currentIndex = radios.findIndex((r) => r.value === currentValue);
-
-    // Shift+Tab: allow default behavior to go back to previous element
-    // Don't click the radio - just navigate
-    if (e.key === "Tab" && e.shiftKey) {
-      return; // Let browser handle Shift+Tab naturally
-    }
-
-    // Tab or Enter: move to warehouse radio group
-    if (e.key === "Tab" || e.key === "Enter") {
-      e.preventDefault();
-      e.stopPropagation();
-      // Focus the currently checked radio in warehouse group
-      if (warehouseRadio2Ref.current?.checked) {
-        warehouseRadio2Ref.current?.focus();
-      } else {
-        warehouseRadio1Ref.current?.focus();
-      }
-      return;
-    }
-
-    if (["ArrowDown", "ArrowUp", "ArrowRight", "ArrowLeft"].includes(e.key)) {
-      e.preventDefault();
-      e.stopPropagation();
-      let nextIndex = currentIndex;
-
-      if (e.key === "ArrowDown" || e.key === "ArrowRight") {
-        nextIndex = (currentIndex + 1) % radios.length;
-      } else if (e.key === "ArrowUp" || e.key === "ArrowLeft") {
-        nextIndex = (currentIndex - 1 + radios.length) % radios.length;
-      }
-
-      const nextRadio = radios[nextIndex];
-      if (nextRadio.ref.current) {
-        nextRadio.ref.current.focus();
-        nextRadio.ref.current.click();
-      }
-    }
-  };
-
-  // Keyboard navigation for warehouse radio group
-  const handleWarehouseRadioKeyDown = (
-    e: React.KeyboardEvent<HTMLInputElement>,
-    currentValue: number
-  ) => {
-    const radios = [
-      { ref: warehouseRadio1Ref, value: 0 },
-      { ref: warehouseRadio2Ref, value: 1 },
-    ];
-    const currentIndex = radios.findIndex((r) => r.value === currentValue);
-
-    // Shift+Tab: go back to stock radio group (currently checked radio in that group)
-    if (e.key === "Tab" && e.shiftKey) {
-      e.preventDefault();
-      e.stopPropagation();
-      // Focus the currently checked radio in stock group
-      if (stockRadio2Ref.current?.checked) {
-        stockRadio2Ref.current?.focus();
-      } else {
-        stockRadio1Ref.current?.focus();
-      }
-      return;
-    }
-
-    // Tab or Enter: allow default behavior to continue to next element
-    if (e.key === "Tab" || e.key === "Enter") {
-      return; // Let browser handle Tab/Enter naturally
-    }
-
-    if (["ArrowDown", "ArrowUp", "ArrowRight", "ArrowLeft"].includes(e.key)) {
-      e.preventDefault();
-      e.stopPropagation();
-      let nextIndex = currentIndex;
-
-      if (e.key === "ArrowDown" || e.key === "ArrowRight") {
-        nextIndex = (currentIndex + 1) % radios.length;
-      } else if (e.key === "ArrowUp" || e.key === "ArrowLeft") {
-        nextIndex = (currentIndex - 1 + radios.length) % radios.length;
-      }
-
-      const nextRadio = radios[nextIndex];
-      if (nextRadio.ref.current) {
-        nextRadio.ref.current.focus();
-        nextRadio.ref.current.click();
-      }
-    }
   };
 
   useEffect(() => {
@@ -347,7 +254,6 @@ const ProductSearchModal: React.FC<ProductSearchModalProps> = ({
         }
       }
 
-      // Handle F5 and F6 keys for specific buttons
       if (event.key === "F5") {
         event.preventDefault();
         openNewWindow();
@@ -380,23 +286,19 @@ const ProductSearchModal: React.FC<ProductSearchModalProps> = ({
   };
 
   return (
-    // Backdrop
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 ">
-      {/* Modal Panel */}
       <div className="bg-gray-100 rounded-lg shadow-xl p-5 border border-gray-300 w-[840px] h-[650px]">
         {/* 1. Status Bar & Title */}
         <div className="w-full flex items-center justify-between">
-          {/* Button */}
           <div className="flex items-center justify-center mb-8">
-            <button
+            <Button
               onClick={onClose}
               className="text-black border bg-[#D9D9D9] p-4 shadow-md shadow-zinc-600"
             >
               {categoryName}
-            </button>
+            </Button>
           </div>
 
-          {/* StatusBar + Title */}
           <div className="flex-1 flex flex-col items-center justify-center mr-20">
             <StatusBar currentStep={2} />
           </div>
@@ -411,27 +313,10 @@ const ProductSearchModal: React.FC<ProductSearchModalProps> = ({
               現在庫数ゼロ
             </label>
             <div className="flex gap-4">
-              <label className="flex items-center">
-                <input
-                  ref={stockRadio1Ref}
-                  type="radio"
-                  name="stock"
-                  className="mr-1"
-                  onKeyDown={(e) => handleStockRadioKeyDown(e, 0)}
-                />
-                表示する
-              </label>
-              <label className="flex items-center">
-                <input
-                  ref={stockRadio2Ref}
-                  type="radio"
-                  name="stock"
-                  className="mr-1"
-                  defaultChecked
-                  onKeyDown={(e) => handleStockRadioKeyDown(e, 1)}
-                />
-                表示しない
-              </label>
+              <Radio.Group defaultValue={"0"}>
+                <Radio value="0">表示する</Radio>
+                <Radio value="1">表示しない</Radio>
+              </Radio.Group>
             </div>
           </div>
           <div className="flex items-center gap-2">
@@ -439,27 +324,10 @@ const ProductSearchModal: React.FC<ProductSearchModalProps> = ({
               倉庫
             </label>
             <div className="flex gap-4">
-              <label className="flex items-center">
-                <input
-                  ref={warehouseRadio1Ref}
-                  type="radio"
-                  name="warehouse"
-                  className="mr-1"
-                  defaultChecked
-                  onKeyDown={(e) => handleWarehouseRadioKeyDown(e, 0)}
-                />
-                自倉庫
-              </label>
-              <label className="flex items-center">
-                <input
-                  ref={warehouseRadio2Ref}
-                  type="radio"
-                  name="warehouse"
-                  className="mr-1"
-                  onKeyDown={(e) => handleWarehouseRadioKeyDown(e, 1)}
-                />
-                全倉庫
-              </label>
+              <Radio.Group defaultValue={"0"}>
+                <Radio value="0">自倉庫</Radio>
+                <Radio value="1">全倉庫</Radio>
+              </Radio.Group>
             </div>
           </div>
         </div>
@@ -533,28 +401,28 @@ const ProductSearchModal: React.FC<ProductSearchModalProps> = ({
         {/* 4. Footer Actions */}
         <div className="mt-4">
           <div className="flex gap-2">
-            <button
+            <Button
               onClick={openNewWindow}
-              className="bg-gray-700 text-white px-3 py-1 rounded text-sm shadow-md shadow-zinc-600"
+              className="bg-gray-700 text-white px-3 py-1 text-sm "
             >
               F5引当済状況
-            </button>
-            <button
+            </Button>
+            <Button
               onClick={openNewWindow}
-              className="bg-gray-700 text-white px-3 py-1 rounded text-sm shadow-md shadow-zinc-600"
+              className="bg-gray-700 text-white px-3 py-1 text-sm "
             >
               F6在庫詳細表示
-            </button>
+            </Button>
           </div>
         </div>
         <div className="flex gap-4 w-full justify-center items-center">
-          <button
+          <Button
             onClick={onClose}
             className="bg-gray-300 border border-gray-500 rounded px-10 py-2 font-bold hover:bg-[#E5F7E5] shadow-md shadow-zinc-600"
           >
             戻る (R)
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={onNext}
             disabled={activeIndex === null}
             className={`border border-gray-500 rounded px-10 py-2 font-bold shadow-md shadow-zinc-600 ${
@@ -564,7 +432,7 @@ const ProductSearchModal: React.FC<ProductSearchModalProps> = ({
             }`}
           >
             選択 (N)
-          </button>
+          </Button>
         </div>
       </div>
     </div>

@@ -1,9 +1,10 @@
 import React, { useEffect, useRef } from "react";
+import { Select } from "antd";
 import {
-  allowDecimalInput,
-  extractHalfWidthDigits,
-} from "../../../../utils/InputHandlers";
-import CustomSelect from "../../../CustomSelect";
+  HalfWidthNumberInput,
+  KanaFullWidthInput,
+} from "../../../JapaneseInputs";
+import type { InputRef } from "antd";
 
 interface SaleDetailEntry7Props {
   onChange: (field: string, value: string) => void;
@@ -14,7 +15,7 @@ const SaleDetailEntry7: React.FC<SaleDetailEntry7Props> = ({
   onChange,
   formData,
 }) => {
-  const firstInputRef = useRef<HTMLInputElement>(null);
+  const firstInputRef = useRef<InputRef>(null);
 
   useEffect(() => {
     if (firstInputRef.current) {
@@ -26,9 +27,8 @@ const SaleDetailEntry7: React.FC<SaleDetailEntry7Props> = ({
     <div className="flex gap-2">
       <div className="h-[64px] w-[100px]">
         <div className="h-1/2 bg-label p-1">商品コード</div>
-        <input
-          type="text"
-          className="h-1/2 w-full border border-black text-center placeholder-black"
+        <HalfWidthNumberInput
+          className="h-1/2 w-full text-center placeholder-black"
           placeholder="96-0001"
           value={formData.productCode ?? ""}
           disabled
@@ -37,43 +37,38 @@ const SaleDetailEntry7: React.FC<SaleDetailEntry7Props> = ({
 
       <div className="h-[64px] w-[100px]">
         <div className="h-1/2 bg-label p-1">商品名</div>
-        <input
+        <KanaFullWidthInput
           ref={firstInputRef}
-          type="text"
           placeholder="消費税"
-          className="h-1/2 w-full border border-black text-center"
+          className="h-1/2 w-full text-center"
           value={formData.productName ?? ""}
-          onChange={(e) => onChange("productName", e.target.value)}
+          onChange={(e) => onChange("productName", e)}
         />
       </div>
 
       <div className="h-[64px] w-[100px]">
         <div className="h-1/2 bg-label p-1">型式</div>
-        <input
-          type="text"
-          className="h-1/2 w-full border border-black text-center"
+        <HalfWidthNumberInput
+          className="h-1/2 w-full text-center"
           value={formData.modelNumber ?? ""}
-          onChange={(e) => onChange("modelNumber", e.target.value)}
+          onChange={(e) => onChange("modelNumber", e)}
         />
       </div>
 
       <div className="h-[64px] w-[120px]">
         <div className="h-1/2 bg-label p-1">売上消費税</div>
-        <input
-          type="text"
-          className="h-1/2 w-full border border-black text-center"
+        <HalfWidthNumberInput
+          maxLength={8}
+          className="h-1/2 w-full text-center"
           placeholder="0"
           value={formData.tax ?? ""}
-          onChange={(e) =>
-            onChange("tax", extractHalfWidthDigits(e.target.value))
-          }
-          onKeyDown={allowDecimalInput}
+          onChange={(e) => onChange("tax", e)}
         />
       </div>
 
       <div className="h-[64px] w-[120px]">
         <div className="h-1/2 bg-label p-1">自振対象</div>
-        <CustomSelect
+        <Select
           value={
             formData.selfSwingTarget !== undefined
               ? String(formData.selfSwingTarget)
@@ -84,13 +79,13 @@ const SaleDetailEntry7: React.FC<SaleDetailEntry7Props> = ({
             { value: "0", label: "0 対象" },
             { value: "1", label: "1 対象外" },
           ]}
-          className="border border-black w-full h-1/2 text-center bg-white px-2"
+          className="w-full h-1/2"
         />
       </div>
 
       <div className="h-[64px] w-[120px]">
         <div className="h-1/2 bg-label p-1">当月外</div>
-        <CustomSelect
+        <Select
           value={
             formData.outsideMonth !== undefined
               ? String(formData.outsideMonth)
@@ -101,7 +96,7 @@ const SaleDetailEntry7: React.FC<SaleDetailEntry7Props> = ({
             { value: "0", label: "0 空欄" },
             { value: "1", label: "1 当月外" },
           ]}
-          className="border border-black w-full h-1/2 text-center bg-white px-2"
+          className="w-full h-1/2"
         />
       </div>
     </div>

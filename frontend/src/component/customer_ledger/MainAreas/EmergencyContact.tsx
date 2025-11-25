@@ -13,10 +13,7 @@ import {
 import { blockTab } from "../../../utils/InputHandlers";
 import CodeInputSelect from "../../CodeInputSelect";
 import { timeSlotOptions } from "../../../constants/customer_ledger";
-import {
-  KanaFullWidthInput,
-  HalfWidthNumberInput,
-} from "../../input/JapaneseInputs";
+import { KanaFullWidthInput, HalfWidthNumberInput } from "../../JapaneseInputs";
 
 const EmergencyContact = forwardRef<any, { showData: boolean }>(
   (props, ref) => {

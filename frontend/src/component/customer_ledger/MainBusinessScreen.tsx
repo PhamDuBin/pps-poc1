@@ -14,7 +14,7 @@ import MessageModal from "../../context/MessageModal";
 import { Transition } from "@headlessui/react";
 import React from "react";
 import { handleOpenWindow } from "../../constants/functions";
-import { HalfWidthNumberInput } from "../input/JapaneseInputs";
+import { HalfWidthNumberInput } from "../JapaneseInputs";
 
 const MainBusinessScreen = () => {
   const [activeSection, setActiveSection] = useState<string | null>(null);

@@ -1,13 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import { fieldDefinitions } from "../../../constants/transaction_information";
-import { processKatakanaInput } from "../../../utils/katakana";
 import { Radio, Select, Button } from "antd";
 import type { BaseSelectRef } from "rc-select";
 import {
   HalfWidthNumberInput,
   HalfWidthKanaInput,
   KanaFullWidthInput,
-} from "../../input/JapaneseInputs";
+} from "../../JapaneseInputs";
 
 const getJapaneseInputComponent = (label: string) => {
   if (
@@ -75,19 +74,6 @@ const AdvancedSearchForm: React.FC<{
     }
 
     setFormValues((prev) => ({ ...prev, [selectedFieldId]: newValues }));
-  };
-
-  const handleKatakanaBlur = () => {
-    if (selectedFieldId === "allTelNumber") {
-      const currentValue = formValues[selectedFieldId];
-      if (typeof currentValue === "string") {
-        const processedValue = processKatakanaInput(currentValue);
-        setFormValues((prev) => ({
-          ...prev,
-          [selectedFieldId]: processedValue,
-        }));
-      }
-    }
   };
 
   const renderDynamicInput = (): React.ReactNode => {
@@ -184,7 +170,6 @@ const AdvancedSearchForm: React.FC<{
             className="border border-black p-1 w-full"
             value={(typeof value === "string" && value) || ""}
             onChange={(e: string) => handleValueChange(e)}
-            onBlur={handleKatakanaBlur}
             onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
               if (e.key === "Enter" && typeof value === "string" && value) {
                 e.preventDefault();

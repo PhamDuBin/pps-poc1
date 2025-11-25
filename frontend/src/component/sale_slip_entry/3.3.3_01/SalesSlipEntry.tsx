@@ -19,7 +19,7 @@ import JapaneseCalendar, {
 import JapaneseMonthPicker, {
   JapaneseMonthPickerHandle,
 } from "../../JapaneseMonthPicker";
-import { HalfWidthNumberInput } from "../../input/JapaneseInputs";
+import { HalfWidthNumberInput } from "../../JapaneseInputs";
 import { Select, Button } from "antd";
 
 type SalesSlipEntryProps = {
@@ -37,6 +37,7 @@ const SalesSlipEntry = forwardRef(
       useState(false);
     const [selectedCategory, setSelectedCategory] = useState("");
     const [currentStep, setCurrentStep] = useState(1);
+
     const [focusIndex, setFocusIndex] = useState<number | null>(null);
     const [rowEdit, setRowEdit] = useState<any>(null);
     const [saleSlips, setSaleSlips] = useState<any>([]);
@@ -60,7 +61,6 @@ const SalesSlipEntry = forwardRef(
     const tooltipRef = useRef<HTMLDivElement | null>(null);
 
     const [keiriDate, setKeiriDate] = useState<Date>(new Date());
-
     const [uriageDate, setUriageDate] = useState<Date>(new Date());
 
     const uriageDateCalendarRef = useRef<JapaneseCalendarHandle>(null);
@@ -116,7 +116,10 @@ const SalesSlipEntry = forwardRef(
       setRowEdit(undefined);
       setCurrentStep(4);
 
-      setFocusIndex(isEditing ? data.id : 0);
+      // Focus vào dòng đầu tiên (0) hoặc dòng vừa sửa
+      setTimeout(() => {
+        setFocusIndex(isEditing ? data.id : 0);
+      }, 100);
     }, []);
 
     const handleCloseSaleDetailModal = useCallback(() => {
@@ -180,43 +183,85 @@ const SalesSlipEntry = forwardRef(
       }
     }, [activeSlipIndex]);
 
+    // Effect focus vào dòng (div)
     useEffect(() => {
       if (focusIndex !== null) {
         const targetRow = slipRefs.current[focusIndex];
         if (targetRow) {
-          const firstFocusableElement = targetRow.querySelector<HTMLElement>(
-            'button, a[href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-          );
-
-          if (firstFocusableElement) {
-            firstFocusableElement.focus();
-          } else {
-            targetRow.focus();
-          }
-
+          targetRow.focus();
           setFocusIndex(null);
         }
       }
     }, [saleSlips, focusIndex]);
 
-    function focusNextElement() {
-      const focusableElements = Array.from(
-        document.querySelectorAll<HTMLElement>(
+    // --- HELPER MỚI: Xử lý nhảy focus ra khỏi danh sách ---
+    const handleExitNavigation = (
+      currentElement: HTMLElement,
+      direction: "up" | "down"
+    ) => {
+      // Lấy tất cả các phần tử có thể focus trong document
+      const allFocusable = Array.from(
+        document.querySelectorAll(
           'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
         )
-      ).filter(
-        (el) => !el.hasAttribute("disabled") && !el.getAttribute("aria-hidden")
-      );
+      ).filter((el) => {
+        return (
+          !el.hasAttribute("disabled") &&
+          !el.getAttribute("aria-hidden") &&
+          (el as HTMLElement).offsetParent !== null
+        ); // Chỉ lấy phần tử hiển thị
+      }) as HTMLElement[];
 
-      const currentIndex = focusableElements.indexOf(
-        document.activeElement as HTMLElement
-      );
-      if (currentIndex > -1) {
-        const nextElement =
-          focusableElements[currentIndex + 1] || focusableElements[0];
-        nextElement.focus();
+      const currentIndex = allFocusable.indexOf(currentElement);
+
+      if (currentIndex !== -1) {
+        if (direction === "down") {
+          const next = allFocusable[currentIndex + 1];
+          if (next) next.focus();
+        } else {
+          const prev = allFocusable[currentIndex - 1];
+          if (prev) prev.focus();
+        }
       }
-    }
+    };
+    // -----------------------------------------------------
+
+    const handleRowKeyDown = (e: React.KeyboardEvent, index: number) => {
+      // Arrow Right: Open Menu
+      if (e.key === "ArrowRight") {
+        e.preventDefault();
+        e.stopPropagation();
+        handleClickSlip(index);
+      }
+      // Arrow Down / Enter / Tab (no shift)
+      else if (
+        e.key === "ArrowDown" ||
+        e.key === "Enter" ||
+        (e.key === "Tab" && !e.shiftKey)
+      ) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (index < saleSlips.length - 1) {
+          // Internal Move
+          slipRefs.current[index + 1]?.focus();
+        } else {
+          // External Move (Exit Down)
+          handleExitNavigation(e.currentTarget as HTMLElement, "down");
+        }
+      }
+      // Arrow Up / Shift+Tab
+      else if (e.key === "ArrowUp" || (e.key === "Tab" && e.shiftKey)) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (index > 0) {
+          // Internal Move
+          slipRefs.current[index - 1]?.focus();
+        } else {
+          // External Move (Exit Up)
+          handleExitNavigation(e.currentTarget as HTMLElement, "up");
+        }
+      }
+    };
 
     const handleTooltipKeyDown = (e: React.KeyboardEvent) => {
       if (e.key === "ArrowLeft") {
@@ -225,7 +270,6 @@ const SalesSlipEntry = forwardRef(
         setActiveSlipIndex(null);
         setTooltipPos(null);
         originalSlip?.focus();
-        focusNextElement();
       } else if (e.key === "ArrowDown" || e.key === "ArrowUp") {
         e.preventDefault();
         const buttons = Array.from(
@@ -243,6 +287,8 @@ const SalesSlipEntry = forwardRef(
             nextIndex = (currentIndex - 1 + buttons.length) % buttons.length;
           }
           buttons[nextIndex]?.focus();
+        } else if (buttons.length > 0) {
+          buttons[0].focus();
         }
       }
     };
@@ -255,6 +301,12 @@ const SalesSlipEntry = forwardRef(
           .sale-slip-entry select:focus {
             background-color: #ffffcc !important;
             outline: 2px solid #4a90e2;
+          }
+          /* Style focus cho dòng */
+          .sale-slip-row:focus {
+            background-color: #e6f7ff;
+            outline: 2px solid #1890ff;
+            outline-offset: -2px;
           }
         `}</style>
         {/* Header */}
@@ -344,17 +396,13 @@ const SalesSlipEntry = forwardRef(
             {saleSlips.map((slip: any, index: any) => (
               <div
                 key={index}
+                className="sale-slip-row mb-1"
                 ref={(el) => {
                   slipRefs.current[index] = el;
                 }}
                 tabIndex={0}
                 onClick={() => handleClickSlip(index)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === "ArrowRight") {
-                    e.preventDefault();
-                    handleClickSlip(index);
-                  }
-                }}
+                onKeyDown={(e) => handleRowKeyDown(e, index)}
               >
                 <SalesSlipEntryRegistration
                   headerRow={slip.headerRow}

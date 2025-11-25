@@ -1,4 +1,5 @@
 import React from "react";
+import { Button } from "antd";
 type SaleDetailSelectorProps = {
   onReSearch: () => void;
 };
@@ -13,7 +14,7 @@ const SaleDetailSelector: React.FC<SaleDetailSelectorProps> = ({
       </div>
       <div className="w-32 flex gap-1 items-center">
         <div className="bg-label p-1">セットNo.</div>
-        <div className="w-8 h-8 border border-black"></div>
+        <div className="w-8 h-6 border border-black"></div>
       </div>
       <div className="w-56 flex gap-1 items-center">
         <div className="bg-label p-1">商品名</div>
@@ -23,12 +24,12 @@ const SaleDetailSelector: React.FC<SaleDetailSelectorProps> = ({
         <div className="bg-label p-1">型式</div>
         <div>PH−5BV</div>
       </div>
-      <button
+      <Button
         onClick={onReSearch}
-        className=" border border-black rounded px-1 shadow-md shadow-zinc-600"
+        className="border border-black shadow-md shadow-zinc-600"
       >
-        <span className="w-[25%] m-2">再検索</span>
-      </button>
+        再検索
+      </Button>
     </div>
   );
 };

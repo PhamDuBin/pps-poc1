@@ -4,6 +4,7 @@ import LeftPanel from "../../component/sale_slip_entry/LeftPanel";
 import { CircleArrowLeft, CircleArrowRight } from "lucide-react";
 import { handleNavigationKey } from "../../utils/InputHandlers";
 import SalesSlipEntry from "../../component/sale_slip_entry/3.3.3_01/SalesSlipEntry";
+import { Button } from "antd";
 
 type SalesSlipEntryHandle = {
   focusUriageDateCalendar: () => void;
@@ -24,6 +25,7 @@ const SaleSlipEntryScreen = () => {
   };
 
   const handleButtonClick = (buttonName: string) => {
+    console.log(buttonName);
     setActiveScreen(buttonName);
     switch (buttonName) {
       case "行追加":
@@ -51,14 +53,10 @@ const SaleSlipEntryScreen = () => {
       const key = e.key.toUpperCase();
       if (key.startsWith("F") && !isNaN(Number(key.substring(1)))) {
         e.preventDefault();
-
         return;
       }
-      const isModifierPressed = e.ctrlKey && e.altKey;
-
-      if (isModifierPressed) {
+      if (e.ctrlKey && e.altKey) {
         e.preventDefault();
-
         return;
       }
 
@@ -66,85 +64,45 @@ const SaleSlipEntryScreen = () => {
         ".advance-search-modal"
       );
       const confirmationModalRoot = container.querySelector(".ant-modal-root");
-
-      if (isAdvanceSearchOpen) {
-        return;
-      }
-
+      if (isAdvanceSearchOpen) return;
       if (
         confirmationModalRoot &&
         (confirmationModalRoot as HTMLElement).style.display !== "none"
       ) {
-        const confirmationModal =
-          confirmationModalRoot.querySelector(".ant-modal");
-        if (!confirmationModal) return;
-
-        const buttons = Array.from(
-          confirmationModal.querySelectorAll<HTMLButtonElement>(
-            ".ant-modal-footer button:not([disabled])"
-          )
-        );
-
-        if (buttons.length === 0) return; // Không có nút nào
-
-        const activeElement = document.activeElement as HTMLElement;
-        let currentIndex = buttons.findIndex((btn) => btn === activeElement);
-
-        // Nếu focus không nằm trên nút, đặt mặc định cho các phím điều hướng
-        if (
-          currentIndex === -1 &&
-          ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Tab"].includes(
-            e.key
-          )
-        ) {
-          // Mặc định là nút primary (OK) hoặc nút cuối (Cancel)
-          const primaryButtonIndex = buttons.findIndex((b) =>
-            b.classList.contains("ant-btn-primary")
-          );
-          currentIndex =
-            primaryButtonIndex !== -1 ? primaryButtonIndex : buttons.length - 1;
-          buttons[currentIndex]?.focus();
-          e.preventDefault();
-          return;
-        }
-
-        // Xử lý điều hướng
-        if (
-          (e.key === "Tab" && e.shiftKey) ||
-          e.key === "ArrowLeft" ||
-          e.key === "ArrowUp"
-        ) {
-          e.preventDefault();
-          const nextIndex =
-            (currentIndex - 1 + buttons.length) % buttons.length;
-          buttons[nextIndex]?.focus();
-        } else if (
-          e.key === "Tab" ||
-          e.key === "ArrowRight" ||
-          e.key === "ArrowDown"
-        ) {
-          e.preventDefault();
-          const nextIndex = (currentIndex + 1) % buttons.length;
-          buttons[nextIndex]?.focus();
-        } else if (e.key === "Enter" || e.key === " ") {
-          // Cho phép hành động mặc định (click) của trình duyệt/Ant
-          return;
-        } else if (e.key === "Escape") {
-          // Cho phép modal tự xử lý đóng
-          return;
-        } else {
-          // Chặn các phím khác
-          if (!e.metaKey && !e.ctrlKey) {
-            e.preventDefault();
-          }
-        }
-        return; // Đã xử lý phím trong modal, dừng lại
+        return;
       }
-      // --- KẾT THÚC LOGIC XỬ LÝ MODAL ---
+
+      const activeElement = document.activeElement as HTMLElement;
+      if (
+        activeElement &&
+        activeElement.closest('[data-calendar-popup="true"]')
+      ) {
+        return;
+      }
+
+      if (e.key === "Enter") {
+        if (activeElement?.classList.contains("custom-date-input")) return;
+        if (activeElement?.classList.contains("japanese-calendar")) return;
+        if (activeElement?.closest(".ant-picker")) return;
+      }
+      if (activeElement?.classList.contains("sale-slip-row")) {
+        if (
+          [
+            "ArrowUp",
+            "ArrowDown",
+            "ArrowRight",
+            "ArrowLeft",
+            "Enter",
+            "Tab",
+          ].includes(e.key)
+        ) {
+          return;
+        }
+      }
 
       const allElements = Array.from(
         container.querySelectorAll(
-          "input:not([disabled]), button:not([disabled]), select:not([disabled]), textarea:not([disabled])"
+          'input:not([disabled]), button:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
         )
       ) as HTMLElement[];
 
@@ -154,70 +112,23 @@ const SaleSlipEntryScreen = () => {
           (el as HTMLInputElement).type === "radio"
         ) {
           const radioGroup = el.closest(".ant-radio-group");
-          if (!radioGroup) {
-            return true;
-          }
+          if (!radioGroup) return true;
           const checkedRadio = radioGroup.querySelector(
             'input[type="radio"]:checked'
           ) as HTMLInputElement | null;
-
-          if (checkedRadio) {
-            return el === checkedRadio;
-          } else {
-            const firstRadioInGroup = radioGroup.querySelector(
-              'input[type="radio"]'
-            );
-            return el === firstRadioInGroup;
-          }
+          if (checkedRadio) return el === checkedRadio;
+          else return el === radioGroup.querySelector('input[type="radio"]');
         }
         if (
           el.tagName === "INPUT" &&
           (el as HTMLInputElement).type === "checkbox"
         ) {
           const checkboxGroup = el.closest(".ant-checkbox-group-navigable");
-          if (!checkboxGroup) {
-            return true;
-          }
-          const firstCheckboxInGroup = checkboxGroup.querySelector(
-            'input[type="checkbox"]'
-          );
-          return el === firstCheckboxInGroup;
+          if (!checkboxGroup) return true;
+          return el === checkboxGroup.querySelector('input[type="checkbox"]');
         }
-
         return true;
       });
-
-      const activeElement = document.activeElement as HTMLElement;
-
-      // --- CÁC LOGIC BỎ QUA ĐIỀU HƯỚNG ---
-
-      if (
-        activeElement &&
-        activeElement.closest('[data-calendar-popup="true"]')
-      ) {
-        return;
-      }
-
-      // Giữ nguyên logic cũ của bạn cho class "japanese-calendar"
-      if (
-        e.key === "Enter" &&
-        activeElement &&
-        activeElement.classList.contains("japanese-calendar")
-      ) {
-        return;
-      }
-
-      if (e.key === "Enter") {
-        if (activeElement?.classList.contains("custom-date-input")) {
-          return;
-        }
-        if (activeElement?.classList.contains("japanese-calendar")) {
-          return;
-        }
-        if (activeElement?.closest(".ant-picker")) {
-          return;
-        }
-      }
 
       const currentIndex = focusableElements.indexOf(activeElement);
       handleNavigationKey(e, currentIndex, focusableElements);
@@ -241,22 +152,13 @@ const SaleSlipEntryScreen = () => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (/^F\d{1,2}$/.test(e.key)) {
         e.preventDefault();
-
-        // Handle F1, F2, F3 for specific buttons
-        if (e.key === "F1") {
-          handleButtonClick("行追加");
-        } else if (e.key === "F2") {
-          handleButtonClick("請求年月変更");
-        } else if (e.key === "F3") {
-          handleButtonClick("入金処理");
-        }
-
+        if (e.key === "F1") handleButtonClick("行追加");
+        else if (e.key === "F2") handleButtonClick("請求年月変更");
+        else if (e.key === "F3") handleButtonClick("入金処理");
         return;
       }
     };
-
     window.addEventListener("keydown", handleKeyDown);
-
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
       document.body.style.cursor = "default";
@@ -285,10 +187,13 @@ const SaleSlipEntryScreen = () => {
       </div>
 
       {showLeftPanel ? (
-        <button
+        <Button
           ref={toggleButtonRef}
-          className={`absolute left-[36.8rem] top-1/2 -translate-y-1/2 text-black w-5 h-5 cursor-pointer bg-bg-alt rounded-full shadow focus:outline-none focus:ring-2 focus:ring-blue-500
-            ${showAdvanceSearch ? "z-0 hidden pointer-events-none" : "z-30"}`}
+          // Dùng type="text" hoặc "default" tùy ý, ở đây dùng text để bỏ border mặc định của antd
+          type="text"
+          // Thêm các class !p-0 !min-w-0 flex items-center justify-center để ghi đè style của Antd
+          className={`absolute left-[36.8rem] top-1/2 -translate-y-1/2 text-black !w-5 !h-5 !min-w-0 !p-0 flex items-center justify-center cursor-pointer bg-bg-alt rounded-full shadow focus:outline-none focus:ring-2 focus:ring-blue-500
+      ${showAdvanceSearch ? "z-0 hidden pointer-events-none" : "z-30"}`}
           onClick={() => {
             setShowLeftPanel(false);
             setTimeout(() => {
@@ -297,6 +202,8 @@ const SaleSlipEntryScreen = () => {
           }}
           onKeyDown={(e) => {
             if (e.key === "Enter" || e.key === " ") {
+              // Antd Button tự xử lý click khi nhấn Enter/Space,
+              // nhưng nếu bạn muốn giữ logic custom thì để nguyên
               setShowLeftPanel(false);
               setTimeout(() => {
                 toggleButtonRef.current?.focus();
@@ -307,15 +214,15 @@ const SaleSlipEntryScreen = () => {
           aria-label="Collapse left panel"
         >
           <CircleArrowLeft className="w-full h-full" />
-        </button>
+        </Button>
       ) : (
-        <button
+        <Button
           ref={toggleButtonRef}
-          className={`absolute left-2 top-1/2 -translate-y-1/2 text-black w-5 h-5 cursor-pointer bg-bg-alt rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500
-            ${showAdvanceSearch ? "z-0 pointer-events-none" : "z-30"}`}
+          type="text"
+          className={`absolute left-2 top-1/2 -translate-y-1/2 text-black !w-5 !h-5 !min-w-0 !p-0 flex items-center justify-center cursor-pointer bg-bg-alt rounded-full focus:outline-none focus:ring-4 focus:ring-orange-600
+      ${showAdvanceSearch ? "z-0 pointer-events-none" : "z-30"}`}
           onClick={() => {
             setShowLeftPanel(true);
-            // Maintain focus on toggle button after opening
             setTimeout(() => {
               toggleButtonRef.current?.focus();
             }, 100);
@@ -324,7 +231,6 @@ const SaleSlipEntryScreen = () => {
             if (e.key === "Enter" || e.key === " ") {
               e.preventDefault();
               setShowLeftPanel(true);
-              // Maintain focus on toggle button after opening
               setTimeout(() => {
                 toggleButtonRef.current?.focus();
               }, 100);
@@ -334,7 +240,7 @@ const SaleSlipEntryScreen = () => {
           aria-label="Expand left panel"
         >
           <CircleArrowRight className="w-full h-full" />
-        </button>
+        </Button>
       )}
       <div className="my-3 ml-2 flex-1 h-[calc(100%-0.75rem*2)] flex flex-row min-w-0 z-10">
         <div className="relative mr-2 border border-black w-10/12 text-black flex justify-center overflow-auto bg-white">

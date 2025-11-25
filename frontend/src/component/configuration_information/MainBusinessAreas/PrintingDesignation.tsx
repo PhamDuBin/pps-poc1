@@ -14,7 +14,7 @@ import {
   addressOptions,
   detailOrderOptions,
 } from "../../../constants/configuration_information";
-import { KanaFullWidthInput } from "../../input/JapaneseInputs";
+import { KanaFullWidthInput } from "../../JapaneseInputs";
 
 const PrintingDesignation = forwardRef<any>((props, ref) => {
   const [selectedOrder, setSelectedOrder] = useState("0");

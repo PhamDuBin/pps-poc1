@@ -3,7 +3,7 @@ import { labelColor, inputColor } from "../../../constants/colors";
 import { blockTab } from "../../../utils/InputHandlers";
 import CodeInputSelect from "../../CodeInputSelect";
 import { labelOptions } from "../../../constants/configuration_information";
-import { KanaFullWidthInput } from "../../input/JapaneseInputs";
+import { KanaFullWidthInput } from "../../JapaneseInputs";
 
 const labelClass = `${labelColor} px-2 flex items-center justify-center h-[32px] w-[180px] rounded-md`;
 

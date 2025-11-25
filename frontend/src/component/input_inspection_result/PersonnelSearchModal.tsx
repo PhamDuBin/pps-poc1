@@ -7,7 +7,7 @@ import {
   type InputRef,
   Button,
 } from "antd";
-import { HalfWidthKanaInput } from "../input/JapaneseInputs";
+import { HalfWidthKanaInput } from "../JapaneseInputs";
 import { inputColor } from "../../constants/colors";
 
 type PersonnelSearchModalProps = {

@@ -12,7 +12,7 @@ import {
   KanaFullWidthInput,
   HalfWidthNumberInput,
   HalfWidthAlphaNumInput,
-} from "../../input/JapaneseInputs";
+} from "../../JapaneseInputs";
 
 const OtherInfo = forwardRef<any, { showData: boolean }>((props, ref) => {
   const firstButtonRef = useRef<any>(null);

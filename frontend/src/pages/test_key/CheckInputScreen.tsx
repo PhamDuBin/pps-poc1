@@ -14,7 +14,7 @@ import {
   HalfWidthNumberInput,
   HalfWidthAlphaNumInput,
   KanaFullWidthInput,
-} from "../../component/input/JapaneseInputs";
+} from "../../component/JapaneseInputs";
 
 import {
   extractHalfWidthDigits,
