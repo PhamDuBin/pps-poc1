@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect, forwardRef } from "react";
-
 type Option = {
   value: string;
   label: string;
@@ -38,6 +37,9 @@ export const CustomCodeTextPair = forwardRef<
     const wrapperRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
     const textAreaRef = useRef<HTMLTextAreaElement>(null);
+    const handleCodeFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+      e.target.select();
+    };
 
     useEffect(() => {
       if (!open) return;
@@ -211,6 +213,7 @@ export const CustomCodeTextPair = forwardRef<
         <div className="relative w-1/12 h-[80px] flex flex-col border border-black border-l-0">
           <input
             ref={inputRef}
+            onFocus={handleCodeFocus}
             type="text"
             value={codeValue}
             onChange={handleCodeChange}

@@ -85,11 +85,6 @@ export default function CheckInputScreen() {
     { code: "", label: "Invalid" },
   ];
 
-  // --- MODIFIED START: Đã xóa các hàm 'processHalfWidthKatakana' và 'processHalfWidthAlphaNumeric'
-  // và các state 'hasConvertedKana', 'hasConvertedAlphaNum', 'isComposingJP', 'isComposingAlphaNum'
-  // vì logic này đã được chuyển vào các component input mới.
-  // --- MODIFIED END ---
-
   const btnBaseStyle =
     "font-semibold py-1 px-4 rounded-lg transition-all duration-200 shadow-md";
   const btnActiveStyle = "bg-blue-600 text-white scale-110";
@@ -158,46 +153,39 @@ export default function CheckInputScreen() {
                   maxLength={4}
                   disabled={i > 0 && !customerCode[i - 1]}
                   onChange={(e) => {
-                    // *** MODIFIED START: Cho phép cả số half-width và full-width ***
                     const value = e.target.value.replace(/[^0-9０-９]/g, "");
-                    // *** MODIFIED END ***
 
                     const newCode = [...customerCode];
                     newCode[i] = value;
                     setCustomerCode(newCode);
                   }}
                   onBlur={(e) => {
-                    // *** MODIFIED START: Chuyển sang half-width TRƯỚC khi padding ***
-                    // 1. Lấy giá trị và chuyển tất cả sang half-width
                     const halfWidthValue = extractHalfWidthDigits(
                       e.target.value
                     );
 
-                    // 2. Thực hiện padding nếu có giá trị
                     if (halfWidthValue && halfWidthValue.length > 0) {
                       const newCode = [...customerCode];
                       newCode[i] = halfWidthValue.padStart(4, "0");
                       setCustomerCode(newCode);
                     } else {
-                      // Nếu người dùng xóa trống, hãy đảm bảo nó rỗng
                       const newCode = [...customerCode];
                       newCode[i] = "";
                       setCustomerCode(newCode);
                     }
-                    // *** MODIFIED END ***
                   }}
                   onKeyDown={(e) => {
                     if (e.nativeEvent.isComposing) {
                       return;
                     }
-                    // For first input (i=0), if empty and Tab/Enter/ArrowDown, go to 氏名
+
                     if (i === 0 && !customerCode[i]) {
                       if (
                         ["Tab", "Enter", "ArrowDown"].includes(e.key) &&
                         !e.shiftKey
                       ) {
                         e.preventDefault();
-                        // Jump to 氏名 input
+
                         const nameInput =
                           formRef.current?.querySelector<HTMLInputElement>(
                             ".input-to-radio"
@@ -209,14 +197,13 @@ export default function CheckInputScreen() {
                       }
                     }
 
-                    // Skip navigation for disabled inputs
                     if (i > 0 && !customerCode[i - 1]) {
                       if (
                         ["Tab", "Enter", "ArrowDown"].includes(e.key) &&
                         !e.shiftKey
                       ) {
                         e.preventDefault();
-                        // Jump to 氏名 input
+
                         const nameInput =
                           formRef.current?.querySelector<HTMLInputElement>(
                             ".input-to-radio"
@@ -505,51 +492,45 @@ export default function CheckInputScreen() {
                 <label className="flex justify-center min-w-[100px] font-black bg-gray-300 py-0.5 px-8 whitespace-nowrap overflow-hidden text-ellipsis">
                   半角カナ
                 </label>
-                {/* --- MODIFIED START: Thay thế input bằng HalfWidthKanaInput --- */}
+
                 <HalfWidthKanaInput
                   disabled={shouldDisableFields}
                   className={`col-span-2 ${className_input_text} input-navigable halfwidth-kana-input disabled:bg-gray-200 disabled:cursor-not-allowed`}
-                  // Tất cả onKeyDown, onBlur, onChange, onComposition... đã bị xóa
-                  // vì HalfWidthKanaInput sẽ tự xử lý logic format.
                 />
-                {/* --- MODIFIED END --- */}
 
                 <span></span>
 
                 <label className="flex justify-center min-w-[100px] font-black bg-gray-300 py-0.5 px-8 whitespace-nowrap overflow-hidden text-ellipsis">
                   半角数字
                 </label>
-                {/* --- MODIFIED START: Thay thế input bằng HalfWidthNumberInput --- */}
+
                 <HalfWidthNumberInput
                   disabled={shouldDisableFields}
                   className={`col-span-2 ${className_input_text} input-navigable disabled:bg-gray-200 disabled:cursor-not-allowed`}
-                  // onKeyDown, onCompositionEnd đã bị xóa.
                 />
-                {/* --- MODIFIED END --- */}
+
                 <span></span>
 
                 <label className="flex justify-center min-w-[100px] font-black bg-gray-300 py-0.5 px-8 whitespace-nowrap overflow-hidden text-ellipsis">
                   半角英数字
                 </label>
-                {/* --- MODIFIED START: Thay thế input bằng HalfWidthAlphaNumInput --- */}
+
                 <HalfWidthAlphaNumInput
                   disabled={shouldDisableFields}
                   className={`col-span-2 ${className_input_text} input-navigable halfwidth-alphanum-input disabled:bg-gray-200 disabled:cursor-not-allowed`}
-                  // Tất cả onKeyDown, onBlur, onChange, onComposition... đã bị xóa
                 />
-                {/* --- MODIFIED END --- */}
+
                 <span></span>
 
                 <label className="flex justify-center min-w-[100px] font-black bg-gray-300 py-0.5 px-8 whitespace-nowrap overflow-hidden text-ellipsis">
                   全角
                 </label>
-                {/* --- MODIFIED START: Thay thế input bằng KanaFullWidthInput --- */}
+
                 <KanaFullWidthInput
                   disabled={shouldDisableFields}
                   className={`col-span-2 ${className_input_text} input-navigable disabled:bg-gray-200 disabled:cursor-not-allowed`}
-                  // onKeyDown đã bị xóa.
                 />
-                {/* --- MODIFIED END --- */}
+
                 <span></span>
 
                 <label className="flex justify-center min-w-[100px] font-black bg-gray-300 py-0.5 px-8 whitespace-nowrap overflow-hidden text-ellipsis">
