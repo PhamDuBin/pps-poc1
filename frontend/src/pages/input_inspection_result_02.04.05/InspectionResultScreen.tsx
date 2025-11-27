@@ -14,6 +14,24 @@ const InspectionResultScreen = () => {
 
     const handleContainerKeyDown = (e: KeyboardEvent) => {
       const key = e.key.toUpperCase();
+      if (key === "F4") {
+        e.preventDefault();
+        const activeElement = document.activeElement as HTMLElement;
+
+        const isAntdSelect = activeElement?.closest(".ant-select-selector");
+
+        if (isAntdSelect) {
+          e.preventDefault();
+
+          const arrowDownEvent = new KeyboardEvent("keydown", {
+            key: "Enter",
+            code: "Enter",
+            bubbles: true,
+          });
+          isAntdSelect.dispatchEvent(arrowDownEvent);
+          return;
+        }
+      }
       if (key.startsWith("F") && !isNaN(Number(key.substring(1)))) {
         e.preventDefault();
         return;

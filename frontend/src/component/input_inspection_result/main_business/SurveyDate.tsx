@@ -1,5 +1,5 @@
 import ModalF1 from "../../modal/Modal_F1";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { labelColor } from "../../../constants/colors";
 import { symbols } from "../../../constants/input_inspection_result";
 const SurveyDate = () => {
@@ -15,6 +15,8 @@ const SurveyDate = () => {
   );
   const [values, setValues] = useState(Array(totalRows).fill(0));
 
+  const intervalRef = useRef<number | null>(null);
+
   const handleClick = (row: number, col: number) => {
     setStates((prev) => {
       const newStates = prev.map((r) => [...r]);
@@ -26,10 +28,57 @@ const SurveyDate = () => {
   const handleValueChange = (rowIndex: number, amount: number) => {
     setValues((currentValues) => {
       const newValues = [...currentValues];
-      newValues[rowIndex] += amount;
+
+      newValues[rowIndex] = Math.max(0, newValues[rowIndex] + amount);
       return newValues;
     });
   };
+
+  const startContinuousChange = (row: number, amount: number) => {
+    handleValueChange(row, amount);
+
+    if (intervalRef.current !== null) {
+      window.clearInterval(intervalRef.current);
+    }
+
+    intervalRef.current = window.setInterval(() => {
+      handleValueChange(row, amount);
+    }, 50);
+  };
+
+  const stopContinuousChange = () => {
+    if (intervalRef.current !== null) {
+      window.clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+  };
+
+  const handleButtonKeyDown = (
+    e: React.KeyboardEvent<HTMLButtonElement>,
+    row: number,
+    amount: number
+  ) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      e.stopPropagation();
+      startContinuousChange(row, amount);
+    }
+  };
+
+  const handleButtonKeyUp = (e: React.KeyboardEvent<HTMLButtonElement>) => {
+    if (e.key === "Enter" || e.key === " ") {
+      stopContinuousChange();
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      if (intervalRef.current !== null) {
+        window.clearInterval(intervalRef.current);
+      }
+    };
+  }, []);
+
   return (
     <>
       <span
@@ -146,18 +195,31 @@ const SurveyDate = () => {
 
                                 <div className="flex flex-col">
                                   <button
-                                    onClick={() =>
-                                      handleValueChange(row, 0.0001)
+                                    onMouseDown={() =>
+                                      startContinuousChange(row, 0.0001)
                                     }
+                                    onMouseUp={stopContinuousChange}
+                                    onMouseLeave={stopContinuousChange}
+                                    onKeyDown={(e) =>
+                                      handleButtonKeyDown(e, row, 0.0001)
+                                    }
+                                    onKeyUp={handleButtonKeyUp}
                                     className="h-2 w-5 border-b border-l border-gray-400 flex items-center justify-center text-[8px] hover:bg-[#E5F7E5] active:bg-gray-300"
                                     tabIndex={-1}
                                   >
                                     ▲
                                   </button>
+
                                   <button
-                                    onClick={() =>
-                                      handleValueChange(row, -0.0001)
+                                    onMouseDown={() =>
+                                      startContinuousChange(row, -0.0001)
                                     }
+                                    onMouseUp={stopContinuousChange}
+                                    onMouseLeave={stopContinuousChange}
+                                    onKeyDown={(e) =>
+                                      handleButtonKeyDown(e, row, -0.0001)
+                                    }
+                                    onKeyUp={handleButtonKeyUp}
                                     className="h-2 w-5 border-l border-gray-400 flex items-center justify-center text-[8px] hover:bg-[#E5F7E5] active:bg-gray-300"
                                     tabIndex={-1}
                                   >
@@ -199,17 +261,17 @@ const SurveyDate = () => {
                                   }
                                 }}
                                 className={`
-          absolute inset-0 w-full h-full flex items-center justify-center
-          focus:outline-none focus:ring-2 focus:ring-black
-          hover:bg-[#E5F7E5] text-[9px]
-          ${
-            warnings[states[row][col]] === "×"
-              ? "bg-red-500 text-white"
-              : warnings[states[row][col]] === "✔"
-              ? "bg-green-600 text-white"
-              : ""
-          }
-        `}
+                                  absolute inset-0 w-full h-full flex items-center justify-center
+                                  focus:outline-none focus:ring-2 focus:ring-black
+                                  hover:bg-[#E5F7E5] text-[9px]
+                                  ${
+                                    warnings[states[row][col]] === "×"
+                                      ? "bg-red-500 text-white"
+                                      : warnings[states[row][col]] === "✔"
+                                      ? "bg-green-600 text-white"
+                                      : ""
+                                  }
+                                `}
                               >
                                 {warnings[states[row][col]]}
                               </button>
@@ -233,16 +295,16 @@ const SurveyDate = () => {
                                 }
                               }}
                               className={`
-        absolute inset-0 w-full h-full flex items-center justify-center
-        focus:outline-none focus:ring-2 focus:ring-black hover:bg-[#E5F7E5]
-        ${
-          symbols[states[row][col]] === "×"
-            ? "bg-red-500 text-white"
-            : symbols[states[row][col]] === "✔"
-            ? "bg-green-600 text-white"
-            : ""
-        }
-      `}
+                              absolute inset-0 w-full h-full flex items-center justify-center
+                              focus:outline-none focus:ring-2 focus:ring-black hover:bg-[#E5F7E5]
+                              ${
+                                symbols[states[row][col]] === "×"
+                                  ? "bg-red-500 text-white"
+                                  : symbols[states[row][col]] === "✔"
+                                  ? "bg-green-600 text-white"
+                                  : ""
+                              }
+                            `}
                             >
                               {symbols[states[row][col]]}
                             </button>
